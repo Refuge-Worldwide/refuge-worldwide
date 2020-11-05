@@ -9,7 +9,6 @@ export default function Layout({
   return (
     <>
       <Meta />
-
       <main>{children}</main>
     </>
   );
