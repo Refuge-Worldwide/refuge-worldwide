@@ -1,7 +1,8 @@
+import type { AppProps } from "next/app";
 import "../styles/globals.css";
 
-function MyApp({ Component, pageProps }) {
+function RefugeApp({ Component, pageProps }: AppProps) {
   return <Component {...pageProps} />;
 }
 
-export default MyApp;
+export default RefugeApp;
