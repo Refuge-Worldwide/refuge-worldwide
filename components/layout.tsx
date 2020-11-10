@@ -1,3 +1,4 @@
+import Footer from "./footer";
 import Meta from "./meta";
 import Navigation from "./navigation";
 
@@ -15,6 +16,8 @@ export default function Layout({ preview, children }): LayoutType {
       </header>
 
       <main>{children}</main>
+
+      <Footer />
     </>
   );
 }
