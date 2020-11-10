@@ -1,15 +1,15 @@
 import Head from "next/head";
 import Layout from "../components/layout";
-import HomeView from "../views/home";
+import AboutView from "../views/about";
 
-export default function HomePage() {
+export default function AboutPage() {
   return (
     <Layout>
       <Head>
-        <title>Refuge Worldwide</title>
+        <title>About</title>
       </Head>
 
-      <HomeView />
+      <AboutView />
     </Layout>
   );
 }

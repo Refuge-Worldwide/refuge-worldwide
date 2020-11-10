@@ -4,7 +4,7 @@ export default function Meta() {
   return (
     <Head>
       <meta name="theme-color" content="#000" />
-      {/* Add Favicon & OG Meta Tags */}
+      <link rel="icon" href="/favicon.ico" />
     </Head>
   );
 }

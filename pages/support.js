@@ -1,15 +1,15 @@
 import Head from "next/head";
 import Layout from "../components/layout";
-import HomeView from "../views/home";
+import SupportView from "../views/support";
 
-export default function HomePage() {
+export default function SupportPage() {
   return (
     <Layout>
       <Head>
-        <title>Refuge Worldwide</title>
+        <title>Support</title>
       </Head>
 
-      <HomeView />
+      <SupportView />
     </Layout>
   );
 }
