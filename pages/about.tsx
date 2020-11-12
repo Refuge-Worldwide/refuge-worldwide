@@ -24,7 +24,7 @@ export async function getStaticProps({ preview = false }) {
   return {
     props: {
       preview,
-      data: (await getAboutPage(preview)) ?? [],
+      data: await getAboutPage(preview),
     },
   };
 }

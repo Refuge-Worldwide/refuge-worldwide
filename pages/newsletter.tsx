@@ -24,7 +24,7 @@ export async function getStaticProps({ preview = false }) {
   return {
     props: {
       preview,
-      data: (await getNewsletterPage(preview)) ?? [],
+      data: await getNewsletterPage(preview),
     },
   };
 }
