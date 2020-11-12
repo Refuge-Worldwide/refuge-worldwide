@@ -1,8 +1,9 @@
 import Link from "next/link";
+import NavigationLink from "./navigationLink";
 
 export default function Navigation() {
   return (
-    <nav>
+    <nav className="text-black">
       <ul>
         <li>
           <Link href="/">
@@ -10,34 +11,34 @@ export default function Navigation() {
           </Link>
         </li>
         <li>
-          <Link href="/radio">
-            <a>Radio</a>
-          </Link>
+          <NavigationLink href="/radio" activeClassName="text-orange">
+            Radio
+          </NavigationLink>
         </li>
         <li>
-          <Link href="/news">
-            <a>News</a>
-          </Link>
+          <NavigationLink href="/news" activeClassName="text-green">
+            News
+          </NavigationLink>
         </li>
         <li>
-          <Link href="/artists">
-            <a>Artists</a>
-          </Link>
+          <NavigationLink href="/artists" activeClassName="text-purple">
+            Artists
+          </NavigationLink>
         </li>
         <li>
-          <Link href="/support">
-            <a>Support</a>
-          </Link>
+          <NavigationLink href="/support" activeClassName="text-pink">
+            Support
+          </NavigationLink>
         </li>
         <li>
-          <Link href="/about">
-            <a>About</a>
-          </Link>
+          <NavigationLink href="/about" activeClassName="text-brown">
+            About
+          </NavigationLink>
         </li>
         <li>
-          <Link href="/newsletter">
-            <a>Newsletter</a>
-          </Link>
+          <NavigationLink href="/newsletter" activeClassName="text-blue">
+            Newsletter
+          </NavigationLink>
         </li>
       </ul>
     </nav>

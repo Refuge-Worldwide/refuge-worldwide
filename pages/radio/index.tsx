@@ -1,5 +1,6 @@
 import Head from "next/head";
 import Layout from "../../components/layout";
+import RadioView from "../../views/radio";
 
 interface Page extends JSX.Element {
   preview: boolean;
@@ -12,7 +13,9 @@ export default function RadioPage({ preview }: Page) {
         <title>Radio</title>
       </Head>
 
-      <h1>Radio</h1>
+      <h1 hidden>Radio</h1>
+
+      <RadioView />
     </Layout>
   );
 }
