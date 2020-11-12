@@ -3,7 +3,14 @@ module.exports = {
     removeDeprecatedGapUtilities: true,
     purgeLayersByDefault: true,
   },
-  purge: ["./pages/**/*.js", "./pages/**/*.tsx"],
+  purge: [
+    "./pages/**/*.js",
+    "./pages/**/*.tsx",
+    "./views/**/*.js",
+    "./views/**/*.tsx",
+    "./components/**/*.js",
+    "./components/**/*.tsx",
+  ],
   theme: {
     colors: {
       blue: "#4d7cff",
