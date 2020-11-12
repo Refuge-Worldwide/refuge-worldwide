@@ -4,4 +4,5 @@ interface DataResponse {
   };
 }
 
-export const extract = (data: DataResponse, key: string) => data?.data?.[key];
+export const extractPage = (data: DataResponse, key: string) =>
+  data?.data?.[key];

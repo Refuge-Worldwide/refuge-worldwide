@@ -1,6 +1,6 @@
-import type { CoverImage } from "../types/shared";
-import { extract } from "../util";
 import type { Document } from "@contentful/rich-text-types";
+import type { CoverImage } from "../types/shared";
+import { extractPage } from "../util";
 import { ENDPOINT } from "./constants";
 
 export async function contentful(query: string, preview = false) {
@@ -41,7 +41,7 @@ export async function getAboutPage(preview: boolean): Promise<AboutPageData> {
     }
   `);
 
-  return extract(data, "pageAbout");
+  return extractPage(data, "pageAbout");
 }
 
 export interface SupportPageData {
@@ -69,7 +69,7 @@ export async function getSupportPage(
     }
   `);
 
-  return extract(data, "pageSupport");
+  return extractPage(data, "pageSupport");
 }
 
 export interface NewsletterPageData {
@@ -97,5 +97,5 @@ export async function getNewsletterPage(
     }
   `);
 
-  return extract(data, "pageNewsletter");
+  return extractPage(data, "pageNewsletter");
 }
