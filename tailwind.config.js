@@ -16,7 +16,12 @@ module.exports = {
       black: "#000",
       white: "#fff",
     },
-    extend: {},
+    extend: {
+      boxShadow: {
+        "pill-black": "0 2px 0 0 rgb(0, 0, 0)",
+        "pill-white": "0 2px 0 0 rgb(255, 255, 255)",
+      },
+    },
   },
   variants: {},
   plugins: [],
