@@ -10,6 +10,21 @@ export default function Navigation() {
           </Link>
         </li>
         <li>
+          <Link href="/radio">
+            <a>Radio</a>
+          </Link>
+        </li>
+        <li>
+          <Link href="/news">
+            <a>News</a>
+          </Link>
+        </li>
+        <li>
+          <Link href="/artists">
+            <a>Artists</a>
+          </Link>
+        </li>
+        <li>
           <Link href="/support">
             <a>Support</a>
           </Link>
