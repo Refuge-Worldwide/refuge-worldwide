@@ -12,6 +12,41 @@ module.exports = {
     "./components/**/*.tsx",
   ],
   theme: {
+    fontWeight: {
+      light: 300,
+      medium: 500,
+    },
+    fontSize: {
+      tiny: "1rem",
+      small: "1.25rem",
+      base: "1.875rem",
+      large: "2.8125rem",
+    },
+    fontFamily: {
+      sans: [
+        "system-ui",
+        "-apple-system",
+        " BlinkMacSystemFont",
+        "Segoe UI",
+        " Roboto",
+        "Helvetica Neue",
+        "Arial",
+        "Noto Sans",
+        " sans-serif",
+        "Apple Color Emoji",
+        "Segoe UI Emoji",
+        "Segoe UI Symbol",
+        "Noto Color Emoji",
+      ],
+      serif: [
+        "Bely Display",
+        "Georgia",
+        "Cambria",
+        "Times New Roman",
+        "Times",
+        "serif",
+      ],
+    },
     colors: {
       blue: "#4d7cff",
       brown: "#815900",

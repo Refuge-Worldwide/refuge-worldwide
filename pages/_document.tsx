@@ -5,7 +5,7 @@ class RefugeDocument extends Document {
     return (
       <Html lang="en" className="antialiased">
         <Head />
-        <body className="text-3xl">
+        <body className="text-base font-light">
           <Main />
           <NextScript />
         </body>

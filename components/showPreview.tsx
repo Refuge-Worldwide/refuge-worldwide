@@ -17,7 +17,7 @@ export default function ShowPreview({
   return (
     <Link href={`/radio/${slug}`}>
       <a>
-        <article>
+        <article className="text-small">
           <Image
             src={coverImage.url}
             width={340}
@@ -26,9 +26,9 @@ export default function ShowPreview({
             alt={title}
           />
 
-          <h2>{title}</h2>
+          <h2 className="font-sans font-medium truncate">{title}</h2>
 
-          <p>{artists}</p>
+          <p className="truncate">{artists}</p>
 
           <ul className="flex">
             {genres.map((genre, i) => (

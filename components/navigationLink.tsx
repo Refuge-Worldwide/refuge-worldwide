@@ -16,9 +16,12 @@ export default function NavigationLink({
 
   const isActive = pathname === href;
 
-  const className = cn("transition-colors duration-150 ease-in-out", {
-    [activeClassName]: isActive,
-  });
+  const className = cn(
+    "font-medium transition-colors duration-150 ease-in-out",
+    {
+      [activeClassName]: isActive,
+    }
+  );
 
   return (
     <Link href={href} {...rest}>
