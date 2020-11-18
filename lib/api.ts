@@ -1,5 +1,10 @@
 import type { Document } from "@contentful/rich-text-types";
-import type { ArtistInterface, CoverImage } from "../types/shared";
+import type {
+  ArtistInterface,
+  CoverImage,
+  GenreInterface,
+  ShowInterface,
+} from "../types/shared";
 import { extractCollection, extractCollectionItem, extractPage } from "../util";
 import { ENDPOINT } from "./constants";
 
@@ -10,8 +15,8 @@ export async function contentful(query: string, preview = false) {
       "Content-Type": "application/json",
       Authorization: `Bearer ${
         preview
-          ? process.env.CONTENTFUL_PREVIEW_ACCESS_TOKEN
-          : process.env.CONTENTFUL_ACCESS_TOKEN
+          ? process.env.NEXT_PUBLIC_CONTENTFUL_PREVIEW_ACCESS_TOKEN
+          : process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN
       }`,
     },
     body: JSON.stringify({ query }),
@@ -161,4 +166,58 @@ export async function getArtistAndMoreShows(
   return {
     artist: extractCollectionItem(data, "artistCollection"),
   };
+}
+
+export async function getAllShows(preview: boolean): Promise<ShowInterface[]> {
+  const data = await contentful(
+    /* GraphQL */ `
+      query {
+        showCollection(order: date_ASC) {
+          items {
+            title
+            date
+            slug
+            location
+            artistsCollection(limit: 9) {
+              items {
+                name
+              }
+            }
+            genresCollection {
+              items {
+                name
+              }
+            }
+            content {
+              json
+            }
+          }
+        }
+      }
+    `,
+    preview
+  );
+
+  return extractCollection(data, "showCollection");
+}
+
+export async function getShowAndMoreShows(slug: string, preview: boolean) {}
+
+export async function getAllGenres(
+  preview: boolean
+): Promise<GenreInterface[]> {
+  const data = await contentful(
+    /* GraphQL */ `
+      query {
+        genreCollection(order: name_ASC) {
+          items {
+            name
+          }
+        }
+      }
+    `,
+    preview
+  );
+
+  return extractCollection(data, "genreCollection");
 }
