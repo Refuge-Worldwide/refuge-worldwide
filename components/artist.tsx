@@ -7,6 +7,7 @@ export default function Artist({ name, photo, slug }: ArtistInterface) {
     <Link href={`/artists/${slug}`}>
       <a>
         <Image
+          key={slug}
           className="object-cover object-center"
           src={photo.url}
           width={340}

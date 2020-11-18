@@ -13,7 +13,7 @@ export default function ArtistRow({
     <section className="border-b-2 border-black">
       <Pill>{alphabet}</Pill>
 
-      <ul>
+      <ul className="flex">
         {artists.map((artist, i) => (
           <li key={i}>
             <Artist {...artist} />
