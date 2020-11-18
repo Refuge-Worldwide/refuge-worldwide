@@ -4,7 +4,7 @@ import type { ArtistInterface } from "../types/shared";
 
 export default function Artist({ name, photo, slug }: ArtistInterface) {
   return (
-    <Link href={`/artist/${slug}`}>
+    <Link href={`/artists/${slug}`}>
       <a>
         <Image
           className="object-cover object-center"

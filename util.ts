@@ -22,6 +22,11 @@ export const extractCollection = (
   key: string
 ) => fetchResponse?.data?.[key]?.items;
 
+export const extractCollectionItem = (
+  fetchResponse: CollectionResponse,
+  key: string
+) => fetchResponse?.data?.[key]?.items?.[0];
+
 export const sortAndGroup = (
   data: ArtistInterface[]
 ): {
