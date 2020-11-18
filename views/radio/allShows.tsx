@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import Pill from "../../components/pill";
 import useShowsAndGenres from "../../hooks/useShowsAndGenres";
@@ -24,6 +25,13 @@ export default function AllShows() {
             <Link href={`/radio/${show.slug}`}>
               <a>
                 <article>
+                  <Image
+                    src={show.coverImage.url}
+                    width={340}
+                    height={190}
+                    className="object-cover object-center"
+                    alt={show.title}
+                  />
                   <h2>{show.title}</h2>
                   <p>{formatArtistNames(show.artistsCollection.items)}</p>
                   <ul className="flex">

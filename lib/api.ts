@@ -172,18 +172,25 @@ export async function getAllShows(preview: boolean): Promise<ShowInterface[]> {
   const data = await contentful(
     /* GraphQL */ `
       query {
-        showCollection(order: date_ASC) {
+        showCollection(order: date_ASC, preview: ${preview}) {
           items {
             title
             date
             slug
             location
+            coverImage {
+              title
+              description
+              url
+              width
+              height
+            }
             artistsCollection(limit: 9) {
               items {
                 name
               }
             }
-            genresCollection {
+            genresCollection(limit: 9) {
               items {
                 name
               }
@@ -209,7 +216,7 @@ export async function getAllGenres(
   const data = await contentful(
     /* GraphQL */ `
       query {
-        genreCollection(order: name_ASC) {
+        genreCollection(order: name_ASC, preview: ${preview}) {
           items {
             name
           }
