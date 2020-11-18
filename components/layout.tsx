@@ -1,11 +1,15 @@
-interface LayoutType extends JSX.Element {
+export default function Layout({
+  preview,
+  className = "",
+  children,
+}: {
+  children: React.ReactNode;
   preview?: boolean;
-}
-
-export default function Layout({ preview, children }): LayoutType {
+  className?: string;
+}) {
   return (
     <>
-      <main>{children}</main>
+      <main className={className}>{children}</main>
     </>
   );
 }

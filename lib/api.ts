@@ -1,6 +1,6 @@
 import type { Document } from "@contentful/rich-text-types";
-import type { CoverImage } from "../types/shared";
-import { extractPage } from "../util";
+import type { ArtistInterface, CoverImage } from "../types/shared";
+import { extractCollection, extractPage } from "../util";
 import { ENDPOINT } from "./constants";
 
 export async function contentful(query: string, preview = false) {
@@ -98,4 +98,27 @@ export async function getNewsletterPage(
   `);
 
   return extractPage(data, "pageNewsletter");
+}
+
+export async function getAllArtists(
+  preview: boolean
+): Promise<ArtistInterface[]> {
+  const data = await contentful(/* GraphQL */ `
+    {
+      artistCollection(order: name_ASC) {
+        items {
+          name
+          photo {
+            title
+            description
+            url
+            width
+            height
+          }
+        }
+      }
+    }
+  `);
+
+  return extractCollection(data, "artistCollection");
 }
