@@ -28,6 +28,9 @@ module.exports = {
         "pill-black": "0 2px 0 0 rgb(0, 0, 0)",
         "pill-white": "0 2px 0 0 rgb(255, 255, 255)",
       },
+      borderWidth: {
+        1.5: "1.5px",
+      },
     },
   },
   variants: {},

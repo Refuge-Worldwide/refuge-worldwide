@@ -145,7 +145,7 @@ export async function getArtistAndMoreShows(
   slug: string,
   preview: boolean
 ): Promise<{ artist: ArtistInterface }> {
-  const data = await contentful(/* GraphQL */ `
+  const entry = await contentful(/* GraphQL */ `
     query {
       artistCollection(where: { slug: "${slug}" }, limit: 1, preview: ${preview}) {
         items {
@@ -164,7 +164,7 @@ export async function getArtistAndMoreShows(
   `);
 
   return {
-    artist: extractCollectionItem(data, "artistCollection"),
+    artist: extractCollectionItem(entry, "artistCollection"),
   };
 }
 
@@ -208,7 +208,55 @@ export async function getAllShows(preview: boolean): Promise<ShowInterface[]> {
   return extractCollection(data, "showCollection");
 }
 
-export async function getShowAndMoreShows(slug: string, preview: boolean) {}
+export async function getShowAndMoreShows(
+  slug: string,
+  preview: boolean
+): Promise<{ show: ShowInterface }> {
+  const entry = await contentful(
+    /* GraphQL */ `
+      query {
+        showCollection(
+          where: { slug: "${slug}" }
+          order: date_ASC
+          preview: ${preview}
+          limit: 1
+        ) {
+          items {
+            title
+            date
+            slug
+            location
+            coverImage {
+              title
+              description
+              url
+              width
+              height
+            }
+            artistsCollection(limit: 9) {
+              items {
+                name
+              }
+            }
+            genresCollection(limit: 9) {
+              items {
+                name
+              }
+            }
+            content {
+              json
+            }
+          }
+        }
+      }
+    `,
+    preview
+  );
+
+  return {
+    show: extractCollectionItem(entry, "showCollection"),
+  };
+}
 
 export async function getAllGenres(
   preview: boolean

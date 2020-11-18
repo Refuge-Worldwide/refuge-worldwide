@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
+import Genre from "../../components/genre";
 import Pill from "../../components/pill";
+import ShowPreview from "../../components/showPreview";
 import useShowsAndGenres from "../../hooks/useShowsAndGenres";
 import { formatArtistNames } from "../../util";
 
@@ -14,34 +16,20 @@ export default function AllShows() {
       </Pill>
 
       <ul className="flex">
+        <li>
+          <Genre active name={"All"} />
+        </li>
         {data?.genres?.map((genre, i) => (
-          <li key={i}>{genre.name}</li>
+          <li key={i}>
+            <Genre name={genre.name} />
+          </li>
         ))}
       </ul>
 
-      <ul>
+      <ul className="flex">
         {data?.shows?.map((show, i) => (
           <li key={i}>
-            <Link href={`/radio/${show.slug}`}>
-              <a>
-                <article>
-                  <Image
-                    src={show.coverImage.url}
-                    width={340}
-                    height={190}
-                    className="object-cover object-center"
-                    alt={show.title}
-                  />
-                  <h2>{show.title}</h2>
-                  <p>{formatArtistNames(show.artistsCollection.items)}</p>
-                  <ul className="flex">
-                    {show.genresCollection.items.map((genre, i) => (
-                      <li key={i}>{genre.name}</li>
-                    ))}
-                  </ul>
-                </article>
-              </a>
-            </Link>
+            <ShowPreview {...show} />
           </li>
         ))}
       </ul>
