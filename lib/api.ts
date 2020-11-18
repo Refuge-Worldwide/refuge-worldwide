@@ -108,6 +108,7 @@ export async function getAllArtists(
       artistCollection(order: name_ASC) {
         items {
           name
+          slug
           photo {
             title
             description

@@ -10,5 +10,6 @@ export interface ImageInterface extends CoverImage {}
 
 export interface ArtistInterface {
   name: string;
+  slug: string;
   photo: ImageInterface;
 }

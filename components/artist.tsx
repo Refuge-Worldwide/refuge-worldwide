@@ -1,17 +1,20 @@
 import Image from "next/image";
+import Link from "next/link";
 import type { ArtistInterface } from "../types/shared";
 
-export default function Artist({ name, photo }: ArtistInterface) {
+export default function Artist({ name, photo, slug }: ArtistInterface) {
   return (
-    <div>
-      <Image
-        className="object-cover object-center"
-        src={photo.url}
-        width={340}
-        height={192}
-        alt={name}
-      />
-      <p>{name}</p>
-    </div>
+    <Link href={`/artist/${slug}`}>
+      <a>
+        <Image
+          className="object-cover object-center"
+          src={photo.url}
+          width={340}
+          height={192}
+          alt={name}
+        />
+        <p>{name}</p>
+      </a>
+    </Link>
   );
 }
