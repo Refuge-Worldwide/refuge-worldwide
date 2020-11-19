@@ -2,7 +2,7 @@ import type { AppProps } from "next/app";
 import Footer from "../components/footer";
 import Meta from "../components/meta";
 import Navigation from "../components/navigation";
-import Player from "../components/player";
+// import Player from "../components/player";
 import "../styles/globals.css";
 
 function RefugeApp({ Component, pageProps }: AppProps) {
@@ -14,7 +14,7 @@ function RefugeApp({ Component, pageProps }: AppProps) {
         <Navigation />
       </header>
 
-      <Player />
+      {/* <Player /> */}
 
       <Component {...pageProps} />
 

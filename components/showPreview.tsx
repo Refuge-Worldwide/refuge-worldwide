@@ -11,7 +11,7 @@ export default function ShowPreview({
   artistsCollection,
   genresCollection,
 }: ShowInterface) {
-  const genres = genresCollection.items.slice(0, 2);
+  const genres = genresCollection.items;
   const artists = formatArtistNames(artistsCollection.items);
 
   return (
@@ -19,6 +19,7 @@ export default function ShowPreview({
       <a>
         <article className="text-small">
           <Image
+            key={slug}
             src={coverImage.url}
             width={340}
             height={190}
