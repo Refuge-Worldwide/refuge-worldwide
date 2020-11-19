@@ -11,7 +11,9 @@ export default function ArtistRow({
 }) {
   return (
     <section className="border-b-2 border-black">
-      <Pill>{alphabet}</Pill>
+      <Pill>
+        <h2>{alphabet}</h2>
+      </Pill>
 
       <ul className="flex">
         {artists.map((artist, i) => (

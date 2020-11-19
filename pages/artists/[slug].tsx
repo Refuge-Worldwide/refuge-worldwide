@@ -4,6 +4,7 @@ import Head from "next/head";
 import Link from "next/link";
 import Layout from "../../components/layout";
 import Pill from "../../components/pill";
+import { Arrow } from "../../icons/arrow";
 import { getAllArtists, getArtistAndMoreShows } from "../../lib/api";
 import { ArtistInterface } from "../../types/shared";
 
@@ -32,7 +33,12 @@ export default function Artist({ artist, preview }: Page) {
 
           <Link href="/artists">
             <a>
-              <Pill invert>Back</Pill>
+              <Pill invert>
+                <div className="inline-flex items-center space-x-3">
+                  <Arrow size={24} className="mt-px transform rotate-180" />
+                  <span>Back</span>
+                </div>
+              </Pill>
             </a>
           </Link>
 

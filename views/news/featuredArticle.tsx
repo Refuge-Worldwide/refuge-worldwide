@@ -2,7 +2,7 @@ import Link from "next/link";
 import Badge from "../../components/badge";
 import Date from "../../components/date";
 import Pill from "../../components/pill";
-import { ArrowRight } from "../../icons/arrows";
+import { Arrow } from "../../icons/arrow";
 
 export default function FeaturedArticle() {
   return (
@@ -23,8 +23,8 @@ export default function FeaturedArticle() {
         </p>
         <Link href={`/news/`}>
           <a className="inline-flex items-center space-x-5 font-medium leading-none">
-            <span className="border-b-2 ">Read more</span>
-            <ArrowRight />
+            <span className="border-b-2">Read more</span>
+            <Arrow />
           </a>
         </Link>
       </header>
