@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ShowInterface } from "../types/shared";
 import { formatArtistNames } from "../util";
-import Genre from "./genre";
+import Badge from "./badge";
 
 export default function ShowPreview({
   slug,
@@ -33,7 +33,7 @@ export default function ShowPreview({
           <ul className="flex">
             {genres.map((genre, i) => (
               <li key={i}>
-                <Genre name={genre.name} />
+                <Badge text={genre.name} />
               </li>
             ))}
           </ul>

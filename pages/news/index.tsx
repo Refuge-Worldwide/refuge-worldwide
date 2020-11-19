@@ -1,5 +1,6 @@
 import Head from "next/head";
 import Layout from "../../components/layout";
+import NewsView from "../../views/news";
 
 interface Page extends JSX.Element {
   preview: boolean;
@@ -12,7 +13,9 @@ export default function NewsPage({ preview }: Page) {
         <title>News</title>
       </Head>
 
-      <h1>News</h1>
+      <h1 hidden>News</h1>
+
+      <NewsView />
     </Layout>
   );
 }

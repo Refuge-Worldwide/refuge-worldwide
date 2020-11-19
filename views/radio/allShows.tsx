@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import Genre from "../../components/genre";
+import Badge from "../../components/badge";
 import Pill from "../../components/pill";
 import ShowPreview from "../../components/showPreview";
 import useShowsAndGenres from "../../hooks/useShowsAndGenres";
@@ -17,11 +17,11 @@ export default function AllShows() {
 
       <ul className="flex">
         <li>
-          <Genre active name={"All"} />
+          <Badge invert text={"All"} />
         </li>
         {data?.genres?.map((genre, i) => (
           <li key={i}>
-            <Genre name={genre.name} />
+            <Badge text={genre.name} />
           </li>
         ))}
       </ul>
