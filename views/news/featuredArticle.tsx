@@ -19,11 +19,11 @@ export default function FeaturedArticle() {
         <Badge text={"Interview"} />
         <p>
           Monthly show from Kyoto, Japan’s original capital city, presented by
-          Shuya Okino, music tastemaker and member of Kyoto Jazz Massive.{" "}
+          Shuya Okino, music tastemaker and member of Kyoto Jazz Massive.
         </p>
         <Link href={`/news/`}>
           <a className="inline-flex items-center space-x-5 font-medium leading-none">
-            <span className="border-b-2">Read more</span>
+            <span className="underline">Read more</span>
             <Arrow />
           </a>
         </Link>

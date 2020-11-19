@@ -236,6 +236,7 @@ export async function getShowAndMoreShows(
             artistsCollection(limit: 9) {
               items {
                 name
+                slug
               }
             }
             genresCollection(limit: 9) {
