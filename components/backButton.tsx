@@ -8,7 +8,7 @@ export default function BackButton() {
 
   return (
     <button
-      className="inline-flex items-center space-x-3 border-2 rounded-full bg-black text-white border-white shadow-pill-white"
+      className="inline-flex items-center space-x-3 border-2 rounded-full bg-black text-white border-white shadow-pill-white focus:outline-none focus:ring-4"
       onClick={handleOnClick}
     >
       <Arrow size={24} className="mt-px transform rotate-180" />

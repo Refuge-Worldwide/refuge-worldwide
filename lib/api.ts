@@ -312,3 +312,43 @@ export async function getAllArticles(
 
   return extractCollection(data, "articleCollection");
 }
+
+export async function getArticleAndMoreArticles(
+  slug: string,
+  preview: boolean
+): Promise<{ article: ArticleInterface }> {
+  const entry = await contentful(
+    /* GraphQL */ `
+      query {
+        articleCollection(
+          where: { slug: "${slug}" }
+          order: date_ASC
+          preview: ${preview}
+          limit: 1
+        ) {
+          title
+          subtitle
+          articleType
+          date
+          slug
+          location
+          coverImage {
+            title
+            description
+            url
+            width
+            height
+          }
+          content {
+            json
+          }
+        }
+      }
+    `,
+    preview
+  );
+
+  return {
+    article: extractCollectionItem(entry, "articleCollection"),
+  };
+}
