@@ -43,7 +43,8 @@ export default function useScript(src: string) {
         script.addEventListener("error", setAttributeFromEvent);
       } else {
         // Grab existing script status from attribute and set to state.
-        setStatus(script.getAttribute("data-status"));
+        const attr: any = script.getAttribute("data-status");
+        setStatus(attr);
       }
 
       // Script event handler to update status in state
