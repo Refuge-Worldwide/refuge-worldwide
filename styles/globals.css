@@ -9,6 +9,11 @@
   h6 {
     @apply font-serif;
   }
+
+  strong,
+  b {
+    @apply font-medium;
+  }
 }
 
 @tailwind components;

@@ -10,7 +10,6 @@ export default function ShowBody({
   title,
   genresCollection,
   artistsCollection,
-  coverImage,
   date,
   location,
   content,
