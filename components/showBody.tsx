@@ -1,4 +1,5 @@
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
+import Image from "next/image";
 import Link from "next/link";
 import { Fragment } from "react";
 import Show from "../pages/radio/[slug]";
@@ -12,6 +13,7 @@ export default function ShowBody({
   title,
   genresCollection,
   artistsCollection,
+  coverImage,
   date,
   location,
   content,
@@ -49,6 +51,16 @@ export default function ShowBody({
 
   return (
     <Fragment>
+      <div>
+        <Image
+          className="object-cover object-center"
+          src={coverImage?.url}
+          alt={coverImage?.title}
+          width={1280}
+          height={720}
+        />
+      </div>
+
       {dateAndPlace}
 
       <h1>{title}</h1>

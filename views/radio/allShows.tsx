@@ -1,10 +1,7 @@
-import Image from "next/image";
-import Link from "next/link";
 import Badge from "../../components/badge";
 import Pill from "../../components/pill";
 import ShowPreview from "../../components/showPreview";
 import useShowsAndGenres from "../../hooks/useShowsAndGenres";
-import { formatArtistNames } from "../../util";
 
 export default function AllShows() {
   const { data } = useShowsAndGenres(false);

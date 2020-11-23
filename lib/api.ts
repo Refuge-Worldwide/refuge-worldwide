@@ -1,5 +1,6 @@
 import type { Document } from "@contentful/rich-text-types";
 import type {
+  ArticleInterface,
   ArtistInterface,
   CoverImage,
   GenreInterface,
@@ -276,4 +277,38 @@ export async function getAllGenres(
   );
 
   return extractCollection(data, "genreCollection");
+}
+
+export async function getAllArticles(
+  preview: boolean
+): Promise<ArticleInterface[]> {
+  const data = await contentful(
+    /* GraphQL */ `
+      query {
+        articleCollection(order: date_ASC, preview: ${preview}) {
+          items {
+            title
+            subtitle
+            articleType
+            date
+            slug
+            location
+            coverImage {
+              title
+              description
+              url
+              width
+              height
+            }
+            content {
+              json
+            }
+          }
+        }
+      }
+    `,
+    preview
+  );
+
+  return extractCollection(data, "articleCollection");
 }

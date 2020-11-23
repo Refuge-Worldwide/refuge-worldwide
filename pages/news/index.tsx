@@ -1,12 +1,15 @@
 import Head from "next/head";
 import Layout from "../../components/layout";
+import { getAllArticles } from "../../lib/api";
+import { ArticleInterface } from "../../types/shared";
 import NewsView from "../../views/news";
 
 interface Page extends JSX.Element {
   preview: boolean;
+  articles: ArticleInterface[];
 }
 
-export default function NewsPage({ preview }: Page) {
+export default function NewsPage({ preview, articles }: Page) {
   return (
     <Layout preview={preview}>
       <Head>
@@ -15,7 +18,7 @@ export default function NewsPage({ preview }: Page) {
 
       <h1 hidden>News</h1>
 
-      <NewsView />
+      <NewsView articles={articles} />
     </Layout>
   );
 }
@@ -23,6 +26,7 @@ export default function NewsPage({ preview }: Page) {
 export async function getStaticProps({ preview = false }) {
   return {
     props: {
+      articles: await getAllArticles(preview),
       preview,
     },
   };

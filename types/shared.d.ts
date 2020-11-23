@@ -36,3 +36,24 @@ export interface ShowInterface {
     json: Document;
   };
 }
+
+enum ArticleType {
+  Project = "Project",
+  Blog = "Blog",
+  News = "News",
+  Event = "Event",
+  Interview = "Interview",
+}
+
+export interface ArticleInterface {
+  title: string;
+  subtitle: string;
+  articleType: ArticleType;
+  date: string;
+  slug: string;
+  location: string;
+  coverImage: CoverImage;
+  content: {
+    json: Document;
+  };
+}
