@@ -1,13 +1,14 @@
 import { useEffect } from "react";
 import useScript from "./useScript";
 
+/**
+ * @summary This hook is still based on an experimental API from Mixcloud, it doesn't seem to be working properly here, might be due to the face its messing with pushstate parts of the browser
+ *
+ * @external https://www.mixcloud.com/developers/widget/
+ */
 export default function useMixcloudFooterWidget() {
-  const isClient = typeof window !== "undefined";
-
   const status = useScript(
-    isClient
-      ? "https://widget.mixcloud.com/media/js/footerWidgetApi.js"
-      : undefined
+    "https://widget.mixcloud.com/media/js/footerWidgetApi.js"
   );
 
   useEffect(() => {
@@ -20,9 +21,7 @@ export default function useMixcloudFooterWidget() {
         }
       );
 
-      promise?.then(function (widget) {
-        console.log(widget);
-      });
+      promise?.then((widget) => console.log(widget));
     }
   }, [status]);
 }
