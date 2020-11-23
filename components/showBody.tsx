@@ -1,10 +1,7 @@
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
-import Image from "next/image";
 import Link from "next/link";
 import { Fragment } from "react";
-import Show from "../pages/radio/[slug]";
 import { ShowInterface } from "../types/shared";
-import { formatArtistNames } from "../util";
 import Badge from "./badge";
 import Date from "./date";
 import Pill from "./pill";
@@ -51,16 +48,6 @@ export default function ShowBody({
 
   return (
     <Fragment>
-      <div>
-        <Image
-          className="object-cover object-center"
-          src={coverImage?.url}
-          alt={coverImage?.title}
-          width={1280}
-          height={720}
-        />
-      </div>
-
       {dateAndPlace}
 
       <h1>{title}</h1>

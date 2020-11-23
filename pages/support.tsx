@@ -1,7 +1,8 @@
+import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import Head from "next/head";
 import Layout from "../components/layout";
+import SinglePage from "../components/singlePage";
 import { getSupportPage, SupportPageData } from "../lib/api";
-import SupportView from "../views/support";
 
 interface Page extends JSX.Element {
   preview: boolean;
@@ -15,7 +16,9 @@ export default function SupportPage({ preview, data }: Page) {
         <title>Support</title>
       </Head>
 
-      <SupportView data={data} />
+      <SinglePage coverImage={data.coverImage}>
+        <div>{documentToReactComponents(data?.content?.json)}</div>
+      </SinglePage>
     </Layout>
   );
 }

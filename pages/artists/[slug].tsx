@@ -1,10 +1,8 @@
 import { useRouter } from "next/dist/client/router";
 import ErrorPage from "next/error";
 import Head from "next/head";
-import Link from "next/link";
 import Layout from "../../components/layout";
-import Pill from "../../components/pill";
-import { Arrow } from "../../icons/arrow";
+import SinglePage from "../../components/singlePage";
 import { getAllArtists, getArtistAndMoreShows } from "../../lib/api";
 import { ArtistInterface } from "../../types/shared";
 
@@ -31,18 +29,9 @@ export default function Artist({ artist, preview }: Page) {
             <meta property="og:image" content={artist.photo.url} />
           </Head>
 
-          <Link href="/artists">
-            <a>
-              <Pill invert>
-                <div className="inline-flex items-center space-x-3">
-                  <Arrow size={24} className="mt-px transform rotate-180" />
-                  <span>Back</span>
-                </div>
-              </Pill>
-            </a>
-          </Link>
-
-          <h1>{artist.name}</h1>
+          <SinglePage coverImage={artist?.photo} withBackButton>
+            <h1>{artist?.name}</h1>
+          </SinglePage>
         </>
       )}
     </Layout>

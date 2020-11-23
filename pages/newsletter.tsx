@@ -1,7 +1,8 @@
+import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import Head from "next/head";
 import Layout from "../components/layout";
+import SinglePage from "../components/singlePage";
 import { getNewsletterPage, NewsletterPageData } from "../lib/api";
-import NewsletterView from "../views/newsletter";
 
 interface Page extends JSX.Element {
   preview: boolean;
@@ -15,7 +16,9 @@ export default function NewsletterPage({ preview, data }: Page) {
         <title>Newsletter</title>
       </Head>
 
-      <NewsletterView data={data} />
+      <SinglePage coverImage={data.coverImage}>
+        <div>{documentToReactComponents(data?.content?.json)}</div>
+      </SinglePage>
     </Layout>
   );
 }

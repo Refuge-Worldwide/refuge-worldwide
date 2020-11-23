@@ -1,7 +1,8 @@
+import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import Head from "next/head";
 import Layout from "../components/layout";
+import SinglePage from "../components/singlePage";
 import { AboutPageData, getAboutPage } from "../lib/api";
-import AboutView from "../views/about";
 
 interface Page extends JSX.Element {
   preview: boolean;
@@ -15,7 +16,9 @@ export default function AboutPage({ preview, data }: Page) {
         <title>About</title>
       </Head>
 
-      <AboutView data={data} />
+      <SinglePage coverImage={data.coverImage}>
+        <div>{documentToReactComponents(data?.content?.json)}</div>
+      </SinglePage>
     </Layout>
   );
 }

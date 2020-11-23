@@ -1,11 +1,9 @@
 import { useRouter } from "next/dist/client/router";
 import ErrorPage from "next/error";
 import Head from "next/head";
-import Link from "next/link";
 import Layout from "../../components/layout";
-import Pill from "../../components/pill";
 import ShowBody from "../../components/showBody";
-import { Arrow } from "../../icons/arrow";
+import SinglePage from "../../components/singlePage";
 import { getAllShows, getShowAndMoreShows } from "../../lib/api";
 import { ShowInterface } from "../../types/shared";
 
@@ -32,18 +30,9 @@ export default function Show({ show, preview }: Page) {
             <meta property="og:image" content={show.coverImage.url} />
           </Head>
 
-          <Link href="/radio">
-            <a>
-              <Pill invert>
-                <div className="inline-flex items-center space-x-3">
-                  <Arrow size={24} className="mt-px transform rotate-180" />
-                  <span>Back</span>
-                </div>
-              </Pill>
-            </a>
-          </Link>
-
-          <ShowBody {...show} />
+          <SinglePage coverImage={show.coverImage} withBackButton>
+            <ShowBody {...show} />
+          </SinglePage>
         </>
       )}
     </Layout>
