@@ -21,7 +21,7 @@ function RefugeApp({ Component, pageProps }: AppProps) {
 
       <Footer />
 
-      <MixcloudPlayer />
+      <MixcloudPlayer mini />
     </>
   );
 }
