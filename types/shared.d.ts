@@ -25,7 +25,6 @@ export interface ShowInterface {
   title: string;
   date: string;
   slug: string;
-  location: string;
   coverImage: CoverImage;
   artistsCollection: {
     items: ArtistInterface[];

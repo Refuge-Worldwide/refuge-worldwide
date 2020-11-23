@@ -13,20 +13,12 @@ export default function ShowBody({
   genresCollection,
   artistsCollection,
   date,
-  location,
   content,
   mixcloudLink,
 }: ShowInterface) {
   const genres = genresCollection.items;
 
   const artists = artistsCollection.items;
-
-  const dateAndPlace = (
-    <p className="text-small">
-      <Date dateString={date} />
-      {location && `, ${location}`}
-    </p>
-  );
 
   const persons = (
     <Fragment>
@@ -62,7 +54,9 @@ export default function ShowBody({
     <Fragment>
       <button onClick={handlePlayShow}>Play</button>
 
-      {dateAndPlace}
+      <p className="text-small">
+        <Date dateString={date} />
+      </p>
 
       <h1>{title}</h1>
 
