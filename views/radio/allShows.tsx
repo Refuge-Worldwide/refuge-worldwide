@@ -12,7 +12,7 @@ export default function AllShows() {
         <h2>All Shows</h2>
       </Pill>
 
-      <ul className="flex flex-wrap leading-none -mr-2 -mb-2">
+      <ul className="w-full flex flex-wrap leading-none -mr-2 -mb-2">
         <li className="inline-flex pr-2 pb-2">
           <Badge invert text={"All"} />
         </li>
