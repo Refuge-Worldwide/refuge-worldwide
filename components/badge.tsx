@@ -8,7 +8,7 @@ export default function Badge({
   invert?: boolean;
 }) {
   const classNames = cn(
-    "inline-flex px-3 py-2 text-tiny leading-none uppercase font-medium border-1.5 rounded-full border-black",
+    "inline-flex px-3 py-2 text-tiny leading-none uppercase font-medium border-1.5 rounded-full border-black whitespace-nowrap",
     invert ? "bg-black text-white" : "bg-transparent text-black"
   );
 

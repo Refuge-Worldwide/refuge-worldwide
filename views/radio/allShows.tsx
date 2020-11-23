@@ -12,12 +12,12 @@ export default function AllShows() {
         <h2>All Shows</h2>
       </Pill>
 
-      <ul className="flex">
-        <li>
+      <ul className="flex flex-wrap leading-none -mr-2 -mb-2">
+        <li className="inline-flex pr-2 pb-2">
           <Badge invert text={"All"} />
         </li>
         {data?.genres?.map((genre, i) => (
-          <li key={i}>
+          <li className="inline-flex pr-2 pb-2" key={i}>
             <Badge text={genre.name} />
           </li>
         ))}
