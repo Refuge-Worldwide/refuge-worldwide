@@ -1,7 +1,9 @@
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import Link from "next/link";
 import { Fragment } from "react";
+import useMixcloudPlayer from "../hooks/useMixcloudPlayer";
 import { ShowInterface } from "../types/shared";
+import { getMixcloudKey } from "../util";
 import Badge from "./badge";
 import Date from "./date";
 import Pill from "./pill";
@@ -46,8 +48,20 @@ export default function ShowBody({
     </Fragment>
   );
 
+  const [player] = useMixcloudPlayer();
+
+  const handlePlayShow = () => {
+    const cloudcastKey = getMixcloudKey(mixcloudLink);
+
+    if (player) {
+      player.load(cloudcastKey, true);
+    }
+  };
+
   return (
     <Fragment>
+      <button onClick={handlePlayShow}>Play</button>
+
       {dateAndPlace}
 
       <h1>{title}</h1>

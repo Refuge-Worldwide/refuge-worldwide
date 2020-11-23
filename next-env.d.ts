@@ -12,7 +12,7 @@ interface FooterWidgetOptions {
 
 interface WidgetInterface {
   ready: any;
-  load: () => Promise<void>;
+  load: (cloudcastKey: string, startPlaying?: boolean) => Promise<void>;
   play: () => Promise<void>;
   pause: () => Promise<void>;
   togglePlay: () => Promise<void>;

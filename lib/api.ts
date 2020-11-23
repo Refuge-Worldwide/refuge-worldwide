@@ -179,6 +179,7 @@ export async function getAllShows(preview: boolean): Promise<ShowInterface[]> {
             date
             slug
             location
+            mixcloudLink
             coverImage {
               title
               description
@@ -227,6 +228,7 @@ export async function getShowAndMoreShows(
             date
             slug
             location
+            mixcloudLink
             coverImage {
               title
               description
