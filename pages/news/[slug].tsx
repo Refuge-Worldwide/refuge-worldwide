@@ -1,3 +1,4 @@
+import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import { useRouter } from "next/dist/client/router";
 import ErrorPage from "next/error";
 import Head from "next/head";
@@ -32,6 +33,9 @@ export default function Article({ article, preview }: Page) {
           <SinglePage coverImage={article.coverImage} withBackButton>
             <h1>{article.title}</h1>
             <p>{article.subtitle}</p>
+            <div className="prose">
+              {documentToReactComponents(article?.content?.json)}
+            </div>
           </SinglePage>
         </>
       )}
