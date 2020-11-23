@@ -13,6 +13,7 @@ export default function ShowBody({
   date,
   location,
   content,
+  mixcloudLink,
 }: ShowInterface) {
   const genres = genresCollection.items;
 
@@ -68,11 +69,6 @@ export default function ShowBody({
       </Pill>
 
       <p className="font-medium">{persons}</p>
-
-      <script
-        src="https://widget.mixcloud.com/media/js/footerWidgetApi.js"
-        type="text/javascript"
-      />
     </Fragment>
   );
 }

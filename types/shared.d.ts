@@ -21,6 +21,7 @@ export interface GenreInterface {
 }
 
 export interface ShowInterface {
+  mixcloudLink: string;
   title: string;
   date: string;
   slug: string;

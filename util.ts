@@ -67,3 +67,6 @@ export const formatArtistNames = (data: ArtistInterface[]) => {
 
   return `With ${names.slice(0, 2).join(", ")} and others`;
 };
+
+export const getMixcloudKey = (url: string) =>
+  url.replace("https://www.mixcloud.com/", "");
