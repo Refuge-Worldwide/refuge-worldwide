@@ -348,8 +348,6 @@ export async function getArticleAndMoreArticles(
     preview
   );
 
-  console.log(entry);
-
   return {
     article: extractCollectionItem(entry, "articleCollection"),
   };
