@@ -320,32 +320,35 @@ export async function getArticleAndMoreArticles(
     /* GraphQL */ `
       query {
         articleCollection(
+          limit: 1
           where: { slug: "${slug}" }
           order: date_ASC
           preview: ${preview}
-          limit: 1
         ) {
-          title
-          subtitle
-          articleType
-          date
-          slug
-          location
-          coverImage {
+          items {
             title
-            description
-            url
-            width
-            height
-          }
-          content {
-            json
+            subtitle
+            articleType
+            date
+            slug
+            coverImage {
+              title
+              description
+              url
+              width
+              height
+            }
+            content {
+              json
+            }
           }
         }
       }
     `,
     preview
   );
+
+  console.log(entry);
 
   return {
     article: extractCollectionItem(entry, "articleCollection"),
