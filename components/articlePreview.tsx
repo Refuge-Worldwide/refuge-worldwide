@@ -1,3 +1,4 @@
+import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import Image from "next/image";
 import Link from "next/link";
 import { Fragment } from "react";
@@ -17,6 +18,7 @@ export default function ArticlePreview({
   articleType,
   withType,
   coverImage,
+  content,
 }: ArticlePreview) {
   return (
     <Link href={`/news/${slug}`}>
@@ -52,12 +54,12 @@ export default function ArticlePreview({
             <div className="h-4" />
           )}
 
-          <p className="font-light">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque,
-            et. Suscipit, veniam eligendi. Nisi, in asperiores. Esse
-            necessitatibus neque ducimus id. Officia error voluptatum hic
-            asperiores quam tempora ipsum mollitia?
-          </p>
+          <div className="font-light">
+            {documentToReactComponents({
+              ...content.json,
+              content: content.json.content.slice(0, 1),
+            })}
+          </div>
 
           <div className="h-4" />
 
