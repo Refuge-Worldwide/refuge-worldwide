@@ -1,10 +1,22 @@
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import Link from "next/link";
 import { Arrow } from "../icons/arrow";
-import { ArticleInterface } from "../types/shared";
+import { ArticleInterface, ArticleType } from "../types/shared";
 import Badge from "./badge";
 import Date from "./date";
 import Pill from "./pill";
+
+function getArticleBackgroundColor(type: ArticleType) {
+  let bg: string;
+
+  if (type === "Project") bg = "bg-orange";
+  if (type === "Blog") bg = "bg-blue";
+  if (type === "News") bg = "bg-pink";
+  if (type === "Event") bg = "bg-purple";
+  if (type === "Interview") bg = "bg-green";
+
+  return bg;
+}
 
 export default function FeaturedArticlePreview({
   title,
@@ -14,8 +26,10 @@ export default function FeaturedArticlePreview({
   content,
   articleType,
 }: ArticleInterface) {
+  const articleClassName = getArticleBackgroundColor(articleType);
+
   return (
-    <article className="bg-green">
+    <article className={articleClassName}>
       <header className="border-2">
         <Pill>
           <span className="font-serif">Featured</span>

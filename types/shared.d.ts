@@ -37,7 +37,7 @@ export interface ShowInterface {
   };
 }
 
-enum ArticleType {
+export enum ArticleType {
   Project = "Project",
   Blog = "Blog",
   News = "News",
