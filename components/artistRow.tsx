@@ -11,17 +11,21 @@ export default function ArtistRow({
 }) {
   return (
     <section className="border-b-2 border-black">
-      <Pill>
-        <h2>{alphabet}</h2>
-      </Pill>
+      <div className="p-8">
+        <Pill>
+          <h2 className="px-6 py-3 leading-none">{alphabet}</h2>
+        </Pill>
 
-      <ul className="flex">
-        {artists.map((artist, i) => (
-          <li key={i}>
-            <Artist {...artist} />
-          </li>
-        ))}
-      </ul>
+        <div className="h-8" />
+
+        <ul className="flex flex-wrap -mr-8 -mb-8">
+          {artists.map((artist, i) => (
+            <li key={i} className="pr-8 pb-8">
+              <Artist {...artist} />
+            </li>
+          ))}
+        </ul>
+      </div>
     </section>
   );
 }
