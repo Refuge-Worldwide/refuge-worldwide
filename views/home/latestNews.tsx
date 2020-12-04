@@ -4,7 +4,11 @@ import Pill from "../../components/pill";
 import { Arrow } from "../../icons/arrow";
 import { ArticleInterface } from "../../types/shared";
 
-export default function LatestNews({ news }: { news: ArticleInterface[] }) {
+export default function LatestNews({
+  articles,
+}: {
+  articles: ArticleInterface[];
+}) {
   return (
     <section>
       <div className="px-8 py-10">
@@ -15,7 +19,7 @@ export default function LatestNews({ news }: { news: ArticleInterface[] }) {
         <div className="h-8" />
 
         <ul className="flex flex-wrap">
-          {news.map((article, i) => (
+          {articles.map((article, i) => (
             <li key={i}>
               <ArticlePreview {...article} />
             </li>

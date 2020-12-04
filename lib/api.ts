@@ -359,7 +359,7 @@ export async function getAllArticles(
   return extractCollection(data, "articleCollection");
 }
 
-export async function getLatestNews(
+export async function getLatestArticles(
   preview: boolean
 ): Promise<ArticleInterface[]> {
   const data = await contentful(

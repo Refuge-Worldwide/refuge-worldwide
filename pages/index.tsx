@@ -1,6 +1,6 @@
 import Head from "next/head";
 import Layout from "../components/layout";
-import { getFeaturedShows, getLatestNews } from "../lib/api";
+import { getFeaturedShows, getLatestArticles } from "../lib/api";
 import { ArticleInterface, ShowInterface } from "../types/shared";
 import FeaturedShows from "../views/home/featuredShows";
 import LatestNews from "../views/home/latestNews";
@@ -8,10 +8,14 @@ import LatestNews from "../views/home/latestNews";
 interface Page extends JSX.Element {
   preview: boolean;
   featuredShows: ShowInterface[];
-  latestNews: ArticleInterface[];
+  latestArticles: ArticleInterface[];
 }
 
-export default function HomePage({ preview, featuredShows, latestNews }: Page) {
+export default function HomePage({
+  preview,
+  featuredShows,
+  latestArticles,
+}: Page) {
   return (
     <Layout preview={preview}>
       <Head>
@@ -24,20 +28,17 @@ export default function HomePage({ preview, featuredShows, latestNews }: Page) {
         <h2>SLIDER HERE</h2>
       </section>
 
-      <LatestNews news={latestNews} />
+      <LatestNews articles={latestArticles} />
     </Layout>
   );
 }
 
 export async function getStaticProps({ preview = false }) {
-  const featuredShows = await getFeaturedShows(preview);
-  const latestNews = await getLatestNews(preview);
-
   return {
     props: {
       preview,
-      featuredShows,
-      latestNews,
+      featuredShows: await getFeaturedShows(preview),
+      latestArticles: await getLatestArticles(preview),
     },
   };
 }
