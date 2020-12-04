@@ -4,7 +4,9 @@ class RefugeDocument extends Document {
   render() {
     return (
       <Html lang="en" className="antialiased">
-        <Head />
+        <Head>
+          <link rel="stylesheet" href="https://use.typekit.net/rqu7mun.css" />
+        </Head>
         <body className="text-base font-light">
           <Main />
           <NextScript />

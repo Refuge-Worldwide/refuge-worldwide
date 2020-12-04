@@ -35,7 +35,7 @@ module.exports = {
         "Noto Color Emoji",
       ],
       serif: [
-        "Bely Display",
+        "bely-display",
         "Georgia",
         "Cambria",
         "Times New Roman",
