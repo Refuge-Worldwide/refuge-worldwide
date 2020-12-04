@@ -1,4 +1,5 @@
 import Link from "next/link";
+import ArticlePreview from "../../components/articlePreview";
 import Pill from "../../components/pill";
 import { Arrow } from "../../icons/arrow";
 import { ArticleInterface } from "../../types/shared";
@@ -13,9 +14,11 @@ export default function LatestNews({ news }: { news: ArticleInterface[] }) {
 
         <div className="h-8" />
 
-        <ul>
+        <ul className="flex">
           {news.map((article, i) => (
-            <li key={i}>{article.title}</li>
+            <li key={i}>
+              <ArticlePreview {...article} />
+            </li>
           ))}
         </ul>
 

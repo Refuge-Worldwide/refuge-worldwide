@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Pill from "../../components/pill";
+import ShowPreview from "../../components/showPreview";
 import { Arrow } from "../../icons/arrow";
 import { ShowInterface } from "../../types/shared";
 
@@ -13,9 +14,11 @@ export default function FeaturedShows({ shows }: { shows: ShowInterface[] }) {
 
         <div className="h-8" />
 
-        <ul>
+        <ul className="flex">
           {shows.map((show, i) => (
-            <li key={i}>{show.title}</li>
+            <li key={i}>
+              <ShowPreview {...show} />
+            </li>
           ))}
         </ul>
 
