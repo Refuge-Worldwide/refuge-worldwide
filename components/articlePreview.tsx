@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Fragment } from "react";
 import { Arrow } from "../icons/arrow";
 import { ArticleInterface } from "../types/shared";
 import Badge from "./badge";
@@ -31,7 +32,7 @@ export default function ArticlePreview({
             alt={title}
           />
 
-          <div className="h-3" />
+          <div className="h-4" />
 
           <p>
             <Date dateString={date} formatString={"DD.MM.YYYY"} />
@@ -39,7 +40,17 @@ export default function ArticlePreview({
 
           <h2 className="font-sans">{title}</h2>
 
-          {withType ? <Badge text={articleType} /> : <div className="h-4" />}
+          {withType ? (
+            <Fragment>
+              <div className="h-2" />
+
+              <Badge text={articleType} />
+
+              <div className="h-2" />
+            </Fragment>
+          ) : (
+            <div className="h-4" />
+          )}
 
           <p className="font-light">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque,
