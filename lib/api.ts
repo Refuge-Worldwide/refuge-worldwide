@@ -392,6 +392,44 @@ export async function getLatestArticles(
   return extractCollection(data, "articleCollection");
 }
 
+export async function getFeaturedArticles(
+  preview: boolean
+): Promise<ArticleInterface[]> {
+  const data = await contentful(
+    /* GraphQL */ `
+      query {
+        articleCollection(
+          where: { isFeatured: true }
+          order: date_DESC
+          limit: 3
+          preview: ${preview}
+        ) {
+          items {
+            title
+            subtitle
+            articleType
+            date
+            slug
+            coverImage {
+              title
+              description
+              url
+              width
+              height
+            }
+            content {
+              json
+            }
+          }
+        }
+      }
+    `,
+    preview
+  );
+
+  return extractCollection(data, "articleCollection");
+}
+
 export async function getArticleAndMoreArticles(
   slug: string,
   preview: boolean
