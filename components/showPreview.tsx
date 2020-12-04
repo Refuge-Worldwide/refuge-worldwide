@@ -23,7 +23,8 @@ export default function ShowPreview({
             src={coverImage.url}
             width={340}
             height={190}
-            className="object-cover object-center"
+            objectFit="cover"
+            objectPosition="center"
             alt={title}
           />
 

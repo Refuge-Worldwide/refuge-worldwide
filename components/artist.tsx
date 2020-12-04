@@ -8,10 +8,11 @@ export default function Artist({ name, photo, slug }: ArtistInterface) {
       <a>
         <Image
           key={slug}
-          className="object-cover object-center"
           src={photo.url}
           width={340}
           height={192}
+          objectFit="cover"
+          objectPosition="center"
           alt={name}
         />
         <p>{name}</p>

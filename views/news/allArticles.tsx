@@ -11,7 +11,7 @@ export default function AllArticles({
       <ul className="flex">
         {articles?.map((article, i) => (
           <li key={i}>
-            <ArticlePreview {...article} />
+            <ArticlePreview withType {...article} />
           </li>
         ))}
       </ul>

@@ -18,11 +18,13 @@ export default function SinglePage({
 
       <div>
         <Image
-          className="object-cover object-center"
+          key={coverImage.title}
           src={coverImage.url}
           alt={coverImage.title}
           width={640}
           height={360}
+          objectFit="cover"
+          objectPosition="center"
         />
       </div>
 
