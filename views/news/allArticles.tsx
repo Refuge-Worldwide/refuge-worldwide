@@ -7,8 +7,8 @@ export default function AllArticles({
   articles: ArticleInterface[];
 }) {
   return (
-    <section>
-      <ul className="flex">
+    <section className="p-8">
+      <ul className="grid grid-cols-3 gap-8">
         {articles?.map((article, i) => (
           <li key={i}>
             <ArticlePreview withType {...article} />

@@ -18,7 +18,7 @@ export default function LatestNews({
 
         <div className="h-8" />
 
-        <ul className="flex flex-wrap">
+        <ul className="grid grid-cols-3 gap-8">
           {articles.map((article, i) => (
             <li key={i}>
               <ArticlePreview {...article} />
