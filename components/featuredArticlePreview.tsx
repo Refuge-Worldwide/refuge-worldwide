@@ -1,4 +1,5 @@
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
+import Image from "next/image";
 import Link from "next/link";
 import { Arrow } from "../icons/arrow";
 import { ArticleInterface, ArticleType } from "../types/shared";
@@ -25,12 +26,13 @@ export default function FeaturedArticlePreview({
   slug,
   content,
   articleType,
+  coverImage,
 }: ArticleInterface) {
   const articleClassName = getArticleBackgroundColor(articleType);
 
   return (
-    <article className={articleClassName}>
-      <header className="border-2">
+    <article className={"md:grid grid-cols-10 h-full " + articleClassName}>
+      <header className="col-span-5 2xl:col-span-3 p-4 lg:p-8 border-l-2 border-t-2 border-b-2 ">
         <Pill>
           <span className="font-serif">Featured</span>
         </Pill>
@@ -45,7 +47,7 @@ export default function FeaturedArticlePreview({
 
         <Badge text={articleType} />
 
-        <div>
+        <div className="line-clamp">
           {documentToReactComponents({
             ...content.json,
             content: content.json.content.slice(0, 1),
@@ -59,7 +61,15 @@ export default function FeaturedArticlePreview({
           </a>
         </Link>
       </header>
-      <main className="border-2 bg-white">IMAGE HERE</main>
+
+      <div className="col-span-5 2xl:col-span-7 relative border-l-2 border-t-2 border-b-2 ">
+        <Image
+          src={coverImage.url}
+          objectFit="cover"
+          objectPosition="center"
+          layout="fill"
+        />
+      </div>
     </article>
   );
 }

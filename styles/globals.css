@@ -25,11 +25,8 @@
   }
 
   .carousel {
-    --gutter: 20px;
-
     display: grid;
     grid-auto-columns: 100%;
-    grid-template-rows: minmax(150px, 1fr);
     grid-auto-flow: column;
 
     overflow-x: scroll;
@@ -38,6 +35,16 @@
 
   .carousel > * {
     scroll-snap-align: start;
+  }
+
+  .line-clamp > p {
+    --lines: 4;
+
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+
+    -webkit-line-clamp: var(--lines);
+    overflow: hidden;
   }
 
   .pill {
