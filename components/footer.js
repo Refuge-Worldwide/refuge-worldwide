@@ -39,9 +39,9 @@ export default function Footer() {
               className="inline-flex items-center text-white font-medium space-x-4"
             >
               <span>Go up</span>
-              <div className="mt-1">
+              <span className="mt-1">
                 <Arrow className="transform -rotate-90" size={24} />
-              </div>
+              </span>
             </a>
           </p>
 
