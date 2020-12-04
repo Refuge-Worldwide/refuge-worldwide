@@ -3,14 +3,19 @@ import Layout from "../../components/layout";
 import { getAllArticles, getFeaturedArticles } from "../../lib/api";
 import { ArticleInterface } from "../../types/shared";
 import AllArticles from "../../views/news/allArticles";
-import FeaturedArticle from "../../views/news/featuredArticle";
+import FeaturedArticle from "../../views/news/featuredArticles";
 
 interface Page extends JSX.Element {
   preview: boolean;
   articles: ArticleInterface[];
+  featuredArticles: ArticleInterface[];
 }
 
-export default function NewsPage({ preview, articles }: Page) {
+export default function NewsPage({
+  preview,
+  articles,
+  featuredArticles,
+}: Page) {
   return (
     <Layout preview={preview}>
       <Head>
@@ -19,7 +24,7 @@ export default function NewsPage({ preview, articles }: Page) {
 
       <h1 hidden>News</h1>
 
-      <FeaturedArticle />
+      <FeaturedArticle articles={featuredArticles} />
 
       <AllArticles articles={articles} />
     </Layout>
