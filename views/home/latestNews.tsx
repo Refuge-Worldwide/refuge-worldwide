@@ -1,13 +1,20 @@
 import Link from "next/link";
 import Pill from "../../components/pill";
 import { Arrow } from "../../icons/arrow";
+import { ArticleInterface } from "../../types/shared";
 
-export default function LatestNews() {
+export default function LatestNews({ news }: { news: ArticleInterface[] }) {
   return (
     <section>
       <Pill>
         <h2>News</h2>
       </Pill>
+
+      <ul>
+        {news.map((article, i) => (
+          <li key={i}>{article.title}</li>
+        ))}
+      </ul>
 
       <div className="text-center">
         <Link href="/news">

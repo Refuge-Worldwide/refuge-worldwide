@@ -209,6 +209,53 @@ export async function getAllShows(preview: boolean): Promise<ShowInterface[]> {
   return extractCollection(data, "showCollection");
 }
 
+export async function getFeaturedShows(
+  preview: boolean
+): Promise<ShowInterface[]> {
+  const data = await contentful(
+    /* GraphQL */ `
+      query {
+        showCollection(
+          order: date_DESC
+          where: { isFeatured: true }
+          limit: 15,
+          preview: ${preview}
+        ) {
+          items {
+            title
+            date
+            slug
+            mixcloudLink
+            coverImage {
+              title
+              description
+              url
+              width
+              height
+            }
+            artistsCollection(limit: 9) {
+              items {
+                name
+              }
+            }
+            genresCollection(limit: 9) {
+              items {
+                name
+              }
+            }
+            content {
+              json
+            }
+          }
+        }
+      }
+    `,
+    preview
+  );
+
+  return extractCollection(data, "showCollection");
+}
+
 export async function getShowAndMoreShows(
   slug: string,
   preview: boolean
@@ -218,7 +265,7 @@ export async function getShowAndMoreShows(
       query {
         showCollection(
           where: { slug: "${slug}" }
-          order: date_ASC
+          order: date_DESC
           preview: ${preview}
           limit: 1
         ) {
@@ -285,7 +332,40 @@ export async function getAllArticles(
   const data = await contentful(
     /* GraphQL */ `
       query {
-        articleCollection(order: date_ASC, preview: ${preview}) {
+        articleCollection(order: date_DESC, preview: ${preview}) {
+          items {
+            title
+            subtitle
+            articleType
+            date
+            slug
+            coverImage {
+              title
+              description
+              url
+              width
+              height
+            }
+            content {
+              json
+            }
+          }
+        }
+      }
+    `,
+    preview
+  );
+
+  return extractCollection(data, "articleCollection");
+}
+
+export async function getLatestNews(
+  preview: boolean
+): Promise<ArticleInterface[]> {
+  const data = await contentful(
+    /* GraphQL */ `
+      query {
+        articleCollection(order: date_DESC, limit: 3, preview: ${preview}) {
           items {
             title
             subtitle
@@ -322,7 +402,7 @@ export async function getArticleAndMoreArticles(
         articleCollection(
           limit: 1
           where: { slug: "${slug}" }
-          order: date_ASC
+          order: date_DESC
           preview: ${preview}
         ) {
           items {
