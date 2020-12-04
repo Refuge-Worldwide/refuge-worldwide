@@ -13,10 +13,10 @@ module.exports = {
       medium: 500,
     },
     fontSize: {
-      tiny: "1rem",
-      small: "1.25rem",
-      base: "1.875rem",
-      large: "2.8125rem",
+      tiny: ["1rem", 1],
+      small: ["1.25rem", 1.3],
+      base: ["1.875rem", 1.26],
+      large: ["2.8125rem", 1.1],
     },
     fontFamily: {
       sans: [
@@ -53,6 +53,7 @@ module.exports = {
       red: "#ff0000",
       black: "#000",
       white: "#fff",
+      transparent: "transparent",
     },
     extend: {
       boxShadow: {
