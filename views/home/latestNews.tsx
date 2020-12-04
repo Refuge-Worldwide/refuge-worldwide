@@ -14,7 +14,7 @@ export default function LatestNews({ news }: { news: ArticleInterface[] }) {
 
         <div className="h-8" />
 
-        <ul className="flex">
+        <ul className="flex flex-wrap">
           {news.map((article, i) => (
             <li key={i}>
               <ArticlePreview {...article} />

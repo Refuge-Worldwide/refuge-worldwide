@@ -11,7 +11,7 @@ export default function Navigation() {
           </Link>
         </li>
         <li className="col-span-6">
-          <ul className="flex justify-between">
+          <ul className="md:flex justify-between">
             <li>
               <NavigationLink href="/radio" activeClassName="text-orange">
                 Radio

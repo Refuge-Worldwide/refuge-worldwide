@@ -18,4 +18,11 @@
 
 @tailwind components;
 
+@layer components {
+  .container {
+    @apply mx-auto;
+    max-width: 90rem;
+  }
+}
+
 @tailwind utilities;

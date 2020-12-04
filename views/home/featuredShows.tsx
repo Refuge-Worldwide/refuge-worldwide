@@ -14,7 +14,7 @@ export default function FeaturedShows({ shows }: { shows: ShowInterface[] }) {
 
         <div className="h-8" />
 
-        <ul className="flex">
+        <ul className="flex flex-wrap">
           {shows.map((show, i) => (
             <li key={i}>
               <ShowPreview {...show} />

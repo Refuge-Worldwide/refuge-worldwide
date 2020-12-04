@@ -7,7 +7,7 @@ class RefugeDocument extends Document {
         <Head>
           <link rel="stylesheet" href="https://use.typekit.net/rqu7mun.css" />
         </Head>
-        <body className="text-base font-light">
+        <body className="text-small sm:text-base font-light">
           <Main />
           <NextScript />
         </body>
