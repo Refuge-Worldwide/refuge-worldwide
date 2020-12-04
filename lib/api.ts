@@ -173,7 +173,7 @@ export async function getAllShows(preview: boolean): Promise<ShowInterface[]> {
   const data = await contentful(
     /* GraphQL */ `
       query {
-        showCollection(order: date_ASC, preview: ${preview}) {
+        showCollection(order: date_DESC, preview: ${preview}) {
           items {
             title
             date
