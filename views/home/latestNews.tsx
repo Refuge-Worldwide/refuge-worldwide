@@ -13,7 +13,7 @@ export default function LatestNews({
     <section>
       <div className="px-8 py-10">
         <Pill>
-          <h2 className="px-6 py-3 leading-none">News</h2>
+          <h2>News</h2>
         </Pill>
 
         <div className="h-8" />

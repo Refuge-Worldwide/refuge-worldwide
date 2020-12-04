@@ -39,6 +39,10 @@
   .carousel > * {
     scroll-snap-align: start;
   }
+
+  .pill {
+    height: 3.75rem;
+  }
 }
 
 @tailwind utilities;

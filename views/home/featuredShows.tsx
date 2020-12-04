@@ -9,7 +9,7 @@ export default function FeaturedShows({ shows }: { shows: ShowInterface[] }) {
     <section>
       <div className="px-8 py-10">
         <Pill>
-          <h2 className="px-6 py-3 leading-none">Featured Shows</h2>
+          <h2>Featured Shows</h2>
         </Pill>
 
         <div className="h-8" />

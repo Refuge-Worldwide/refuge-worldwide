@@ -13,7 +13,7 @@ export default function ArtistRow({
     <section className="border-t-2 border-black">
       <div className="p-8">
         <Pill>
-          <h2 className="px-6 py-3 leading-none">{alphabet}</h2>
+          <h2>{alphabet}</h2>
         </Pill>
 
         <div className="h-8" />
