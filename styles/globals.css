@@ -23,6 +23,22 @@
     @apply mx-auto;
     max-width: 90rem;
   }
+
+  .carousel {
+    --gutter: 20px;
+
+    display: grid;
+    grid-auto-columns: 100%;
+    grid-template-rows: minmax(150px, 1fr);
+    grid-auto-flow: column;
+
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+  }
+
+  .carousel > * {
+    scroll-snap-align: start;
+  }
 }
 
 @tailwind utilities;

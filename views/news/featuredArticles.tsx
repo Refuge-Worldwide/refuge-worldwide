@@ -8,7 +8,7 @@ export default function FeaturedArticles({
 }) {
   return (
     <section>
-      <ul>
+      <ul className="carousel">
         {articles.map((article, i) => (
           <li key={i}>
             <FeaturedArticlePreview {...article} />
