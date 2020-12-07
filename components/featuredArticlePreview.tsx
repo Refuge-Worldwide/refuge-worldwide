@@ -37,15 +37,25 @@ export default function FeaturedArticlePreview({
           <span className="font-serif">Featured</span>
         </Pill>
 
+        <div className="h-6" />
+
         <p className="font-medium">
-          <Date dateString={date} />
+          <Date dateString={date} formatString="MMMM DD, YYYY" />
         </p>
+
+        <div className="h-2" />
 
         <h1 className="text-large">{title}</h1>
 
+        <div className="h-2" />
+
         <p className="font-medium">{subtitle}</p>
 
+        <div className="h-6" />
+
         <Badge text={articleType} />
+
+        <div className="h-6" />
 
         <div className="line-clamp">
           {documentToReactComponents({
@@ -53,6 +63,8 @@ export default function FeaturedArticlePreview({
             content: content.json.content.slice(0, 1),
           })}
         </div>
+
+        <div className="h-6" />
 
         <Link href={`/news/${slug}`}>
           <a className="inline-flex items-center space-x-5 font-medium leading-none">
