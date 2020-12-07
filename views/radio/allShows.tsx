@@ -1,10 +1,10 @@
 import Badge from "../../components/badge";
 import Pill from "../../components/pill";
 import ShowPreview from "../../components/showPreview";
-import useShowsAndGenres from "../../hooks/useShowsAndGenres";
+import useFilteredShows from "../../hooks/useFilteredShows";
 
 export default function AllShows() {
-  const { data } = useShowsAndGenres(false);
+  const { data } = useFilteredShows();
 
   return (
     <section>
