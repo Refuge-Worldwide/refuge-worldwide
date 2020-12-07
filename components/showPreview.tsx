@@ -18,23 +18,29 @@ export default function ShowPreview({
     <Link href={`/radio/${slug}`}>
       <a>
         <article className="text-small">
-          <Image
-            key={slug}
-            src={coverImage.url}
-            width={340}
-            height={190}
-            objectFit="cover"
-            objectPosition="center"
-            alt={title}
-          />
+          <div className="flex">
+            <Image
+              key={slug}
+              src={coverImage.url}
+              width={340}
+              height={190}
+              objectFit="cover"
+              objectPosition="center"
+              alt={title}
+            />
+          </div>
+
+          <div className="h-2" />
 
           <h2 className="font-sans font-medium truncate">{title}</h2>
 
           <p className="truncate">{artists}</p>
 
-          <ul className="flex">
+          <div className="h-2" />
+
+          <ul className="w-full flex flex-wrap leading-none -mr-2 -mb-2">
             {genres.map((genre, i) => (
-              <li key={i}>
+              <li key={i} className="inline-flex pr-2 pb-2">
                 <Badge text={genre.name} />
               </li>
             ))}
