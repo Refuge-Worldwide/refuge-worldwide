@@ -365,7 +365,12 @@ export async function getLatestArticles(
   const data = await contentful(
     /* GraphQL */ `
       query {
-        articleCollection(order: date_DESC, limit: 3, preview: ${preview}) {
+        articleCollection(
+          order: date_DESC
+          where: { isFeatured: false }
+          limit: 3
+          preview: ${preview}
+        ) {
           items {
             title
             subtitle
