@@ -7,9 +7,7 @@ import useGenres from "../../hooks/useGenres";
 
 export default function AllShows() {
   const { data: genres } = useGenres();
-
   const { filter, filterSet } = useGenreFilter();
-
   const { data: shows } = useFilteredShows(filter);
 
   return (
