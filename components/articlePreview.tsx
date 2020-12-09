@@ -1,4 +1,8 @@
-import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
+import {
+  documentToReactComponents,
+  Options,
+} from "@contentful/rich-text-react-renderer";
+import { Document, INLINES } from "@contentful/rich-text-types";
 import Image from "next/image";
 import Link from "next/link";
 import { Fragment } from "react";
@@ -20,6 +24,19 @@ export default function ArticlePreview({
   coverImage,
   content,
 }: ArticlePreview) {
+  const excerpt: Document = {
+    ...content.json,
+    content: content.json.content
+      .filter((el) => el.nodeType === "paragraph")
+      .slice(0, 1),
+  };
+
+  const richTextOptions: Options = {
+    renderNode: {
+      [INLINES.HYPERLINK]: (_, children) => children,
+    },
+  };
+
   return (
     <Link href={`/news/${slug}`}>
       <a>
@@ -55,10 +72,7 @@ export default function ArticlePreview({
           )}
 
           <div className="font-light">
-            {documentToReactComponents({
-              ...content.json,
-              content: content.json.content.slice(0, 1),
-            })}
+            {documentToReactComponents(excerpt, richTextOptions)}
           </div>
 
           <div className="h-4" />
