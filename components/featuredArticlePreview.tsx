@@ -1,6 +1,7 @@
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import Image from "next/image";
 import Link from "next/link";
+import { Fragment } from "react";
 import { Arrow } from "../icons/arrow";
 import { ArticleInterface, ArticleType } from "../types/shared";
 import Badge from "./badge";
@@ -24,7 +25,6 @@ export default function FeaturedArticlePreview({
   subtitle,
   date,
   slug,
-  content,
   articleType,
   coverImage,
 }: ArticleInterface) {
@@ -34,7 +34,7 @@ export default function FeaturedArticlePreview({
     <article className={"md:grid grid-cols-10 h-full " + articleClassName}>
       <header className="col-span-5 2xl:col-span-3 p-4 lg:p-8 border-l-2 border-t-2 border-b-2 ">
         <Pill>
-          <span className="font-serif">Featured</span>
+          <span className="font-serif">{articleType}</span>
         </Pill>
 
         <div className="h-6" />
@@ -50,19 +50,6 @@ export default function FeaturedArticlePreview({
         <div className="h-2" />
 
         <p className="font-medium">{subtitle}</p>
-
-        <div className="h-6" />
-
-        <Badge text={articleType} />
-
-        <div className="h-6" />
-
-        <div className="line-clamp">
-          {documentToReactComponents({
-            ...content.json,
-            content: content.json.content.slice(0, 1),
-          })}
-        </div>
 
         <div className="h-6" />
 

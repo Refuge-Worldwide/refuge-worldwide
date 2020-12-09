@@ -11,7 +11,7 @@ export default function LatestNews({
 }) {
   return (
     <section>
-      <div className="px-8 py-10">
+      <div className="px-8 pt-12 pb-20">
         <Pill>
           <h2>News</h2>
         </Pill>
