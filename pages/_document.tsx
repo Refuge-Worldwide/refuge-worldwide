@@ -5,6 +5,12 @@ class RefugeDocument extends Document {
     return (
       <Html lang="en" className="antialiased">
         <Head>
+          <link
+            rel="preload"
+            href="https://use.typekit.net/rqu7mun.css"
+            as="style"
+          />
+
           <link rel="stylesheet" href="https://use.typekit.net/rqu7mun.css" />
         </Head>
         <body className="text-small sm:text-base font-light">
