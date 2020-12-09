@@ -17,7 +17,7 @@ export default function SupportPage({ preview, data }: Page) {
       </Head>
 
       <SinglePage coverImage={data.coverImage}>
-        <div className="prose">
+        <div className="prose sm:prose-lg">
           {documentToReactComponents(data?.content?.json)}
         </div>
       </SinglePage>

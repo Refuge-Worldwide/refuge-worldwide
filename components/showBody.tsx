@@ -70,7 +70,9 @@ export default function ShowBody({
 
       <p className="font-medium">With {persons}</p>
 
-      <div className="prose">{documentToReactComponents(content?.json)}</div>
+      <div className="prose sm:prose-lg">
+        {documentToReactComponents(content?.json)}
+      </div>
 
       <Pill>
         <span className="font-serif">Persons</span>
