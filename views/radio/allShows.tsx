@@ -42,9 +42,9 @@ export default function AllShows() {
 
         <div className="h-4" />
 
-        <ul className="flex flex-wrap -mr-12 -mb-12">
+        <ul className="flex flex-wrap -mr-10 -mb-10">
           {shows?.map((show, i) => (
-            <li key={i} className="pr-12 pb-12">
+            <li key={i} className="pr-10 pb-10">
               <ShowPreview {...show} />
             </li>
           ))}
