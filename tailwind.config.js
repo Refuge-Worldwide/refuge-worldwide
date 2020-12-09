@@ -63,11 +63,35 @@ module.exports = {
       borderWidth: {
         1.5: "1.5px",
       },
+      typography: (theme) => ({
+        DEFAULT: {
+          css: {
+            color: theme("colors.black"),
+            fontSize: "1.25rem",
+            strong: {
+              fontWeight: theme("fontWeight.medium"),
+            },
+            a: {
+              fontWeight: theme("fontWeight.medium"),
+            },
+          },
+        },
+        lg: {
+          css: {
+            fontSize: "1.875rem",
+          },
+        },
+      }),
     },
   },
   corePlugins: {
     container: false,
   },
   variants: {},
-  plugins: [require("@tailwindcss/typography"), require("@tailwindcss/forms")],
+  plugins: [
+    require("@tailwindcss/typography")({
+      modifiers: ["lg"],
+    }),
+    require("@tailwindcss/forms"),
+  ],
 };
