@@ -36,9 +36,9 @@ export default function AllShows() {
 
         <div className="h-4" />
 
-        <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
-          {shows?.map((show, i) => (
-            <li key={i}>
+        <ul className="flex flex-wrap -mr-12 -mb-12">
+          {shows.map((show, i) => (
+            <li key={i} className="pr-12 pb-12">
               <ShowPreview {...show} />
             </li>
           ))}
