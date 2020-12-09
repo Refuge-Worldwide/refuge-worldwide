@@ -7,22 +7,22 @@ import { ShowInterface } from "../../types/shared";
 export default function FeaturedShows({ shows }: { shows: ShowInterface[] }) {
   return (
     <section>
-      <div className="px-8 py-10">
+      <div className="px-8 pt-12 pb-20">
         <Pill>
           <h2>Featured Shows</h2>
         </Pill>
 
         <div className="h-8" />
 
-        <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+        <ul className="flex flex-wrap -mr-12 -mb-12">
           {shows.map((show, i) => (
-            <li key={i}>
+            <li key={i} className="pr-12 pb-12">
               <ShowPreview {...show} />
             </li>
           ))}
         </ul>
 
-        <div className="h-16" />
+        <div className="h-20" />
 
         <div className="text-center">
           <Link href="/radio">

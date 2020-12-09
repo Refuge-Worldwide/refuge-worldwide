@@ -17,7 +17,7 @@ export default function ShowPreview({
   return (
     <Link href={`/radio/${slug}`}>
       <a>
-        <article className="text-small">
+        <article className="text-small show-preview">
           <div className="flex">
             <Image
               key={slug}
@@ -38,8 +38,8 @@ export default function ShowPreview({
 
           <div className="h-2" />
 
-          <ul className="w-full flex flex-wrap leading-none -mr-2 -mb-2">
-            {genres.map((genre, i) => (
+          <ul className="flex flex-wrap leading-none -mr-2 -mb-2">
+            {genres.slice(0, 2).map((genre, i) => (
               <li key={i} className="inline-flex pr-2 pb-2">
                 <Badge text={genre.name} />
               </li>
