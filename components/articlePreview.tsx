@@ -63,7 +63,11 @@ export default function ArticlePreview({
             <Fragment>
               <div className="h-2" />
 
-              <Badge text={articleType} />
+              <ul className="flex flex-wrap">
+                <li>
+                  <Badge text={articleType} />
+                </li>
+              </ul>
 
               <div className="h-2" />
             </Fragment>
