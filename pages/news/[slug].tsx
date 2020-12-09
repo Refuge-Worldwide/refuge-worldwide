@@ -31,9 +31,15 @@ export default function Article({ article, preview }: Page) {
           </Head>
 
           <SinglePage coverImage={article.coverImage} withBackButton>
-            <h1>{article.title}</h1>
-            <p>{article.subtitle}</p>
-            <div className="prose">
+            <h1 className="text-base sm:text-large">{article.title}</h1>
+
+            <div className="h-4" />
+
+            <p className="font-medium">{article.subtitle}</p>
+
+            <div className="h-6" />
+
+            <div className="prose sm:prose-lg">
               {documentToReactComponents(article?.content?.json)}
             </div>
           </SinglePage>
