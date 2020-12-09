@@ -5,6 +5,7 @@ class RefugeDocument extends Document {
     return (
       <Html lang="en" className="antialiased">
         <Head>
+          <link rel="dns-prefetch" href="https://use.typekit.net/" />
           <link
             rel="preload"
             href="https://use.typekit.net/rqu7mun.css"
