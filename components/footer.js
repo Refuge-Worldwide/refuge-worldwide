@@ -7,7 +7,11 @@ export default function Footer() {
       <div className="pt-28 pb-20">
         <div className="container md:grid items-center grid-cols-2">
           <div className="mb-6 md:mb-0">
-            <img className="mx-auto" src="/images/footer-smile.svg" alt="" />
+            <img
+              className="mx-auto h-64 w-auto"
+              src="/images/footer-smile.svg"
+              alt=""
+            />
           </div>
           <div>
             <div className="space-y-7">
