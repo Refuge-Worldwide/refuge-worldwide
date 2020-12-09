@@ -14,18 +14,24 @@ export default function SinglePage({
 }) {
   return (
     <Fragment>
-      {withBackButton && <BackButton />}
+      <div className="relative">
+        {withBackButton && (
+          <div className="absolute left-4 sm:left-8 top-3 sm:top-4 z-10">
+            <BackButton />
+          </div>
+        )}
 
-      <div>
-        <Image
-          key={coverImage.title}
-          src={coverImage.url}
-          alt={coverImage.title}
-          width={640}
-          height={360}
-          objectFit="cover"
-          objectPosition="center"
-        />
+        <div>
+          <Image
+            key={coverImage.title}
+            src={coverImage.url}
+            alt={coverImage.title}
+            width={640}
+            height={360}
+            objectFit="cover"
+            objectPosition="center"
+          />
+        </div>
       </div>
 
       <div>{children}</div>
