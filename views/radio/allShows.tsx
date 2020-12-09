@@ -21,13 +21,19 @@ export default function AllShows() {
 
         <ul className="w-full flex flex-wrap leading-none -mr-2 -mb-2">
           <li className="inline-flex pr-2 pb-2">
-            <button onClick={() => filterSet("All")}>
+            <button
+              className="focus:outline-none focus:ring-4 rounded-full"
+              onClick={() => filterSet("All")}
+            >
               <Badge invert={filter === "All"} text={"All"} />
             </button>
           </li>
           {genres?.map((genre, i) => (
             <li className="inline-flex pr-2 pb-2" key={i}>
-              <button onClick={() => filterSet(genre)}>
+              <button
+                className="focus:outline-none focus:ring-4 rounded-full"
+                onClick={() => filterSet(genre)}
+              >
                 <Badge invert={filter === genre} text={genre} />
               </button>
             </li>
@@ -37,7 +43,7 @@ export default function AllShows() {
         <div className="h-4" />
 
         <ul className="flex flex-wrap -mr-12 -mb-12">
-          {shows.map((show, i) => (
+          {shows?.map((show, i) => (
             <li key={i} className="pr-12 pb-12">
               <ShowPreview {...show} />
             </li>
