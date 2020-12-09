@@ -68,6 +68,7 @@ module.exports = {
           css: {
             color: theme("colors.black"),
             fontSize: "1.25rem",
+            lineHeight: "1.3",
             strong: {
               fontWeight: theme("fontWeight.medium"),
             },
@@ -79,6 +80,7 @@ module.exports = {
         lg: {
           css: {
             fontSize: "1.875rem",
+            lineHeight: "1.26",
           },
         },
       }),
