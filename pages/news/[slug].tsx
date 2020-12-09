@@ -2,6 +2,7 @@ import { documentToReactComponents } from "@contentful/rich-text-react-renderer"
 import { useRouter } from "next/dist/client/router";
 import ErrorPage from "next/error";
 import Head from "next/head";
+import ArticleBody from "../../components/articleBody";
 import Layout from "../../components/layout";
 import SinglePage from "../../components/singlePage";
 import { getAllArticles, getArticleAndMoreArticles } from "../../lib/api";
@@ -31,17 +32,7 @@ export default function Article({ article, preview }: Page) {
           </Head>
 
           <SinglePage coverImage={article.coverImage} withBackButton>
-            <h1 className="text-base sm:text-large">{article.title}</h1>
-
-            <div className="h-4" />
-
-            <p className="font-medium">{article.subtitle}</p>
-
-            <div className="h-6" />
-
-            <div className="prose sm:prose-lg">
-              {documentToReactComponents(article?.content?.json)}
-            </div>
+            <ArticleBody {...article} />
           </SinglePage>
         </>
       )}
