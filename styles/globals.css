@@ -32,6 +32,13 @@
     overflow-y: visible;
     overflow-x: scroll;
     scroll-snap-type: x mandatory;
+
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .carousel::-webkit-scrollbar {
+    display: none;
   }
 
   .carousel > * {
