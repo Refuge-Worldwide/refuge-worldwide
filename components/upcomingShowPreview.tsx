@@ -33,7 +33,7 @@ export default function UpcomingShowPreview({
       <div className="h-4" />
 
       <div className="flex">
-        <Pill small>
+        <Pill size="small">
           <span className="font-serif text-tiny sm:text-small">
             <Date dateString={date} formatString="MMMM DD" />
           </span>

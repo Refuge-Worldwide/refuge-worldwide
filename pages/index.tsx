@@ -8,6 +8,7 @@ import {
 import { ArticleInterface, ShowInterface } from "../types/shared";
 import FeaturedShows from "../views/home/featuredShows";
 import LatestNews from "../views/home/latestNews";
+import NextUp from "../views/home/nextUp";
 import FeaturedArticles from "../views/news/featuredArticles";
 
 interface Page extends JSX.Element {
@@ -28,6 +29,8 @@ export default function HomePage({
       <Head>
         <title>Refuge Worldwide</title>
       </Head>
+
+      <NextUp />
 
       <FeaturedShows shows={featuredShows} />
 

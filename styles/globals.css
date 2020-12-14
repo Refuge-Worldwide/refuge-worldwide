@@ -55,19 +55,22 @@
     overflow: hidden;
   }
 
-  .pill {
+  .pill-large {
     height: 2.75rem;
   }
-  @screen sm {
-    .pill {
-      height: 3.75rem;
-    }
+  .pill-medium {
+    height: 2.5rem;
   }
-
   .pill-small {
     height: 2.125rem;
   }
   @screen sm {
+    .pill-large {
+      height: 3.75rem;
+    }
+    .pill-medium {
+      height: 3.125rem;
+    }
     .pill-small {
       height: 2.5rem;
     }
