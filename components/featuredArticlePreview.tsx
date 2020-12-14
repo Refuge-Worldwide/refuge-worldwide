@@ -1,10 +1,7 @@
-import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import Image from "next/image";
 import Link from "next/link";
-import { Fragment } from "react";
 import { Arrow } from "../icons/arrow";
 import { ArticleInterface, ArticleType } from "../types/shared";
-import Badge from "./badge";
 import Date from "./date";
 import Pill from "./pill";
 
