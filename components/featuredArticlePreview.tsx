@@ -66,6 +66,8 @@ export default function FeaturedArticlePreview({
           objectFit="cover"
           objectPosition="center"
           layout="fill"
+          loading="eager"
+          priority
         />
       </div>
     </article>
