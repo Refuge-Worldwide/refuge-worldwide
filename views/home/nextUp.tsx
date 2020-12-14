@@ -6,7 +6,7 @@ export default function NextUp() {
       <div className="flex">
         <div className="py-4 px-8 border-r-2">
           <Pill size="medium">
-            <h2>next up</h2>
+            <h2>Today</h2>
           </Pill>
         </div>
       </div>
