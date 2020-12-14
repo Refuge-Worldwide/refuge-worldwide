@@ -4,14 +4,14 @@ import NavigationLink from "./navigationLink";
 export default function Navigation() {
   return (
     <nav className="text-black">
-      <ul className="grid grid-cols-10">
-        <li className="col-span-4">
+      <ul className="flex">
+        <li>
           <Link href="/">
             <a>Refuge Worldwide</a>
           </Link>
         </li>
-        <li className="col-span-6">
-          <ul className="md:flex justify-between">
+        <li className="flex-1">
+          <ul className="md:flex justify-end space-x-6 lg:space-x-8 xl:space-x-14">
             <li>
               <NavigationLink href="/radio" activeClassName="text-orange">
                 Radio
