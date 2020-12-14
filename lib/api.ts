@@ -122,7 +122,7 @@ export async function getAllArtists(
   const data = await contentful(
     /* GraphQL */ `
       query {
-        artistCollection(order: name_ASC, preview: ${preview}) {
+        artistCollection(order: name_ASC, preview: ${preview}, limit: 20) {
           items {
             name
             slug

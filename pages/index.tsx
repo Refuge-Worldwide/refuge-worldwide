@@ -46,5 +46,6 @@ export async function getStaticProps({ preview = false }) {
       latestArticles: await getLatestArticles(preview),
       featuredArticles: await getFeaturedArticles(preview),
     },
+    revalidate: 60,
   };
 }
