@@ -6,17 +6,17 @@ const getFilteredShows = (
   _: any,
   filter: string,
   allShows: {
-    upcoming: ShowInterface[];
-    past: ShowInterface[];
+    next: ShowInterface[];
+    previous: ShowInterface[];
   }
 ) => {
-  if (filter === "All") return allShows.past;
+  if (filter === "All") return allShows.previous;
 
   const includesGenreFilter = (show: ShowInterface) =>
     show.genresCollection.items.filter((genre) => genre.name === filter)
       .length > 0;
 
-  return allShows.past.filter(includesGenreFilter);
+  return allShows.previous.filter(includesGenreFilter);
 };
 
 export default function useFilteredShows(filter: string, preview = false) {

@@ -5,11 +5,11 @@ import useShows from "./useShows";
 async function getGenres(
   _: any,
   allShows: {
-    past: ShowInterface[];
-    upcoming: ShowInterface[];
+    previous: ShowInterface[];
+    next: ShowInterface[];
   }
 ) {
-  const allShowGenres = allShows.past
+  const allShowGenres = allShows.previous
     .flatMap((show) => show.genresCollection.items)
     .map((genre) => genre.name);
 
