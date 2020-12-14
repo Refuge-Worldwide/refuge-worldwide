@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { ShowInterface } from "../types/shared";
 import { formatArtistNames } from "../util";
 import Badge from "./badge";
+import Date from "./date";
 
 export default function ShowPreview({
   slug,
@@ -10,6 +11,7 @@ export default function ShowPreview({
   coverImage,
   artistsCollection,
   genresCollection,
+  date,
 }: ShowInterface) {
   const genres = genresCollection.items;
   const artists = formatArtistNames(artistsCollection.items);
@@ -34,7 +36,9 @@ export default function ShowPreview({
 
           <h2 className="font-sans font-medium truncate">{title}</h2>
 
-          <p className="truncate">{artists}</p>
+          <p>
+            <Date dateString={date} formatString="MMMM DD, YYYY" />
+          </p>
 
           <div className="h-2" />
 
