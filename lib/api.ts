@@ -122,7 +122,7 @@ export async function getAllArtists(
   const data = await contentful(
     /* GraphQL */ `
       query {
-        artistCollection(order: name_ASC, preview: ${preview}, limit: 20) {
+        artistCollection(order: name_ASC, preview: ${preview}, limit: 50) {
           items {
             name
             slug
@@ -174,7 +174,7 @@ export async function getAllShows(preview: boolean): Promise<ShowInterface[]> {
   const data = await contentful(
     /* GraphQL */ `
       query {
-        showCollection(order: date_DESC, preview: ${preview}, limit: 20) {
+        showCollection(order: date_DESC, preview: ${preview}, limit: 50) {
           items {
             title
             date
