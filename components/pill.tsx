@@ -11,10 +11,14 @@ export default function Pill({
 }) {
   const className = cn(
     "inline-flex px-4 sm:px-6 items-center border-2 rounded-full leading-none",
-    `pill-${size}`,
     invert
       ? "bg-black text-white border-white shadow-pill-white"
-      : "bg-white text-black border-black shadow-pill-black"
+      : "bg-white text-black border-black shadow-pill-black",
+    {
+      "pill-small": size === "small",
+      "pill-medium": size === "medium",
+      "pill-large": size === "large",
+    }
   );
 
   return <div className={className}>{children}</div>;
