@@ -51,6 +51,9 @@
   .pill {
     height: 3.75rem;
   }
+  .pill-small {
+    height: 2.5rem;
+  }
 
   .show-preview {
     max-width: 340px;

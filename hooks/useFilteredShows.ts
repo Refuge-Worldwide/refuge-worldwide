@@ -5,15 +5,18 @@ import useShows from "./useShows";
 const getFilteredShows = (
   _: any,
   filter: string,
-  allShows: ShowInterface[]
+  allShows: {
+    upcoming: ShowInterface[];
+    past: ShowInterface[];
+  }
 ) => {
-  if (filter === "All") return allShows;
+  if (filter === "All") return allShows.past;
 
   const includesGenreFilter = (show: ShowInterface) =>
     show.genresCollection.items.filter((genre) => genre.name === filter)
       .length > 0;
 
-  return allShows.filter(includesGenreFilter);
+  return allShows.past.filter(includesGenreFilter);
 };
 
 export default function useFilteredShows(filter: string, preview = false) {
