@@ -7,15 +7,15 @@ async function getShows(_: any, preview: boolean) {
 
   const shows = await getAllShows(preview);
 
-  const next = shows.filter(
+  const upcoming = shows.filter(
     (show) => dayjs(show.date).isAfter(today) && show.isFeatured
   );
 
-  const previous = shows.filter((show) => dayjs(show.date).isBefore(today));
+  const past = shows.filter((show) => dayjs(show.date).isBefore(today));
 
   return {
-    next,
-    previous,
+    upcoming,
+    past,
   };
 }
 
