@@ -9,10 +9,10 @@ export default function useIntersect({
   rootMargin?: string;
   threshold: number | number[];
 }) {
-  const [entry, updateEntry] = useState({});
-  const [node, setNode] = useState(null);
+  const [entry, updateEntry] = useState<IntersectionObserverEntry>(null);
+  const [node, setNode] = useState<Element>(null);
 
-  const observer = useRef(null);
+  const observer = useRef<IntersectionObserver>(null);
 
   useEffect(() => {
     if (observer.current) observer.current.disconnect();
@@ -33,5 +33,5 @@ export default function useIntersect({
     return () => currentObserver.disconnect();
   }, [node, root, rootMargin, threshold]);
 
-  return [setNode, entry];
+  return { setNode, entry };
 }
