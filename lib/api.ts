@@ -1,4 +1,5 @@
 import type { Document } from "@contentful/rich-text-types";
+import dayjs from "dayjs";
 import type {
   ArticleInterface,
   ArtistInterface,
@@ -253,7 +254,13 @@ export async function getFeaturedShows(
     preview
   );
 
-  return extractCollection(data, "showCollection");
+  const featuredShows = extractCollection(data, "showCollection");
+
+  const pastFeaturedShows = featuredShows.filter((show) =>
+    dayjs(show.date).isBefore(dayjs())
+  );
+
+  return pastFeaturedShows;
 }
 
 export async function getShowAndMoreShows(
