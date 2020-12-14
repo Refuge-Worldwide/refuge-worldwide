@@ -56,10 +56,21 @@
   }
 
   .pill {
-    height: 3.75rem;
+    height: 2.75rem;
   }
+  @screen sm {
+    .pill {
+      height: 3.75rem;
+    }
+  }
+
   .pill-small {
-    height: 2.5rem;
+    height: 2.125rem;
+  }
+  @screen sm {
+    .pill-small {
+      height: 2.5rem;
+    }
   }
 
   .show-preview {

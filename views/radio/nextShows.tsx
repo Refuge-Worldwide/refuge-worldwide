@@ -8,12 +8,12 @@ export default function NextShows() {
 
   return (
     <section className="bg-orange border-2">
-      <div className="p-8">
+      <div className="p-4 sm:p-8">
         <Pill>
           <h2>Next Shows</h2>
         </Pill>
 
-        <div className="h-8" />
+        <div className="h-5 sm:h-8" />
 
         <ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
           {data?.upcoming?.slice(0, 3)?.map((show, i) => (

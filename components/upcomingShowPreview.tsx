@@ -18,7 +18,7 @@ export default function UpcomingShowPreview({
 
   return (
     <article>
-      <div className="flex">
+      <div className="flex w-full">
         <Image
           key={slug}
           src={coverImage.url}
@@ -30,11 +30,11 @@ export default function UpcomingShowPreview({
         />
       </div>
 
-      <div className="h-5" />
+      <div className="h-4" />
 
       <div className="flex">
         <Pill small>
-          <span className="font-serif text-small">
+          <span className="font-serif text-tiny sm:text-small">
             <Date dateString={date} formatString="MMMM DD" />
           </span>
         </Pill>
