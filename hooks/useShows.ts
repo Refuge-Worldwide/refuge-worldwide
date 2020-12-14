@@ -7,11 +7,16 @@ async function getShows(_: any, preview: boolean) {
 
   const shows = await getAllShows(preview);
 
-  const upcoming = shows.filter((show) => dayjs(show.date).isAfter(today));
+  const upcoming = shows.filter(
+    (show) => dayjs(show.date).isAfter(today) && show.isFeatured
+  );
 
   const past = shows.filter((show) => dayjs(show.date).isBefore(today));
 
-  return { upcoming, past };
+  return {
+    upcoming,
+    past,
+  };
 }
 
 export default function useShows(preview = false) {

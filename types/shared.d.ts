@@ -26,6 +26,7 @@ export interface ShowInterface {
   date: string;
   slug: string;
   coverImage: CoverImage;
+  isFeatured: boolean;
   artistsCollection: {
     items: ArtistInterface[];
   };

@@ -1,4 +1,3 @@
-import { list } from "postcss";
 import Pill from "../../components/pill";
 import UpcomingShowPreview from "../../components/upcomingShowPreview";
 import useShows from "../../hooks/useShows";
