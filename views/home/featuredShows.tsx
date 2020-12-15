@@ -14,7 +14,7 @@ export default function FeaturedShows({ shows }: { shows: ShowInterface[] }) {
 
         <div className="h-5 sm:h-8" />
 
-        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-y-10">
+        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-y-10 sm:gap-8">
           {shows.map((show, i) => (
             <li key={i}>
               <ShowPreview {...show} />

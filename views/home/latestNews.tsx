@@ -18,7 +18,7 @@ export default function LatestNews({
 
         <div className="h-8" />
 
-        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-10">
+        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
           {articles.map((article, i) => (
             <li key={i}>
               <ArticlePreview {...article} />
