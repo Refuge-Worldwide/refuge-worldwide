@@ -72,3 +72,11 @@ export const getMixcloudKey = (url: string) =>
   url.replace("https://www.mixcloud.com", "");
 
 export const isServer = typeof window === "undefined";
+
+/**
+ * Sorting functions for Arrays
+ */
+export const sort = {
+  alpha: (a: string, b: string) =>
+    a.localeCompare(b, "en", { sensitivity: "base" }),
+};

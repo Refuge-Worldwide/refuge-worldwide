@@ -1,5 +1,6 @@
 import useSWR from "swr";
 import { ShowInterface } from "../types/shared";
+import { sort } from "../util";
 import useShows from "./useShows";
 
 async function getGenres(
@@ -13,7 +14,7 @@ async function getGenres(
     .flatMap((show) => show.genresCollection.items)
     .map((genre) => genre.name);
 
-  const uniqueGenres = Array.from(new Set(allShowGenres));
+  const uniqueGenres = Array.from(new Set(allShowGenres)).sort(sort.alpha);
 
   return uniqueGenres;
 }
