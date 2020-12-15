@@ -1,6 +1,7 @@
 import Head from "next/head";
 import ArtistRow from "../../components/artistRow";
 import Layout from "../../components/layout";
+import Pill from "../../components/pill";
 import { getAllArtists } from "../../lib/api";
 import type { ArtistInterface } from "../../types/shared";
 import { sortAndGroup } from "../../util";
@@ -19,7 +20,11 @@ export default function ArtistsPage({ allArtists, preview }: Page) {
         <title>Artists</title>
       </Head>
 
-      <h1 hidden>Artists</h1>
+      <section className="block sm:hidden p-4 border-t-2">
+        <Pill outline>
+          <h1>Artists A-Z</h1>
+        </Pill>
+      </section>
 
       {sections.map((section, i) => (
         <ArtistRow key={i} {...section} />
