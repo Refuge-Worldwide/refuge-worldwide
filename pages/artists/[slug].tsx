@@ -4,14 +4,16 @@ import Head from "next/head";
 import Layout from "../../components/layout";
 import SinglePage from "../../components/singlePage";
 import { getAllArtists, getArtistAndMoreShows } from "../../lib/api";
-import { ArtistInterface } from "../../types/shared";
+import { ArtistInterface, ShowInterface } from "../../types/shared";
+import RelatedShows from "../../views/artists/relatedShows";
 
 interface Page extends JSX.Element {
   artist: ArtistInterface;
+  relatedShows?: ShowInterface[];
   preview: boolean;
 }
 
-export default function Artist({ artist, preview }: Page) {
+export default function Artist({ artist, relatedShows, preview }: Page) {
   const router = useRouter();
 
   if (!router.isFallback && !artist) {
@@ -30,8 +32,12 @@ export default function Artist({ artist, preview }: Page) {
           </Head>
 
           <SinglePage coverImage={artist?.photo} withBackButton>
-            <h1>{artist?.name}</h1>
+            <h1 className="text-base sm:text-large text-center">
+              {artist.name}
+            </h1>
           </SinglePage>
+
+          {relatedShows?.length > 0 && <RelatedShows shows={relatedShows} />}
         </>
       )}
     </Layout>
@@ -45,6 +51,7 @@ export async function getStaticProps({ params, preview = false }) {
     props: {
       preview,
       artist: data?.artist,
+      relatedShows: data?.relatedShows,
     },
   };
 }

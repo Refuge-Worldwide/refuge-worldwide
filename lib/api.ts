@@ -162,7 +162,12 @@ export async function getAllArtists(
 export async function getArtistAndMoreShows(
   slug: string,
   preview: boolean
-): Promise<{ artist: ArtistInterface }> {
+): Promise<{
+  artist: ArtistInterface;
+  relatedShows: ShowInterface[];
+}> {
+  const today = dayjs();
+
   const entry = await contentful(/* GraphQL */ `
     query {
       artistCollection(where: { slug: "${slug}" }, limit: 1, preview: ${preview}) {
@@ -181,8 +186,21 @@ export async function getArtistAndMoreShows(
     }
   `);
 
+  const allShows = await getAllShows(preview);
+
+  const relatedShows = allShows.filter((show) => {
+    const isRelatedArtistFilter =
+      show.artistsCollection.items.filter((artist) => artist.slug === slug)
+        .length > 0;
+
+    const isPastFilter = dayjs(show.date).isBefore(today);
+
+    return isRelatedArtistFilter && isPastFilter;
+  });
+
   return {
     artist: extractCollectionItem(entry, "artistCollection"),
+    relatedShows,
   };
 }
 
@@ -207,6 +225,7 @@ export async function getAllShows(preview: boolean): Promise<ShowInterface[]> {
             artistsCollection(limit: 9) {
               items {
                 name
+                slug
               }
             }
             genresCollection(limit: 9) {
@@ -255,6 +274,7 @@ export async function getFeaturedShows(
             artistsCollection(limit: 9) {
               items {
                 name
+                slug
               }
             }
             genresCollection(limit: 9) {
