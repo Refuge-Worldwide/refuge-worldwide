@@ -11,14 +11,14 @@ export default function LatestNews({
 }) {
   return (
     <section>
-      <div className="px-8 pt-12 pb-20">
+      <div className="p-4 sm:p-8">
         <Pill>
           <h2>News</h2>
         </Pill>
 
         <div className="h-8" />
 
-        <ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-10">
           {articles.map((article, i) => (
             <li key={i}>
               <ArticlePreview {...article} />
@@ -26,17 +26,19 @@ export default function LatestNews({
           ))}
         </ul>
 
-        <div className="h-16" />
+        <div className="h-10 sm:h-16" />
 
         <div className="text-center">
           <Link href="/news">
-            <a className="inline-flex items-center space-x-4 font-medium">
+            <a className="inline-flex items-center space-x-4 text-base font-medium">
               <span className="underline">All News</span>
               <Arrow />
             </a>
           </Link>
         </div>
       </div>
+
+      <div className="h-10" />
     </section>
   );
 }
