@@ -1,5 +1,6 @@
 import Head from "next/head";
 import Layout from "../../components/layout";
+import Pill from "../../components/pill";
 import { getAllArticles, getFeaturedArticles } from "../../lib/api";
 import { ArticleInterface } from "../../types/shared";
 import AllArticles from "../../views/news/allArticles";
@@ -22,9 +23,13 @@ export default function NewsPage({
         <title>News</title>
       </Head>
 
-      <h1 hidden>News</h1>
-
       <FeaturedArticle articles={featuredArticles} />
+
+      <section className="block sm:hidden px-4 pt-4 border-t-2">
+        <Pill>
+          <h1>News</h1>
+        </Pill>
+      </section>
 
       <AllArticles articles={articles} />
     </Layout>

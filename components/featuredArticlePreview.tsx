@@ -28,13 +28,17 @@ export default function FeaturedArticlePreview({
   const articleClassName = getArticleBackgroundColor(articleType);
 
   return (
-    <article className={"md:grid grid-cols-10 h-full " + articleClassName}>
-      <header className="col-span-5 2xl:col-span-3 p-4 lg:p-8 border-l-2 border-t-2 border-b-2 ">
+    <article
+      className={
+        "flex flex-col-reverse md:grid grid-cols-10 h-full " + articleClassName
+      }
+    >
+      <header className="flex-1 md:col-span-5 2xl:col-span-3 p-4 lg:p-8 border-l-2 border-t-0 md:border-t-2 border-b-2 ">
         <Pill>
           <span className="font-serif">{articleType}</span>
         </Pill>
 
-        <div className="h-6" />
+        <div className="h-3 sm:h-6" />
 
         <p className="font-medium">
           <Date dateString={date} formatString="MMMM DD, YYYY" />
@@ -42,7 +46,7 @@ export default function FeaturedArticlePreview({
 
         <div className="h-2" />
 
-        <h1 className="text-large">{title}</h1>
+        <h1 className="text-base sm:text-large">{title}</h1>
 
         <div className="h-4" />
 
@@ -57,10 +61,10 @@ export default function FeaturedArticlePreview({
           </a>
         </Link>
 
-        <div className="h-8" />
+        <div className="h-6" />
       </header>
 
-      <div className="col-span-5 2xl:col-span-7 relative border-l-2 border-t-2 border-b-2 ">
+      <div className="md:col-span-5 2xl:col-span-7 h-56 md:h-auto relative border-l-2 border-t-2 border-b-2 ">
         <Image
           src={coverImage.url}
           objectFit="cover"
