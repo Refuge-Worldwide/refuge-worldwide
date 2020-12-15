@@ -75,10 +75,6 @@
       height: 2.5rem;
     }
   }
-
-  .show-preview {
-    max-width: 340px;
-  }
 }
 
 @tailwind utilities;

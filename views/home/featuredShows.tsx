@@ -14,9 +14,9 @@ export default function FeaturedShows({ shows }: { shows: ShowInterface[] }) {
 
         <div className="h-8" />
 
-        <ul className="flex w-full flex-wrap -mr-10 -mb-10">
+        <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 lg:gap-8">
           {shows.map((show, i) => (
-            <li key={i} className="pr-10 pb-10">
+            <li key={i}>
               <ShowPreview {...show} />
             </li>
           ))}

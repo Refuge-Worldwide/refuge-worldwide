@@ -7,7 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Fragment } from "react";
 import { Arrow } from "../icons/arrow";
-import { ArticleInterface } from "../types/shared";
+import type { ArticleInterface } from "../types/shared";
 import Badge from "./badge";
 import Date from "./date";
 
@@ -24,6 +24,9 @@ export default function ArticlePreview({
   coverImage,
   content,
 }: ArticlePreview) {
+  /**
+   * Roundabout way to get the first line of text
+   */
   const excerpt: Document = {
     ...content.json,
     content: content.json.content
@@ -41,15 +44,17 @@ export default function ArticlePreview({
     <Link href={`/news/${slug}`}>
       <a>
         <article className="text-small font-medium leading-snug">
-          <Image
-            key={slug}
-            src={coverImage.url}
-            width={590}
-            height={345}
-            objectFit="cover"
-            objectPosition="center"
-            alt={title}
-          />
+          <div className="flex">
+            <Image
+              key={slug}
+              src={coverImage.url}
+              width={590}
+              height={345}
+              objectFit="cover"
+              objectPosition="center"
+              alt={title}
+            />
+          </div>
 
           <div className="h-4" />
 

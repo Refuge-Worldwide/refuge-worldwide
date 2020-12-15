@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { ShowInterface } from "../types/shared";
-import { formatArtistNames, sort } from "../util";
+import { sort } from "../util";
 import Badge from "./badge";
 import Date from "./date";
 
@@ -9,7 +9,6 @@ export default function ShowPreview({
   slug,
   title,
   coverImage,
-  artistsCollection,
   genresCollection,
   date,
 }: ShowInterface) {
@@ -18,18 +17,16 @@ export default function ShowPreview({
     .sort(sort.alpha)
     .slice(0, 2);
 
-  const artists = formatArtistNames(artistsCollection.items);
-
   return (
     <Link href={`/radio/${slug}`}>
       <a>
-        <article className="text-small show-preview">
+        <article className="text-small">
           <div className="flex">
             <Image
               key={slug}
               src={coverImage.url}
-              width={340}
-              height={190}
+              width={590}
+              height={345}
               objectFit="cover"
               objectPosition="center"
               alt={title}
