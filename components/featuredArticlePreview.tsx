@@ -29,7 +29,7 @@ export default function FeaturedArticlePreview({
 
   return (
     <article className={"md:grid grid-cols-10 h-full " + articleClassName}>
-      <header className="col-span-5 2xl:col-span-3 px-4 py-6 lg:px-8 lg:py-12 border-l-2 border-t-2 border-b-2 ">
+      <header className="col-span-5 2xl:col-span-3 p-4 lg:p-8 border-l-2 border-t-2 border-b-2 ">
         <Pill>
           <span className="font-serif">{articleType}</span>
         </Pill>

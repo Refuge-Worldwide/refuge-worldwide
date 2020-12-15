@@ -18,9 +18,9 @@ export default function ArtistRow({
 
         <div className="h-8" />
 
-        <ul className="flex flex-wrap -mr-10 -mb-10">
+        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-y-10 sm:gap-8">
           {artists.map((artist, i) => (
-            <li key={i} className="pr-10 pb-10">
+            <li key={i}>
               <Artist {...artist} />
             </li>
           ))}

@@ -9,8 +9,8 @@ export default function Artist({ name, photo, slug }: ArtistInterface) {
         <Image
           key={slug}
           src={photo.url}
-          width={340}
-          height={192}
+          width={590}
+          height={345}
           objectFit="cover"
           objectPosition="center"
           alt={name}
