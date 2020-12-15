@@ -116,6 +116,22 @@ export async function getNewsletterPage(
   return extractPage(data, "pageNewsletter");
 }
 
+export interface TodaySection {
+  content: string;
+}
+
+export async function getTodaySection(preview: boolean): Promise<TodaySection> {
+  const data = await contentful(/* GraphQL */ `
+    {
+      sectionToday(id: "2bP8MlTMBYfe1paaxwwziy", preview: ${preview}) {
+        content
+      }
+    }
+  `);
+
+  return extractPage(data, "sectionToday");
+}
+
 export async function getAllArtists(
   preview: boolean
 ): Promise<ArtistInterface[]> {
