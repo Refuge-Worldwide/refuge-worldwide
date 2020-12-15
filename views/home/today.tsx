@@ -11,7 +11,7 @@ export default function Today({ content }: TodaySection) {
           </Pill>
         </div>
         <div className="md:pt-4 pb-4 px-4 md:px-0 flex items-center overflow-x-scroll">
-          <span className="font-medium md:whitespace-nowrap pr-4 pl-4">
+          <span className="font-medium md:whitespace-nowrap md:px-4">
             {content}
           </span>
         </div>
