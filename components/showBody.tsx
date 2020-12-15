@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Fragment } from "react";
 import useMixcloudPlayer from "../hooks/useMixcloudPlayer";
 import { ShowInterface } from "../types/shared";
-import { getMixcloudKey } from "../util";
+import { getMixcloudKey, sort } from "../util";
 import Badge from "./badge";
 import Date from "./date";
 import Pill from "./pill";
@@ -16,7 +16,9 @@ export default function ShowBody({
   content,
   mixcloudLink,
 }: ShowInterface) {
-  const genres = genresCollection.items;
+  const genres = genresCollection.items
+    .map((genre) => genre.name)
+    .sort(sort.alpha);
 
   const artists = artistsCollection.items;
 
@@ -67,7 +69,7 @@ export default function ShowBody({
       <ul className="flex flex-wrap justify-center -mr-2 -mb-2">
         {genres.map((genre, i) => (
           <li key={i} className="pr-2 pb-2">
-            <Badge text={genre.name} />
+            <Badge text={genre} />
           </li>
         ))}
       </ul>

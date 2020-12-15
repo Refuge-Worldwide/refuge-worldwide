@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { ShowInterface } from "../types/shared";
-import { formatArtistNames } from "../util";
+import { formatArtistNames, sort } from "../util";
 import Badge from "./badge";
 import Date from "./date";
 
@@ -13,7 +13,11 @@ export default function ShowPreview({
   genresCollection,
   date,
 }: ShowInterface) {
-  const genres = genresCollection.items;
+  const genres = genresCollection.items
+    .map((genre) => genre.name)
+    .sort(sort.alpha)
+    .slice(0, 2);
+
   const artists = formatArtistNames(artistsCollection.items);
 
   return (
@@ -43,9 +47,9 @@ export default function ShowPreview({
           <div className="h-2" />
 
           <ul className="flex flex-wrap -mr-2 -mb-2">
-            {genres.slice(0, 2).map((genre, i) => (
+            {genres.map((genre, i) => (
               <li key={i} className="pr-2 pb-2">
-                <Badge text={genre.name} />
+                <Badge text={genre} />
               </li>
             ))}
           </ul>
