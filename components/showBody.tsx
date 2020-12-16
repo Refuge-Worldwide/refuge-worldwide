@@ -54,7 +54,7 @@ export default function ShowBody({
 
   return (
     <Fragment>
-      <button onClick={handlePlayShow}>Play</button>
+      {mixcloudLink && <button onClick={handlePlayShow}>Play</button>}
 
       <p className="text-small text-center">
         <Date dateString={date} />
