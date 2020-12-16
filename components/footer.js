@@ -38,7 +38,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="px-4 md:px-8 border-t border-white pt-10 md:pt-16 pb-16">
+      <div className="px-4 md:px-8 border-t border-white pt-10 md:pt-16 pb-10 md:pb-16">
         <div className="grid md:grid-cols-3 gap-12 text-small font-medium">
           {/* Spacer */}
           <div className="hidden md:block" />
