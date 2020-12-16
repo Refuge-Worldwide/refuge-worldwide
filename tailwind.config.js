@@ -13,6 +13,7 @@ module.exports = {
       medium: 500,
     },
     fontSize: {
+      xxs: ["0.75rem", 1.1],
       tiny: ["1rem", 1],
       small: ["1.25rem", 1.3],
       base: ["1.875rem", 1.26],

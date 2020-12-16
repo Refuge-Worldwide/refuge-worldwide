@@ -15,7 +15,7 @@ export default function ShowPreview({
   const genres = genresCollection.items
     .map((genre) => genre.name)
     .sort(sort.alpha)
-    .slice(0, 2);
+    .slice(0, 3);
 
   return (
     <Link href={`/radio/${slug}`}>
@@ -46,7 +46,7 @@ export default function ShowPreview({
           <ul className="flex flex-wrap -mr-2 -mb-2">
             {genres.map((genre, i) => (
               <li key={i} className="pr-2 pb-2">
-                <Badge text={genre} />
+                <Badge small text={genre} />
               </li>
             ))}
           </ul>
