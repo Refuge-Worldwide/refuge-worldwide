@@ -38,17 +38,14 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="px-4 md:px-8 border-t border-white pt-10 md:pt-20 pb-16 md:pb-20">
-        <div className="grid md:grid-cols-3 gap-12">
+      <div className="px-4 md:px-8 border-t border-white pt-10 md:pt-16 pb-16">
+        <div className="grid md:grid-cols-3 gap-12 text-small font-medium">
           {/* Spacer */}
           <div className="hidden md:block" />
 
           <div className="flex justify-center">
             <p>
-              <a
-                href="#top"
-                className="inline-flex items-center text-white font-medium space-x-4"
-              >
+              <a href="#top" className="inline-flex items-center space-x-4">
                 <span>Go up</span>
                 <span className="mt-1">
                   <Arrow className="transform -rotate-90" size={24} />
