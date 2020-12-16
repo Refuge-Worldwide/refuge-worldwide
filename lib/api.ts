@@ -146,6 +146,7 @@ export async function getAllArtists(
           items {
             name
             slug
+            role
             photo {
               title
               description

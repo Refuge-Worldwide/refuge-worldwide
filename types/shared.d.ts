@@ -14,6 +14,7 @@ export interface ArtistInterface {
   name: string;
   slug: string;
   photo: ImageInterface;
+  role?: boolean;
 }
 
 export interface GenreInterface {
