@@ -38,7 +38,7 @@ export default function RelatedShowPreview({
           <h2 className="font-sans font-medium truncate">{title}</h2>
 
           <p>
-            <Date dateString={date} formatString="MMMM DD, YYYY" />
+            <Date dateString={date} />
           </p>
 
           <div className="h-2" />

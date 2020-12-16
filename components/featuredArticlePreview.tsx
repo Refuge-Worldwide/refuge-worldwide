@@ -41,7 +41,7 @@ export default function FeaturedArticlePreview({
         <div className="h-3 sm:h-6" />
 
         <p className="font-medium">
-          <Date dateString={date} formatString="MMMM DD, YYYY" />
+          <Date dateString={date} />
         </p>
 
         <div className="h-2" />
