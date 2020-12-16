@@ -4,33 +4,31 @@ import { Arrow } from "../icons/arrow";
 export default function Footer() {
   return (
     <footer className="bg-black text-white">
-      <div className="px-4 md:px-8 pt-10 md:pt-28 pb-8 md:pb-20">
+      <div className="px-4 md:px-8 pt-10 md:pt-20 pb-8 md:pb-20">
         <div className="container md:grid items-center grid-cols-2">
           <div className="mb-6 md:mb-0">
             <img
-              className="mx-auto h-32 sm:h-40 lg:h-64 w-auto object-contain"
+              className="mx-auto h-32 sm:h-40 lg:h-48 w-auto object-contain"
               src="/images/footer-smile.svg"
               alt=""
             />
           </div>
           <div>
-            <h3 className="text-base sm:text-large leading-none">
-              About Refuge
-            </h3>
+            <h3 className="text-base leading-none">About Refuge</h3>
 
             <div className="h-3 md:h-7" />
 
-            <div className="space-y-7">
-              <p className="font-medium leading-tight">
+            <div className="space-y-7 max-w-xl text-small font-medium leading-tight">
+              <p>
                 Refuge is a fundraising platform working in solidarity with
                 grass-roots and non-profit organizations.
               </p>
-              <p className="font-medium leading-tight">
+              <p>
                 Since 2015, we have donated over €50,000 EUR to community groups
                 in Berlin, by raising money at our basement parties,
                 week-end-long raves, and a street food festival.
               </p>
-              <p className="font-medium leading-tight">
+              <p>
                 <Link href="/about">
                   <a className="underline">Read more about us</a>
                 </Link>
@@ -40,7 +38,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="px-4 md:px-8 border-t border-white pt-10 md:pt-28 pb-16 md:pb-28">
+      <div className="px-4 md:px-8 border-t border-white pt-10 md:pt-20 pb-16 md:pb-20">
         <div className="grid md:grid-cols-3 gap-12">
           {/* Spacer */}
           <div className="hidden md:block" />
