@@ -80,7 +80,7 @@ export default function ShowBody({
 
       <div className="h-6" />
 
-      <div className="p-8 prose sm:prose-lg">
+      <div className="p-4 sm:p-8 prose sm:prose-lg">
         {documentToReactComponents(content?.json)}
       </div>
 

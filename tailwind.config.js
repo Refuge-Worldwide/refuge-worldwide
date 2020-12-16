@@ -67,20 +67,65 @@ module.exports = {
         DEFAULT: {
           css: {
             color: theme("colors.black"),
-            fontSize: "1.25rem",
-            lineHeight: "1.3",
+            fontSize: "20px",
+            lineHeight: "30px",
             strong: {
               fontWeight: theme("fontWeight.medium"),
             },
             a: {
               fontWeight: theme("fontWeight.medium"),
             },
+            /**
+             * Headers
+             */
+            "h1, h2, h3": {
+              fontSize: "30px",
+              lineHeight: "38px",
+
+              textAlign: "center",
+            },
+            "h4, h5, h6": {
+              fontSize: "20px",
+              lineHeight: "30px",
+            },
+            /**
+             * Lists
+             */
+            "ul > li": {
+              paddingLeft: "1.5em",
+            },
+            "ul > li::before": {
+              backgroundColor: theme("colors.black"),
+              top: "0.5em",
+            },
           },
         },
         lg: {
           css: {
-            fontSize: "1.875rem",
-            lineHeight: "1.26",
+            fontSize: "30px",
+            lineHeight: "38px",
+            /**
+             * Headers
+             */
+            "h1, h2, h3": {
+              fontSize: "45px",
+              lineHeight: "50px",
+
+              textAlign: "center",
+            },
+            "h4, h5, h6": {
+              fontSize: "30px",
+              lineHeight: "38px",
+            },
+            /**
+             * Lists
+             */
+            "ul > li": {
+              paddingLeft: "1.5em",
+            },
+            "ul > li::before": {
+              top: "0.5em",
+            },
           },
         },
       }),
