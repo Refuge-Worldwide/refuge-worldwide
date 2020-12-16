@@ -13,7 +13,7 @@ export default function Today({ content, header }: TodaySection) {
             </Pill>
           </div>
           <div className="md:pt-4 pb-4 px-4 md:px-0 flex items-center overflow-x-scroll">
-            <span className="md:whitespace-nowrap md:px-4">
+            <span className="md:flex md:space-x-2 md:whitespace-nowrap md:px-4">
               {documentToReactComponents(content?.json)}
             </span>
           </div>
