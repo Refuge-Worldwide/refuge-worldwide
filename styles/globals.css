@@ -16,6 +16,10 @@
   }
 }
 
+.com {
+  scroll-behavior: smooth;
+}
+
 @tailwind components;
 
 @layer components {
@@ -28,6 +32,8 @@
     display: grid;
     grid-auto-columns: 100%;
     grid-auto-flow: column;
+
+    scroll-behavior: smooth;
 
     overflow-y: visible;
     overflow-x: scroll;
