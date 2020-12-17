@@ -3,8 +3,9 @@ import ArtistRow from "../../components/artistRow";
 import Badge from "../../components/badge";
 import Layout from "../../components/layout";
 import Pill from "../../components/pill";
+import useArtistRoleFilter from "../../hooks/useArtistRoleFilter";
 import { getAllArtists } from "../../lib/api";
-import type { ArtistInterface } from "../../types/shared";
+import type { ArtistFilterType, ArtistInterface } from "../../types/shared";
 import { sortAndGroup } from "../../util";
 
 interface Page extends JSX.Element {
@@ -13,7 +14,9 @@ interface Page extends JSX.Element {
 }
 
 export default function ArtistsPage({ allArtists, preview }: Page) {
-  const sections = sortAndGroup(allArtists);
+  const filters: ArtistFilterType[] = ["All", "Residents", "Guests"];
+  const { filter, filterSet } = useArtistRoleFilter<ArtistFilterType>();
+  const sections = sortAndGroup(allArtists, filter);
 
   return (
     <Layout className="bg-purple" preview={preview}>
@@ -29,22 +32,16 @@ export default function ArtistsPage({ allArtists, preview }: Page) {
         <div className="h-8" />
 
         <ul className="w-full flex flex-wrap leading-none -mr-2 -mb-2">
-          <li className="inline-flex pr-2 pb-2">
-            <button className="focus:outline-none focus:ring-4 rounded-full">
-              <Badge invert={true} text={"All"} />
-            </button>
-          </li>
-
-          <li className="inline-flex pr-2 pb-2">
-            <button className="focus:outline-none focus:ring-4 rounded-full">
-              <Badge invert={false} text={"Residents"} />
-            </button>
-          </li>
-          <li className="inline-flex pr-2 pb-2">
-            <button className="focus:outline-none focus:ring-4 rounded-full">
-              <Badge invert={false} text={"Guests"} />
-            </button>
-          </li>
+          {filters.map((type, i) => (
+            <li key={i} className="inline-flex pr-2 pb-2">
+              <button
+                className="focus:outline-none focus:ring-4 rounded-full"
+                onClick={() => filterSet(type)}
+              >
+                <Badge invert={filter === type} text={type} />
+              </button>
+            </li>
+          ))}
         </ul>
       </section>
 

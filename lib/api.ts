@@ -146,7 +146,7 @@ export async function getAllArtists(
           items {
             name
             slug
-            role
+            isResident: role
             photo {
               title
               description

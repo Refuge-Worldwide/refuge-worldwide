@@ -14,8 +14,10 @@ export interface ArtistInterface {
   name: string;
   slug: string;
   photo: ImageInterface;
-  role?: boolean;
+  isResident?: boolean;
 }
+
+export type ArtistFilterType = "All" | "Residents" | "Guests";
 
 export interface GenreInterface {
   name: string;

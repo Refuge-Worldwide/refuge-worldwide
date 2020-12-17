@@ -1,4 +1,4 @@
-import { ArtistInterface } from "./types/shared";
+import { ArtistInterface, ArtistFilterType } from "./types/shared";
 
 interface PageResponse {
   data: {
@@ -28,27 +28,35 @@ export const extractCollectionItem = (
 ) => fetchResponse?.data?.[key]?.items?.[0];
 
 export const sortAndGroup = (
-  data: ArtistInterface[]
+  data: ArtistInterface[],
+  role: ArtistFilterType
 ): {
   alphabet: string;
   artists: ArtistInterface[];
-}[] =>
-  Object.values(
-    data.reduce((accumulator, current) => {
-      let alphabet = current.name[0];
+}[] => {
+  return Object.values(
+    data
+      .filter((artist) => {
+        if (role === "All" || artist.isResident === null) return artist;
+        if (role === "Residents" && artist.isResident === false) return artist;
+        if (role === "Guests" && artist.isResident === false) return artist;
+      })
+      .reduce((accumulator, current) => {
+        let alphabet = current.name[0];
 
-      if (!accumulator[alphabet]) {
-        accumulator[alphabet] = {
-          alphabet,
-          artists: [current],
-        };
-      } else {
-        accumulator[alphabet].artists.push(current);
-      }
+        if (!accumulator[alphabet]) {
+          accumulator[alphabet] = {
+            alphabet,
+            artists: [current],
+          };
+        } else {
+          accumulator[alphabet].artists.push(current);
+        }
 
-      return accumulator;
-    }, {})
+        return accumulator;
+      }, {})
   );
+};
 
 export const formatArtistNames = (data: ArtistInterface[]) => {
   const names = data.map(({ name }) => name);
