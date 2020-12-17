@@ -1,4 +1,4 @@
-import { ArtistInterface, ArtistFilterType } from "./types/shared";
+import { ArtistFilterType, ArtistInterface } from "./types/shared";
 
 interface PageResponse {
   data: {
@@ -34,28 +34,36 @@ export const sortAndGroup = (
   alphabet: string;
   artists: ArtistInterface[];
 }[] => {
-  return Object.values(
-    data
-      .filter((artist) => {
-        if (role === "All") return artist;
-        if (role === "Residents" && artist.isResident === true) return artist;
-        if (role === "Guests" && artist.isResident === false) return artist;
-      })
-      .reduce((accumulator, current) => {
-        let alphabet = current.name[0];
+  const residencyFilter = (artist: ArtistInterface) => {
+    if (role === "All") return artist;
+    if (role === "Residents" && artist.isResident === true) return artist;
+    if (role === "Guests" && artist.isResident === false) return artist;
+  };
 
-        if (!accumulator[alphabet]) {
-          accumulator[alphabet] = {
-            alphabet,
-            artists: [current],
-          };
-        } else {
-          accumulator[alphabet].artists.push(current);
-        }
+  const alphaReducer = (
+    accumulator: {
+      [key: string]: {
+        alphabet: string;
+        artists: ArtistInterface[];
+      };
+    },
+    current: ArtistInterface
+  ) => {
+    let alphabet = current.name[0];
 
-        return accumulator;
-      }, {})
-  );
+    if (!accumulator[alphabet]) {
+      accumulator[alphabet] = {
+        alphabet,
+        artists: [current],
+      };
+    } else {
+      accumulator[alphabet].artists.push(current);
+    }
+
+    return accumulator;
+  };
+
+  return Object.values(data.filter(residencyFilter).reduce(alphaReducer, {}));
 };
 
 export const formatArtistNames = (data: ArtistInterface[]) => {
