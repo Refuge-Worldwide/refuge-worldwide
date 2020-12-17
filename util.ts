@@ -37,8 +37,8 @@ export const sortAndGroup = (
   return Object.values(
     data
       .filter((artist) => {
-        if (role === "All" || artist.isResident === null) return artist;
-        if (role === "Residents" && artist.isResident === false) return artist;
+        if (role === "All") return artist;
+        if (role === "Residents" && artist.isResident === true) return artist;
         if (role === "Guests" && artist.isResident === false) return artist;
       })
       .reduce((accumulator, current) => {
