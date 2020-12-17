@@ -20,7 +20,10 @@ const getRadioCoStatus = async (_: any, stationId: string) => {
 
 function useRadioCoStatus(stationId: string) {
   return useSWR<RadioCoInterface>(["RadioCo", stationId], getRadioCoStatus, {
-    refreshInterval: 30 * 1000,
+    /**
+     * @note Refresh the radio data every 30s
+     */
+    // refreshInterval: 30 * 1000,
   });
 }
 
