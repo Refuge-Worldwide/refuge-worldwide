@@ -1,6 +1,5 @@
 import {
   MutableRefObject,
-  Ref,
   useCallback,
   useEffect,
   useRef,
@@ -10,9 +9,8 @@ import useSWR from "swr";
 import Pause from "../icons/pause";
 import Play from "../icons/play";
 import { RadioCoInterface } from "../types/shared";
-import { isServer } from "../util";
 
-const getRadioCo = async (_: any, stationId: string) => {
+const getRadioCoStatus = async (_: any, stationId: string) => {
   const URL = `https://public.radio.co/stations/${stationId}/status`;
 
   const res = await fetch(URL);
@@ -20,8 +18,10 @@ const getRadioCo = async (_: any, stationId: string) => {
   return res.json();
 };
 
-function useRadioCo(stationId: string) {
-  return useSWR<RadioCoInterface>(["RadioCo", stationId], getRadioCo, {});
+function useRadioCoStatus(stationId: string) {
+  return useSWR<RadioCoInterface>(["RadioCo", stationId], getRadioCoStatus, {
+    refreshInterval: 30 * 1000,
+  });
 }
 
 const BroadcastingIndicator = ({
@@ -76,7 +76,7 @@ export default function Player() {
   const FOUNDATION_FM = "s0628bdd53";
   const AUDIO_SRC = `https://streamer.radio.co/${FOUNDATION_FM}/listen`;
 
-  const { data } = useRadioCo(FOUNDATION_FM);
+  const { data } = useRadioCoStatus(FOUNDATION_FM);
 
   const player = useRef<HTMLAudioElement>(null);
 
