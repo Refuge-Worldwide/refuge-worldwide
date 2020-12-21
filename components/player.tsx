@@ -76,10 +76,12 @@ function usePlayerState(ref: MutableRefObject<HTMLAudioElement>) {
 }
 
 export default function Player() {
+  const REFUGE_WW = "s3699c5e49";
   const FOUNDATION_FM = "s0628bdd53";
-  const AUDIO_SRC = `https://streamer.radio.co/${FOUNDATION_FM}/listen`;
 
-  const { data } = useRadioCoStatus(FOUNDATION_FM);
+  const AUDIO_SRC = `https://streamer.radio.co/${REFUGE_WW}/listen`;
+
+  const { data } = useRadioCoStatus(REFUGE_WW);
 
   const player = useRef<HTMLAudioElement>(null);
 
