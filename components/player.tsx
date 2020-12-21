@@ -79,7 +79,7 @@ export default function Player() {
   const REFUGE_WW = "s3699c5e49";
   const FOUNDATION_FM = "s0628bdd53";
 
-  const AUDIO_SRC = `https://streamer.radio.co/${REFUGE_WW}/listen`;
+  const AUDIO_SRC = `https://streaming.radio.co/${REFUGE_WW}/listen`;
 
   const { data } = useRadioCoStatus(REFUGE_WW);
 
