@@ -94,7 +94,9 @@ export default function Player() {
           <BroadcastingIndicator status={data?.status} />
         </div>
         <div className="col-span-8">
-          <p>{data?.current_track.title}</p>
+          <div className="overflow-x-scroll">
+            <p className="whitespace-nowrap">{data?.current_track.title}</p>
+          </div>
         </div>
         <div className="col-span-1">
           <div className="flex justify-end">
