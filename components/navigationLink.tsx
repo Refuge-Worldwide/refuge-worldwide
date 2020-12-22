@@ -18,6 +18,7 @@ export default function NavigationLink({
 
   const className = cn(
     "font-medium transition-colors duration-150 ease-in-out",
+    `hover:${activeClassName}`,
     {
       [activeClassName]: isActive,
     }
