@@ -1,50 +1,25 @@
-import cn from "classnames";
-import { useRouter } from "next/dist/client/router";
 import Link from "next/link";
 import Facebook from "../icons/facebook";
 import Instagram from "../icons/instagram";
 import NavigationLink from "./navigationLink";
 
-function useActivePath(path = "/") {
-  const { pathname } = useRouter();
-
-  return pathname === path;
-}
-
-function NavigationLogo() {
-  const isHome = useActivePath();
-
-  let image = <img src="/images/navigation-smile.svg" alt="Refuge" />;
-
-  if (isHome)
-    image = (
-      <img
-        src="/images/navigation-smile-full.svg"
-        alt="Refuge Social Clubbing Worldwild"
-      />
-    );
-
-  return (
-    <Link href="/">
-      <a>{image}</a>
-    </Link>
-  );
-}
-
 export default function Navigation() {
-  const isHome = useActivePath();
-
-  const contentWrapperClassNames = cn(
-    "px-4 md:px-8",
-    isHome ? "py-6" : "py-2.5"
-  );
-
   return (
     <nav className="text-black">
-      <div className={contentWrapperClassNames}>
+      <div className="px-4 md:px-8 py-2.5">
         <ul className="flex items-center">
           <li>
-            <NavigationLogo />
+            <Link href="/">
+              <a className="flex">
+                <img
+                  src="/images/navigation-smile.svg"
+                  width={66}
+                  height={40}
+                  alt="Refuge"
+                  loading="eager"
+                />
+              </a>
+            </Link>
           </li>
           <li className="flex-1">
             <ul className="md:flex justify-end items-center space-x-6 lg:space-x-8 xl:space-x-14">
