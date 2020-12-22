@@ -51,6 +51,7 @@ export default function FeaturedArticles({
             <li key={i}>
               <button
                 onClick={handleOnClick}
+                aria-label={`Carousel Item ${i + 1}`}
                 className={`block h-6 w-6 rounded-full border-2 border-white focus:outline-none focus:ring-4 ${
                   i === activeId ? "bg-white" : "bg-transparent "
                 }`}

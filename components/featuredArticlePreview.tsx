@@ -46,7 +46,9 @@ export default function FeaturedArticlePreview({
 
         <div className="h-2" />
 
-        <h1 className="text-base sm:text-large">{title}</h1>
+        <h1 id={slug} className="text-base sm:text-large">
+          {title}
+        </h1>
 
         <div className="h-4" />
 
@@ -55,7 +57,10 @@ export default function FeaturedArticlePreview({
         <div className="h-6" />
 
         <Link href={`/news/${slug}`}>
-          <a className="inline-flex items-center space-x-5 font-medium leading-none focus:outline-none">
+          <a
+            className="inline-flex items-center space-x-5 font-medium leading-none focus:outline-none"
+            aria-labelledby={slug}
+          >
             <span className="underline">Read more</span>
             <Arrow />
           </a>
@@ -67,6 +72,7 @@ export default function FeaturedArticlePreview({
       <div className="md:col-span-5 2xl:col-span-7 h-56 md:h-auto relative border-l-2 border-t-2 border-b-2">
         <Image
           key={slug}
+          alt={coverImage.title}
           src={coverImage.url}
           objectFit="cover"
           objectPosition="center"

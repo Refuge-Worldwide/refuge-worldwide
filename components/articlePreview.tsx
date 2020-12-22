@@ -42,7 +42,7 @@ export default function ArticlePreview({
 
   return (
     <Link href={`/news/${slug}`}>
-      <a>
+      <a aria-labelledby={slug}>
         <article className="text-small font-medium leading-snug">
           <div className="flex">
             <Image
@@ -62,7 +62,9 @@ export default function ArticlePreview({
             <Date dateString={date} formatString={"DD.MM.YYYY"} />
           </p>
 
-          <h2 className="font-sans">{title}</h2>
+          <h2 id={slug} className="font-sans">
+            {title}
+          </h2>
 
           {withType ? (
             <Fragment>
