@@ -80,21 +80,27 @@ export default function ShowBody({
 
       <div className="h-6" />
 
-      <div className="p-4 sm:p-8 prose sm:prose-lg">
-        {documentToReactComponents(content?.json)}
+      <div className="p-4 sm:p-8">
+        <div className="container-md">
+          <div className="prose sm:prose-lg max-w-none">
+            {documentToReactComponents(content?.json)}
+          </div>
+        </div>
       </div>
 
       <div className="h-14 md:h-28" />
 
       <section className="border-t-2">
         <div className="p-4 md:p-8">
-          <Pill>
-            <span className="font-serif">Persons</span>
-          </Pill>
+          <div className="container-md">
+            <Pill>
+              <span className="font-serif">Persons</span>
+            </Pill>
 
-          <div className="h-8" />
+            <div className="h-8" />
 
-          <p className="font-medium">{persons}</p>
+            <p className="font-medium">{persons}</p>
+          </div>
         </div>
       </section>
     </Fragment>

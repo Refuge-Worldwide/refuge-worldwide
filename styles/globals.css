@@ -40,6 +40,11 @@
     max-width: 90rem;
   }
 
+  .container-md {
+    @apply mx-auto;
+    max-width: 68rem;
+  }
+
   .carousel {
     display: grid;
     grid-auto-columns: 100%;
