@@ -3,12 +3,17 @@ import Pill from "../../components/pill";
 import ShowPreview from "../../components/showPreview";
 import useFilteredShows from "../../hooks/useFilteredShows";
 import useGenreFilter from "../../hooks/useGenreFilter";
-import useGenres from "../../hooks/useGenres";
+import { ShowInterface } from "../../types/shared";
 
-export default function AllShows() {
-  const { data: genres } = useGenres();
+export default function AllShows({
+  genres,
+  pastShows,
+}: {
+  genres: string[];
+  pastShows: ShowInterface[];
+}) {
   const { filter, filterSet } = useGenreFilter();
-  const { data: shows } = useFilteredShows(filter);
+  const { data: shows } = useFilteredShows(pastShows, filter);
 
   return (
     <section>

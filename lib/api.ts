@@ -7,7 +7,12 @@ import type {
   GenreInterface,
   ShowInterface,
 } from "../types/shared";
-import { extractCollection, extractCollectionItem, extractPage } from "../util";
+import {
+  extractCollection,
+  extractCollectionItem,
+  extractPage,
+  sort,
+} from "../util";
 import { ENDPOINT } from "./constants";
 
 export async function contentful(query: string, preview = false) {
@@ -249,6 +254,43 @@ export async function getAllShows(preview: boolean): Promise<ShowInterface[]> {
   );
 
   return extractCollection(data, "showCollection");
+}
+
+export async function getUpcomingAndPastShows(preview: boolean) {
+  const today = dayjs();
+
+  const shows = await getAllShows(preview);
+
+  /**
+   * Upcoming & Featured
+   */
+  const upcoming = shows
+    .sort((a, b) => (dayjs(a.date).isBefore(b.date) ? -1 : 1))
+    .filter((show) => dayjs(show.date).isAfter(today) && show.isFeatured);
+
+  /**
+   * All Past Shows
+   */
+  const past = shows
+    .sort((a, b) => (dayjs(a.date).isBefore(b.date) ? -1 : 1))
+    .filter((show) => dayjs(show.date).isBefore(today));
+
+  return {
+    upcoming,
+    past,
+  };
+}
+
+export async function getGenres(preview: boolean) {
+  const { past } = await getUpcomingAndPastShows(preview);
+
+  const allShowGenres = past
+    .flatMap((show) => show.genresCollection.items)
+    .map((genre) => genre.name);
+
+  const uniqueGenres = Array.from(new Set(allShowGenres)).sort(sort.alpha);
+
+  return uniqueGenres;
 }
 
 export async function getFeaturedShows(

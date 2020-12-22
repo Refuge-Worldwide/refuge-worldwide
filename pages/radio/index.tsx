@@ -1,13 +1,23 @@
 import Head from "next/head";
 import Layout from "../../components/layout";
+import { getGenres, getUpcomingAndPastShows } from "../../lib/api";
+import { ShowInterface } from "../../types/shared";
 import AllShows from "../../views/radio/allShows";
 import NextShows from "../../views/radio/nextShows";
 
 interface Page extends JSX.Element {
+  genres: string[];
+  pastShows: ShowInterface[];
   preview: boolean;
+  upcomingShows: ShowInterface[];
 }
 
-export default function RadioPage({ preview }: Page) {
+export default function RadioPage({
+  genres,
+  pastShows,
+  preview,
+  upcomingShows,
+}: Page) {
   return (
     <Layout preview={preview}>
       <Head>
@@ -16,17 +26,24 @@ export default function RadioPage({ preview }: Page) {
 
       <h1 hidden>Radio</h1>
 
-      <NextShows />
+      <NextShows upcomingShows={upcomingShows} />
 
-      <AllShows />
+      <AllShows genres={genres} pastShows={pastShows} />
     </Layout>
   );
 }
 
 export async function getStaticProps({ preview = false }) {
+  const { upcoming, past } = await getUpcomingAndPastShows(preview);
+  const genres = await getGenres(preview);
+
   return {
     props: {
       preview,
+      upcomingShows: upcoming,
+      pastShows: past,
+      genres,
     },
+    revalidate: 60,
   };
 }
