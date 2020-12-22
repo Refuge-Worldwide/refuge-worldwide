@@ -7,11 +7,14 @@ import { getMixcloudKey, sort } from "../util";
 import Badge from "./badge";
 import Date from "./date";
 import Pill from "./pill";
+import PlayLarge from "../icons/playLarge";
+import Share from "../icons/share";
 
 export default function ShowBody({
   title,
   genresCollection,
   artistsCollection,
+  slug,
   date,
   content,
   mixcloudLink,
@@ -52,43 +55,79 @@ export default function ShowBody({
     }
   };
 
+  const shareData: ShareData = {
+    text: title,
+    title: "Refuge Worldwide",
+    url: `https://refuge-worldwide.vercel.app/radio/${slug}`,
+  };
+
+  const handleShare = async () => {
+    try {
+      /**
+       * @todo Handle sharing on devices without the Share API
+       */
+      await navigator.share(shareData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <Fragment>
-      {mixcloudLink && <button onClick={handlePlayShow}>Play</button>}
+      <section>
+        <div className="p-4 sm:p-8">
+          <div className="container-md">
+            <div className="flex justify-between">
+              <div>
+                {mixcloudLink && (
+                  <button
+                    className="rounded-full focus:outline-none focus:ring-4"
+                    onClick={handlePlayShow}
+                  >
+                    <PlayLarge />
+                  </button>
+                )}
+              </div>
 
-      <p className="text-small text-center">
-        <Date dateString={date} />
-      </p>
+              <div>
+                <button className="focus:outline-none" onClick={handleShare}>
+                  <Share />
+                </button>
+              </div>
+            </div>
 
-      <div className="h-6" />
+            <p className="text-small text-center">
+              <Date dateString={date} />
+            </p>
 
-      <h1 className="text-base sm:text-large text-center">{title}</h1>
+            <div className="h-6" />
 
-      <div className="h-6" />
+            <h1 className="text-base sm:text-large text-center">{title}</h1>
 
-      <ul className="flex flex-wrap justify-center -mr-2 -mb-2">
-        {genres.map((genre, i) => (
-          <li key={i} className="pr-2 pb-2">
-            <Badge text={genre} />
-          </li>
-        ))}
-      </ul>
+            <div className="h-6" />
 
-      <div className="h-6" />
+            <ul className="w-full flex flex-wrap justify-center -mr-2 -mb-2">
+              {genres.map((genre, i) => (
+                <li key={i} className="pr-2 pb-2">
+                  <Badge text={genre} />
+                </li>
+              ))}
+            </ul>
 
-      <p className="font-medium text-center">With {persons}</p>
+            <div className="h-6" />
 
-      <div className="h-6" />
+            <p className="font-medium text-center">With {persons}</p>
 
-      <div className="p-4 sm:p-8">
-        <div className="container-md">
-          <div className="prose sm:prose-lg max-w-none">
-            {documentToReactComponents(content?.json)}
+            <div className="h-6" />
+
+            <div className="prose sm:prose-lg max-w-none">
+              {documentToReactComponents(content?.json)}
+            </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      <div className="h-14 md:h-28" />
+      <div className="h-12 md:h-24" />
 
       <section className="border-t-2">
         <div className="p-4 md:p-8">
