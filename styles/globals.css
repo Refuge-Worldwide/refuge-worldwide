@@ -1,4 +1,6 @@
 @tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @layer base {
   h1,
@@ -31,12 +33,6 @@
     src: url("/fonts/visuelt-medium.woff2") format("woff2");
   }
 }
-
-.com {
-  scroll-behavior: smooth;
-}
-
-@tailwind components;
 
 @layer components {
   .container {
@@ -98,5 +94,3 @@
     }
   }
 }
-
-@tailwind utilities;
