@@ -5,9 +5,8 @@ export default function Play() {
       width={35}
       height={35}
       viewBox="0 0 35 35"
-      fill="currentColor"
     >
-      <path d="M35 17.5L0 35V0z" />
+      <path d="M35 17.5L0 35V0z" fill="currentColor" />
     </svg>
   );
 }

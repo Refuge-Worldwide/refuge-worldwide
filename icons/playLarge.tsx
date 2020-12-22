@@ -1,20 +1,12 @@
-export default function PlayLarge({ title = "Play", titleId = "play-large" }) {
+export default function PlayLarge() {
   return (
     <svg
-      width={120}
-      height={120}
-      viewBox="0 0 120 120"
-      fill="none"
+      width={100}
+      height={100}
+      viewBox="0 0 100 100"
       xmlns="http://www.w3.org/2000/svg"
-      aria-labelledby={titleId}
     >
-      <title id={titleId}>{title}</title>
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M60 0A60 60 0 1060 120 60 60 0 0060 0zM37.733 6.239a58.19 58.19 0 1144.535 107.52A58.19 58.19 0 0137.732 6.24zm1.308 27.249l52.262 26.131L39.04 85.752V33.488z"
-        fill="currentColor"
-      />
+      <path d="M100 49.97L0 96.94V3l100 46.97z" fill="currentColor" />
     </svg>
   );
 }

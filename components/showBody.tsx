@@ -7,7 +7,7 @@ import { getMixcloudKey, sort } from "../util";
 import Badge from "./badge";
 import Date from "./date";
 import Pill from "./pill";
-import PlayLarge from "../icons/playLarge";
+import PlayCircle from "../icons/playCircle";
 import Share from "../icons/share";
 
 export default function ShowBody({
@@ -84,7 +84,7 @@ export default function ShowBody({
                     className="rounded-full focus:outline-none focus:ring-4"
                     onClick={handlePlayShow}
                   >
-                    <PlayLarge />
+                    <PlayCircle />
                   </button>
                 )}
               </div>
