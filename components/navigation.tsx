@@ -1,7 +1,9 @@
+import cn from "classnames";
 import { useRouter } from "next/dist/client/router";
 import Link from "next/link";
+import Facebook from "../icons/facebook";
+import Instagram from "../icons/instagram";
 import NavigationLink from "./navigationLink";
-import cn from "classnames";
 
 function useActivePath(path = "/") {
   const { pathname } = useRouter();
@@ -45,7 +47,7 @@ export default function Navigation() {
             <NavigationLogo />
           </li>
           <li className="flex-1">
-            <ul className="md:flex justify-end space-x-6 lg:space-x-8 xl:space-x-14">
+            <ul className="md:flex justify-end items-center space-x-6 lg:space-x-8 xl:space-x-14">
               <li>
                 <NavigationLink href="/radio" activeClassName="text-orange">
                   Radio
@@ -76,8 +78,22 @@ export default function Navigation() {
                   Newsletter
                 </NavigationLink>
               </li>
+              <li>
+                <ul className="flex space-x-6">
+                  <li>
+                    <a href="#instagram">
+                      <Instagram />
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#facebook">
+                      <Facebook />
+                    </a>
+                  </li>
+                </ul>
+              </li>
             </ul>
-          </li>{" "}
+          </li>
         </ul>
       </div>
     </nav>
