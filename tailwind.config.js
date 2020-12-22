@@ -80,6 +80,9 @@ module.exports = {
             /**
              * Headers
              */
+            "h1, h2, h3, h4, h5, h6": {
+              fontWeight: "normal",
+            },
             "h1, h2, h3": {
               fontSize: "30px",
               lineHeight: "38px",
