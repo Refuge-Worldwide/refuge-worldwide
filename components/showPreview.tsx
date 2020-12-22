@@ -19,7 +19,7 @@ export default function ShowPreview({
 
   return (
     <Link href={`/radio/${slug}`}>
-      <a aria-labelledby={slug}>
+      <a aria-labelledby={`show-${slug}`}>
         <article className="text-small">
           <div className="flex">
             <Image
@@ -35,7 +35,7 @@ export default function ShowPreview({
 
           <div className="h-2" />
 
-          <h2 id={slug} className="font-sans font-medium truncate">
+          <h2 id={`show-${slug}`} className="font-sans font-medium truncate">
             {title}
           </h2>
 

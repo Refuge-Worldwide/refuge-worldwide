@@ -23,7 +23,7 @@ export default function UpcomingShowPreview({
 
   return (
     <Link href={`/radio/${slug}`}>
-      <a aria-labelledby={slug}>
+      <a aria-labelledby={`upcoming-${slug}`}>
         <article>
           <div className="flex w-full">
             <Image
@@ -49,7 +49,7 @@ export default function UpcomingShowPreview({
 
           <div className="h-2" />
 
-          <h2 id={slug} className="text-base sm:text-large">
+          <h2 id={`upcoming-${slug}`} className="text-base sm:text-large">
             {title}
           </h2>
 

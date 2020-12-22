@@ -46,7 +46,7 @@ export default function FeaturedArticlePreview({
 
         <div className="h-2" />
 
-        <h1 id={slug} className="text-base sm:text-large">
+        <h1 id={`featured-article-${slug}`} className="text-base sm:text-large">
           {title}
         </h1>
 
@@ -59,7 +59,7 @@ export default function FeaturedArticlePreview({
         <Link href={`/news/${slug}`}>
           <a
             className="inline-flex items-center space-x-5 font-medium leading-none focus:outline-none"
-            aria-labelledby={slug}
+            aria-labelledby={`featured-article-${slug}`}
           >
             <span className="underline">Read more</span>
             <Arrow />
