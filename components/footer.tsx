@@ -20,13 +20,20 @@ export default function Footer() {
 
             <div className="space-y-7 max-w-xl text-small font-medium leading-tight">
               <p>
-                Refuge is a fundraising platform working in solidarity with
-                grass-roots and non-profit organizations.
+                Refuge began in 2015 as a fundraising platform working in
+                solidarity with grassroots and non-profit organizations across
+                Berlin. In 2020 an idea for Refuge Worldwide radio station was
+                hatched, with the station broadcasting remotely from 2021 based
+                out of Neukölln.
               </p>
               <p>
-                Since 2015, we have donated over €50,000 EUR to community groups
-                in Berlin, by raising money at our basement parties,
-                week-end-long raves, and a street food festival.
+                We are a non-commercial independent platform, amplifying voices
+                and creating unity in the community. If you are able to, please
+                consider{" "}
+                <a href="#patreon" className="underline">
+                  supporting us via Patreon
+                </a>
+                .
               </p>
               <p>
                 <Link href="/about">
