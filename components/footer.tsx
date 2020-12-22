@@ -63,6 +63,15 @@ export default function Footer() {
 
           <div className="flex-1 flex justify-center md:justify-end space-x-12">
             <p>
+              <a
+                href="mailto:hello@refugeworldwide.com"
+                className="font-medium"
+              >
+                Contact
+              </a>
+            </p>
+
+            <p>
               <Link href="/imprint">
                 <a className="font-medium">Imprint</a>
               </Link>
