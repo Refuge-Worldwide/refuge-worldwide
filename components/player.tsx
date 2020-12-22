@@ -1,3 +1,4 @@
+import cn from "classnames";
 import {
   MutableRefObject,
   useCallback,
@@ -87,8 +88,12 @@ export default function Player() {
 
   const { isPlaying, play, pause } = usePlayerState(player);
 
+  const playerWrapperClassNames = cn("bg-black text-white", {
+    "sticky top-0 z-50": isPlaying,
+  });
+
   return (
-    <section className="bg-black text-white">
+    <section className={playerWrapperClassNames}>
       <div className="px-4 md:px-8 pt-3 pb-3">
         <div className="grid grid-cols-10 gap-9 items-center">
           <div className="col-span-1">
