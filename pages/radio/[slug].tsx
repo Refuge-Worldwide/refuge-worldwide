@@ -26,7 +26,10 @@ export default function Show({ show, preview }: Page) {
       ) : (
         <>
           <Head>
-            <title>{show.title} | Refuge Worldwide</title>
+            <title>{show.title}</title>
+            <meta property="og:site_name" content="Refuge Worldwide" />
+            <meta property="og:type" content="article" />
+            <meta property="og:title" content={show.title} />
             <meta property="og:image" content={show.coverImage.url} />
           </Head>
 
