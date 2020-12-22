@@ -17,8 +17,12 @@ export default function AboutPage({ preview, data }: Page) {
       </Head>
 
       <SinglePage coverImage={data.coverImage}>
-        <div className="p-4 sm:p-8 prose sm:prose-lg">
-          {documentToReactComponents(data?.content?.json)}
+        <div className="p-4 sm:p-8">
+          <div className="container-md">
+            <div className="prose sm:prose-lg max-w-none">
+              {documentToReactComponents(data?.content?.json)}
+            </div>
+          </div>
         </div>
       </SinglePage>
     </Layout>

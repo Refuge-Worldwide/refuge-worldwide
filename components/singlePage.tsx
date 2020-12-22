@@ -21,7 +21,7 @@ export default function SinglePage({
           </div>
         )}
 
-        <div>
+        <div className="flex">
           <Image
             key={coverImage.title}
             src={coverImage.url}
