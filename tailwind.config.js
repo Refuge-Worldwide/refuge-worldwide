@@ -21,6 +21,7 @@ module.exports = {
     },
     fontFamily: {
       sans: [
+        "Visuelt",
         "system-ui",
         "-apple-system",
         " BlinkMacSystemFont",
