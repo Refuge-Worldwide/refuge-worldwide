@@ -35,10 +35,19 @@ export default function MixcloudPlayer({ mini = false }: { mini?: boolean }) {
       const widget: PlayerWidget = window.Mixcloud.PlayerWidget(iframe);
 
       widget.ready.then(async function () {
-        // const isPaused = await widget.getIsPaused();
-        // if (isPaused) {
-        //   await widget.play();
-        // }
+        try {
+          const isPaused = await widget.getIsPaused();
+
+          console.log({
+            key: await widget.getCurrentKey(),
+          });
+
+          if (isPaused) {
+            await widget.play();
+          }
+        } catch (error) {
+          console.error(error);
+        }
       });
     }
 
@@ -59,10 +68,11 @@ export default function MixcloudPlayer({ mini = false }: { mini?: boolean }) {
             `https://www.mixcloud.com/widget/iframe/?` +
             `hide_cover=1&` +
             `mini=${mini ? 1 : 0}&` +
-            `feed=${encodeURIComponent(key)}`,
+            `feed=${key}`,
         }}
       />
     );
   }
+
   return null;
 }
