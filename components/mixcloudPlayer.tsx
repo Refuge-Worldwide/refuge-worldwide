@@ -68,7 +68,7 @@ export default function MixcloudPlayer({ mini = true }: { mini?: boolean }) {
     // @ts-ignore
     widget = window?.Mixcloud?.PlayerWidget(e.currentTarget);
 
-    widget.ready.then(async () => {
+    widget.ready.then(() => {
       console.log("[Mixcloud]", "PlayerWidget Ready");
 
       widget.events.error.on(onErrorListener);
@@ -76,7 +76,7 @@ export default function MixcloudPlayer({ mini = true }: { mini?: boolean }) {
       widget.events.play.on(onPlayListener);
 
       try {
-        await widget.togglePlay();
+        widget.play();
       } catch (error) {
         console.error("[Mixcloud - Play Error]", error);
       }
