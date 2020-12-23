@@ -94,6 +94,7 @@ export default function MixcloudPlayer({ mini = true }: { mini?: boolean }) {
           src:
             `https://www.mixcloud.com/widget/iframe/?` +
             `hide_cover=1&` +
+            `light=1&` +
             `mini=${mini ? 1 : 0}&` +
             `feed=${key}`,
         }}
