@@ -59,7 +59,7 @@ export default function UpcomingShowPreview({
 
           <div className="h-3" />
 
-          <ul className="flex flex-wrap -mr-2 -mb-2">
+          <ul className="w-full flex flex-wrap -mr-2 -mb-2">
             {genres.map((genre, i) => (
               <li key={i} className="pr-2 pb-2">
                 <Badge text={genre} />

@@ -6,3 +6,9 @@ const mixcloudPlayer = newRidgeState<WidgetInterface>(null);
 export default function useMixcloudPlayer() {
   return mixcloudPlayer.use();
 }
+
+const mixcloudShowKey = newRidgeState<string>(null);
+
+export function useMixcloudShowKey() {
+  return mixcloudShowKey.use();
+}

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { useMixcloudShowKey } from "../hooks/useMixcloudPlayer";
 import PlayLarge from "../icons/playLarge";
 import type { ShowInterface } from "../types/shared";
 import { sort } from "../util";
@@ -12,15 +13,18 @@ export default function ShowPreview({
   coverImage,
   genresCollection,
   date,
+  mixcloudLink,
 }: ShowInterface) {
   const genres = genresCollection.items
     .map((genre) => genre.name)
     .sort(sort.alpha)
     .slice(0, 3);
 
+  const [, setKey] = useMixcloudShowKey();
+
   return (
     <article className="text-small">
-      <div className="flex relative group">
+      <button className="flex relative group">
         <Image
           key={slug}
           src={coverImage.url}
@@ -35,7 +39,7 @@ export default function ShowPreview({
             <PlayLarge />
           </div>
         </div>
-      </div>
+      </button>
 
       <div className="h-2" />
 

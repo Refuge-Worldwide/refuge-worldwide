@@ -1,7 +1,9 @@
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import Link from "next/link";
 import { Fragment } from "react";
-import useMixcloudPlayer from "../hooks/useMixcloudPlayer";
+import useMixcloudPlayer, {
+  useMixcloudShowKey,
+} from "../hooks/useMixcloudPlayer";
 import { ShowInterface } from "../types/shared";
 import { getMixcloudKey, sort } from "../util";
 import Badge from "./badge";
@@ -45,23 +47,16 @@ export default function ShowBody({
     </Fragment>
   );
 
-  const [player] = useMixcloudPlayer();
-
-  const handlePlayShow = () => {
-    const cloudcastKey = getMixcloudKey(mixcloudLink);
-
-    if (player) {
-      player.load(cloudcastKey, true);
-    }
-  };
-
-  const shareData: ShareData = {
-    text: title,
-    title: "Refuge Worldwide",
-    url: `https://refuge-worldwide.vercel.app/radio/${slug}`,
-  };
+  const [, setKey] = useMixcloudShowKey();
+  const handlePlayShow = () => setKey(getMixcloudKey(mixcloudLink));
 
   const handleShare = async () => {
+    const shareData: ShareData = {
+      text: title,
+      title: "Refuge Worldwide",
+      url: `https://refuge-worldwide.vercel.app/radio/${slug}`,
+    };
+
     try {
       /**
        * @todo Handle sharing on devices without the Share API

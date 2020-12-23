@@ -1,7 +1,7 @@
 import type { AppProps } from "next/app";
 import Footer from "../components/footer";
 import Meta from "../components/meta";
-// import MixcloudPlayer from "../components/mixcloudPlayer";
+import MixcloudPlayer from "../components/mixcloudPlayer";
 import Navigation from "../components/navigation";
 import Player from "../components/player";
 import "../styles/globals.css";
@@ -21,7 +21,7 @@ function RefugeApp({ Component, pageProps }: AppProps) {
 
       <Footer />
 
-      {/* <MixcloudPlayer mini /> */}
+      <MixcloudPlayer mini />
     </>
   );
 }
