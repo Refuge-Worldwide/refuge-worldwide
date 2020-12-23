@@ -25,7 +25,7 @@ interface PlayerWidget {
 export default function MixcloudPlayer({ mini = false }: { mini?: boolean }) {
   const key = showKey.useValue();
 
-  const status = useScript("http://widget.mixcloud.com/media/js/widgetApi.js");
+  const status = useScript("//widget.mixcloud.com/media/js/widgetApi.js");
 
   useEffect(() => {
     async function handleMixcloudPlayer() {
