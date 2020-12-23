@@ -49,21 +49,21 @@ export default function MixcloudPlayer({ mini = true }: { mini?: boolean }) {
   let widget: PlayerWidget = null;
 
   const onErrorListener = (event: any) => {
-    console.error("[Mixcloud Event - error]", event);
+    console.error("[Mixcloud]", "on.error", event);
   };
 
   const onPauseListener = () => {
-    console.log("[Mixcloud Event - pause]");
+    console.log("[Mixcloud]", "on.pause");
   };
 
   const onPlayListener = () => {
-    console.log("[Mixcloud Event - play]");
+    console.log("[Mixcloud]", "on.play");
   };
 
   const handleIframeLoad = async (
     e: SyntheticEvent<HTMLIFrameElement, Event>
   ) => {
-    console.log("[Mixcloud]", "iframe Loaded");
+    console.log("[Mixcloud]", "iframe Embed Loaded");
 
     // @ts-ignore
     widget = window?.Mixcloud?.PlayerWidget(e.currentTarget);
@@ -78,7 +78,7 @@ export default function MixcloudPlayer({ mini = true }: { mini?: boolean }) {
       try {
         widget.play();
       } catch (error) {
-        console.error("[Mixcloud - Play Error]", error);
+        console.error("[Mixcloud]", "Widget play() Error", error);
       }
     });
   };
