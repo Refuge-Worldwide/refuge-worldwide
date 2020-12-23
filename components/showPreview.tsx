@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useMixcloudShowKey } from "../hooks/useMixcloudPlayer";
 import PlayLarge from "../icons/playLarge";
 import type { ShowInterface } from "../types/shared";
-import { sort } from "../util";
+import { getMixcloudKey, sort } from "../util";
 import Badge from "./badge";
 import Date from "./date";
 
@@ -21,10 +21,11 @@ export default function ShowPreview({
     .slice(0, 3);
 
   const [, setKey] = useMixcloudShowKey();
+  const handlePlayShow = () => setKey(getMixcloudKey(mixcloudLink));
 
   return (
     <article className="text-small">
-      <button className="flex relative group">
+      <button onClick={handlePlayShow} className="flex relative group">
         <Image
           key={slug}
           src={coverImage.url}
