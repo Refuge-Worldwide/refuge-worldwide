@@ -22,7 +22,7 @@ interface PlayerWidget {
   ready: Promise<void>;
 }
 
-export default function MixcloudPlayer({ mini = false }: { mini?: boolean }) {
+export default function MixcloudPlayer({ mini = true }: { mini?: boolean }) {
   const key = showKey.useValue();
 
   const status = useScript("//widget.mixcloud.com/media/js/widgetApi.js");
@@ -34,16 +34,17 @@ export default function MixcloudPlayer({ mini = false }: { mini?: boolean }) {
       // @ts-ignore
       const widget: PlayerWidget = window.Mixcloud.PlayerWidget(iframe);
 
-      widget.ready.then(async function () {
+      widget.ready.then(async () => {
         try {
           const isPaused = await widget.getIsPaused();
 
           console.log({
             key: await widget.getCurrentKey(),
+            isPaused,
           });
 
           if (isPaused) {
-            await widget.play();
+            await widget.togglePlay();
           }
         } catch (error) {
           console.error(error);

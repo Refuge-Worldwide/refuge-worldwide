@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { isServer } from "../util";
 
 export default function useScript(src: string) {
   // Keep track of script status ("idle", "loading", "ready", "error")
@@ -11,7 +10,7 @@ export default function useScript(src: string) {
     () => {
       // Allow falsy src value if waiting on other data needed for
       // constructing the script URL passed to this hook.
-      if (!src || isServer) {
+      if (!src) {
         setStatus("idle");
         return;
       }

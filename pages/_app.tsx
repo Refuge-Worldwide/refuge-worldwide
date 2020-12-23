@@ -1,10 +1,14 @@
 import type { AppProps } from "next/app";
+import dynamic from "next/dynamic";
 import Footer from "../components/footer";
 import Meta from "../components/meta";
-import MixcloudPlayer from "../components/mixcloudPlayer";
 import Navigation from "../components/navigation";
 import Player from "../components/player";
 import "../styles/globals.css";
+
+const MixcloudPlayer = dynamic(() => import("../components/mixcloudPlayer"), {
+  ssr: false,
+});
 
 function RefugeApp({ Component, pageProps }: AppProps) {
   return (
@@ -21,7 +25,7 @@ function RefugeApp({ Component, pageProps }: AppProps) {
 
       <Footer />
 
-      <MixcloudPlayer mini />
+      <MixcloudPlayer />
     </>
   );
 }
