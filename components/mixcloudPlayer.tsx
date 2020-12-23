@@ -1,52 +1,14 @@
 import { SyntheticEvent } from "react";
 import useScript from "../hooks/useScript";
-import { showKey } from "../lib/mixcloud";
-
-interface PlayerWidget {
-  events: {
-    buffering: {
-      on: (e: any) => void;
-      off: (e: any) => void;
-    };
-    ended: {
-      on: (e: any) => void;
-      off: (e: any) => void;
-    };
-    error: {
-      on: (e: any) => void;
-      off: (e: any) => void;
-    };
-    pause: {
-      on: (e: any) => void;
-      off: (e: any) => void;
-    };
-    play: {
-      on: (e: any) => void;
-      off: (e: any) => void;
-    };
-    progress: {
-      on: (e: any) => void;
-      off: (e: any) => void;
-    };
-  };
-  getCurrentKey: () => Promise<string>;
-  getDuration: () => Promise<number>;
-  getIsPaused: () => Promise<boolean>;
-  getPosition: () => Promise<number>;
-  getVolume: () => Promise<number>;
-  pause: () => Promise<void>;
-  play: () => Promise<void>;
-  seek: (seconds: number) => Promise<void>;
-  togglePlay: () => Promise<void>;
-  ready: Promise<void>;
-}
+import { showKey, playerWidget } from "../lib/mixcloud";
+import { PlayerWidget } from "../types/shared";
 
 export default function MixcloudPlayer({ mini = true }: { mini?: boolean }) {
   const key = showKey.useValue();
 
   const status = useScript("//widget.mixcloud.com/media/js/widgetApi.js");
 
-  let widget: PlayerWidget = null;
+  const [, playerWidgetStateSet] = playerWidget.use();
 
   const onErrorListener = (event: any) => {
     console.error("[Mixcloud]", "on.error", event);
@@ -65,8 +27,12 @@ export default function MixcloudPlayer({ mini = true }: { mini?: boolean }) {
   ) => {
     console.log("[Mixcloud]", "iframe Embed Loaded");
 
+    let widget: PlayerWidget;
+
     // @ts-ignore
     widget = window?.Mixcloud?.PlayerWidget(e.currentTarget);
+
+    playerWidgetStateSet(widget);
 
     widget.ready.then(() => {
       console.log("[Mixcloud]", "PlayerWidget Ready");

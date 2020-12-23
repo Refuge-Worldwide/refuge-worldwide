@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import PlayLarge from "../icons/playLarge";
-import { showKey } from "../lib/mixcloud";
+import { playerWidget, showKey } from "../lib/mixcloud";
 import type { ShowInterface } from "../types/shared";
 import { getMixcloudKey, sort } from "../util";
 import Badge from "./badge";
@@ -21,7 +21,22 @@ export default function ShowPreview({
     .slice(0, 3);
 
   const [, setKey] = showKey.use();
-  const handlePlayShow = () => setKey(getMixcloudKey(mixcloudLink));
+
+  const player = playerWidget.useValue();
+
+  const handlePlayShow = async () => {
+    setKey(getMixcloudKey(mixcloudLink));
+
+    if (player?.play) {
+      console.log("[Mixcloud]", "Play");
+
+      try {
+        await player.togglePlay();
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
 
   return (
     <article className="text-small">
