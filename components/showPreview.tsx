@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { useMixcloudShowKey } from "../hooks/useMixcloudPlayer";
 import PlayLarge from "../icons/playLarge";
+import { showKey } from "../lib/mixcloud";
 import type { ShowInterface } from "../types/shared";
 import { getMixcloudKey, sort } from "../util";
 import Badge from "./badge";
@@ -20,7 +20,7 @@ export default function ShowPreview({
     .sort(sort.alpha)
     .slice(0, 3);
 
-  const [, setKey] = useMixcloudShowKey();
+  const [, setKey] = showKey.use();
   const handlePlayShow = () => setKey(getMixcloudKey(mixcloudLink));
 
   return (

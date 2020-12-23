@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { useMixcloudShowKey } from "../hooks/useMixcloudPlayer";
+import { useEffect } from "react";
 import useScript from "../hooks/useScript";
+import { showKey } from "../lib/mixcloud";
 
 // events: {
 //   buffering: {on: () => Promise<void>;, off: () => void};
@@ -23,7 +23,7 @@ interface PlayerWidget {
 }
 
 export default function MixcloudPlayer({ mini = false }: { mini?: boolean }) {
-  const [key] = useMixcloudShowKey();
+  const key = showKey.useValue();
 
   const status = useScript("http://widget.mixcloud.com/media/js/widgetApi.js");
 

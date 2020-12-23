@@ -1,16 +1,14 @@
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import Link from "next/link";
 import { Fragment } from "react";
-import useMixcloudPlayer, {
-  useMixcloudShowKey,
-} from "../hooks/useMixcloudPlayer";
+import PlayCircle from "../icons/playCircle";
+import Share from "../icons/share";
+import { showKey } from "../lib/mixcloud";
 import { ShowInterface } from "../types/shared";
 import { getMixcloudKey, sort } from "../util";
 import Badge from "./badge";
 import Date from "./date";
 import Pill from "./pill";
-import PlayCircle from "../icons/playCircle";
-import Share from "../icons/share";
 
 export default function ShowBody({
   title,
@@ -47,7 +45,7 @@ export default function ShowBody({
     </Fragment>
   );
 
-  const [, setKey] = useMixcloudShowKey();
+  const [, setKey] = showKey.use();
   const handlePlayShow = () => setKey(getMixcloudKey(mixcloudLink));
 
   const handleShare = async () => {
