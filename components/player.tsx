@@ -130,12 +130,10 @@ export default function Player() {
         </div>
       </div>
 
-      {isOnline && (
-        <audio ref={player} src={AUDIO_SRC} hidden>
-          <source src={AUDIO_SRC} type="audio/mpeg" />
-          Your browser does not support the audio element.
-        </audio>
-      )}
+      <audio ref={player} src={AUDIO_SRC} hidden>
+        <source src={AUDIO_SRC} type="audio/mpeg" />
+        Your browser does not support the audio element.
+      </audio>
     </section>
   );
 }
