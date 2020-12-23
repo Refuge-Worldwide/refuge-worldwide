@@ -20,7 +20,7 @@
   @font-face {
     font-family: Visuelt;
     font-weight: 300;
-    font-display: optional;
+    font-display: swap;
     font-style: normal;
     src: url("/fonts/visuelt-light.woff2") format("woff2");
   }
@@ -28,7 +28,7 @@
   @font-face {
     font-family: Visuelt;
     font-weight: 500;
-    font-display: optional;
+    font-display: swap;
     font-style: normal;
     src: url("/fonts/visuelt-medium.woff2") format("woff2");
   }
