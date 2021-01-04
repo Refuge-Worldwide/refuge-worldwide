@@ -1,4 +1,5 @@
 import { MutableRefObject, useCallback, useEffect, useState } from "react";
+import { showKey } from "../lib/mixcloud";
 
 export default function usePlayerState(
   ref: MutableRefObject<HTMLAudioElement>
@@ -18,8 +19,17 @@ export default function usePlayerState(
     };
   }, [ref]);
 
+  const [, setKey] = showKey.use();
+
+  /**
+   * @note This will unmount the Mixcloud player so we don't have two media sources playing at once.
+   */
+  const removeMixcloudPlayer = () => setKey(null);
+
   const play = useCallback(async () => {
     try {
+      removeMixcloudPlayer();
+
       await ref?.current?.play();
     } catch (error) {
       console.error(error);
