@@ -1,5 +1,5 @@
 import cn from "classnames";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import usePlayerState from "../hooks/usePlayerState";
 import useRadioCoStatus from "../hooks/useRadioCoStatus";
 import Pause from "../icons/pause";
@@ -27,11 +27,11 @@ const BroadcastingIndicator = ({
 };
 
 export default function LivePlayer() {
-  const REFUGE_WW = "s3699c5e49";
+  const REFUGE_WORLDWIDE = "s3699c5e49";
 
-  const AUDIO_SRC = `https://streaming.radio.co/${REFUGE_WW}/listen`;
+  const AUDIO_SRC = `https://streaming.radio.co/${REFUGE_WORLDWIDE}/listen`;
 
-  const { data } = useRadioCoStatus(REFUGE_WW);
+  const { data } = useRadioCoStatus(REFUGE_WORLDWIDE);
   const isOnline = data?.status === "online";
 
   const player = useRef<HTMLAudioElement>(null);
@@ -41,6 +41,22 @@ export default function LivePlayer() {
   const playerWrapperClassNames = cn("bg-black text-white", {
     "sticky top-0 z-50": isPlaying,
   });
+
+  useEffect(() => {
+    if ("mediaSession" in navigator && data?.current_track) {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: data.current_track.title,
+        artist: "Refuge Worldwide",
+        artwork: [
+          {
+            src: data.current_track.artwork_url,
+            sizes: "1024x1024",
+            type: "image/png",
+          },
+        ],
+      });
+    }
+  }, [data]);
 
   return (
     <section className={playerWrapperClassNames}>
@@ -80,8 +96,14 @@ export default function LivePlayer() {
         </div>
       </div>
 
-      <audio ref={player} src={AUDIO_SRC} hidden>
-        {isPlaying && <source src={AUDIO_SRC} type="audio/mpeg" />}
+      <audio
+        hidden
+        id="refuge-live-player"
+        src={AUDIO_SRC}
+        preload="none"
+        ref={player}
+      >
+        <source src={AUDIO_SRC} type="audio/mpeg" />
         Your browser does not support the audio element.
       </audio>
     </section>
