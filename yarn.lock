@@ -216,6 +216,11 @@
     "@types/prop-types" "*"
     csstype "^3.0.2"
 
+"@types/wicg-mediasession@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@types/wicg-mediasession/-/wicg-mediasession-1.1.0.tgz#368bb113ffc1a5410895cbb1e5ba50ee291f162f"
+  integrity sha512-aA6+ZUHgNpXqWEL8UdS1fx/oCFSrh/Hu9BbM8rXYZLiCQSuZ8+Lzu1//LKwHMNBAXgen7/8LoThDEKS9VEaGxw==
+
 "@webassemblyjs/ast@1.9.0":
   version "1.9.0"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.9.0.tgz#bd850604b4042459a5a41cd7d338cbed695ed964"
