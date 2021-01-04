@@ -1,6 +1,6 @@
 import { SyntheticEvent } from "react";
 import useScript from "../hooks/useScript";
-import { showKey, playerWidget } from "../lib/mixcloud";
+import { playerWidget, showKey } from "../lib/mixcloud";
 import { PlayerWidget } from "../types/shared";
 
 export default function MixcloudPlayer({ mini = true }: { mini?: boolean }) {
@@ -34,7 +34,7 @@ export default function MixcloudPlayer({ mini = true }: { mini?: boolean }) {
 
     playerWidgetStateSet(widget);
 
-    widget.ready.then(() => {
+    widget.ready.then(async () => {
       console.log("[Mixcloud]", "PlayerWidget Ready");
 
       widget.events.error.on(onErrorListener);
@@ -42,7 +42,9 @@ export default function MixcloudPlayer({ mini = true }: { mini?: boolean }) {
       widget.events.play.on(onPlayListener);
 
       try {
-        widget.play();
+        console.log("[Mixcloud]", "Attempt Play");
+
+        await widget.play();
       } catch (error) {
         console.error("[Mixcloud]", "Widget play() Error", error);
       }
@@ -52,18 +54,18 @@ export default function MixcloudPlayer({ mini = true }: { mini?: boolean }) {
   if (status === "ready" && key) {
     return (
       <iframe
+        allow="autoplay"
         onLoad={handleIframeLoad}
         id="mixcloud-player"
         height={mini ? 60 : 120}
         className="fixed bottom-0 left-0 w-full md:w-2/3 lg:w-1/2"
-        {...{
-          src:
-            `https://www.mixcloud.com/widget/iframe/?` +
-            `hide_cover=1&` +
-            `light=1&` +
-            `mini=${mini ? 1 : 0}&` +
-            `feed=${key}`,
-        }}
+        src={
+          `https://www.mixcloud.com/widget/iframe/?` +
+          `hide_cover=1&` +
+          `light=1&` +
+          `mini=${mini ? 1 : 0}&` +
+          `feed=${key}`
+        }
       />
     );
   }
