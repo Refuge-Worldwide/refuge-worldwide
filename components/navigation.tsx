@@ -1,10 +1,15 @@
 import Link from "next/link";
+import { useState } from "react";
 import { INSTAGRAM_URL, TWITTER_URL } from "../constants";
 import Instagram from "../icons/instagram";
+import { Menu, Close } from "../icons/menu";
 import Twitter from "../icons/twitter";
 import NavigationLink from "./navigationLink";
 
 export default function Navigation() {
+  const [isOpen, isOpenSet] = useState(false);
+  const toggleMenu = () => isOpenSet(!isOpen);
+
   return (
     <nav className="text-black">
       <div className="px-4 md:px-8 py-2.5">
@@ -22,7 +27,17 @@ export default function Navigation() {
               </a>
             </Link>
           </li>
-          <li className="flex-1">
+
+          <li className="block lg:hidden ml-auto">
+            <button
+              onClick={toggleMenu}
+              className="flex focus:outline-none focus:ring-4"
+            >
+              {isOpen ? <Close /> : <Menu />}
+            </button>
+          </li>
+
+          <li className="hidden lg:block flex-1">
             <ul className="md:flex justify-end items-center space-x-6 lg:space-x-8 xl:space-x-14">
               <li>
                 <NavigationLink
