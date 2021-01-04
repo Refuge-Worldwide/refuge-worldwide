@@ -1,10 +1,13 @@
-import { MutableRefObject, useCallback, useEffect, useState } from "react";
+import { MutableRefObject, useCallback, useEffect } from "react";
+import { newRidgeState } from "react-ridge-state";
 import { showKey } from "../lib/mixcloud";
+
+export const livePlayerState = newRidgeState(false);
 
 export default function usePlayerState(
   ref: MutableRefObject<HTMLAudioElement>
 ) {
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = livePlayerState.use();
 
   useEffect(() => {
     const setStatePlaying = () => setIsPlaying(true);
@@ -20,15 +23,11 @@ export default function usePlayerState(
   }, [ref]);
 
   const [, setKey] = showKey.use();
-
-  /**
-   * @note This will unmount the Mixcloud player so we don't have two media sources playing at once.
-   */
-  const removeMixcloudPlayer = () => setKey(null);
+  const unmountMixcloudPlayer = () => setKey(null);
 
   const play = useCallback(async () => {
     try {
-      removeMixcloudPlayer();
+      unmountMixcloudPlayer();
 
       await ref?.current?.play();
     } catch (error) {
@@ -43,6 +42,12 @@ export default function usePlayerState(
       console.error(error);
     }
   }, [ref]);
+
+  useEffect(() => {
+    if (isPlaying === false) {
+      pause();
+    }
+  }, [pause, isPlaying]);
 
   return {
     isPlaying,
