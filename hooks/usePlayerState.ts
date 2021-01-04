@@ -18,9 +18,21 @@ export default function usePlayerState(
     };
   }, [ref]);
 
-  const play = useCallback(() => ref?.current?.play(), [ref]);
+  const play = useCallback(async () => {
+    try {
+      await ref?.current?.play();
+    } catch (error) {
+      console.error(error);
+    }
+  }, [ref]);
 
-  const pause = useCallback(() => ref?.current?.pause(), [ref]);
+  const pause = useCallback(() => {
+    try {
+      ref?.current?.pause();
+    } catch (error) {
+      console.error(error);
+    }
+  }, [ref]);
 
   return {
     isPlaying,
