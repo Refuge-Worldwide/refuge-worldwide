@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PATREON_URL } from "../constants";
 import { Arrow } from "../icons/arrow";
 
 export default function Footer() {
@@ -30,7 +31,7 @@ export default function Footer() {
                 We are a non-commercial independent platform, amplifying voices
                 and creating unity in the community. If you are able to, please
                 consider{" "}
-                <a href="#patreon" className="underline">
+                <a href={PATREON_URL} className="underline">
                   supporting us via Patreon
                 </a>
                 .

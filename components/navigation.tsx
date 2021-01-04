@@ -1,6 +1,8 @@
 import Link from "next/link";
+import { FACEBOOK_URL, INSTAGRAM_URL, TWITTER_URL } from "../constants";
 import Facebook from "../icons/facebook";
 import Instagram from "../icons/instagram";
+import Twitter from "../icons/twitter";
 import NavigationLink from "./navigationLink";
 
 export default function Navigation() {
@@ -80,13 +82,18 @@ export default function Navigation() {
               <li>
                 <ul className="flex space-x-6">
                   <li>
-                    <a href="#instagram">
+                    <a href={INSTAGRAM_URL}>
                       <Instagram />
                     </a>
                   </li>
                   <li>
-                    <a href="#facebook">
+                    <a href={FACEBOOK_URL}>
                       <Facebook />
+                    </a>
+                  </li>
+                  <li>
+                    <a href={TWITTER_URL}>
+                      <Twitter />
                     </a>
                   </li>
                 </ul>
