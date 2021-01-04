@@ -31,7 +31,8 @@
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-ridge-state": "^4.1.6",
-    "swr": "^0.3.11"
+    "swr": "^0.3.11",
+    "use-intersection": "^0.2.1"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^10.0.4",

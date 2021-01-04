@@ -96,3 +96,11 @@ export const sort = {
   alpha: (a: string, b: string) =>
     a.localeCompare(b, "en", { sensitivity: "base" }),
 };
+
+export const delay = (time = 1500) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(true);
+    }, time);
+  });
+};

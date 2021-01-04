@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
+import { useIntersection } from "use-intersection";
 import FeaturedArticlePreview from "../../components/featuredArticlePreview";
-import useIntersect from "../../hooks/useIntersect";
+import useInterval from "../../hooks/useInterval";
 import { ArticleInterface } from "../../types/shared";
 import { isServer } from "../../util";
 
@@ -9,27 +10,46 @@ export default function FeaturedArticles({
 }: {
   articles: ArticleInterface[];
 }) {
-  const [activeId, setActiveId] = useState(0);
-  const carousel = useRef(null);
+  const carousel = useRef<HTMLUListElement>(null);
+
+  const intersecting = useIntersection(carousel, {
+    threshold: 0.35,
+  });
+
+  const [activeId, setActiveId] = useState(1);
+
+  function autoAdvanceCarousel() {
+    const isNotLastSlide = activeId < articles.length - 1;
+
+    if (isNotLastSlide) {
+      carousel.current.scrollLeft = window.innerWidth * (activeId + 1);
+    } else {
+      carousel.current.scrollLeft = 0;
+    }
+  }
+
+  useInterval(() => {
+    if (intersecting) autoAdvanceCarousel();
+  }, 5 * 1000);
 
   return (
     <section className="relative">
       {/* Articles */}
       <ul ref={carousel} className="carousel">
         {articles?.map((article, i) => {
-          const { setNode, entry } = useIntersect({
+          const slide = useRef<HTMLLIElement>(null);
+
+          const isSlideInView = useIntersection(slide, {
             threshold: 0.5,
-            root: carousel.current,
+            root: carousel,
           });
 
-          const isIntersecting = entry?.isIntersecting;
-
           useEffect(() => {
-            if (isIntersecting) setActiveId(i);
-          }, [isIntersecting]);
+            if (isSlideInView) setActiveId(i);
+          }, [isSlideInView]);
 
           return (
-            <li ref={setNode} key={i} id={String(i)}>
+            <li ref={slide} key={i} id={String(i)}>
               <FeaturedArticlePreview {...article} />
             </li>
           );
