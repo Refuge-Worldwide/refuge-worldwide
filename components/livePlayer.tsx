@@ -1,32 +1,9 @@
 import cn from "classnames";
-import {
-  MutableRefObject,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import useSWR from "swr";
+import { useRef } from "react";
+import usePlayerState from "../hooks/usePlayerState";
+import useRadioCoStatus from "../hooks/useRadioCoStatus";
 import Pause from "../icons/pause";
 import Play from "../icons/play";
-import { RadioCoInterface } from "../types/shared";
-
-const getRadioCoStatus = async (_: any, stationId: string) => {
-  const URL = `https://public.radio.co/stations/${stationId}/status`;
-
-  const res = await fetch(URL);
-
-  return res.json();
-};
-
-function useRadioCoStatus(stationId: string) {
-  return useSWR<RadioCoInterface>(["RadioCo", stationId], getRadioCoStatus, {
-    /**
-     * @note Refresh the radio data every 30s
-     */
-    // refreshInterval: 30 * 1000,
-  });
-}
 
 const BroadcastingIndicator = ({
   status,
@@ -49,34 +26,7 @@ const BroadcastingIndicator = ({
   );
 };
 
-function usePlayerState(ref: MutableRefObject<HTMLAudioElement>) {
-  const [isPlaying, setIsPlaying] = useState(false);
-
-  useEffect(() => {
-    const setStatePlaying = () => setIsPlaying(true);
-    const setStatePaused = () => setIsPlaying(false);
-
-    ref?.current?.addEventListener("play", setStatePlaying);
-    ref?.current?.addEventListener("pause", setStatePaused);
-
-    return () => {
-      ref?.current?.removeEventListener("play", setStatePlaying);
-      ref?.current?.removeEventListener("pause", setStatePaused);
-    };
-  }, [ref]);
-
-  const play = useCallback(() => ref?.current?.play(), [ref]);
-
-  const pause = useCallback(() => ref?.current?.pause(), [ref]);
-
-  return {
-    isPlaying,
-    play,
-    pause,
-  };
-}
-
-export default function Player() {
+export default function LivePlayer() {
   const REFUGE_WW = "s3699c5e49";
 
   const AUDIO_SRC = `https://streaming.radio.co/${REFUGE_WW}/listen`;
@@ -131,7 +81,7 @@ export default function Player() {
       </div>
 
       <audio ref={player} src={AUDIO_SRC} hidden>
-        <source src={AUDIO_SRC} type="audio/mpeg" />
+        {isPlaying && <source src={AUDIO_SRC} type="audio/mpeg" />}
         Your browser does not support the audio element.
       </audio>
     </section>

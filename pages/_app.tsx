@@ -1,9 +1,9 @@
 import type { AppProps } from "next/app";
 import dynamic from "next/dynamic";
 import Footer from "../components/footer";
+import LivePlayer from "../components/livePlayer";
 import Meta from "../components/meta";
 import Navigation from "../components/navigation";
-import Player from "../components/player";
 import "../styles/globals.css";
 
 const MixcloudPlayer = dynamic(() => import("../components/mixcloudPlayer"), {
@@ -19,7 +19,7 @@ function RefugeApp({ Component, pageProps }: AppProps) {
         <Navigation />
       </header>
 
-      <Player />
+      <LivePlayer />
 
       <Component {...pageProps} />
 
