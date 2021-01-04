@@ -49,7 +49,7 @@ export const sortAndGroup = (
     },
     current: ArtistInterface
   ) => {
-    let alphabet = current.name[0];
+    const alphabet = current.name[0];
 
     if (!accumulator[alphabet]) {
       accumulator[alphabet] = {

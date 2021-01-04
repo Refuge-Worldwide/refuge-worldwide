@@ -8,12 +8,10 @@ export interface CoverImage {
   height: number;
 }
 
-export interface ImageInterface extends CoverImage {}
-
 export interface ArtistInterface {
   name: string;
   slug: string;
-  photo: ImageInterface;
+  photo: CoverImage;
   isResident: boolean;
 }
 
