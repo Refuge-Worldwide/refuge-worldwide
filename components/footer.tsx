@@ -86,6 +86,24 @@ export default function Footer() {
           </div>
         </div>
       </div>
+
+      <div className="px-4 md:px-8 border-t border-white py-4 md:py-8">
+        <div className="font-medium text-center text-xxs">
+          <p>
+            Designed by{" "}
+            <a
+              className="underline"
+              href="https://www.studiopanorama.de/?lang=en"
+            >
+              <span className="tracking-widest">panorama</span>
+            </a>
+            . Built by{" "}
+            <a className="underline" href="https://reiner.design">
+              mirshko
+            </a>
+          </p>
+        </div>
+      </div>
     </footer>
   );
 }
