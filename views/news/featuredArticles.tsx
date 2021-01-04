@@ -1,7 +1,7 @@
+import useInterval from "@use-it/interval";
 import { useEffect, useRef, useState } from "react";
 import { useIntersection } from "use-intersection";
 import FeaturedArticlePreview from "../../components/featuredArticlePreview";
-import useInterval from "../../hooks/useInterval";
 import { ArticleInterface } from "../../types/shared";
 import { isServer } from "../../util";
 
@@ -10,6 +10,11 @@ export default function FeaturedArticles({
 }: {
   articles: ArticleInterface[];
 }) {
+  /**
+   * @note Time between carousel auto advance
+   */
+  const DELAY = 5000;
+
   const carousel = useRef<HTMLUListElement>(null);
 
   const intersecting = useIntersection(carousel, {
@@ -30,7 +35,7 @@ export default function FeaturedArticles({
 
   useInterval(() => {
     if (intersecting) autoAdvanceCarousel();
-  }, 5 * 1000);
+  }, DELAY);
 
   return (
     <section className="relative">

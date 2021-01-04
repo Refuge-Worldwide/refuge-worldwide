@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@contentful/rich-text-react-renderer": "^14.1.2",
+    "@use-it/interval": "^1.0.0",
     "classnames": "^2.2.6",
     "dayjs": "^1.10.1",
     "next": "^10.0.4",
