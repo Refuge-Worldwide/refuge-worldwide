@@ -24,32 +24,56 @@ export default function Navigation() {
           <li className="flex-1">
             <ul className="md:flex justify-end items-center space-x-6 lg:space-x-8 xl:space-x-14">
               <li>
-                <NavigationLink href="/radio" activeClassName="text-orange">
+                <NavigationLink
+                  href="/radio"
+                  activeClassName="text-orange"
+                  className="hover:text-orange focus:text-orange"
+                >
                   Radio
                 </NavigationLink>
               </li>
               <li>
-                <NavigationLink href="/news" activeClassName="text-green">
+                <NavigationLink
+                  href="/news"
+                  activeClassName="text-green"
+                  className="hover:text-green focus:text-green"
+                >
                   News
                 </NavigationLink>
               </li>
               <li>
-                <NavigationLink href="/artists" activeClassName="text-purple">
+                <NavigationLink
+                  href="/artists"
+                  activeClassName="text-purple"
+                  className="hover:text-purple focus:text-purple"
+                >
                   Artists
                 </NavigationLink>
               </li>
               <li>
-                <NavigationLink href="/support" activeClassName="text-pink">
+                <NavigationLink
+                  href="/support"
+                  activeClassName="text-pink"
+                  className="hover:text-pink focus:text-pink"
+                >
                   Support
                 </NavigationLink>
               </li>
               <li>
-                <NavigationLink href="/about" activeClassName="text-brown">
+                <NavigationLink
+                  href="/about"
+                  activeClassName="text-brown"
+                  className="hover:text-brown focus:text-brown"
+                >
                   About
                 </NavigationLink>
               </li>
               <li>
-                <NavigationLink href="/newsletter" activeClassName="text-blue">
+                <NavigationLink
+                  href="/newsletter"
+                  activeClassName="text-blue"
+                  className="hover:text-blue focus:text-blue"
+                >
                   Newsletter
                 </NavigationLink>
               </li>

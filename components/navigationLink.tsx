@@ -3,10 +3,12 @@ import { useRouter } from "next/dist/client/router";
 import Link, { LinkProps } from "next/link";
 
 interface NavigationLink extends React.PropsWithChildren<LinkProps> {
+  className: string;
   activeClassName: string;
 }
 
 export default function NavigationLink({
+  className = "",
   activeClassName,
   children,
   href,
@@ -16,9 +18,9 @@ export default function NavigationLink({
 
   const isActive = pathname === href;
 
-  const className = cn(
+  const classNames = cn(
+    className,
     "font-medium transition-colors duration-150 ease-in-out",
-    `hover:${activeClassName} focus:${activeClassName}`,
     {
       [activeClassName]: isActive,
     }
@@ -26,7 +28,7 @@ export default function NavigationLink({
 
   return (
     <Link href={href} {...rest}>
-      <a className={className}>{children}</a>
+      <a className={classNames}>{children}</a>
     </Link>
   );
 }
