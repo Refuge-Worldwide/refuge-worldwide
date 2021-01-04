@@ -34,6 +34,7 @@ export default function UpcomingShowPreview({
               objectFit="cover"
               objectPosition="center"
               alt={title}
+              className="bg-black bg-opacity-10"
             />
           </div>
 
