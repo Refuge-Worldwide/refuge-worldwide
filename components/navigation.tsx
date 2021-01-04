@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { FACEBOOK_URL, INSTAGRAM_URL, TWITTER_URL } from "../constants";
-import Facebook from "../icons/facebook";
+import { INSTAGRAM_URL, TWITTER_URL } from "../constants";
 import Instagram from "../icons/instagram";
 import Twitter from "../icons/twitter";
 import NavigationLink from "./navigationLink";
@@ -84,11 +83,6 @@ export default function Navigation() {
                   <li>
                     <a href={INSTAGRAM_URL}>
                       <Instagram />
-                    </a>
-                  </li>
-                  <li>
-                    <a href={FACEBOOK_URL}>
-                      <Facebook />
                     </a>
                   </li>
                   <li>
