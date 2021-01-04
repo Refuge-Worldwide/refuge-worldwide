@@ -14,28 +14,27 @@
   },
   "dependencies": {
     "@contentful/rich-text-react-renderer": "^14.1.2",
-    "@tailwindcss/forms": "^0.2.1",
-    "@tailwindcss/typography": "^0.3.1",
-    "autoprefixer": "^10.0.4",
     "classnames": "^2.2.6",
-    "dayjs": "^1.9.6",
-    "next": "^10.0.3",
-    "postcss": "^8.1.14",
+    "dayjs": "^1.10.1",
+    "next": "^10.0.4",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-ridge-state": "^4.1.6",
-    "swr": "^0.3.9"
+    "swr": "^0.3.11"
   },
   "devDependencies": {
+    "@tailwindcss/forms": "^0.2.1",
+    "@tailwindcss/typography": "^0.3.1",
     "@types/classnames": "^2.2.11",
-    "@types/node": "^14.14.10",
+    "@types/node": "^14.14.19",
     "@types/react": "^17.0.0",
     "@types/wicg-mediasession": "^1.1.0",
-    "husky": "^4.3.0",
-    "postcss-preset-env": "^6.7.0",
+    "autoprefixer": "^10.1.0",
+    "husky": "^4.3.6",
+    "postcss": "^8.2.2",
     "prettier": "^2.2.1",
     "pretty-quick": "^3.1.0",
-    "tailwindcss": "^2.0.1",
-    "typescript": "^4.1.2"
+    "tailwindcss": "^2.0.2",
+    "typescript": "^4.1.3"
   }
 }
