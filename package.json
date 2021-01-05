@@ -9,7 +9,7 @@
     "build": "next build",
     "analyze": "ANALYZE=true yarn build",
     "start": "next start",
-    "format": "prettier --write \"**/*.ts\"",
+    "format": "prettier --write \"**/*.tsx\" \"**/*.ts\"",
     "lint": "eslint . --ext ts --cache"
   },
   "husky": {
@@ -18,7 +18,7 @@
     }
   },
   "lint-staged": {
-    "*.ts": [
+    "*.{ts,tsx}": [
       "eslint --cache",
       "pretty-quick --staged"
     ]
