@@ -33,7 +33,7 @@ export default function FeaturedArticlePreview({
         "flex flex-col-reverse md:grid grid-cols-10 h-full " + articleClassName
       }
     >
-      <header className="flex-1 md:col-span-5 2xl:col-span-3 p-4 lg:p-8 border-l-2 border-t-0 md:border-t-2 md:border-b-2">
+      <header className="flex-1 md:col-span-5 2xl:col-span-3 p-4 lg:p-8 border-l-2 border-t-0 md:border-t-2 border-b-2">
         <Pill>
           <span className="font-serif">{articleType}</span>
         </Pill>
@@ -66,7 +66,7 @@ export default function FeaturedArticlePreview({
           </a>
         </Link>
 
-        <div className="h-6" />
+        <div className="hidden sm:block h-6" />
       </header>
 
       <div className="md:col-span-5 2xl:col-span-7 h-56 md:h-auto relative border-l-2 border-t-2 border-b-2">
