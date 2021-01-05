@@ -17,12 +17,12 @@ export default function AllShows({
 
   return (
     <section>
-      <div className="p-8">
+      <div className="p-4 sm:p-8">
         <Pill>
           <h2>All Shows</h2>
         </Pill>
 
-        <div className="h-8" />
+        <div className="h-5 sm:h-8" />
 
         <ul className="w-full flex flex-wrap leading-none -mr-2 -mb-2">
           <li className="inline-flex pr-2 pb-2">
