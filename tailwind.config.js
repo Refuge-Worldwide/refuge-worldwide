@@ -16,7 +16,7 @@ module.exports = {
       xxs: ["0.75rem", 1.1],
       tiny: ["1rem", 1],
       small: ["1.25rem", 1.3],
-      base: ["1.875rem", 1.26],
+      base: ["1.875rem", 1.2666666667],
       large: ["2.8125rem", 1.1],
     },
     fontFamily: {

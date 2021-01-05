@@ -20,7 +20,7 @@
   @font-face {
     font-family: Visuelt;
     font-weight: 300;
-    font-display: swap;
+    font-display: optional;
     font-style: normal;
     src: url("/fonts/visuelt-light.woff2") format("woff2");
   }
@@ -28,7 +28,7 @@
   @font-face {
     font-family: Visuelt;
     font-weight: 500;
-    font-display: swap;
+    font-display: optional;
     font-style: normal;
     src: url("/fonts/visuelt-medium.woff2") format("woff2");
   }
@@ -97,6 +97,10 @@
     .pill-small {
       height: 2.5rem;
     }
+  }
+
+  .pill-input {
+    @apply px-6 pt-4 pb-3 w-full rounded-full border-2 border-black bg-white shadow-pill-black text-small sm:text-base text-black font-light focus:outline-none outline-none focus:border-black focus:ring-0;
   }
 }
 

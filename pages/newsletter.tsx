@@ -1,9 +1,11 @@
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
+import dynamic from "next/dynamic";
 import Head from "next/head";
 import Layout from "../components/layout";
 import SinglePage from "../components/singlePage";
-import Subscribe from "../components/subscribe";
 import { getNewsletterPage, NewsletterPageData } from "../lib/api";
+
+const Subscribe = dynamic(() => import("../components/subscribe"));
 
 interface Page extends JSX.Element {
   preview: boolean;
