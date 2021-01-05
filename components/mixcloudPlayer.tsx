@@ -1,4 +1,4 @@
-import { SyntheticEvent, useEffect } from "react";
+import { SyntheticEvent } from "react";
 import { livePlayerState } from "../hooks/usePlayerState";
 import useScript from "../hooks/useScript";
 import { playerWidget, showKey } from "../lib/mixcloud";
@@ -31,10 +31,6 @@ export default function MixcloudPlayer({ mini = true }: { mini?: boolean }) {
       setIsLivePlaying(false);
     }
   };
-
-  useEffect(() => {
-    window.onbeforeunload = null;
-  }, []);
 
   const handleIframeLoad = async ({
     currentTarget,
