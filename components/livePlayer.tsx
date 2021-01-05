@@ -12,16 +12,16 @@ const BroadcastingIndicator = ({
 }) => {
   if (status === "online")
     return (
-      <div className="flex items-center space-x-6">
-        <div className="flex-shrink-0 h-10 w-10 rounded-full bg-red animate-pulse" />
-        <p className="hidden md:block">Live</p>
+      <div className="flex-grow-0 flex items-center space-x-6">
+        <div className="flex-shrink-0 w-7 h-7 sm:h-10 sm:w-10 rounded-full bg-red animate-pulse" />
+        <p className="hidden md:block leading-none mt-1">Live</p>
       </div>
     );
 
   return (
-    <div className="flex items-center space-x-6">
-      <div className="flex-shrink-0 h-10 w-10 rounded-full bg-white opacity-25" />
-      <p className="hidden md:block">Offline</p>
+    <div className="flex-grow-0 flex items-center space-x-6">
+      <div className="flex-shrink-0 w-7 h-7 sm:h-10 sm:w-10 rounded-full bg-white opacity-25" />
+      <p className="hidden md:block leading-none mt-1">Offline</p>
     </div>
   );
 };
@@ -38,9 +38,12 @@ export default function LivePlayer() {
 
   const { isPlaying, play, pause } = usePlayerState(player);
 
-  const playerWrapperClassNames = cn("bg-black text-white", {
-    "sticky top-0 z-50": isPlaying,
-  });
+  const playerWrapperClassNames = cn(
+    "bg-black text-white h-12 sm:h-16 px-4 sm:px-8 flex items-center space-x-3 sm:space-x-9",
+    {
+      "sticky top-0 z-50": isPlaying,
+    }
+  );
 
   useEffect(() => {
     if ("mediaSession" in navigator && data?.current_track) {
@@ -60,41 +63,24 @@ export default function LivePlayer() {
 
   return (
     <section className={playerWrapperClassNames}>
-      <div className="px-4 md:px-8 pt-3 pb-3">
-        <div className="grid grid-cols-10 gap-9 items-center">
-          <div className="col-span-1">
-            <BroadcastingIndicator status={data?.status} />
-          </div>
-          <div className="col-span-8">
-            {isOnline ? (
-              <div className="overflow-x-scroll">
-                <p className="whitespace-nowrap">{data?.current_track.title}</p>
-              </div>
-            ) : null}
-          </div>
-          <div className="col-span-1">
-            {isOnline && (
-              <div className="flex justify-end">
-                {isPlaying ? (
-                  <button
-                    className="focus:outline-none focus:ring-4"
-                    onClick={pause}
-                  >
-                    <Pause />
-                  </button>
-                ) : (
-                  <button
-                    className="focus:outline-none focus:ring-4"
-                    onClick={play}
-                  >
-                    <Play />
-                  </button>
-                )}
-              </div>
-            )}
-          </div>
+      <BroadcastingIndicator status={data?.status} />
+
+      {isOnline ? (
+        <div className="flex-1 overflow-x-scroll hide-scrollbar">
+          <p className="whitespace-nowrap leading-none mt-0.5">
+            {data?.current_track.title}
+          </p>
         </div>
-      </div>
+      ) : null}
+
+      {isOnline && (
+        <button
+          className="flex-grow-0 h-7 w-7 sm:h-9 sm:w-9 focus:outline-none focus:ring-4"
+          onClick={isPlaying ? pause : play}
+        >
+          {isPlaying ? <Play /> : <Pause />}
+        </button>
+      )}
 
       <audio
         hidden
@@ -106,6 +92,14 @@ export default function LivePlayer() {
         <source src={AUDIO_SRC} type="audio/mpeg" />
         Your browser does not support the audio element.
       </audio>
+    </section>
+  );
+}
+
+export function LivePlayerLoading() {
+  return (
+    <section className="bg-black text-white h-12 sm:h-16 px-4 sm:px-8 flex items-center">
+      <p className="whitespace-nowrap leading-none mt-0.5">Loading Broadcast</p>
     </section>
   );
 }

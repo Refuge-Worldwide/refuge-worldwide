@@ -1,6 +1,7 @@
 import type { AppProps } from "next/app";
 import dynamic from "next/dynamic";
 import Footer from "../components/footer";
+import { LivePlayerLoading } from "../components/livePlayer";
 import Meta from "../components/meta";
 import Navigation from "../components/navigation";
 import "../styles/globals.css";
@@ -11,6 +12,7 @@ const MixcloudPlayer = dynamic(() => import("../components/mixcloudPlayer"), {
 
 const LivePlayer = dynamic(() => import("../components/livePlayer"), {
   ssr: false,
+  loading: LivePlayerLoading,
 });
 
 function RefugeApp({ Component, pageProps }: AppProps) {
