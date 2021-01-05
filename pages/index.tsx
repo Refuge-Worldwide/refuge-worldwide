@@ -4,13 +4,13 @@ import {
   getFeaturedArticles,
   getFeaturedShows,
   getLatestArticles,
-  getTodaySection,
-  TodaySection,
+  getNextUpSection,
+  NextUpSection,
 } from "../lib/api";
 import { ArticleInterface, ShowInterface } from "../types/shared";
 import FeaturedShows from "../views/home/featuredShows";
 import LatestNews from "../views/home/latestNews";
-import Today from "../views/home/today";
+import NextUp from "../views/home/nextUp";
 import FeaturedArticles from "../views/news/featuredArticles";
 
 interface Page extends JSX.Element {
@@ -18,7 +18,7 @@ interface Page extends JSX.Element {
   featuredShows: ShowInterface[];
   latestArticles: ArticleInterface[];
   featuredArticles: ArticleInterface[];
-  todaySection: TodaySection;
+  nextUp: NextUpSection;
 }
 
 export default function HomePage({
@@ -26,7 +26,7 @@ export default function HomePage({
   featuredShows,
   latestArticles,
   featuredArticles,
-  todaySection,
+  nextUp,
 }: Page) {
   return (
     <Layout preview={preview}>
@@ -34,7 +34,7 @@ export default function HomePage({
         <title>Refuge Worldwide</title>
       </Head>
 
-      <Today {...todaySection} />
+      <NextUp {...nextUp} />
 
       <FeaturedShows shows={featuredShows} />
 
@@ -52,7 +52,7 @@ export async function getStaticProps({ preview = false }) {
       featuredShows: await getFeaturedShows(preview),
       latestArticles: await getLatestArticles(preview),
       featuredArticles: await getFeaturedArticles(preview),
-      todaySection: await getTodaySection(preview),
+      nextUp: await getNextUpSection(preview),
     },
     revalidate: 60,
   };

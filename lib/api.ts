@@ -121,12 +121,14 @@ export async function getNewsletterPage(
   return extractPage(data, "pageNewsletter");
 }
 
-export interface TodaySection {
+export interface NextUpSection {
   header: string;
   content: { json: Document };
 }
 
-export async function getTodaySection(preview: boolean): Promise<TodaySection> {
+export async function getNextUpSection(
+  preview: boolean
+): Promise<NextUpSection> {
   const data = await contentful(/* GraphQL */ `
     {
       sectionToday(id: "2bP8MlTMBYfe1paaxwwziy", preview: ${preview}) {

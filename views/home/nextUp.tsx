@@ -1,8 +1,8 @@
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import Pill from "../../components/pill";
-import { TodaySection } from "../../lib/api";
+import { NextUpSection } from "../../lib/api";
 
-export default function Today({ content, header }: TodaySection) {
+export default function NextUp({ content, header }: NextUpSection) {
   if (content.json && typeof header === "string")
     return (
       <section className="bg-orange border-t-2 border-b-2">
