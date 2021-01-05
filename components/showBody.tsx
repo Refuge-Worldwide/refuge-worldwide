@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Fragment } from "react";
 import PlayCircle from "../icons/playCircle";
 import Share from "../icons/share";
-import { showKey } from "../lib/mixcloud";
+import { playerWidget, showKey } from "../lib/mixcloud";
 import { ShowInterface } from "../types/shared";
 import { getMixcloudKey, sort } from "../util";
 import Badge from "./badge";
@@ -46,7 +46,21 @@ export default function ShowBody({
   );
 
   const [, setKey] = showKey.use();
-  const handlePlayShow = () => setKey(getMixcloudKey(mixcloudLink));
+  const player = playerWidget.useValue();
+
+  const handlePlayShow = async () => {
+    setKey(getMixcloudKey(mixcloudLink));
+
+    if (player?.play) {
+      console.log("[Mixcloud]", "Play");
+
+      try {
+        await player.togglePlay();
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
 
   const handleShare = async () => {
     const shareData: ShareData = {
