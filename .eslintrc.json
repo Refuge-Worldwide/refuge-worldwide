@@ -17,6 +17,11 @@
     "ecmaVersion": 12,
     "sourceType": "module"
   },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
   "plugins": ["react", "@typescript-eslint", "@next/eslint-plugin-next"],
   "rules": {
     "react/react-in-jsx-scope": 0,
