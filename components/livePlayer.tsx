@@ -14,14 +14,14 @@ const BroadcastingIndicator = ({
     return (
       <div className="flex items-center space-x-6">
         <div className="flex-shrink-0 h-10 w-10 rounded-full bg-red animate-pulse" />
-        <p>Live</p>
+        <p className="hidden md:block">Live</p>
       </div>
     );
 
   return (
     <div className="flex items-center space-x-6">
       <div className="flex-shrink-0 h-10 w-10 rounded-full bg-white opacity-25" />
-      <p>Offline</p>
+      <p className="hidden md:block">Offline</p>
     </div>
   );
 };
