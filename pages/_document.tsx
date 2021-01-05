@@ -19,6 +19,7 @@ class RefugeDocument extends Document {
             href="/fonts/visuelt-medium.woff2"
             crossOrigin="anonymous"
           />
+          <link rel="preload" as="image" href="/images/navigation-smile.svg" />
           <link rel="dns-prefetch" href="https://use.typekit.net/" />
           <link
             rel="preload"
