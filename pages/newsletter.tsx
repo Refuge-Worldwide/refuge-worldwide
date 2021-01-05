@@ -2,6 +2,7 @@ import { documentToReactComponents } from "@contentful/rich-text-react-renderer"
 import Head from "next/head";
 import Layout from "../components/layout";
 import SinglePage from "../components/singlePage";
+import Subscribe from "../components/subscribe";
 import { getNewsletterPage, NewsletterPageData } from "../lib/api";
 
 interface Page extends JSX.Element {
@@ -22,6 +23,10 @@ export default function NewsletterPage({ preview, data }: Page) {
             <div className="prose sm:prose-lg max-w-none">
               {documentToReactComponents(data?.content?.json)}
             </div>
+
+            <div className="h-10" />
+
+            <Subscribe />
           </div>
         </div>
       </SinglePage>
