@@ -33,7 +33,7 @@ export default function FeaturedShows({ shows }: { shows: ShowInterface[] }) {
           </Link>
         </div>
 
-        <div className="h-10" />
+        <div className="h-8 sm:h-10" />
       </div>
     </section>
   );
