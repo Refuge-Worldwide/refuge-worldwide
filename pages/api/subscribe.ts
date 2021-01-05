@@ -40,7 +40,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     // 7. Swallow any errors from Mailchimp and return a better error message.
     if (response.status >= 400) {
       return res.status(400).json({
-        error: `There was an error subscribing to the newsletter.`,
+        error: `There was an error subscribing to the newsletter. Shoot us an email at [hello@refugeworldwide.com] and we'll add you to the list.`,
       });
     }
 
