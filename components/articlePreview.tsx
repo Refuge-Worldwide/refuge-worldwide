@@ -77,22 +77,24 @@ export default function ArticlePreview({
                 </li>
               </ul>
 
-              <div className="h-2" />
+              <div className="hidden sm:block h-2" />
             </Fragment>
           ) : (
-            <div className="h-4" />
+            <div className="hidden sm:block h-4" />
           )}
 
-          <div className="font-light">
-            {documentToReactComponents(excerpt, richTextOptions)}
+          <div className="hidden sm:block">
+            <div className="font-light">
+              {documentToReactComponents(excerpt, richTextOptions)}
+            </div>
+
+            <div className="h-4" />
+
+            <p className="inline-flex items-center space-x-5">
+              <span className="underline">Read more</span>
+              <Arrow />
+            </p>
           </div>
-
-          <div className="h-4" />
-
-          <p className="inline-flex items-center space-x-5">
-            <span className="underline">Read more</span>
-            <Arrow />
-          </p>
         </article>
       </a>
     </Link>

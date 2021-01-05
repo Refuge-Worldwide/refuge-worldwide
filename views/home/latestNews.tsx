@@ -16,7 +16,7 @@ export default function LatestNews({
           <h2>News</h2>
         </Pill>
 
-        <div className="h-8" />
+        <div className="h-5 sm:h-8" />
 
         <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
           {articles.map((article, i) => (
