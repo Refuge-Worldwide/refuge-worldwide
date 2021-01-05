@@ -37,10 +37,8 @@ export default function MixcloudPlayer({ mini = true }: { mini?: boolean }) {
   }: SyntheticEvent<HTMLIFrameElement, Event>) => {
     console.log("[Mixcloud]", "iframe Embed Loaded");
 
-    let widget: PlayerWidget;
-
     // @ts-ignore
-    widget = window?.Mixcloud?.PlayerWidget(currentTarget);
+    const widget: PlayerWidget = window?.Mixcloud?.PlayerWidget(currentTarget);
 
     playerWidgetStateSet(widget);
 

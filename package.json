@@ -10,7 +10,7 @@
     "analyze": "ANALYZE=true yarn build",
     "start": "next start",
     "format": "prettier --write \"**/*.tsx\" \"**/*.ts\"",
-    "lint": "eslint . --ext ts --cache"
+    "lint": "eslint . --ext ts --ext tsx --cache"
   },
   "husky": {
     "hooks": {
