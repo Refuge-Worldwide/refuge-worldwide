@@ -47,7 +47,7 @@ export default function Subscribe() {
 
         <input
           className="pill-input"
-          autoComplete="email"
+          autoComplete="off"
           id="email"
           name="email"
           placeholder="Your Email"
