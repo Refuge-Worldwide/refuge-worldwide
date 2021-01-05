@@ -38,9 +38,9 @@ export default function ShowBody({
 
         if (artists.length === 1) return a;
 
-        if (isLast) return <Fragment>and {a}</Fragment>;
+        if (isLast) return <Fragment key={i}>and {a}</Fragment>;
 
-        return <Fragment>{a}, </Fragment>;
+        return <Fragment key={i}>{a}, </Fragment>;
       })}
     </Fragment>
   );
@@ -88,7 +88,7 @@ export default function ShowBody({
               <div>
                 {mixcloudLink && (
                   <button
-                    className="rounded-full focus:outline-none focus:ring-4"
+                    className="w-20 h-20 sm:w-28 sm:h-28 rounded-full focus:outline-none focus:ring-4"
                     onClick={handlePlayShow}
                   >
                     <PlayCircle />
@@ -97,7 +97,10 @@ export default function ShowBody({
               </div>
 
               <div>
-                <button className="focus:outline-none" onClick={handleShare}>
+                <button
+                  className="w-20 h-20 sm:w-28 sm:h-28 focus:outline-none"
+                  onClick={handleShare}
+                >
                   <Share />
                 </button>
               </div>
