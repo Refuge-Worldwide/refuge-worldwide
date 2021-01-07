@@ -62,7 +62,7 @@ export default function FeaturedArticles({
       </ul>
 
       {/* Indicators */}
-      <ul className="absolute top-44 md:bottom-8 inset-x-0 flex justify-center space-x-3">
+      <ul className="absolute top-44 md:top-auto md:bottom-8 inset-x-0 flex justify-center space-x-3">
         {articles?.map((_, i) => {
           const item = !isServer ? document?.getElementById(String(i)) : null;
 
