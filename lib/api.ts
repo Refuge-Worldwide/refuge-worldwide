@@ -48,7 +48,7 @@ export interface Links {
 
 export interface Content {
   json: Document;
-  links: Links;
+  links?: Links;
 }
 
 export interface AboutPageData {
