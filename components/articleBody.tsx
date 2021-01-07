@@ -12,32 +12,36 @@ export default function ArticleBody({
   articleType,
 }: ArticleInterface) {
   return (
-    <div className="container-md">
-      <div className="h-4 sm:h-8" />
+    <Fragment>
+      <section>
+        <div className="p-4 sm:p-8">
+          <div className="container-md">
+            <Pill>
+              <span className="font-serif">{articleType}</span>
+            </Pill>
 
-      <Pill>
-        <span className="font-serif">{articleType}</span>
-      </Pill>
+            <p className="text-small text-center">
+              <Date dateString={date} />
+            </p>
 
-      <p className="text-small text-center">
-        <Date dateString={date} />
-      </p>
+            <div className="h-6" />
 
-      <div className="h-6" />
+            <h1 className="text-base sm:text-large text-center">{title}</h1>
 
-      <h1 className="text-base sm:text-large text-center">{title}</h1>
+            <div className="h-6" />
 
-      <div className="h-6" />
+            <p className="font-medium text-center">{subtitle}</p>
 
-      <p className="font-medium text-center">{subtitle}</p>
+            <div className="h-6" />
 
-      <div className="h-6" />
-
-      <div className="p-4 sm:p-8 prose sm:prose-lg">
-        {documentToReactComponents(content?.json)}
-      </div>
+            <div className="p-4 sm:p-8 prose sm:prose-lg">
+              {documentToReactComponents(content?.json)}
+            </div>
+          </div>
+        </div>
+      </section>
 
       <div className="h-28" />
-    </div>
+    </Fragment>
   );
 }
