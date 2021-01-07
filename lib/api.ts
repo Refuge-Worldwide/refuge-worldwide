@@ -30,29 +30,65 @@ export async function contentful(query: string, preview = false) {
   }).then((response) => response.json());
 }
 
+export interface Asset {
+  sys: { id: string };
+  contentType: string;
+  title: string;
+  description: string;
+  url: string;
+  width: number;
+  height: number;
+}
+
+export interface Links {
+  assets: {
+    block: Asset[];
+  };
+}
+
+export interface Content {
+  json: Document;
+  links: Links;
+}
+
 export interface AboutPageData {
   coverImage: CoverImage;
-  content: { json: Document };
+  content: Content;
 }
 
 export async function getAboutPage(preview: boolean): Promise<AboutPageData> {
   const data = await contentful(
     /* GraphQL */ `
-    query {
-      pageAbout(id: "z1SsoA1K4SMJryGuYjzhK", preview: ${preview}) {
-        coverImage {
-          title
-          description
-          url
-          width
-          height
-        }
-        content {
-          json
+      query {
+        pageAbout(id: "z1SsoA1K4SMJryGuYjzhK", preview: ${preview}) {
+          coverImage {
+            title
+            description
+            url
+            width
+            height
+          }
+          content {
+            json
+            links {
+              assets {
+                block {
+                  sys {
+                    id
+                  }
+                  contentType
+                  title
+                  description
+                  url
+                  width
+                  height
+                }
+              }
+            }
+          }
         }
       }
-    }
-  `,
+    `,
     preview
   );
 
@@ -61,7 +97,7 @@ export async function getAboutPage(preview: boolean): Promise<AboutPageData> {
 
 export interface SupportPageData {
   coverImage: CoverImage;
-  content: { json: Document };
+  content: Content;
 }
 
 export async function getSupportPage(
@@ -92,7 +128,7 @@ export async function getSupportPage(
 
 export interface NewsletterPageData {
   coverImage: CoverImage;
-  content: { json: Document };
+  content: Content;
 }
 
 export async function getNewsletterPage(
@@ -123,7 +159,7 @@ export async function getNewsletterPage(
 
 export interface NextUpSection {
   header: string;
-  content: { json: Document };
+  content: Content;
 }
 
 export async function getNextUpSection(
