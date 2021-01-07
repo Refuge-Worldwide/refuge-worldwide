@@ -12,7 +12,9 @@ export default function ArticleBody({
   articleType,
 }: ArticleInterface) {
   return (
-    <Fragment>
+    <div className="container-md">
+      <div className="h-4 sm:h-8" />
+
       <Pill>
         <span className="font-serif">{articleType}</span>
       </Pill>
@@ -31,11 +33,11 @@ export default function ArticleBody({
 
       <div className="h-6" />
 
-      <div className="p-8 prose sm:prose-lg">
+      <div className="p-4 sm:p-8 prose sm:prose-lg">
         {documentToReactComponents(content?.json)}
       </div>
 
       <div className="h-28" />
-    </Fragment>
+    </div>
   );
 }
