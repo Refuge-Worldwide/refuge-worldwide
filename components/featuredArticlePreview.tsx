@@ -74,6 +74,7 @@ export default function FeaturedArticlePreview({
           <div className="md:col-span-5 2xl:col-span-7 h-56 md:h-auto relative border-l-2 border-t-2 border-b-2">
             <Image
               key={slug}
+              draggable="false"
               alt={coverImage.title}
               src={coverImage.url}
               objectFit="cover"
