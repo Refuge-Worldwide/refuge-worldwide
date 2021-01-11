@@ -27,9 +27,15 @@ export default function FeaturedArticles({
     const isNotLastSlide = activeId < articles.length - 1;
 
     if (isNotLastSlide) {
-      carousel.current.scrollLeft = window.innerWidth * (activeId + 1);
+      carousel.current.scrollBy({
+        left: window.innerWidth * (activeId + 1),
+        behavior: "smooth",
+      });
     } else {
-      carousel.current.scrollLeft = 0;
+      carousel.current.scrollBy({
+        left: 0,
+        behavior: "smooth",
+      });
     }
   }
 
