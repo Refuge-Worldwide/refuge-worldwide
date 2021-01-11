@@ -116,6 +116,21 @@ export async function getSupportPage(
         }
         content {
           json
+          links {
+            assets {
+              block {
+                sys {
+                  id
+                }
+                contentType
+                title
+                description
+                url
+                width
+                height
+              }
+            }
+          }
         }
       }
     }
@@ -147,6 +162,21 @@ export async function getNewsletterPage(
         }
         content {
           json
+          links {
+            assets {
+              block {
+                sys {
+                  id
+                }
+                contentType
+                title
+                description
+                url
+                width
+                height
+              }
+            }
+          }
         }
       }
     }
@@ -425,6 +455,21 @@ export async function getShowAndMoreShows(
             }
             content {
               json
+              links {
+                assets {
+                  block {
+                    sys {
+                      id
+                    }
+                    contentType
+                    title
+                    description
+                    url
+                    width
+                    height
+                  }
+                }
+              }
             }
           }
         }
@@ -594,6 +639,21 @@ export async function getArticleAndMoreArticles(
             }
             content {
               json
+              links {
+                assets {
+                  block {
+                    sys {
+                      id
+                    }
+                    contentType
+                    title
+                    description
+                    url
+                    width
+                    height
+                  }
+                }
+              }
             }
           }
         }

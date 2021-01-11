@@ -1,5 +1,5 @@
 import { newRidgeState } from "react-ridge-state";
-import { PlayerWidget } from "../types/shared";
+import { PlayerWidget } from "../types/mixcloud";
 
 export const showKey = newRidgeState<string>(null);
 

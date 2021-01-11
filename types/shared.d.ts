@@ -1,4 +1,5 @@
 import type { Document } from "@contentful/rich-text-types";
+import { Content } from "../lib/api";
 
 export interface CoverImage {
   title: string;
@@ -13,6 +14,7 @@ export interface ArtistInterface {
   slug: string;
   photo: CoverImage;
   isResident: boolean;
+  content?: Content;
 }
 
 export type ArtistFilterType = "All" | "Residents" | "Guests";
@@ -34,9 +36,7 @@ export interface ShowInterface {
   genresCollection: {
     items: GenreInterface[];
   };
-  content: {
-    json: Document;
-  };
+  content: Content;
 }
 
 export enum ArticleType {
@@ -55,71 +55,5 @@ export interface ArticleInterface {
   slug: string;
   location: string;
   coverImage: CoverImage;
-  content: {
-    json: Document;
-  };
-}
-
-export interface RadioCoInterface {
-  status: "online" | "offline";
-  source: {
-    type: string;
-    collaborator?: any;
-    relay?: any;
-  };
-  collaborators: any[];
-  relays: any[];
-  current_track: {
-    title: string;
-    start_time: string;
-    artwork_url: string;
-    artwork_url_large: string;
-  };
-  history: { title: string }[];
-  logo_url: string;
-  streaming_hostname: string;
-  outputs: {
-    name: string;
-    format: string;
-    bitrate: number;
-  }[];
-}
-
-export interface PlayerWidget {
-  events: {
-    buffering: {
-      on: (e: any) => void;
-      off: (e: any) => void;
-    };
-    ended: {
-      on: (e: any) => void;
-      off: (e: any) => void;
-    };
-    error: {
-      on: (e: any) => void;
-      off: (e: any) => void;
-    };
-    pause: {
-      on: (e: any) => void;
-      off: (e: any) => void;
-    };
-    play: {
-      on: (e: any) => void;
-      off: (e: any) => void;
-    };
-    progress: {
-      on: (e: any) => void;
-      off: (e: any) => void;
-    };
-  };
-  getCurrentKey: () => Promise<string>;
-  getDuration: () => Promise<number>;
-  getIsPaused: () => Promise<boolean>;
-  getPosition: () => Promise<number>;
-  getVolume: () => Promise<number>;
-  pause: () => Promise<void>;
-  play: () => Promise<void>;
-  seek: (seconds: number) => Promise<void>;
-  togglePlay: () => Promise<void>;
-  ready: Promise<void>;
+  content: Content;
 }
