@@ -84,8 +84,8 @@ export default function ShowBody({
       <section>
         <div className="p-4 sm:p-8">
           <div className="container-md">
-            <div className="flex justify-between">
-              <div>
+            <div className="flex flex-wrap md:flex-nowrap md:space-x-8 lg:space-x-12 justify-between">
+              <div className="flex">
                 {mixcloudLink && (
                   <button
                     className="w-20 h-20 sm:w-28 sm:h-28 rounded-full focus:outline-none focus:ring-4"
@@ -96,7 +96,33 @@ export default function ShowBody({
                 )}
               </div>
 
-              <div>
+              <div className="w-full order-last md:order-none">
+                <div className="h-3 block md:hidden" />
+
+                <p className="text-small text-center">
+                  <Date dateString={date} />
+                </p>
+
+                <div className="h-6" />
+
+                <h1 className="text-base sm:text-large text-center">{title}</h1>
+
+                <div className="h-6" />
+
+                <ul className="w-full flex flex-wrap justify-center -mr-2 -mb-2">
+                  {genres.map((genre, i) => (
+                    <li key={i} className="pr-2 pb-2">
+                      <Badge text={genre} />
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="h-6" />
+
+                <p className="font-medium text-center">With {persons}</p>
+              </div>
+
+              <div className="flex">
                 <button
                   className="w-20 h-20 sm:w-28 sm:h-28 focus:outline-none"
                   onClick={handleShare}
@@ -105,28 +131,6 @@ export default function ShowBody({
                 </button>
               </div>
             </div>
-
-            <p className="text-small text-center">
-              <Date dateString={date} />
-            </p>
-
-            <div className="h-6" />
-
-            <h1 className="text-base sm:text-large text-center">{title}</h1>
-
-            <div className="h-6" />
-
-            <ul className="w-full flex flex-wrap justify-center -mr-2 -mb-2">
-              {genres.map((genre, i) => (
-                <li key={i} className="pr-2 pb-2">
-                  <Badge text={genre} />
-                </li>
-              ))}
-            </ul>
-
-            <div className="h-6" />
-
-            <p className="font-medium text-center">With {persons}</p>
 
             <div className="h-6" />
 
