@@ -1,6 +1,7 @@
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import { Fragment } from "react";
 import Share from "../icons/share";
+import { renderRichTextWithImages } from "../lib/rich-text";
 import { ArtistInterface } from "../types/shared";
 
 export default function ArtistBody({ slug, name, content }: ArtistInterface) {
@@ -51,12 +52,12 @@ export default function ArtistBody({ slug, name, content }: ArtistInterface) {
               </div>
             </div>
 
-            {content?.json && (
+            {content && (
               <Fragment>
                 <div className="h-6" />
 
                 <div className="prose sm:prose-lg max-w-none">
-                  {documentToReactComponents(content?.json)}
+                  {renderRichTextWithImages(content)}
                 </div>
               </Fragment>
             )}
