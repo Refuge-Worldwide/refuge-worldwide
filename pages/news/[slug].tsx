@@ -1,4 +1,3 @@
-import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import { useRouter } from "next/dist/client/router";
 import ErrorPage from "next/error";
 import Head from "next/head";
@@ -7,6 +6,7 @@ import Layout from "../../components/layout";
 import SinglePage from "../../components/singlePage";
 import { getAllArticles, getArticleAndMoreArticles } from "../../lib/api";
 import { ArticleInterface } from "../../types/shared";
+import Loading from "../../views/loading";
 
 interface Page extends JSX.Element {
   article: ArticleInterface;
@@ -23,7 +23,7 @@ export default function Article({ article, preview }: Page) {
   return (
     <Layout preview={preview}>
       {router.isFallback ? (
-        <h1>Loading…</h1>
+        <Loading />
       ) : (
         <>
           <Head>

@@ -65,6 +65,9 @@ module.exports = {
       borderWidth: {
         1.5: "1.5px",
       },
+      animation: {
+        "spin-slow": "spin 4s linear infinite",
+      },
       typography: (theme) => ({
         DEFAULT: {
           css: {

@@ -7,6 +7,7 @@ import SinglePage from "../../components/singlePage";
 import { getAllArtists, getArtistAndMoreShows } from "../../lib/api";
 import { ArtistInterface, ShowInterface } from "../../types/shared";
 import RelatedShows from "../../views/artists/relatedShows";
+import Loading from "../../views/loading";
 
 interface Page extends JSX.Element {
   artist: ArtistInterface;
@@ -24,7 +25,7 @@ export default function Artist({ artist, relatedShows, preview }: Page) {
   return (
     <Layout preview={preview}>
       {router.isFallback ? (
-        <h1>Loading…</h1>
+        <Loading />
       ) : (
         <>
           <Head>

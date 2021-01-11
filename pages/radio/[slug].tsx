@@ -6,6 +6,7 @@ import ShowBody from "../../components/showBody";
 import SinglePage from "../../components/singlePage";
 import { getAllShows, getShowAndMoreShows } from "../../lib/api";
 import { ShowInterface } from "../../types/shared";
+import Loading from "../../views/loading";
 
 interface Page extends JSX.Element {
   show: ShowInterface;
@@ -22,7 +23,7 @@ export default function Show({ show, preview }: Page) {
   return (
     <Layout preview={preview}>
       {router.isFallback ? (
-        <h1>Loading…</h1>
+        <Loading />
       ) : (
         <>
           <Head>
