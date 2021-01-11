@@ -1,6 +1,8 @@
 import Link from "next/link";
-import { PATREON_URL } from "../constants";
+import { MIXCLOUD_URL, PATREON_URL, SOUNDCLOUD_URL } from "../constants";
 import { Arrow } from "../icons/arrow";
+import Mixcloud from "../icons/mixcloud";
+import Soundcloud from "../icons/soundcloud";
 
 export default function Footer() {
   return (
@@ -62,28 +64,43 @@ export default function Footer() {
             </p>
           </div>
 
-          <div className="flex-1 flex justify-center md:justify-end space-x-12">
-            <p>
+          <ul className="flex-1 flex justify-center md:justify-end items-center space-x-12">
+            <li>
               <a
                 href="mailto:hello@refugeworldwide.com"
                 className="font-medium"
               >
                 Contact
               </a>
-            </p>
+            </li>
 
-            <p>
+            <li>
               <Link href="/imprint">
                 <a className="font-medium">Imprint</a>
               </Link>
-            </p>
+            </li>
 
-            <p>
+            <li>
               <Link href="/privacy">
                 <a className="font-medium">Privacy</a>
               </Link>
-            </p>
-          </div>
+            </li>
+
+            <li>
+              <ul className="flex items-center space-x-6">
+                <li>
+                  <a href={SOUNDCLOUD_URL}>
+                    <Soundcloud />
+                  </a>
+                </li>
+                <li>
+                  <a href={MIXCLOUD_URL}>
+                    <Mixcloud />
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
         </div>
       </div>
 
