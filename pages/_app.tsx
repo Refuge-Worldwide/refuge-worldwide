@@ -4,6 +4,7 @@ import Footer from "../components/footer";
 import { LivePlayerLoading } from "../components/livePlayer";
 import Meta from "../components/meta";
 import Navigation from "../components/navigation";
+import useSmoothscrollPolyfill from "../hooks/useSmoothscrollPolyfill";
 import "../styles/globals.css";
 
 const MixcloudPlayer = dynamic(() => import("../components/mixcloudPlayer"), {
@@ -16,6 +17,8 @@ const LivePlayer = dynamic(() => import("../components/livePlayer"), {
 });
 
 function RefugeApp({ Component, pageProps }: AppProps) {
+  useSmoothscrollPolyfill();
+
   return (
     <>
       <Meta />
