@@ -259,6 +259,24 @@ export async function getArtistAndMoreShows(
             width
             height
           }
+          content {
+            json
+            links {
+              assets {
+                block {
+                  sys {
+                    id
+                  }
+                  contentType
+                  title
+                  description
+                  url
+                  width
+                  height
+                }
+              }
+            }
+          }
         }
       }
     }
