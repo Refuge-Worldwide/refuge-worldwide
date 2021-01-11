@@ -10,7 +10,7 @@ export default function ArtistRow({
   artists: ArtistInterface[];
 }) {
   return (
-    <section className="border-t-2 border-black">
+    <section id={alphabet} className="border-t-2 border-black">
       <div className="p-4 sm:p-8">
         <Pill>
           <h2>{alphabet}</h2>
