@@ -1,6 +1,7 @@
 import { useRouter } from "next/dist/client/router";
 import ErrorPage from "next/error";
 import Head from "next/head";
+import ArtistBody from "../../components/artistBody";
 import Layout from "../../components/layout";
 import SinglePage from "../../components/singlePage";
 import { getAllArtists, getArtistAndMoreShows } from "../../lib/api";
@@ -32,9 +33,7 @@ export default function Artist({ artist, relatedShows, preview }: Page) {
           </Head>
 
           <SinglePage coverImage={artist?.photo} withBackButton>
-            <h1 className="text-base sm:text-large text-center">
-              {artist.name}
-            </h1>
+            <ArtistBody {...artist} />
           </SinglePage>
 
           {relatedShows?.length > 0 && <RelatedShows shows={relatedShows} />}
