@@ -51,6 +51,7 @@
     grid-auto-flow: column;
 
     scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
 
     overflow-y: visible;
     overflow-x: scroll;
