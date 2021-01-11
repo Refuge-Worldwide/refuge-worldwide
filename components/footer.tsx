@@ -5,6 +5,9 @@ import Mixcloud from "../icons/mixcloud";
 import Soundcloud from "../icons/soundcloud";
 
 export default function Footer() {
+  const handleGoToTop = () =>
+    window?.scroll({ top: 0, left: 0, behavior: "smooth" });
+
   return (
     <footer className="bg-black text-white">
       <div className="px-4 md:px-8 pt-10 md:pt-20 pb-8 md:pb-20">
@@ -54,14 +57,15 @@ export default function Footer() {
           <div className="hidden md:block" />
 
           <div className="flex justify-center">
-            <p>
-              <a href="#top" className="inline-flex items-center space-x-4">
-                <span>Go up</span>
-                <span className="mt-1">
-                  <Arrow className="transform -rotate-90" size={24} />
-                </span>
-              </a>
-            </p>
+            <button
+              onClick={handleGoToTop}
+              className="focus:outline-none inline-flex items-center space-x-4"
+            >
+              <span>Go up</span>
+              <span className="mt-1">
+                <Arrow className="transform -rotate-90" size={24} />
+              </span>
+            </button>
           </div>
 
           <ul className="flex-1 flex justify-center md:justify-end items-center space-x-12">
