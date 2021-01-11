@@ -5,8 +5,6 @@ import Share from "../icons/share";
 import { ArtistInterface } from "../types/shared";
 
 export default function ArtistBody({ slug, name, content }: ArtistInterface) {
-  console.log(content);
-
   const handleShare = async () => {
     const shareData: ShareData = {
       text: name,
