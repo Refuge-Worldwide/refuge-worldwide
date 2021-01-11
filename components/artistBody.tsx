@@ -1,9 +1,10 @@
+import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import { Fragment } from "react";
 import PlayCircle from "../icons/playCircle";
 import Share from "../icons/share";
 import { ArtistInterface } from "../types/shared";
 
-export default function ArtistBody({ slug, name }: ArtistInterface) {
+export default function ArtistBody({ slug, name, content }: ArtistInterface) {
   const handleShare = async () => {
     const shareData: ShareData = {
       text: name,
@@ -48,6 +49,16 @@ export default function ArtistBody({ slug, name }: ArtistInterface) {
                 </button>
               </div>
             </div>
+
+            {content?.json && (
+              <Fragment>
+                <div className="h-6" />
+
+                <div className="prose sm:prose-lg max-w-none">
+                  {documentToReactComponents(content?.json)}
+                </div>
+              </Fragment>
+            )}
           </div>
         </div>
       </section>
