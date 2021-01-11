@@ -29,9 +29,11 @@ export default function ArtistBody({ slug, name, content }: ArtistInterface) {
           <div className="container-md">
             <div className="flex flex-wrap md:flex-nowrap md:space-x-8 lg:space-x-12 justify-between md:items-center">
               <div className="flex">
-                <button className="w-20 h-20 sm:w-28 sm:h-28 rounded-full focus:outline-none focus:ring-4">
+                <div className="w-20 h-20 sm:w-28 sm:h-28" />
+                {/* Hook up to play latest show */}
+                {/* <button className="w-20 h-20 sm:w-28 sm:h-28 rounded-full focus:outline-none focus:ring-4">
                   <PlayCircle />
-                </button>
+                </button> */}
               </div>
 
               <div className="w-full order-last md:order-none">
