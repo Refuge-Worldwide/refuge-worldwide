@@ -26,6 +26,7 @@ export default function SinglePage({
           src={coverImage.url}
           alt={coverImage.title}
           layout="fill"
+          quality="85"
           objectFit="cover"
           objectPosition="center"
         />
