@@ -1,5 +1,6 @@
 import useInterval from "@use-it/interval";
 import { useEffect, useRef, useState } from "react";
+import smoothscroll from "smoothscroll-polyfill";
 import { useIntersection } from "use-intersection";
 import FeaturedArticlePreview from "../../components/featuredArticlePreview";
 import { ArticleInterface } from "../../types/shared";
@@ -10,6 +11,8 @@ export default function FeaturedArticles({
 }: {
   articles: ArticleInterface[];
 }) {
+  useEffect(() => smoothscroll.polyfill(), []);
+
   /**
    * @note Time between carousel auto advance
    */
