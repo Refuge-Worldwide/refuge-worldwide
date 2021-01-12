@@ -27,7 +27,14 @@ export async function contentful(query: string, preview = false) {
       }`,
     },
     body: JSON.stringify({ query }),
-  }).then((response) => response.json());
+  }).then((response) => {
+    console.log({
+      status: response.status,
+      statusText: response.statusText,
+    });
+
+    return response.json();
+  });
 }
 
 export interface Asset {
