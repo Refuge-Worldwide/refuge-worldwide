@@ -62,6 +62,9 @@ export async function getAboutPage(preview: boolean): Promise<AboutPageData> {
       query {
         pageAbout(id: "z1SsoA1K4SMJryGuYjzhK", preview: ${preview}) {
           coverImage {
+            sys {
+              id
+            }
             title
             description
             url
@@ -108,6 +111,9 @@ export async function getSupportPage(
     query {
       pageSupport(id: "Aa4GRMf6fuDtkH0UhkX19", preview: ${preview}) {
         coverImage {
+          sys {
+            id
+          }
           title
           description
           url
@@ -154,6 +160,9 @@ export async function getNewsletterPage(
     query {
       pageNewsletter(id: "7t2jOQoBCZ6sGK4HgBZZ42", preview: ${preview}) {
         coverImage {
+          sys {
+            id
+          }
           title
           description
           url
@@ -221,6 +230,9 @@ export async function getAllArtists(
             slug
             isResident: role
             photo {
+              sys {
+                id
+              }
               title
               description
               url
@@ -253,6 +265,9 @@ export async function getArtistAndMoreShows(
           name
           slug
           photo {
+            sys {
+              id
+            }
             title
             description
             url
@@ -312,6 +327,9 @@ export async function getAllShows(preview: boolean): Promise<ShowInterface[]> {
             mixcloudLink
             isFeatured
             coverImage {
+              sys {
+                id
+              }
               title
               description
               url
@@ -398,6 +416,9 @@ export async function getFeaturedShows(
             mixcloudLink
             isFeatured
             coverImage {
+              sys {
+                id
+              }
               title
               description
               url
@@ -454,6 +475,9 @@ export async function getShowAndMoreShows(
             mixcloudLink
             isFeatured
             coverImage {
+              sys {
+                id
+              }
               title
               description
               url
@@ -534,6 +558,9 @@ export async function getAllArticles(
             date
             slug
             coverImage {
+              sys {
+                id
+              }
               title
               description
               url
@@ -572,6 +599,9 @@ export async function getLatestArticles(
             date
             slug
             coverImage {
+              sys {
+                id
+              }
               title
               description
               url
@@ -610,6 +640,9 @@ export async function getFeaturedArticles(
             date
             slug
             coverImage {
+              sys {
+                id
+              }
               title
               description
               url
@@ -649,6 +682,9 @@ export async function getArticleAndMoreArticles(
             date
             slug
             coverImage {
+              sys {
+                id
+              }
               title
               description
               url

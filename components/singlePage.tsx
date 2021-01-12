@@ -22,7 +22,7 @@ export default function SinglePage({
         )}
 
         <Image
-          key={coverImage.title}
+          key={coverImage.sys.id}
           src={coverImage.url}
           alt={coverImage.title}
           layout="fill"

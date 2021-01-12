@@ -1,7 +1,7 @@
-import type { Document } from "@contentful/rich-text-types";
 import { Content } from "../lib/api";
 
 export interface CoverImage {
+  sys: { id: string };
   title: string;
   description: string;
   url: string;
