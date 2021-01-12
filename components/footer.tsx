@@ -52,9 +52,9 @@ export default function Footer() {
       </div>
 
       <div className="px-4 md:px-8 border-t border-white pt-10 md:pt-16 pb-10 md:pb-16">
-        <div className="grid md:grid-cols-3 gap-12 text-small font-medium">
+        <div className="grid lg:grid-cols-3 gap-8 lg:gap-12 text-small font-medium">
           {/* Spacer */}
-          <div className="hidden md:block" />
+          <div className="hidden lg:block" />
 
           <div className="flex justify-center">
             <button
@@ -68,7 +68,7 @@ export default function Footer() {
             </button>
           </div>
 
-          <ul className="flex-1 flex justify-center md:justify-end items-center space-x-12">
+          <ul className="flex-1 lg:flex justify-end items-center space-y-4 lg:space-y-0 lg:space-x-8 xl:space-x-12">
             <li>
               <a
                 href="mailto:hello@refugeworldwide.com"
@@ -91,18 +91,15 @@ export default function Footer() {
             </li>
 
             <li>
-              <ul className="flex items-center space-x-6">
-                <li>
-                  <a href={SOUNDCLOUD_URL}>
-                    <Soundcloud />
-                  </a>
-                </li>
-                <li>
-                  <a href={MIXCLOUD_URL}>
-                    <Mixcloud />
-                  </a>
-                </li>
-              </ul>
+              <a href={SOUNDCLOUD_URL}>
+                <Soundcloud />
+              </a>
+            </li>
+
+            <li>
+              <a href={MIXCLOUD_URL}>
+                <Mixcloud />
+              </a>
             </li>
           </ul>
         </div>
