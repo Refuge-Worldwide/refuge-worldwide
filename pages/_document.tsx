@@ -20,6 +20,11 @@ class RefugeDocument extends Document {
             crossOrigin="anonymous"
           />
           <link rel="preload" as="image" href="/images/navigation-smile.svg" />
+          <link
+            rel="preload"
+            as="image"
+            href="/images/navigation-smile-white.svg"
+          />
           <link rel="dns-prefetch" href="https://use.typekit.net/" />
           <link
             rel="preload"

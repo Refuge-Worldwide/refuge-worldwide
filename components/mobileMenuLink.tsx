@@ -1,14 +1,12 @@
-import cn from "classnames";
-import { useRouter } from "next/router";
 import Link, { LinkProps } from "next/link";
+import { useRouter } from "next/router";
+import cn from "classnames";
 
 interface NavigationLink extends React.PropsWithChildren<LinkProps> {
-  className: string;
   activeClassName: string;
 }
 
-export default function NavigationLink({
-  className = "",
+export default function MobileMenuLink({
   activeClassName,
   children,
   href,
@@ -19,8 +17,7 @@ export default function NavigationLink({
   const isActive = pathname === href;
 
   const classNames = cn(
-    className,
-    "font-medium transition-colors duration-150 ease-in-out",
+    "text-large font-medium transition-colors duration-150 ease-in-out focus:outline-none",
     {
       [activeClassName]: isActive,
     }

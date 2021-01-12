@@ -1,14 +1,17 @@
+import VisuallyHidden from "@reach/visually-hidden";
 import Link from "next/link";
 import { useState } from "react";
 import { INSTAGRAM_URL, TWITTER_URL } from "../constants";
 import Instagram from "../icons/instagram";
-import { Menu, Close } from "../icons/menu";
+import { Menu } from "../icons/menu";
 import Twitter from "../icons/twitter";
+import MobileMenu from "./mobileMenu";
 import NavigationLink from "./navigationLink";
 
 export default function Navigation() {
   const [isOpen, isOpenSet] = useState(false);
-  const toggleMenu = () => isOpenSet(!isOpen);
+  const openMenu = () => isOpenSet(true);
+  const closeMenu = () => isOpenSet(false);
 
   return (
     <nav className="text-black">
@@ -30,10 +33,13 @@ export default function Navigation() {
 
           <li className="block lg:hidden ml-auto">
             <button
-              onClick={toggleMenu}
+              onClick={openMenu}
               className="flex focus:outline-none focus:ring-4"
             >
-              {isOpen ? <Close /> : <Menu />}
+              <VisuallyHidden>Open Menu</VisuallyHidden>
+              <span aria-hidden>
+                <Menu />
+              </span>
             </button>
           </li>
 
@@ -111,6 +117,8 @@ export default function Navigation() {
           </li>
         </ul>
       </div>
+
+      <MobileMenu onDismiss={closeMenu} isOpen={isOpen} />
     </nav>
   );
 }
