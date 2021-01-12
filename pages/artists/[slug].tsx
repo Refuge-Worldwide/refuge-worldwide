@@ -60,7 +60,10 @@ export async function getStaticPaths() {
   const allArtists = await getAllArtists(false);
 
   return {
-    paths: allArtists?.map(({ slug }) => `/artists/${slug}`) ?? [],
+    paths:
+      allArtists
+        ?.filter((artist) => typeof artist.slug === "string")
+        ?.map(({ slug }) => `/artists/${slug}`) ?? [],
     fallback: true,
   };
 }
