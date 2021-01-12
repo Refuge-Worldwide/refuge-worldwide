@@ -66,10 +66,10 @@ export default function LivePlayer() {
       <BroadcastingIndicator status={data?.status} />
 
       {isOnline ? (
-        <div className="flex-1 overflow-x-scroll hide-scrollbar">
-          <p className="whitespace-nowrap leading-none mt-0.5">
+        <div className="flex-1 overflow-x-scroll hide-scrollbar mt-0.5">
+          <span className="whitespace-nowrap leading-none">
             {data?.current_track.title}
-          </p>
+          </span>
         </div>
       ) : null}
 
