@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Fragment, ReactNode } from "react";
+import { contentful } from "../lib/loaders";
 import { CoverImage } from "../types/shared";
 import BackButton from "./backButton";
 
@@ -24,9 +25,9 @@ export default function SinglePage({
         <Image
           key={coverImage.sys.id}
           src={coverImage.url}
+          loader={contentful}
           alt={coverImage.title}
           layout="fill"
-          quality="85"
           objectFit="cover"
           objectPosition="center"
         />

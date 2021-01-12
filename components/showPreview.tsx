@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import PlayLarge from "../icons/playLarge";
+import { contentful } from "../lib/loaders";
 import { playerWidget, showKey } from "../lib/mixcloud";
 import type { ShowInterface } from "../types/shared";
 import { getMixcloudKey, sort } from "../util";
@@ -42,8 +43,9 @@ export default function ShowPreview({
     <article className="text-small">
       <button onClick={handlePlayShow} className="flex relative group">
         <Image
-          key={slug}
+          key={coverImage.sys.id}
           src={coverImage.url}
+          loader={contentful}
           width={590}
           height={345}
           objectFit="cover"

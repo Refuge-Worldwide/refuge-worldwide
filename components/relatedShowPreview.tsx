@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { contentful } from "../lib/loaders";
 import { ShowInterface } from "../types/shared";
 import { sort } from "../util";
 import Badge from "./badge";
@@ -23,8 +24,9 @@ export default function RelatedShowPreview({
         <article className="text-small text-white">
           <div className="flex">
             <Image
-              key={slug}
+              key={coverImage.sys.id}
               src={coverImage.url}
+              loader={contentful}
               width={590}
               height={345}
               objectFit="cover"
