@@ -79,18 +79,6 @@ export default function Footer() {
             </li>
 
             <li>
-              <Link href="/imprint">
-                <a className="font-medium">Imprint</a>
-              </Link>
-            </li>
-
-            <li>
-              <Link href="/privacy">
-                <a className="font-medium">Privacy</a>
-              </Link>
-            </li>
-
-            <li>
               <a href={SOUNDCLOUD_URL}>
                 <Soundcloud />
               </a>
