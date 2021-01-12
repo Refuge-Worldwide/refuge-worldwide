@@ -301,7 +301,7 @@ export async function getArtistAndMoreShows(
 
   const relatedShows = allShows.filter((show) => {
     const isRelatedArtistFilter =
-      show.artistsCollection.items.filter((artist) => artist.slug === slug)
+      show.artistsCollection.items.filter((artist) => artist?.slug === slug)
         .length > 0;
 
     const isPastFilter = dayjs(show.date).isBefore(today);
