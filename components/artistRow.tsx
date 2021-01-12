@@ -1,5 +1,5 @@
 import { ArtistInterface } from "../types/shared";
-import Artist from "./artist";
+import ArtistPreview from "./artistPreview";
 import Pill from "./pill";
 
 export default function ArtistRow({
@@ -21,7 +21,7 @@ export default function ArtistRow({
         <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-y-6 sm:gap-8">
           {artists.map((artist, i) => (
             <li key={i}>
-              <Artist {...artist} />
+              <ArtistPreview {...artist} />
             </li>
           ))}
         </ul>
