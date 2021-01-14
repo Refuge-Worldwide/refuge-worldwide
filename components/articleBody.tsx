@@ -1,9 +1,9 @@
-import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import { Fragment } from "react";
-import Share from "../icons/share";
+import { renderRichTextWithImages } from "../lib/rich-text";
 import { ArticleInterface } from "../types/shared";
 import Date from "./date";
 import Pill from "./pill";
+import ShareButton from "./shareButton";
 
 export default function ArticleBody({
   title,
@@ -13,23 +13,6 @@ export default function ArticleBody({
   slug,
   articleType,
 }: ArticleInterface) {
-  const handleShare = async () => {
-    const shareData: ShareData = {
-      text: title,
-      title: "Refuge Worldwide",
-      url: `https://refuge-worldwide.vercel.app/news/${slug}`,
-    };
-
-    try {
-      /**
-       * @todo Handle sharing on devices without the Share API
-       */
-      await navigator.share(shareData);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   return (
     <Fragment>
       <section>
@@ -56,19 +39,19 @@ export default function ArticleBody({
             </div>
 
             <div className="flex">
-              <button
-                className="w-20 h-20 sm:w-28 sm:h-28 focus:outline-none"
-                onClick={handleShare}
-              >
-                <Share />
-              </button>
+              <ShareButton
+                details={{
+                  title: title,
+                  slug: `/news/${slug}`,
+                }}
+              />
             </div>
           </div>
 
           <div className="h-6" />
 
           <div className="prose sm:prose-lg max-w-none">
-            {documentToReactComponents(content?.json)}
+            {renderRichTextWithImages(content)}
           </div>
 
           <div className="h-12 md:h-24" />

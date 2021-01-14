@@ -1,28 +1,10 @@
-import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import { Fragment } from "react";
-import Share from "../icons/share";
 import { renderRichTextWithImages } from "../lib/rich-text";
 import { ArtistInterface } from "../types/shared";
 import Pill from "./pill";
+import ShareButton from "./shareButton";
 
 export default function ArtistBody({ slug, name, content }: ArtistInterface) {
-  const handleShare = async () => {
-    const shareData: ShareData = {
-      text: name,
-      title: "Refuge Worldwide",
-      url: `https://refuge-worldwide.vercel.app/artists/${slug}`,
-    };
-
-    try {
-      /**
-       * @todo Handle sharing on devices without the Share API
-       */
-      await navigator.share(shareData);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   return (
     <Fragment>
       <section>
@@ -39,12 +21,12 @@ export default function ArtistBody({ slug, name, content }: ArtistInterface) {
             </div>
 
             <div className="flex">
-              <button
-                className="w-20 h-20 sm:w-28 sm:h-28 focus:outline-none"
-                onClick={handleShare}
-              >
-                <Share />
-              </button>
+              <ShareButton
+                details={{
+                  title: name,
+                  slug: `/artists/${slug}`,
+                }}
+              />
             </div>
           </div>
 

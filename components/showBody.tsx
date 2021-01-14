@@ -2,13 +2,13 @@ import { documentToReactComponents } from "@contentful/rich-text-react-renderer"
 import Link from "next/link";
 import { Fragment } from "react";
 import PlayCircle from "../icons/playCircle";
-import Share from "../icons/share";
 import { playerWidget, showKey } from "../lib/mixcloud";
 import { ShowInterface } from "../types/shared";
 import { getMixcloudKey, sort } from "../util";
 import Badge from "./badge";
 import Date from "./date";
 import Pill from "./pill";
+import ShareButton from "./shareButton";
 
 export default function ShowBody({
   title,
@@ -62,23 +62,6 @@ export default function ShowBody({
     }
   };
 
-  const handleShare = async () => {
-    const shareData: ShareData = {
-      text: title,
-      title: "Refuge Worldwide",
-      url: `https://refuge-worldwide.vercel.app/radio/${slug}`,
-    };
-
-    try {
-      /**
-       * @todo Handle sharing on devices without the Share API
-       */
-      await navigator.share(shareData);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   return (
     <Fragment>
       <section>
@@ -122,12 +105,12 @@ export default function ShowBody({
             </div>
 
             <div className="flex">
-              <button
-                className="w-20 h-20 sm:w-28 sm:h-28 focus:outline-none"
-                onClick={handleShare}
-              >
-                <Share />
-              </button>
+              <ShareButton
+                details={{
+                  title: title,
+                  slug: `/radio/${slug}`,
+                }}
+              />
             </div>
           </div>
 
