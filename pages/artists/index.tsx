@@ -52,7 +52,7 @@ export default function ArtistsPage({ allArtists, preview }: Page) {
         ))}
       </div>
 
-      <aside className="hidden md:block border-r-2 p-4">
+      <aside className="border-r-2 p-4">
         <ul className="text-small text-center sticky top-4">
           {ALPHABET.map((letter, i) => {
             const letterHasArtists =
