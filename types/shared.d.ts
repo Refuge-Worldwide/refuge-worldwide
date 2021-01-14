@@ -1,5 +1,7 @@
 import { Content } from "../lib/api";
 
+export type CoverImagePosition = "top" | "center" | "bottom";
+
 export interface CoverImage {
   sys: { id: string };
   title: string;
@@ -13,6 +15,7 @@ export interface ArtistInterface {
   name: string;
   slug: string;
   photo: CoverImage;
+  coverImagePosition: CoverImagePosition;
   isResident: boolean;
   content?: Content;
 }
@@ -29,6 +32,7 @@ export interface ShowInterface {
   date: string;
   slug: string;
   coverImage: CoverImage;
+  coverImagePosition: CoverImagePosition;
   isFeatured: boolean;
   artistsCollection: {
     items: ArtistInterface[];
@@ -55,5 +59,6 @@ export interface ArticleInterface {
   slug: string;
   location: string;
   coverImage: CoverImage;
+  coverImagePosition: CoverImagePosition;
   content: Content;
 }

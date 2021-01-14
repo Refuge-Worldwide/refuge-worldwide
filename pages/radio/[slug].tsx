@@ -34,7 +34,11 @@ export default function Show({ show, preview }: Page) {
             <meta property="og:image" content={show.coverImage.url} />
           </Head>
 
-          <SinglePage coverImage={show.coverImage} withBackButton>
+          <SinglePage
+            coverImage={show.coverImage}
+            objectPosition={show.coverImagePosition}
+            withBackButton
+          >
             <ShowBody {...show} />
           </SinglePage>
         </>

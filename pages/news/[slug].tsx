@@ -31,7 +31,11 @@ export default function Article({ article, preview }: Page) {
             <meta property="og:image" content={article.coverImage.url} />
           </Head>
 
-          <SinglePage coverImage={article.coverImage} withBackButton>
+          <SinglePage
+            coverImage={article.coverImage}
+            objectPosition={article.coverImagePosition}
+            withBackButton
+          >
             <ArticleBody {...article} />
           </SinglePage>
         </>

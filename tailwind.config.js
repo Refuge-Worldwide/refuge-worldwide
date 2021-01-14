@@ -63,7 +63,7 @@ module.exports = {
       },
       spacing: {
         112: "32rem",
-        "cover-image": "60rem",
+        "cover-image": "40rem",
       },
       zIndex: {
         "-10": "-10",

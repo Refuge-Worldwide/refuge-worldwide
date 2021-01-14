@@ -33,7 +33,11 @@ export default function Artist({ artist, relatedShows, preview }: Page) {
             <meta property="og:image" content={artist.photo.url} />
           </Head>
 
-          <SinglePage coverImage={artist?.photo} withBackButton>
+          <SinglePage
+            coverImage={artist.photo}
+            objectPosition={artist.coverImagePosition}
+            withBackButton
+          >
             <ArtistBody {...artist} />
           </SinglePage>
 

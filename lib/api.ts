@@ -274,6 +274,7 @@ export async function getArtistAndMoreShows(
             width
             height
           }
+          coverImagePosition
           content {
             json
             links {
@@ -336,6 +337,7 @@ export async function getAllShows(preview: boolean): Promise<ShowInterface[]> {
               width
               height
             }
+            coverImagePosition
             artistsCollection(limit: 9) {
               items {
                 name
@@ -425,6 +427,7 @@ export async function getFeaturedShows(
               width
               height
             }
+            coverImagePosition
             artistsCollection(limit: 9) {
               items {
                 name
@@ -484,6 +487,7 @@ export async function getShowAndMoreShows(
               width
               height
             }
+            coverImagePosition
             artistsCollection(limit: 9) {
               items {
                 name
@@ -567,6 +571,7 @@ export async function getAllArticles(
               width
               height
             }
+            coverImagePosition
             content {
               json
             }
@@ -608,6 +613,7 @@ export async function getLatestArticles(
               width
               height
             }
+            coverImagePosition
             content {
               json
             }
@@ -649,6 +655,7 @@ export async function getFeaturedArticles(
               width
               height
             }
+            coverImagePosition
             content {
               json
             }
@@ -691,6 +698,7 @@ export async function getArticleAndMoreArticles(
               width
               height
             }
+            coverImagePosition
             content {
               json
               links {
