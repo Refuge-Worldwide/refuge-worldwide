@@ -16,7 +16,7 @@ export default function NavigationLink({
 }: NavigationLink) {
   const { pathname } = useRouter();
 
-  const isActive = pathname.includes(String(href));
+  const isActive = pathname === href;
 
   const classNames = cn(
     className,
