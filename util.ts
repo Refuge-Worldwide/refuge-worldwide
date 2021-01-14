@@ -1,4 +1,4 @@
-import { NUMERIC_REGEX, REGEX } from "./constants";
+import { REGEX } from "./constants";
 import { ArtistFilterType, ArtistInterface } from "./types/shared";
 
 interface PageResponse {
