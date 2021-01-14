@@ -1,4 +1,7 @@
 import Share from "../icons/share";
+import { isServer } from "../util";
+
+const Button;
 
 export default function ShareButton({
   details,
@@ -8,6 +11,8 @@ export default function ShareButton({
     slug: string;
   };
 }) {
+  const cachedClassNames = "w-20 h-20 sm:w-28 sm:h-28 focus:outline-none";
+
   const { title, slug } = details;
 
   const handleOnClick = async () => {
@@ -18,20 +23,21 @@ export default function ShareButton({
     };
 
     try {
-      /**
-       * @todo Handle sharing on devices without the Share API
-       */
       await navigator.share(shareData);
     } catch (error) {
       console.error(error);
     }
   };
 
+  if (!isServer && navigator?.share)
+    return (
+      <button className={cachedClassNames} onClick={handleOnClick}>
+        <Share />
+      </button>
+    );
+
   return (
-    <button
-      className="w-20 h-20 sm:w-28 sm:h-28 focus:outline-none"
-      onClick={handleOnClick}
-    >
+    <button className={cachedClassNames}>
       <Share />
     </button>
   );
