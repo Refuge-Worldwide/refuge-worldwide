@@ -57,10 +57,10 @@ export default function ArtistBody({ slug, name, content }: ArtistInterface) {
               </div>
             </Fragment>
           )}
+
+          <div className="h-12 md:h-24" />
         </div>
       </section>
-
-      <div className="h-12 md:h-24" />
     </Fragment>
   );
 }

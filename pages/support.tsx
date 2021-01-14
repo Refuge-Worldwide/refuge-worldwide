@@ -17,13 +17,13 @@ export default function SupportPage({ preview, data }: Page) {
       </Head>
 
       <SinglePage coverImage={data.coverImage}>
-        <div className="p-4 sm:p-8">
-          <div className="container-md">
+        <section>
+          <div className="container-md p-4 sm:p-8 bg-white">
             <div className="prose sm:prose-lg max-w-none">
               {documentToReactComponents(data?.content?.json)}
             </div>
           </div>
-        </div>
+        </section>
       </SinglePage>
     </Layout>
   );

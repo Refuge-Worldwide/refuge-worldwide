@@ -14,27 +14,31 @@ export default function SinglePage({
   withBackButton?: boolean;
 }) {
   return (
-    <Fragment>
-      <div className="relative h-56 sm:h-96 md:h-112 lg:h-cover-image">
-        {withBackButton && (
-          <div className="absolute left-4 sm:left-8 top-3 sm:top-4 z-10">
-            <BackButton />
-          </div>
-        )}
+    <div className="relative">
+      {withBackButton && (
+        <div className="absolute left-4 sm:left-8 top-3 sm:top-4 z-20">
+          <BackButton />
+        </div>
+      )}
 
+      <div className="relative h-56 sm:h-96 md:h-112 lg:h-cover-image -z-10">
         <Image
-          className="-z-10"
+          alt={""}
+          aria-hidden
+          className="select-none "
+          draggable={false}
           key={coverImage.sys.id}
-          src={coverImage.url}
-          loader={contentful}
-          alt={coverImage.title}
           layout="fill"
+          loader={contentful}
+          loading="eager"
           objectFit="cover"
           objectPosition="center"
+          priority
+          src={coverImage.url}
         />
       </div>
 
-      <div className="lg:-mt-96 z-10">{children}</div>
-    </Fragment>
+      <div className="lg:-mt-96">{children}</div>
+    </div>
   );
 }
