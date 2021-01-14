@@ -20,7 +20,10 @@ export default function ArtistsPage({ allArtists, preview }: Page) {
   const sections = sortAndGroup(allArtists, filter);
 
   return (
-    <Layout className="bg-purple flex flex-row-reverse" preview={preview}>
+    <Layout
+      className="bg-purple flex flex-col-reverse sm:flex-row-reverse"
+      preview={preview}
+    >
       <Head>
         <title>Artists</title>
       </Head>
@@ -52,8 +55,8 @@ export default function ArtistsPage({ allArtists, preview }: Page) {
         ))}
       </div>
 
-      <aside className="border-r-2 px-4">
-        <ul className="text-small text-center sticky top-12 sm:top-16 py-4">
+      <aside className="border-b-2 sm:border-b-0 sm:border-r-2">
+        <ul className="sm:sticky sm:top-16 p-4 overflow-scroll hide-scrollbar flex sm:block space-x-4 sm:space-x-0 text-small text-center">
           {ALPHABET.map((letter, i) => {
             const letterHasArtists =
               sections.filter((section) => section.alphabet === letter).length >
@@ -74,6 +77,8 @@ export default function ArtistsPage({ allArtists, preview }: Page) {
               </li>
             );
           })}
+
+          <li>&nbsp;</li>
         </ul>
       </aside>
     </Layout>
