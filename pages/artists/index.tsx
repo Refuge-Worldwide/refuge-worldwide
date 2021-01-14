@@ -86,7 +86,7 @@ export default function ArtistsPage({ allArtists, preview }: Page) {
 }
 
 export async function getStaticProps({ preview = false }) {
-  const allArtists = await getAllArtists(preview);
+  const allArtists = await getAllArtists(preview, 500);
 
   return {
     props: {

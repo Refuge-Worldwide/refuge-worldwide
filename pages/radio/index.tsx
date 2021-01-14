@@ -34,7 +34,7 @@ export default function RadioPage({
 }
 
 export async function getStaticProps({ preview = false }) {
-  const { upcoming, past } = await getUpcomingAndPastShows(preview);
+  const { upcoming, past } = await getUpcomingAndPastShows(preview, 500);
   const genres = await getGenres(preview);
 
   return {
