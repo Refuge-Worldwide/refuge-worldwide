@@ -41,7 +41,7 @@ export default function LivePlayer() {
   const playerWrapperClassNames = cn(
     "bg-black text-white h-12 sm:h-16 px-4 sm:px-8 flex items-center space-x-3 sm:space-x-9",
     {
-      "sticky top-0 z-50": isPlaying,
+      "sticky top-0 z-50": isOnline,
     }
   );
 
