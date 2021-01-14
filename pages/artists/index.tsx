@@ -52,8 +52,8 @@ export default function ArtistsPage({ allArtists, preview }: Page) {
         ))}
       </div>
 
-      <aside className="border-r-2 p-4">
-        <ul className="text-small text-center sticky top-4">
+      <aside className="border-r-2 px-4">
+        <ul className="text-small text-center sticky top-12 sm:top-16 py-4">
           {ALPHABET.map((letter, i) => {
             const letterHasArtists =
               sections.filter((section) => section.alphabet === letter).length >
