@@ -1,8 +1,6 @@
 import Share from "../icons/share";
 import { isServer } from "../util";
 
-const Button;
-
 export default function ShareButton({
   details,
 }: {
