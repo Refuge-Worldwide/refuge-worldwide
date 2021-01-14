@@ -20,7 +20,7 @@ export default function ArtistsPage({ allArtists, preview }: Page) {
   const sections = sortAndGroup(allArtists, filter);
 
   return (
-    <Layout className="bg-purple md:flex flex-row-reverse" preview={preview}>
+    <Layout className="bg-purple flex flex-row-reverse" preview={preview}>
       <Head>
         <title>Artists</title>
       </Head>
