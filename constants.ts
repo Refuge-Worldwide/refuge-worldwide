@@ -35,4 +35,10 @@ export const ALPHABET = [
   "X",
   "Y",
   "Z",
+  "#",
 ];
+
+export const REGEX = {
+  NUMERIC: new RegExp(/^\d+$/),
+  SPECIAL: new RegExp(/\W|_/g),
+};

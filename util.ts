@@ -1,3 +1,4 @@
+import { NUMERIC_REGEX, REGEX } from "./constants";
 import { ArtistFilterType, ArtistInterface } from "./types/shared";
 
 interface PageResponse {
@@ -27,13 +28,15 @@ export const extractCollectionItem = (
   key: string
 ) => fetchResponse?.data?.[key]?.items?.[0];
 
+interface GroupedArtists {
+  alphabet: string;
+  artists: ArtistInterface[];
+}
+
 export const sortAndGroup = (
   data: ArtistInterface[],
   role: ArtistFilterType
-): {
-  alphabet: string;
-  artists: ArtistInterface[];
-}[] => {
+): GroupedArtists[] => {
   const residencyFilter = (artist: ArtistInterface) => {
     if (role === "All") return artist;
     if (role === "Residents" && artist.isResident === true) return artist;
@@ -49,7 +52,10 @@ export const sortAndGroup = (
     },
     current: ArtistInterface
   ) => {
-    const alphabet = current.name[0];
+    let alphabet = current.name[0];
+
+    if (REGEX.NUMERIC.test(alphabet) || REGEX.SPECIAL.test(alphabet))
+      alphabet = "#";
 
     if (!accumulator[alphabet]) {
       accumulator[alphabet] = {
@@ -63,7 +69,16 @@ export const sortAndGroup = (
     return accumulator;
   };
 
-  return Object.values(data.filter(residencyFilter).reduce(alphaReducer, {}));
+  const sortHashtagToEnd = (a: GroupedArtists, b: GroupedArtists) => {
+    if (a.alphabet === "#" || b.alphabet === "#") return -1;
+    if (a.alphabet < b.alphabet) return -1;
+    if (a.alphabet > b.alphabet) return 1;
+    return 0;
+  };
+
+  return Object.values(
+    data.filter(residencyFilter).reduce(alphaReducer, {})
+  ).sort(sortHashtagToEnd);
 };
 
 export const formatArtistNames = (data: ArtistInterface[]) => {

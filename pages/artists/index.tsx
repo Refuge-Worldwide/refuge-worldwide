@@ -56,7 +56,7 @@ export default function ArtistsPage({ allArtists, preview }: Page) {
       </div>
 
       <aside className="border-b-2 sm:border-b-0 sm:border-r-2">
-        <ul className="sm:sticky sm:top-16 p-4 overflow-scroll hide-scrollbar flex sm:block space-x-4 sm:space-x-0 text-small text-center">
+        <ul className="sm:sticky sm:top-16 p-4 overflow-scroll hide-scrollbar flex sm:block space-x-4 sm:space-x-0 text-small text-center whitespace-nowrap">
           {ALPHABET.map((letter, i) => {
             const letterHasArtists =
               sections.filter((section) => section.alphabet === letter).length >
