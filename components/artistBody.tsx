@@ -3,6 +3,7 @@ import { Fragment } from "react";
 import Share from "../icons/share";
 import { renderRichTextWithImages } from "../lib/rich-text";
 import { ArtistInterface } from "../types/shared";
+import Pill from "./pill";
 
 export default function ArtistBody({ slug, name, content }: ArtistInterface) {
   const handleShare = async () => {
@@ -28,13 +29,9 @@ export default function ArtistBody({ slug, name, content }: ArtistInterface) {
         <div className="p-4 sm:p-8">
           <div className="container-md">
             <div className="flex flex-wrap md:flex-nowrap md:space-x-8 lg:space-x-12 justify-between md:items-center">
-              <div className="flex">
-                <div className="w-20 h-20 sm:w-28 sm:h-28" />
-                {/* Hook up to play latest show */}
-                {/* <button className="w-20 h-20 sm:w-28 sm:h-28 rounded-full focus:outline-none focus:ring-4">
-                  <PlayCircle />
-                </button> */}
-              </div>
+              <Pill>
+                <span className="font-serif">Artist</span>
+              </Pill>
 
               <div className="w-full order-last md:order-none">
                 <div className="h-3 block md:hidden" />
