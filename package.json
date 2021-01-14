@@ -28,7 +28,6 @@
     "@reach/dialog": "^0.12.1",
     "@reach/visually-hidden": "^0.12.0",
     "@use-it/interval": "^1.0.0",
-    "add": "^2.0.6",
     "classnames": "^2.2.6",
     "dayjs": "^1.10.3",
     "next": "^10.0.5",
@@ -38,8 +37,7 @@
     "react-ridge-state": "^4.1.6",
     "smoothscroll-polyfill": "^0.4.4",
     "swr": "^0.4.0",
-    "use-intersection": "^0.2.1",
-    "yarn": "^1.22.10"
+    "use-intersection": "^0.2.1"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^10.0.5",
