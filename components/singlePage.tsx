@@ -15,7 +15,7 @@ export default function SinglePage({
 }) {
   return (
     <Fragment>
-      <div className="relative h-56 sm:h-96">
+      <div className="relative h-56 sm:h-96 md:h-112 lg:h-cover-image">
         {withBackButton && (
           <div className="absolute left-4 sm:left-8 top-3 sm:top-4 z-10">
             <BackButton />
@@ -23,6 +23,7 @@ export default function SinglePage({
         )}
 
         <Image
+          className="-z-10"
           key={coverImage.sys.id}
           src={coverImage.url}
           loader={contentful}
@@ -33,7 +34,7 @@ export default function SinglePage({
         />
       </div>
 
-      <div>{children}</div>
+      <div className="lg:-mt-96 z-10">{children}</div>
     </Fragment>
   );
 }

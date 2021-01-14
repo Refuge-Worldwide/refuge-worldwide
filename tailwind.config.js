@@ -68,6 +68,13 @@ module.exports = {
       animation: {
         "spin-slow": "spin 4s linear infinite",
       },
+      spacing: {
+        112: "32rem",
+        "cover-image": "60rem",
+      },
+      zIndex: {
+        "-10": "-10",
+      },
       typography: (theme) => ({
         DEFAULT: {
           css: {
