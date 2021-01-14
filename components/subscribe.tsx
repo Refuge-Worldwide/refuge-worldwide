@@ -1,19 +1,15 @@
-import { useState } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { FormEvent, useRef, useState } from "react";
 import { Arrow } from "../icons/arrow";
-
-type FormValues = {
-  email: string;
-  optIn: boolean;
-};
 
 export default function Subscribe() {
   const [message, setMessage] = useState("");
 
-  const { register, handleSubmit, reset } = useForm<FormValues>();
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    const { email } = data;
+  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const email = inputRef.current.value;
 
     // 3. Send a request to our API with the user's email address.
     const res = await fetch("/api/subscribe", {
@@ -32,12 +28,12 @@ export default function Subscribe() {
     }
 
     // 5. Clear the input value and show a success message.
-    reset();
+    inputRef.current.value = "";
     setMessage("Success! 🎉 You are now subscribed to the newsletter.");
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} method="POST">
+    <form onSubmit={onSubmit} method="POST">
       <div>
         <label className="block font-medium" htmlFor="email">
           Register here
@@ -52,7 +48,8 @@ export default function Subscribe() {
           name="email"
           placeholder="Your Email"
           type="email"
-          ref={register({ required: true })}
+          required
+          ref={inputRef}
         />
       </div>
 
@@ -68,7 +65,7 @@ export default function Subscribe() {
             id="optIn"
             name="optIn"
             type="checkbox"
-            ref={register({ required: true })}
+            required
           />{" "}
           <span className="sm:mt-0.5 sm:leading-none">
             I consent to receive emails from Refuge Worldwide
