@@ -13,11 +13,16 @@ export default function ShareButton({
 
   const { title, slug } = details;
 
+  const URL = `https://refuge-worldwide.vercel.app${slug}`;
+
+  const TEXT =
+    "Refuge Worldwide is a community radio station and fundraising platform based in Berlin.";
+
   const handleOnClick = async () => {
     const shareData: ShareData = {
       text: title,
       title: "Refuge Worldwide",
-      url: `https://refuge-worldwide.vercel.app/${slug}`,
+      url: URL,
     };
 
     try {
@@ -35,8 +40,52 @@ export default function ShareButton({
     );
 
   return (
-    <button className={cachedClassNames}>
+    <a className={cachedClassNames}>
       <Share />
-    </button>
+    </a>
   );
 }
+
+const WhatsApp = ({ link, text }) => (
+  <a
+    target="_blank"
+    rel="noopener noreferrer"
+    href={`https://wa.me/?text=${encodeURI(`${text} ${link}`)}`}
+  >
+    WhatsApp
+  </a>
+);
+
+const Facebook = ({ link }) => (
+  <a
+    target="_blank"
+    rel="noopener noreferrer"
+    href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURI(link)}`}
+  >
+    Facebook
+  </a>
+);
+
+const Twitter = ({ link, text }) => (
+  <a
+    target="_blank"
+    rel="noopener noreferrer"
+    href={`https://twitter.com/intent/tweet?text=${encodeURI(
+      text
+    )}&url=${encodeURI(link)}&via=refugeworldwide`}
+  >
+    Twitter
+  </a>
+);
+
+const Telegram = ({ link, text }) => (
+  <a
+    target="_blank"
+    rel="noopener noreferrer"
+    href={`https://telegram.me/share/url?url=${encodeURI(
+      link
+    )}&text=${encodeURI(text)}`}
+  >
+    Telegram
+  </a>
+);

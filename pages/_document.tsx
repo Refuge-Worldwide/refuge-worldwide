@@ -32,6 +32,8 @@ class RefugeDocument extends Document {
             as="style"
           />
           <link rel="stylesheet" href="https://use.typekit.net/rqu7mun.css" />
+          <link rel="icon" href="/favicon.ico" />
+          <meta name="theme-color" content="#000" />
         </Head>
         <body className="text-small sm:text-base font-light">
           <Main />
