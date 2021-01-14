@@ -5,8 +5,10 @@ import { INSTAGRAM_URL, TWITTER_URL } from "../constants";
 import Instagram from "../icons/instagram";
 import { Menu } from "../icons/menu";
 import Twitter from "../icons/twitter";
-import MobileMenu from "./mobileMenu";
 import NavigationLink from "./navigationLink";
+import dynamic from "next/dynamic";
+
+const MobileMenu = dynamic(() => import("../components/mobileMenu"));
 
 export default function Navigation() {
   const [isOpen, isOpenSet] = useState(false);
