@@ -1,5 +1,10 @@
 import Link from "next/link";
-import { MIXCLOUD_URL, PATREON_URL, SOUNDCLOUD_URL } from "../constants";
+import {
+  MIXCLOUD_URL,
+  PATREON_URL,
+  SOUNDCLOUD_URL,
+  CONTACT_URL,
+} from "../constants";
 import { Arrow } from "../icons/arrow";
 import Mixcloud from "../icons/mixcloud";
 import Soundcloud from "../icons/soundcloud";
@@ -28,9 +33,10 @@ export default function Footer() {
               <p>
                 Refuge began in 2015 as a fundraising platform working in
                 solidarity with grassroots and non-profit organizations across
-                Berlin. In 2020 an idea for Refuge Worldwide radio station was
-                hatched, with the station broadcasting remotely from 2021 based
-                out of Neukölln.
+                Berlin. In 2020 we started to plan a Refuge Worldwide radio
+                station to amplify the music and issues that we care about with
+                the station broadcasting remotely from 2021 based out of
+                Neukölln.
               </p>
               <p>
                 We are a non-commercial independent platform, amplifying voices
@@ -70,10 +76,7 @@ export default function Footer() {
 
           <ul className="flex-1 lg:flex justify-end items-center space-y-4 lg:space-y-0 lg:space-x-8 xl:space-x-12">
             <li>
-              <a
-                href="mailto:hello@refugeworldwide.com"
-                className="font-medium"
-              >
+              <a href={CONTACT_URL} className="font-medium">
                 Contact
               </a>
             </li>

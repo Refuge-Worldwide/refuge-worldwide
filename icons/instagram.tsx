@@ -1,12 +1,13 @@
 export default function Instagram({
+  size = 24,
   title = "Instagram",
   titleId = "instagram",
 }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width={24}
-      height={24}
+      width={size}
+      height={size}
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"

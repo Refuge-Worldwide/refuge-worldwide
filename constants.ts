@@ -6,7 +6,9 @@ export const SOUNDCLOUD_URL = "https://soundcloud.com/RefugeWorldwide/";
 
 export const MIXCLOUD_URL = "https://www.mixcloud.com/RefugeWorldwide/";
 
-export const PATREON_URL = "#patreon";
+export const PATREON_URL = "https://www.patreon.com/refugeworldwide";
+
+export const CONTACT_URL = "mailto:hello@refugeworldwide.com";
 
 export const ALPHABET = [
   "A",
