@@ -20,6 +20,8 @@ export default function ArticleMeta({
   // @ts-ignore
   const description = excerpt.value || SEO.DESCRIPTION;
 
+  const image = `${coverImage.url}?w=1200&h=630&fit=pad`;
+
   return (
     <Head>
       <title key="title">{title}</title>
@@ -28,9 +30,9 @@ export default function ArticleMeta({
       <meta name="description" content={description} />
       <meta property="og:description" content={description} />
 
-      <meta property="og:image" content={coverImage.url} />
-      <meta property="og:image:width" content={coverImage.width.toString()} />
-      <meta property="og:image:height" content={coverImage.height.toString()} />
+      <meta property="og:image" content={image} />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
       <meta property="og:image:alt" content={coverImage.title} />
 
       <meta property="og:url" content={`${SEO.ROOT}/news/${slug}`} />
