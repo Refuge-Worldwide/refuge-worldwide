@@ -1,5 +1,5 @@
-import Head from "next/head";
 import Layout from "../components/layout";
+import PageMeta from "../components/seo/page";
 import {
   getFeaturedArticles,
   getFeaturedShows,
@@ -30,9 +30,7 @@ export default function HomePage({
 }: Page) {
   return (
     <Layout preview={preview}>
-      <Head>
-        <title>Refuge Worldwide</title>
-      </Head>
+      <PageMeta title="Refuge Worldwide" path="/" />
 
       <NextUp {...nextUp} />
 

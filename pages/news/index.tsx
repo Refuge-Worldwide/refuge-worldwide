@@ -1,6 +1,7 @@
 import Head from "next/head";
 import Layout from "../../components/layout";
 import Pill from "../../components/pill";
+import PageMeta from "../../components/seo/page";
 import { getAllArticles, getFeaturedArticles } from "../../lib/api";
 import { ArticleInterface } from "../../types/shared";
 import AllArticles from "../../views/news/allArticles";
@@ -19,9 +20,7 @@ export default function NewsPage({
 }: Page) {
   return (
     <Layout preview={preview}>
-      <Head>
-        <title>News</title>
-      </Head>
+      <PageMeta title="News | Refuge Worldwide" path="news/" />
 
       <FeaturedArticle articles={featuredArticles} />
 

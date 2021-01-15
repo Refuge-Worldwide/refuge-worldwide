@@ -1,8 +1,8 @@
-import Head from "next/head";
 import ArtistRow from "../../components/artistRow";
 import Badge from "../../components/badge";
 import Layout from "../../components/layout";
 import Pill from "../../components/pill";
+import PageMeta from "../../components/seo/page";
 import { ALPHABET } from "../../constants";
 import useArtistRoleFilter from "../../hooks/useArtistRoleFilter";
 import { getAllArtists } from "../../lib/api";
@@ -24,9 +24,7 @@ export default function ArtistsPage({ allArtists, preview }: Page) {
       className="bg-purple flex flex-col-reverse sm:flex-row-reverse"
       preview={preview}
     >
-      <Head>
-        <title>Artists</title>
-      </Head>
+      <PageMeta title="Artists | Refuge Worldwide" path="artists/" />
 
       <div>
         <section className="p-4 sm:p-8">

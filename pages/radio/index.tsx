@@ -1,5 +1,5 @@
-import Head from "next/head";
 import Layout from "../../components/layout";
+import PageMeta from "../../components/seo/page";
 import { getGenres, getUpcomingAndPastShows } from "../../lib/api";
 import { ShowInterface } from "../../types/shared";
 import AllShows from "../../views/radio/allShows";
@@ -20,9 +20,7 @@ export default function RadioPage({
 }: Page) {
   return (
     <Layout preview={preview}>
-      <Head>
-        <title>Radio</title>
-      </Head>
+      <PageMeta title="Radio | Refuge Worldwide" path="radio/" />
 
       <h1 hidden>Radio</h1>
 

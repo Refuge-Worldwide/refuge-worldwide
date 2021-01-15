@@ -1,9 +1,9 @@
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
-import Head from "next/head";
 import Layout from "../components/layout";
-import SinglePage from "../views/singlePage";
+import PageMeta from "../components/seo/page";
 import Subscribe from "../components/subscribe";
 import { getNewsletterPage, NewsletterPageData } from "../lib/api";
+import SinglePage from "../views/singlePage";
 
 interface Page extends JSX.Element {
   preview: boolean;
@@ -13,9 +13,7 @@ interface Page extends JSX.Element {
 export default function NewsletterPage({ preview, data }: Page) {
   return (
     <Layout preview={preview}>
-      <Head>
-        <title>Newsletter</title>
-      </Head>
+      <PageMeta title="Newsletter | Refuge Worldwide" path="newsletter/" />
 
       <SinglePage coverImage={data.coverImage}>
         <section>

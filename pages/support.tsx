@@ -3,6 +3,7 @@ import Head from "next/head";
 import Layout from "../components/layout";
 import SinglePage from "../views/singlePage";
 import { getSupportPage, SupportPageData } from "../lib/api";
+import PageMeta from "../components/seo/page";
 
 interface Page extends JSX.Element {
   preview: boolean;
@@ -12,9 +13,7 @@ interface Page extends JSX.Element {
 export default function SupportPage({ preview, data }: Page) {
   return (
     <Layout preview={preview}>
-      <Head>
-        <title>Support</title>
-      </Head>
+      <PageMeta title="Support | Refuge Worldwide" path="support/" />
 
       <SinglePage coverImage={data.coverImage}>
         <section>

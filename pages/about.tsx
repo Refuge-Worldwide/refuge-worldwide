@@ -1,8 +1,8 @@
-import Head from "next/head";
 import Layout from "../components/layout";
-import SinglePage from "../views/singlePage";
+import PageMeta from "../components/seo/page";
 import { AboutPageData, getAboutPage } from "../lib/api";
 import { renderRichTextWithImages } from "../lib/rich-text";
+import SinglePage from "../views/singlePage";
 
 interface Page extends JSX.Element {
   preview: boolean;
@@ -12,9 +12,7 @@ interface Page extends JSX.Element {
 export default function AboutPage({ preview, data }: Page) {
   return (
     <Layout preview={preview}>
-      <Head>
-        <title>About</title>
-      </Head>
+      <PageMeta title="About | Refuge Worldwide" path="about/" />
 
       <SinglePage coverImage={data.coverImage}>
         <section>
