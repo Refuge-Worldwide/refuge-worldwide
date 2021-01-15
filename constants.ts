@@ -1,3 +1,9 @@
+export const SEO = {
+  DESCRIPTION:
+    "Refuge Worldwide is a community radio station and fundraising platform based in Berlin.",
+  ROOT: "https://refuge-worldwide.vercel.app",
+};
+
 export const TWITTER_URL = "https://twitter.com/RefugeWorldwide";
 
 export const INSTAGRAM_URL = "https://instagram.com/RefugeWorldwide/";

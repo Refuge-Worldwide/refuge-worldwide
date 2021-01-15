@@ -1,13 +1,13 @@
 import { useRouter } from "next/dist/client/router";
 import ErrorPage from "next/error";
-import Head from "next/head";
-import ArtistBody from "../../views/artists/artistBody";
 import Layout from "../../components/layout";
-import SinglePage from "../../views/singlePage";
+import ArtistMeta from "../../components/seo/artist";
 import { getAllArtists, getArtistAndMoreShows } from "../../lib/api";
 import { ArtistInterface, ShowInterface } from "../../types/shared";
+import ArtistBody from "../../views/artists/artistBody";
 import RelatedShows from "../../views/artists/relatedShows";
 import Loading from "../../views/loading";
+import SinglePage from "../../views/singlePage";
 
 interface Page extends JSX.Element {
   artist: ArtistInterface;
@@ -28,10 +28,7 @@ export default function Artist({ artist, relatedShows, preview }: Page) {
         <Loading />
       ) : (
         <>
-          <Head>
-            <title>{artist.name} | Refuge Worldwide</title>
-            <meta property="og:image" content={artist.photo.url} />
-          </Head>
+          <ArtistMeta {...artist} />
 
           <SinglePage
             coverImage={artist.photo}
