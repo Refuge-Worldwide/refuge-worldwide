@@ -3,7 +3,7 @@ import ErrorPage from "next/error";
 import Head from "next/head";
 import ArticleBody from "../../views/news/articleBody";
 import Layout from "../../components/layout";
-import SinglePage from "../../components/singlePage";
+import SinglePage from "../../views/singlePage";
 import { getAllArticles, getArticleAndMoreArticles } from "../../lib/api";
 import { ArticleInterface } from "../../types/shared";
 import Loading from "../../views/loading";

@@ -3,7 +3,7 @@ import ErrorPage from "next/error";
 import Head from "next/head";
 import Layout from "../../components/layout";
 import ShowBody from "../../views/radio/showBody";
-import SinglePage from "../../components/singlePage";
+import SinglePage from "../../views/singlePage";
 import { getAllShows, getShowAndMoreShows } from "../../lib/api";
 import { ShowInterface } from "../../types/shared";
 import Loading from "../../views/loading";

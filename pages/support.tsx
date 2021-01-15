@@ -1,7 +1,7 @@
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import Head from "next/head";
 import Layout from "../components/layout";
-import SinglePage from "../components/singlePage";
+import SinglePage from "../views/singlePage";
 import { getSupportPage, SupportPageData } from "../lib/api";
 
 interface Page extends JSX.Element {

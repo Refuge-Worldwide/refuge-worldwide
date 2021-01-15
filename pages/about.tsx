@@ -1,6 +1,6 @@
 import Head from "next/head";
 import Layout from "../components/layout";
-import SinglePage from "../components/singlePage";
+import SinglePage from "../views/singlePage";
 import { AboutPageData, getAboutPage } from "../lib/api";
 import { renderRichTextWithImages } from "../lib/rich-text";
 

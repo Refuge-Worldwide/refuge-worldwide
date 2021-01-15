@@ -3,7 +3,7 @@ import ErrorPage from "next/error";
 import Head from "next/head";
 import ArtistBody from "../../views/artists/artistBody";
 import Layout from "../../components/layout";
-import SinglePage from "../../components/singlePage";
+import SinglePage from "../../views/singlePage";
 import { getAllArtists, getArtistAndMoreShows } from "../../lib/api";
 import { ArtistInterface, ShowInterface } from "../../types/shared";
 import RelatedShows from "../../views/artists/relatedShows";

@@ -2,7 +2,7 @@ import Image from "next/image";
 import { ReactNode } from "react";
 import { contentful } from "../lib/loaders";
 import { CoverImage, CoverImagePosition } from "../types/shared";
-import BackButton from "./backButton";
+import BackButton from "../components/backButton";
 
 export default function SinglePage({
   coverImage,
