@@ -1,9 +1,11 @@
 import cn from "classnames";
 import { useEffect, useRef } from "react";
+import useMarquee3k from "../hooks/useMarquee3k";
 import usePlayerState from "../hooks/usePlayerState";
 import useRadioCoStatus from "../hooks/useRadioCoStatus";
 import Pause from "../icons/pause";
 import Play from "../icons/play";
+import { isServer } from "../util";
 
 const BroadcastingIndicator = ({
   status,
@@ -61,15 +63,19 @@ export default function LivePlayer() {
     }
   }, [data]);
 
+  useMarquee3k([isOnline]);
+
   return (
     <section className={playerWrapperClassNames}>
       <BroadcastingIndicator status={data?.status} />
 
       {isOnline ? (
-        <div className="flex-1 overflow-x-scroll hide-scrollbar mt-0.5">
-          <span className="whitespace-nowrap leading-none">
-            {data?.current_track.title}
-          </span>
+        <div className="flex-1 truncate mt-0.5">
+          <div className="marquee3k" data-speed="0.25">
+            <span className="whitespace-nowrap leading-none pr-8">
+              {data?.current_track.title}
+            </span>
+          </div>
         </div>
       ) : null}
 
@@ -99,7 +105,10 @@ export default function LivePlayer() {
 export function LivePlayerLoading() {
   return (
     <section className="bg-black text-white h-12 sm:h-16 px-4 sm:px-8 flex items-center">
-      <p className="whitespace-nowrap leading-none mt-0.5">Loading Broadcast</p>
+      <div className="flex-grow-0 flex items-center space-x-6">
+        <div className="flex-shrink-0 w-7 h-7 sm:h-10 sm:w-10 rounded-full bg-white opacity-25" />
+        <p className="hidden md:block leading-none mt-1">Loading Broadcast</p>
+      </div>
     </section>
   );
 }
