@@ -1,5 +1,6 @@
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import { Block, BLOCKS } from "@contentful/rich-text-types";
+import Image from "next/image";
 import { Asset, Content } from "./api";
 
 interface EmbeddedAssetBlock extends Block {
@@ -22,7 +23,15 @@ function renderEmbeddedAsset(assets: Asset[]) {
     const asset = getAssetById(id, assets);
 
     if (asset.contentType.includes("image")) {
-      return <img src={asset.url} alt={asset.title} />;
+      return (
+        <Image
+          src={asset.url}
+          alt={asset.title}
+          width={asset.width}
+          height={asset.height}
+          layout="responsive"
+        />
+      );
     }
 
     return null;
