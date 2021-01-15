@@ -74,19 +74,17 @@ export default function Footer() {
             </button>
           </div>
 
-          <ul className="flex-1 lg:flex justify-end items-center space-y-4 lg:space-y-0 lg:space-x-8 xl:space-x-12">
+          <ul className="flex-1 flex lg:justify-end items-center space-x-8 xl:space-x-12">
             <li>
               <a href={CONTACT_URL} className="font-medium">
                 Contact
               </a>
             </li>
-
             <li>
               <a href={SOUNDCLOUD_URL}>
                 <Soundcloud />
               </a>
             </li>
-
             <li>
               <a href={MIXCLOUD_URL}>
                 <Mixcloud />
