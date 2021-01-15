@@ -1,9 +1,18 @@
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
+import Marquee3k from "marquee3000";
+import { useEffect } from "react";
 import Pill from "../../components/pill";
 import { NextUpSection } from "../../lib/api";
 
 export default function NextUp({ content, header }: NextUpSection) {
-  if (content.json && typeof header === "string")
+  const shouldShowBanner = content.json && typeof header === "string";
+
+  useEffect(() => {
+    if (shouldShowBanner) Marquee3k?.init();
+    return () => Marquee3k?.pauseAll();
+  }, []);
+
+  if (shouldShowBanner)
     return (
       <section className="bg-orange border-t-2 border-b-2">
         <div className="flex items-center">
@@ -12,10 +21,14 @@ export default function NextUp({ content, header }: NextUpSection) {
               <h2 className="whitespace-nowrap">{header}</h2>
             </Pill>
           </div>
-          <div className="pt-4 pb-4 overflow-x-scroll hide-scrollbar">
-            <span className="h-10 flex items-center space-x-2 whitespace-nowrap px-4">
-              {documentToReactComponents(content?.json)}
-            </span>
+          <div className="pt-4 pb-4 overflow-hidden">
+            <div className="marquee3k" data-speed="1">
+              <div>
+                <span className="h-10 flex items-center space-x-2 whitespace-nowrap px-2">
+                  {documentToReactComponents(content?.json)}
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </section>
