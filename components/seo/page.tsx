@@ -10,8 +10,6 @@ export default function PageMeta({
 }) {
   const photo = {
     url: `${SEO.ROOT}/og-thumb.jpg`,
-    width: 1000,
-    height: 1000,
     title: "Refuge Worldwide Brandmark",
   };
 
@@ -24,8 +22,8 @@ export default function PageMeta({
       <meta property="og:description" content={SEO.DESCRIPTION} />
 
       <meta property="og:image" content={photo.url} />
-      <meta property="og:image:width" content={photo.width.toString()} />
-      <meta property="og:image:height" content={photo.height.toString()} />
+      <meta property="og:image:width" content="1000" />
+      <meta property="og:image:height" content="1000" />
       <meta property="og:image:alt" content={photo.title} />
 
       <meta property="og:url" content={`${SEO.ROOT}/${path}`} />
