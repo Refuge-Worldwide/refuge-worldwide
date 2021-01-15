@@ -53,11 +53,10 @@ export enum ArticleType {
 
 export interface ArticleInterface {
   title: string;
-  subtitle: string;
+  subtitle?: string;
   articleType: ArticleType;
   date: string;
   slug: string;
-  location: string;
   coverImage: CoverImage;
   coverImagePosition: CoverImagePosition;
   content: Content;

@@ -1,12 +1,12 @@
 import { useRouter } from "next/dist/client/router";
 import ErrorPage from "next/error";
-import Head from "next/head";
-import ArticleBody from "../../views/news/articleBody";
 import Layout from "../../components/layout";
-import SinglePage from "../../views/singlePage";
+import ArticleMeta from "../../components/seo/article";
 import { getAllArticles, getArticleAndMoreArticles } from "../../lib/api";
 import { ArticleInterface } from "../../types/shared";
 import Loading from "../../views/loading";
+import ArticleBody from "../../views/news/articleBody";
+import SinglePage from "../../views/singlePage";
 
 interface Page extends JSX.Element {
   article: ArticleInterface;
@@ -26,10 +26,7 @@ export default function Article({ article, preview }: Page) {
         <Loading />
       ) : (
         <>
-          <Head>
-            <title>{article.title} | Refuge Worldwide</title>
-            <meta property="og:image" content={article.coverImage.url} />
-          </Head>
+          <ArticleMeta {...article} />
 
           <SinglePage
             coverImage={article.coverImage}
