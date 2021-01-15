@@ -1,12 +1,4 @@
-import {
-  Menu,
-  MenuList,
-  MenuButton,
-  MenuItem,
-  MenuItems,
-  MenuPopover,
-  MenuLink,
-} from "@reach/menu-button";
+import { Menu, MenuButton, MenuLink, MenuList } from "@reach/menu-button";
 import Share from "../icons/share";
 
 export default function ShareMenu({ url }: { url: string }) {
