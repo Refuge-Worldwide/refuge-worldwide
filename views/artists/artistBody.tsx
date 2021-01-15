@@ -9,7 +9,7 @@ export default function ArtistBody({ slug, name, content }: ArtistInterface) {
     <Fragment>
       <section>
         <div className="container-md p-4 sm:p-8 bg-white">
-          <div className="flex flex-wrap md:flex-nowrap md:space-x-8 lg:space-x-12 justify-between md:items-center">
+          <div className="flex flex-wrap md:flex-nowrap md:space-x-8 lg:space-x-12 justify-between">
             <Pill>
               <span className="font-serif">Artist</span>
             </Pill>

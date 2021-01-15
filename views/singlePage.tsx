@@ -40,7 +40,7 @@ export default function SinglePage({
         />
       </div>
 
-      <div className="lg:-mt-48">{children}</div>
+      <div className="lg:-mt-24">{children}</div>
     </div>
   );
 }
