@@ -9,12 +9,16 @@ export default function ArticleMeta({
   content,
   slug,
 }: ArticleInterface) {
-  const excerpt = content.json.content
-    .filter((el) => el.nodeType === "paragraph")[0]
-    .content.filter((el) => el.nodeType === "text")[0];
+  const excerpt = content?.json?.content
+    ?.filter((el) => el?.nodeType === "paragraph")
+    ?.slice(0, 1)
+    ?.pop()
+    ?.content?.filter((el) => el?.nodeType === "text")
+    ?.slice(0, 1)
+    ?.pop();
 
   // @ts-ignore
-  const description = excerpt?.value || SEO.DESCRIPTION;
+  const description = excerpt.value || SEO.DESCRIPTION;
 
   return (
     <Head>
