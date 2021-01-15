@@ -25,7 +25,7 @@ export default function Footer() {
             />
           </div>
           <div>
-            <h3 className="text-base leading-none">About Refuge</h3>
+            <p className="font-serif text-base leading-none">About Refuge</p>
 
             <div className="h-3 md:h-7" />
 
