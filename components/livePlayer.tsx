@@ -82,6 +82,9 @@ export default function LivePlayer() {
         <button
           className="flex-grow-0 h-7 w-7 sm:h-9 sm:w-9 focus:outline-none focus:ring-4"
           onClick={isPlaying ? pause : play}
+          aria-label={
+            isPlaying ? "Pause Live Broadcast" : "Play Live Broadcast"
+          }
         >
           {isPlaying ? <Pause /> : <Play />}
         </button>
