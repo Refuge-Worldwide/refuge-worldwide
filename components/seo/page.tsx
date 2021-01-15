@@ -32,7 +32,7 @@ export default function PageMeta({
 
       <meta property="og:type" content="website" />
 
-      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:card" content="summary" />
       <meta name="twitter:site" content="@refugeworldwide" />
     </Head>
   );
