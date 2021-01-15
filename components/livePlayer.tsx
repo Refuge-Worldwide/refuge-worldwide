@@ -5,7 +5,6 @@ import usePlayerState from "../hooks/usePlayerState";
 import useRadioCoStatus from "../hooks/useRadioCoStatus";
 import Pause from "../icons/pause";
 import Play from "../icons/play";
-import { isServer } from "../util";
 
 const BroadcastingIndicator = ({
   status,
