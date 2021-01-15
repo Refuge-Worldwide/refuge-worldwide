@@ -1,7 +1,7 @@
 import { useRouter } from "next/dist/client/router";
 import ErrorPage from "next/error";
 import Head from "next/head";
-import ArticleBody from "../../components/articleBody";
+import ArticleBody from "../../views/news/articleBody";
 import Layout from "../../components/layout";
 import SinglePage from "../../components/singlePage";
 import { getAllArticles, getArticleAndMoreArticles } from "../../lib/api";

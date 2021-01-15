@@ -1,8 +1,8 @@
 import { Fragment } from "react";
-import { renderRichTextWithImages } from "../lib/rich-text";
-import { ArtistInterface } from "../types/shared";
-import Pill from "./pill";
-import ShareButton from "./shareButton";
+import { renderRichTextWithImages } from "../../lib/rich-text";
+import { ArtistInterface } from "../../types/shared";
+import Pill from "../../components/pill";
+import ShareButton from "../../components/shareButton";
 
 export default function ArtistBody({ slug, name, content }: ArtistInterface) {
   return (

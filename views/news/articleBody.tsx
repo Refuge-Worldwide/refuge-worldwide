@@ -1,9 +1,9 @@
 import { Fragment } from "react";
-import { renderRichTextWithImages } from "../lib/rich-text";
-import { ArticleInterface } from "../types/shared";
-import Date from "./date";
-import Pill from "./pill";
-import ShareButton from "./shareButton";
+import { renderRichTextWithImages } from "../../lib/rich-text";
+import { ArticleInterface } from "../../types/shared";
+import Date from "../../components/date";
+import Pill from "../../components/pill";
+import ShareButton from "../../components/shareButton";
 
 export default function ArticleBody({
   title,

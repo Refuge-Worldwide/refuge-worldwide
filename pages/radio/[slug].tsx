@@ -2,7 +2,7 @@ import { useRouter } from "next/dist/client/router";
 import ErrorPage from "next/error";
 import Head from "next/head";
 import Layout from "../../components/layout";
-import ShowBody from "../../components/showBody";
+import ShowBody from "../../views/radio/showBody";
 import SinglePage from "../../components/singlePage";
 import { getAllShows, getShowAndMoreShows } from "../../lib/api";
 import { ShowInterface } from "../../types/shared";

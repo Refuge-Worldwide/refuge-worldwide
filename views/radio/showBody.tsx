@@ -1,14 +1,14 @@
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import Link from "next/link";
 import { Fragment } from "react";
-import PlayCircle from "../icons/playCircle";
-import { playerWidget, showKey } from "../lib/mixcloud";
-import { ShowInterface } from "../types/shared";
-import { getMixcloudKey, sort } from "../util";
-import Badge from "./badge";
-import Date from "./date";
-import Pill from "./pill";
-import ShareButton from "./shareButton";
+import PlayCircle from "../../icons/playCircle";
+import { playerWidget, showKey } from "../../lib/mixcloud";
+import { ShowInterface } from "../../types/shared";
+import { getMixcloudKey, sort } from "../../util";
+import Badge from "../../components/badge";
+import Date from "../../components/date";
+import Pill from "../../components/pill";
+import ShareButton from "../../components/shareButton";
 
 export default function ShowBody({
   title,
