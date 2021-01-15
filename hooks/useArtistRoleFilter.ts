@@ -1,7 +1,8 @@
 import { useState } from "react";
+import type { ArtistFilterType } from "../types/shared";
 
-export default function useArtistRoleFilter<T = any>(initialFilter: T) {
-  const [filter, filterSet] = useState<T>(initialFilter);
+export default function useArtistRoleFilter(initialFilter: ArtistFilterType) {
+  const [filter, filterSet] = useState<ArtistFilterType>(initialFilter);
 
   return { filter, filterSet };
 }

@@ -1,4 +1,3 @@
-import Head from "next/head";
 import Layout from "../../components/layout";
 import Pill from "../../components/pill";
 import PageMeta from "../../components/seo/page";

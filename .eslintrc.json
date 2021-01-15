@@ -29,6 +29,7 @@
     "react/prop-types": 0,
     "no-control-regex": 0,
     "react/no-unescaped-entities": 0,
-    "@typescript-eslint/ban-ts-comment": 0
+    "@typescript-eslint/ban-ts-comment": 0,
+    "@typescript-eslint/explicit-module-boundary-types": 0
   }
 }

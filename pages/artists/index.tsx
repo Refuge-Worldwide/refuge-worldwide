@@ -16,7 +16,7 @@ interface Page extends JSX.Element {
 
 export default function ArtistsPage({ allArtists, preview }: Page) {
   const filters: ArtistFilterType[] = ["All", "Residents", "Guests"];
-  const { filter, filterSet } = useArtistRoleFilter<ArtistFilterType>("All");
+  const { filter, filterSet } = useArtistRoleFilter("All");
   const sections = sortAndGroup(allArtists, filter);
 
   return (

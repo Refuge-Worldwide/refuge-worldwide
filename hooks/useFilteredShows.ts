@@ -1,7 +1,7 @@
 import useSWR from "swr";
 import { ShowInterface } from "../types/shared";
 
-const getFilteredShows = (_: any, filter: string, data: ShowInterface[]) => {
+const getFilteredShows = (_: string, filter: string, data: ShowInterface[]) => {
   if (filter === "All") return data;
 
   const includesGenreFilter = (show: ShowInterface) =>

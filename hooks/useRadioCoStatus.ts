@@ -25,7 +25,7 @@ export interface RadioCoInterface {
   }[];
 }
 
-const getRadioCoStatus = async (_: any, stationId: string) => {
+const getRadioCoStatus = async (_: string, stationId: string) => {
   const URL = `https://public.radio.co/stations/${stationId}/status`;
 
   const res = await fetch(URL);

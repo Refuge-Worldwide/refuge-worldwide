@@ -13,7 +13,7 @@ export default function MixcloudPlayer({ mini = true }: { mini?: boolean }) {
 
   const [, playerWidgetStateSet] = playerWidget.use();
 
-  const onErrorListener = (event: any) => {
+  const onErrorListener = (event: Event) => {
     console.error("[Mixcloud]", "on.error", event);
   };
 
