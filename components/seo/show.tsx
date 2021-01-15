@@ -1,14 +1,14 @@
 import Head from "next/head";
 import { SEO } from "../../constants";
-import { ArticleInterface } from "../../types/shared";
+import { ShowInterface } from "../../types/shared";
 
-export default function ArticleMeta({
+export default function ShowMeta({
   title,
   date,
   coverImage,
   content,
   slug,
-}: ArticleInterface) {
+}: ShowInterface) {
   const excerpt = content?.json?.content
     ?.filter((el) => el?.nodeType === "paragraph")
     ?.slice(0, 1)

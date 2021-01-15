@@ -1,12 +1,12 @@
 import { useRouter } from "next/dist/client/router";
 import ErrorPage from "next/error";
-import Head from "next/head";
 import Layout from "../../components/layout";
-import ShowBody from "../../views/radio/showBody";
-import SinglePage from "../../views/singlePage";
+import ShowMeta from "../../components/seo/show";
 import { getAllShows, getShowAndMoreShows } from "../../lib/api";
 import { ShowInterface } from "../../types/shared";
 import Loading from "../../views/loading";
+import ShowBody from "../../views/radio/showBody";
+import SinglePage from "../../views/singlePage";
 
 interface Page extends JSX.Element {
   show: ShowInterface;
@@ -26,13 +26,7 @@ export default function Show({ show, preview }: Page) {
         <Loading />
       ) : (
         <>
-          <Head>
-            <title>{show.title}</title>
-            <meta property="og:site_name" content="Refuge Worldwide" />
-            <meta property="og:type" content="article" />
-            <meta property="og:title" content={show.title} />
-            <meta property="og:image" content={show.coverImage.url} />
-          </Head>
+          <ShowMeta {...show} />
 
           <SinglePage
             coverImage={show.coverImage}

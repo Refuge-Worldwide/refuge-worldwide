@@ -52,6 +52,7 @@ class RefugeDocument extends Document {
           <link rel="manifest" href="/site.webmanifest" />
           <meta name="msapplication-TileColor" content="#000000" />
           <meta name="theme-color" content="#000000" />
+          <meta property="og:site_name" content="Refuge Worldwide" />
         </Head>
         <body className="text-small sm:text-base font-light">
           <Main />

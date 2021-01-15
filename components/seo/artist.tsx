@@ -22,7 +22,6 @@ export default function ArtistMeta({ photo, name, slug }: ArtistInterface) {
 
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:site" content="@refugeworldwide" />
-      <meta name="twitter:creator" content="@refugeworldwide" />
     </Head>
   );
 }
