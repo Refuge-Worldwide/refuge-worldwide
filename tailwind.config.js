@@ -49,6 +49,13 @@ module.exports = {
       black: "#000",
       white: "#fff",
       transparent: "transparent",
+      social: {
+        telegram: "#26A5E4",
+        twitter: "#1DA1F2",
+        facebook: "#1877F2",
+        instagram: "#E4405F",
+        whatsapp: "#25D366",
+      },
     },
     extend: {
       boxShadow: {
