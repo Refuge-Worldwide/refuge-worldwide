@@ -26,6 +26,7 @@
   "dependencies": {
     "@contentful/rich-text-react-renderer": "^14.1.2",
     "@reach/dialog": "^0.12.1",
+    "@reach/menu-button": "^0.12.1",
     "@reach/visually-hidden": "^0.12.0",
     "@use-it/interval": "^1.0.0",
     "classnames": "^2.2.6",
