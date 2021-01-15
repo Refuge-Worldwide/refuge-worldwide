@@ -33,7 +33,7 @@ export default function ShowMeta({
       <meta property="og:image:height" content={coverImage.height.toString()} />
       <meta property="og:image:alt" content={coverImage.title} />
 
-      <meta property="og:url" content={`${SEO.ROOT}/news/${slug}`} />
+      <meta property="og:url" content={`${SEO.ROOT}/radio/${slug}`} />
 
       <meta property="og:type" content="article" />
       <meta property="article:published_time" content={date} />
