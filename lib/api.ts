@@ -220,7 +220,7 @@ export async function getNextUpSection(
 
 export async function getAllArtists(
   preview: boolean,
-  limit = 50
+  limit = 250
 ): Promise<ArtistInterface[]> {
   const data = await contentful(
     /* GraphQL */ `
@@ -319,7 +319,7 @@ export async function getArtistAndMoreShows(
 
 export async function getAllShows(
   preview: boolean,
-  limit = 50
+  limit = 250
 ): Promise<ShowInterface[]> {
   const data = await contentful(
     /* GraphQL */ `
@@ -366,7 +366,7 @@ export async function getAllShows(
   return extractCollection(data, "showCollection");
 }
 
-export async function getUpcomingAndPastShows(preview: boolean, limit = 50) {
+export async function getUpcomingAndPastShows(preview: boolean, limit = 250) {
   const today = dayjs();
 
   const shows = await getAllShows(preview, limit);
@@ -553,12 +553,13 @@ export async function getAllGenres(
 }
 
 export async function getAllArticles(
-  preview: boolean
+  preview: boolean,
+  limit = 250
 ): Promise<ArticleInterface[]> {
   const data = await contentful(
     /* GraphQL */ `
       query {
-        articleCollection(order: date_DESC, preview: ${preview}) {
+        articleCollection(order: date_DESC, preview: ${preview}, limit: ${limit}) {
           items {
             title
             subtitle
