@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "postbuild": "next-sitemap",
     "analyze": "ANALYZE=true yarn build",
     "start": "next start",
     "format": "prettier --write \"**/*.tsx\" \"**/*.ts\"",
@@ -57,6 +58,7 @@
     "eslint-plugin-react": "^7.22.0",
     "husky": "^4.3.7",
     "lint-staged": "^10.5.3",
+    "next-sitemap": "^1.4.5",
     "postcss": "^8.2.4",
     "prettier": "^2.2.1",
     "pretty-quick": "^3.1.0",

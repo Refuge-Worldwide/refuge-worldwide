@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://refugeworldwide.com
+
+# Sitemaps
+Sitemap: https://refugeworldwide.com/sitemap.xml
