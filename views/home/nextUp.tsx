@@ -3,8 +3,8 @@ import Pill from "../../components/pill";
 import useMarquee3k from "../../hooks/useMarquee3k";
 import { NextUpSection } from "../../lib/api";
 
-export default function NextUp({ content, header }: NextUpSection) {
-  const shouldShowBanner = content.json && typeof header === "string";
+export default function NextUp({ content }: NextUpSection) {
+  const shouldShowBanner = content && content.json;
 
   useMarquee3k();
 
@@ -12,9 +12,11 @@ export default function NextUp({ content, header }: NextUpSection) {
     return (
       <section className="bg-orange border-t-2 border-b-2">
         <div className="flex items-center">
-          <div className="hidden sm:block pt-4 pb-4 px-4 md:px-8 border-r-2">
+          <div className="pt-2 pb-2 sm:pt-4 sm:pb-4 px-4 md:px-8 border-r-2">
             <Pill size="medium">
-              <h2 className="whitespace-nowrap">{header}</h2>
+              <h2 className="whitespace-nowrap">
+                Next <span className="hidden md:inline">Up</span>
+              </h2>
             </Pill>
           </div>
           <div className="pt-2 pb-2 sm:pt-4 sm:pb-4 overflow-hidden">

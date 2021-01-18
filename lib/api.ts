@@ -197,7 +197,6 @@ export async function getNewsletterPage(
 }
 
 export interface NextUpSection {
-  header: string;
   content: Content;
 }
 
@@ -207,7 +206,6 @@ export async function getNextUpSection(
   const data = await contentful(/* GraphQL */ `
     {
       sectionToday(id: "2bP8MlTMBYfe1paaxwwziy", preview: ${preview}) {
-        header
         content {
           json
         }
