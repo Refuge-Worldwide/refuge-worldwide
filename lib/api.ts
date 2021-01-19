@@ -322,7 +322,7 @@ export async function getAllShows(
   const data = await contentful(
     /* GraphQL */ `
       query {
-        showCollection(order: date_DESC, preview: ${preview}, limit: ${limit}) {
+        showCollection(order: date_DESC, where: { artistsCollection_exists: true }, preview: ${preview}, limit: ${limit}) {
           items {
             title
             date
