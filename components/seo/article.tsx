@@ -18,7 +18,7 @@ export default function ArticleMeta({
     ?.pop();
 
   // @ts-ignore
-  const description = excerpt.value || SEO.DESCRIPTION;
+  const description = content?.json?.content ? excerpt.value : SEO.DESCRIPTION;
 
   const image = `${coverImage.url}?w=1200&h=630&fit=pad`;
 
