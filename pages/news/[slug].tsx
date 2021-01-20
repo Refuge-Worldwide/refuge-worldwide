@@ -6,14 +6,16 @@ import { getAllArticles, getArticleAndMoreArticles } from "../../lib/api";
 import { ArticleInterface } from "../../types/shared";
 import Loading from "../../views/loading";
 import ArticleBody from "../../views/news/articleBody";
+import RelatedArticles from "../../views/news/relatedArticles";
 import SinglePage from "../../views/singlePage";
 
 interface Page extends JSX.Element {
   article: ArticleInterface;
   preview: boolean;
+  relatedArticles?: ArticleInterface[];
 }
 
-export default function Article({ article, preview }: Page) {
+export default function Article({ article, relatedArticles, preview }: Page) {
   const router = useRouter();
 
   if (!router.isFallback && !article) {
@@ -35,6 +37,10 @@ export default function Article({ article, preview }: Page) {
           >
             <ArticleBody {...article} />
           </SinglePage>
+
+          {relatedArticles?.length > 0 && (
+            <RelatedArticles articles={relatedArticles} />
+          )}
         </>
       )}
     </Layout>
@@ -48,6 +54,7 @@ export async function getStaticProps({ params, preview = false }) {
     props: {
       preview,
       article: data?.article,
+      relatedArticles: data?.relatedArticles,
     },
   };
 }

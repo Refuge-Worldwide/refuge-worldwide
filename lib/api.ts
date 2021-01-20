@@ -675,7 +675,10 @@ export async function getFeaturedArticles(
 export async function getArticleAndMoreArticles(
   slug: string,
   preview: boolean
-): Promise<{ article: ArticleInterface }> {
+): Promise<{
+  article: ArticleInterface;
+  relatedArticles: ArticleInterface[];
+}> {
   const entry = await contentful(
     /* GraphQL */ `
       query {
@@ -727,7 +730,18 @@ export async function getArticleAndMoreArticles(
     preview
   );
 
+  const allArticles = await getAllArticles(preview);
+
+  const relatedArticles = allArticles
+    .filter((article) => {
+      const isNotOwnArticle = article.slug !== slug;
+
+      return isNotOwnArticle;
+    })
+    .slice(0, 3);
+
   return {
     article: extractCollectionItem(entry, "articleCollection"),
+    relatedArticles,
   };
 }
