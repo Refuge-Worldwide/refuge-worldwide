@@ -41,6 +41,5 @@ export async function getStaticProps({ preview = false }) {
       featuredArticles: await getFeaturedArticles(preview),
       preview,
     },
-    revalidate: 60,
   };
 }

@@ -91,6 +91,5 @@ export async function getStaticProps({ preview = false }) {
       preview,
       allArtists,
     },
-    revalidate: 60,
   };
 }

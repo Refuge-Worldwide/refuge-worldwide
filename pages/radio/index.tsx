@@ -42,6 +42,5 @@ export async function getStaticProps({ preview = false }) {
       pastShows: past,
       genres,
     },
-    revalidate: 60,
   };
 }
