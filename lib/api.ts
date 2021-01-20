@@ -1,11 +1,13 @@
-import type { Document } from "@contentful/rich-text-types";
 import dayjs from "dayjs";
 import type {
+  AboutPageData,
   ArticleInterface,
   ArtistInterface,
-  CoverImage,
   GenreInterface,
+  NewsletterPageData,
+  NextUpSection,
   ShowInterface,
+  SupportPageData,
 } from "../types/shared";
 import {
   extractCollection,
@@ -28,32 +30,6 @@ export async function contentful(query: string, preview = false) {
     },
     body: JSON.stringify({ query }),
   }).then((response) => response.json());
-}
-
-export interface Asset {
-  sys: { id: string };
-  contentType: string;
-  title: string;
-  description: string;
-  url: string;
-  width: number;
-  height: number;
-}
-
-export interface Links {
-  assets: {
-    block: Asset[];
-  };
-}
-
-export interface Content {
-  json: Document;
-  links?: Links;
-}
-
-export interface AboutPageData {
-  coverImage: CoverImage;
-  content: Content;
 }
 
 export async function getAboutPage(preview: boolean): Promise<AboutPageData> {
@@ -96,11 +72,6 @@ export async function getAboutPage(preview: boolean): Promise<AboutPageData> {
   );
 
   return extractPage(data, "pageAbout");
-}
-
-export interface SupportPageData {
-  coverImage: CoverImage;
-  content: Content;
 }
 
 export async function getSupportPage(
@@ -147,11 +118,6 @@ export async function getSupportPage(
   return extractPage(data, "pageSupport");
 }
 
-export interface NewsletterPageData {
-  coverImage: CoverImage;
-  content: Content;
-}
-
 export async function getNewsletterPage(
   preview: boolean
 ): Promise<NewsletterPageData> {
@@ -194,10 +160,6 @@ export async function getNewsletterPage(
   );
 
   return extractPage(data, "pageNewsletter");
-}
-
-export interface NextUpSection {
-  content: Content;
 }
 
 export async function getNextUpSection(

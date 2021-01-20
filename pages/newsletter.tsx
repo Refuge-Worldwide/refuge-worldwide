@@ -2,7 +2,8 @@ import { documentToReactComponents } from "@contentful/rich-text-react-renderer"
 import Layout from "../components/layout";
 import PageMeta from "../components/seo/page";
 import Subscribe from "../components/subscribe";
-import { getNewsletterPage, NewsletterPageData } from "../lib/api";
+import { getNewsletterPage } from "../lib/api";
+import { NewsletterPageData } from "../types/shared";
 import SinglePage from "../views/singlePage";
 
 interface Page extends JSX.Element {

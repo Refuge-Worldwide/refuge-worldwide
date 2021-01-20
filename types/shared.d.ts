@@ -1,4 +1,5 @@
-import { Content } from "../lib/api";
+import type { Document } from "@contentful/rich-text-types";
+import type { CoverImage } from "./shared";
 
 export type CoverImagePosition = "top" | "center" | "bottom";
 
@@ -9,6 +10,27 @@ export interface CoverImage {
   url: string;
   width: number;
   height: number;
+}
+
+export interface Asset {
+  sys: { id: string };
+  contentType: string;
+  title: string;
+  description: string;
+  url: string;
+  width: number;
+  height: number;
+}
+
+export interface Links {
+  assets: {
+    block: Asset[];
+  };
+}
+
+export interface Content {
+  json: Document;
+  links?: Links;
 }
 
 export interface ArtistInterface {
@@ -59,5 +81,24 @@ export interface ArticleInterface {
   slug: string;
   coverImage: CoverImage;
   coverImagePosition: CoverImagePosition;
+  content: Content;
+}
+
+export interface AboutPageData {
+  coverImage: CoverImage;
+  content: Content;
+}
+
+export interface NextUpSection {
+  content: Content;
+}
+
+export interface NewsletterPageData {
+  coverImage: CoverImage;
+  content: Content;
+}
+
+export interface SupportPageData {
+  coverImage: CoverImage;
   content: Content;
 }

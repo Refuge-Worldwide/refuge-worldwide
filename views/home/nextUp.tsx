@@ -1,7 +1,7 @@
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import Pill from "../../components/pill";
 import useMarquee3k from "../../hooks/useMarquee3k";
-import { NextUpSection } from "../../lib/api";
+import { NextUpSection } from "../../types/shared";
 
 export default function NextUp({ content }: NextUpSection) {
   const shouldShowBanner = content && content.json;

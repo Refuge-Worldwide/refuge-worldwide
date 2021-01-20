@@ -1,7 +1,7 @@
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import { Block, BLOCKS } from "@contentful/rich-text-types";
 import Image from "next/image";
-import { Asset, Content } from "./api";
+import { Asset, Content } from "../types/shared";
 
 interface EmbeddedAssetBlock extends Block {
   data: {

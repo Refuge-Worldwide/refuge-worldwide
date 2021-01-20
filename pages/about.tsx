@@ -1,7 +1,8 @@
 import Layout from "../components/layout";
 import PageMeta from "../components/seo/page";
-import { AboutPageData, getAboutPage } from "../lib/api";
+import { getAboutPage } from "../lib/api";
 import { renderRichTextWithImages } from "../lib/rich-text";
+import { AboutPageData } from "../types/shared";
 import SinglePage from "../views/singlePage";
 
 interface Page extends JSX.Element {

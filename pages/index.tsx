@@ -5,9 +5,12 @@ import {
   getFeaturedShows,
   getLatestArticles,
   getNextUpSection,
-  NextUpSection,
 } from "../lib/api";
-import { ArticleInterface, ShowInterface } from "../types/shared";
+import {
+  ArticleInterface,
+  NextUpSection,
+  ShowInterface,
+} from "../types/shared";
 import FeaturedShows from "../views/home/featuredShows";
 import LatestNews from "../views/home/latestNews";
 import NextUp from "../views/home/nextUp";
