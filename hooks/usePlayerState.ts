@@ -30,8 +30,6 @@ export default function usePlayerState(
       unmountMixcloudPlayer();
 
       await ref?.current?.play();
-
-      ref?.current?.load();
     } catch (error) {
       console.error(error);
     }
