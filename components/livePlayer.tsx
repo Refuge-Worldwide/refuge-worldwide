@@ -5,6 +5,7 @@ import usePlayerState from "../hooks/usePlayerState";
 import useRadioCoStatus from "../hooks/useRadioCoStatus";
 import Pause from "../icons/pause";
 import Play from "../icons/play";
+import Marquee from "./marquee";
 
 const BroadcastingIndicator = ({
   status,
@@ -74,13 +75,10 @@ export default function LivePlayer() {
       <BroadcastingIndicator status={data?.status} />
 
       {isOnline ? (
-        <div className="flex-1 truncate mt-0.5">
-          <div className="marquee3k" data-speed="0.25">
-            <span className="whitespace-nowrap leading-none pr-8">
-              {data?.current_track.title}
-            </span>
-          </div>
-        </div>
+        <Marquee
+          key={data?.current_track?.title}
+          text={data?.current_track?.title}
+        />
       ) : null}
 
       {isOnline && (
