@@ -1,11 +1,14 @@
 import { SyntheticEvent } from "react";
-import { livePlayerState } from "../hooks/usePlayerState";
+import { shouldUnloadLivePlayerState } from "../hooks/usePlayerState";
 import useScript from "../hooks/useScript";
 import { playerWidget, showKey } from "../lib/mixcloud";
 import { PlayerWidget } from "../types/mixcloud";
 
 export default function MixcloudPlayer({ mini = true }: { mini?: boolean }) {
-  const [isLivePlaying, setIsLivePlaying] = livePlayerState.use();
+  const [
+    shouldUnloadLivePlayer,
+    shouldUnloadLivePlayerSet,
+  ] = shouldUnloadLivePlayerState.use();
 
   const key = showKey.useValue();
 
@@ -23,18 +26,15 @@ export default function MixcloudPlayer({ mini = true }: { mini?: boolean }) {
 
   const onPlayListener = () => {
     console.log("[Mixcloud]", "on.play");
-
-    /**
-     * @note This should pause the Live Player when someone starts a Mixcloud show
-     */
-    if (isLivePlaying) {
-      setIsLivePlaying(false);
-    }
   };
 
   const handleIframeLoad = async ({
     currentTarget,
   }: SyntheticEvent<HTMLIFrameElement, Event>) => {
+    if (!shouldUnloadLivePlayer) {
+      shouldUnloadLivePlayerSet(true);
+    }
+
     console.log("[Mixcloud]", "iframe Embed Loaded");
 
     // @ts-ignore

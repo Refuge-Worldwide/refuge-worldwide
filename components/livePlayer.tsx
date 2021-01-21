@@ -36,8 +36,13 @@ export default function LivePlayer() {
   const isOnline = data?.status === "online";
 
   const player = useRef<HTMLAudioElement>(null);
+  const source = useRef<HTMLSourceElement>(null);
 
-  const { isPlaying, play, pause } = usePlayerState(player);
+  const { isPlaying, play, pause } = usePlayerState({
+    audioRef: player,
+    sourceRef: source,
+    url: AUDIO_SRC,
+  });
 
   const playerWrapperClassNames = cn(
     "bg-black text-white h-12 sm:h-16 px-4 sm:px-8 flex items-center space-x-3 sm:space-x-9",
@@ -90,14 +95,8 @@ export default function LivePlayer() {
         </button>
       )}
 
-      <audio
-        hidden
-        id="refuge-live-player"
-        src={AUDIO_SRC}
-        preload="none"
-        ref={player}
-      >
-        <source src={AUDIO_SRC} type="audio/mpeg" />
+      <audio hidden id="refuge-live-player" preload="none" ref={player}>
+        <source ref={source} src={AUDIO_SRC} type="audio/mpeg" />
         Your browser does not support the audio element.
       </audio>
     </section>

@@ -1,53 +1,76 @@
 import { MutableRefObject, useCallback, useEffect } from "react";
 import { newRidgeState } from "react-ridge-state";
 import { showKey } from "../lib/mixcloud";
+import { delay } from "../util";
 
-export const livePlayerState = newRidgeState(false);
+export const livePlayerState = newRidgeState(undefined);
+export const shouldUnloadLivePlayerState = newRidgeState(false);
 
-export default function usePlayerState(
-  ref: MutableRefObject<HTMLAudioElement>
-) {
+export default function usePlayerState({
+  audioRef,
+  sourceRef,
+  url,
+}: {
+  audioRef: MutableRefObject<HTMLAudioElement>;
+  sourceRef: MutableRefObject<HTMLSourceElement>;
+  url: string;
+}) {
   const [isPlaying, setIsPlaying] = livePlayerState.use();
-
+  const [
+    shouldUnloadLivePlayer,
+    shouldUnloadLivePlayerSet,
+  ] = shouldUnloadLivePlayerState.use();
   useEffect(() => {
     const setStatePlaying = () => setIsPlaying(true);
     const setStatePaused = () => setIsPlaying(false);
 
-    ref?.current?.addEventListener("play", setStatePlaying);
-    ref?.current?.addEventListener("pause", setStatePaused);
+    audioRef?.current?.addEventListener("play", setStatePlaying);
+    audioRef?.current?.addEventListener("pause", setStatePaused);
 
     return () => {
-      ref?.current?.removeEventListener("play", setStatePlaying);
-      ref?.current?.removeEventListener("pause", setStatePaused);
+      audioRef?.current?.removeEventListener("play", setStatePlaying);
+      audioRef?.current?.removeEventListener("pause", setStatePaused);
     };
-  }, [ref]);
+  }, [audioRef]);
 
   const [, setKey] = showKey.use();
   const unmountMixcloudPlayer = () => setKey(null);
 
   const play = useCallback(async () => {
     try {
+      shouldUnloadLivePlayerSet(false);
+
       unmountMixcloudPlayer();
 
-      await ref?.current?.play();
-    } catch (error) {
-      console.error(error);
-    }
-  }, [ref]);
+      if (!sourceRef?.current?.getAttribute("src")) {
+        sourceRef?.current?.setAttribute("src", url);
+        audioRef?.current?.load();
+      }
 
-  const pause = useCallback(() => {
-    try {
-      ref?.current?.pause();
+      await audioRef?.current?.play();
     } catch (error) {
       console.error(error);
     }
-  }, [ref]);
+  }, [audioRef]);
+
+  const pause = useCallback(async () => {
+    try {
+      sourceRef?.current?.setAttribute("src", "");
+      audioRef?.current?.pause();
+
+      await delay(1000);
+
+      audioRef?.current?.load();
+    } catch (error) {
+      console.error(error);
+    }
+  }, [audioRef]);
 
   useEffect(() => {
-    if (isPlaying === false) {
+    if (shouldUnloadLivePlayer) {
       pause();
     }
-  }, [pause, isPlaying]);
+  }, [shouldUnloadLivePlayer]);
 
   return {
     isPlaying,
