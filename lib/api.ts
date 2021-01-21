@@ -342,7 +342,7 @@ export async function getUpcomingAndPastShows(preview: boolean, limit = 250) {
    * All Past Shows
    */
   const past = shows
-    .sort((a, b) => (dayjs(a.date).isBefore(b.date) ? -1 : 1))
+    .sort((a, b) => (dayjs(a.date).isAfter(b.date) ? -1 : 1))
     .filter((show) => dayjs(show.date).isBefore(today));
 
   return {
