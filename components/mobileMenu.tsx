@@ -105,12 +105,12 @@ export default function MobileMenu({
         <li>
           <ul className="flex space-x-8">
             <li>
-              <a href={INSTAGRAM_URL}>
+              <a target="_blank" rel="noopener noreferrer" href={INSTAGRAM_URL}>
                 <Instagram size={40} />
               </a>
             </li>
             <li>
-              <a href={TWITTER_URL}>
+              <a target="_blank" rel="noopener noreferrer" href={TWITTER_URL}>
                 <Twitter size={40} />
               </a>
             </li>

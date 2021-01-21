@@ -41,7 +41,12 @@ export default function Footer() {
                 We are a non-commercial independent platform, amplifying voices
                 and creating unity in the community. If you are able to, please
                 consider{" "}
-                <a href={PATREON_URL} className="underline">
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href={PATREON_URL}
+                  className="underline"
+                >
                   supporting us via Patreon
                 </a>
                 .
@@ -80,12 +85,16 @@ export default function Footer() {
               </a>
             </li>
             <li>
-              <a href={SOUNDCLOUD_URL}>
+              <a
+                href={SOUNDCLOUD_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <Soundcloud />
               </a>
             </li>
             <li>
-              <a href={MIXCLOUD_URL}>
+              <a href={MIXCLOUD_URL} target="_blank" rel="noopener noreferrer">
                 <Mixcloud />
               </a>
             </li>
@@ -99,12 +108,19 @@ export default function Footer() {
             Designed by{" "}
             <a
               className="underline"
+              target="_blank"
+              rel="noopener noreferrer"
               href="https://www.studiopanorama.de/?lang=en"
             >
               <span className="tracking-widest">panorama</span>
             </a>
             . Built by{" "}
-            <a className="underline" href="https://reiner.design">
+            <a
+              className="underline"
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://reiner.design"
+            >
               mirshko
             </a>
           </p>

@@ -104,12 +104,20 @@ export default function Navigation() {
               <li>
                 <ul className="flex space-x-6">
                   <li>
-                    <a href={INSTAGRAM_URL}>
+                    <a
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      href={INSTAGRAM_URL}
+                    >
                       <Instagram />
                     </a>
                   </li>
                   <li>
-                    <a href={TWITTER_URL}>
+                    <a
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      href={TWITTER_URL}
+                    >
                       <Twitter />
                     </a>
                   </li>
