@@ -1,6 +1,4 @@
-import Marquee3k from "marquee3000";
 import useSWR from "swr";
-import { isServer } from "../util";
 
 export interface RadioCoInterface {
   status: "online" | "offline";
