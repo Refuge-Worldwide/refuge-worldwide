@@ -1,6 +1,5 @@
 import cn from "classnames";
 import { useEffect, useRef } from "react";
-import useMarquee3k from "../hooks/useMarquee3k";
 import usePlayerState from "../hooks/usePlayerState";
 import useRadioCoStatus from "../hooks/useRadioCoStatus";
 import Pause from "../icons/pause";
@@ -67,8 +66,6 @@ export default function LivePlayer() {
       });
     }
   }, [data]);
-
-  useMarquee3k([isOnline]);
 
   return (
     <section className={playerWrapperClassNames}>
