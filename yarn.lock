@@ -3466,11 +3466,6 @@ map-visit@^1.0.0:
   dependencies:
     object-visit "^1.0.0"
 
-marquee3000@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/marquee3000/-/marquee3000-1.1.1.tgz#a4d7ec6a341a905758f5f8dafe1febe4e84f4550"
-  integrity sha512-XAZdVIdunQT2EdHdMmkbXh5i728KxwGmvY1w60WZdYmF3WgyBr4dcdyufTGfFPR1Rogr35Y9zST0vUsNN3WKPg==
-
 matcher@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/matcher/-/matcher-3.0.0.tgz#bd9060f4c5b70aa8041ccc6f80368760994f30ca"

@@ -1,6 +1,4 @@
-import Marquee3k from "marquee3000";
 import useSWR from "swr";
-import { isServer } from "../util";
 
 export interface RadioCoInterface {
   status: "online" | "offline";
@@ -38,10 +36,5 @@ const getRadioCoStatus = async (_: string, stationId: string) => {
 export default function useRadioCoStatus(stationId: string) {
   return useSWR<RadioCoInterface>(["RadioCo", stationId], getRadioCoStatus, {
     refreshInterval: 10 * 60 * 1000,
-    onSuccess: (data) => {
-      if (!isServer && data.status === "online") {
-        Marquee3k?.refreshAll();
-      }
-    },
   });
 }
