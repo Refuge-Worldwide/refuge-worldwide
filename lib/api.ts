@@ -372,7 +372,6 @@ export async function getFeaturedShows(
         showCollection(
           order: date_DESC
           where: { isFeatured: true }
-          limit: 15,
           preview: ${preview}
         ) {
           items {
@@ -415,9 +414,9 @@ export async function getFeaturedShows(
 
   const featuredShows = extractCollection(data, "showCollection");
 
-  const pastFeaturedShows = featuredShows.filter((show) =>
-    dayjs(show.date).isBefore(dayjs())
-  );
+  const pastFeaturedShows = featuredShows
+    .filter((show) => dayjs(show.date).isBefore(dayjs()))
+    .slice(0, 15);
 
   return pastFeaturedShows;
 }
