@@ -11,7 +11,7 @@ export default function NextShows({
     <section className="bg-orange border-2">
       <div className="p-4 sm:p-8">
         <Pill>
-          <h2>Next Shows</h2>
+          <h2>Coming Soon</h2>
         </Pill>
 
         <div className="h-5 sm:h-8" />
