@@ -22,7 +22,7 @@ const BroadcastingIndicator = ({
   return (
     <div className="flex-grow-0 flex items-center space-x-6">
       <div className="flex-shrink-0 w-7 h-7 sm:h-10 sm:w-10 rounded-full bg-white opacity-25" />
-      <p className="hidden md:block leading-none mt-1">Offline</p>
+      <p className="leading-none mt-1">Offline</p>
     </div>
   );
 };
