@@ -261,15 +261,17 @@ export async function getArtistAndMoreShows(
 
   const allShows = await getAllShows(preview);
 
-  const relatedShows = allShows.filter((show) => {
-    const isRelatedArtistFilter =
-      show.artistsCollection.items.filter((artist) => artist?.slug === slug)
-        .length > 0;
+  const relatedShows = allShows
+    .filter((show) => {
+      const isRelatedArtistFilter =
+        show.artistsCollection.items.filter((artist) => artist?.slug === slug)
+          .length > 0;
 
-    const isPastFilter = dayjs(show.date).isBefore(today);
+      const isPastFilter = dayjs(show.date).isBefore(today);
 
-    return isRelatedArtistFilter && isPastFilter;
-  });
+      return isRelatedArtistFilter && isPastFilter;
+    })
+    .slice(0, 3);
 
   return {
     artist: extractCollectionItem(entry, "artistCollection"),
@@ -422,11 +424,10 @@ export async function getFeaturedShows(
   return pastFeaturedShows;
 }
 
-export async function getShowAndMoreShows(
-  slug: string,
-  preview: boolean
-): Promise<{ show: ShowInterface }> {
-  const entry = await contentful(
+export async function getShowAndMoreShows(slug: string, preview: boolean) {
+  const today = dayjs();
+
+  const res = await contentful(
     /* GraphQL */ `
       query {
         showCollection(
@@ -488,8 +489,32 @@ export async function getShowAndMoreShows(
     preview
   );
 
+  const entry: ShowInterface = extractCollectionItem(res, "showCollection");
+  const entryGenres = entry.genresCollection.items.map((genre) => genre.name);
+
+  const allShows = await getAllShows(preview);
+
+  const relatedShows = allShows
+    .filter((filterShow) => {
+      const currentShowGenres = filterShow.genresCollection.items.map(
+        (genre) => genre.name
+      );
+
+      const isRelatedShowFilter =
+        currentShowGenres.filter((genre) => entryGenres.includes(genre))
+          .length > 0;
+
+      const isNotOwnShow = filterShow.slug !== slug;
+
+      const isPastFilter = dayjs(filterShow.date).isBefore(today);
+
+      return isNotOwnShow && isRelatedShowFilter && isPastFilter;
+    })
+    .slice(0, 3);
+
   return {
-    show: extractCollectionItem(entry, "showCollection"),
+    show: entry,
+    relatedShows,
   };
 }
 

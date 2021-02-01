@@ -4,16 +4,18 @@ import Layout from "../../components/layout";
 import ShowMeta from "../../components/seo/show";
 import { getAllShows, getShowAndMoreShows } from "../../lib/api";
 import { ShowInterface } from "../../types/shared";
+import RelatedShows from "../../views/artists/relatedShows";
 import Loading from "../../views/loading";
 import ShowBody from "../../views/radio/showBody";
 import SinglePage from "../../views/singlePage";
 
-interface Page extends JSX.Element {
+type Props = {
   show: ShowInterface;
+  relatedShows?: ShowInterface[];
   preview: boolean;
-}
+};
 
-export default function Show({ show, preview }: Page) {
+export default function Show({ show, relatedShows, preview }: Props) {
   const router = useRouter();
 
   if (!router.isFallback && !show) {
@@ -35,6 +37,10 @@ export default function Show({ show, preview }: Page) {
           >
             <ShowBody {...show} />
           </SinglePage>
+
+          {relatedShows?.length > 0 && (
+            <RelatedShows title="More Episodes" shows={relatedShows} />
+          )}
         </>
       )}
     </Layout>
@@ -48,6 +54,7 @@ export async function getStaticProps({ params, preview = false }) {
     props: {
       preview,
       show: data?.show,
+      relatedShows: data?.relatedShows,
     },
   };
 }
@@ -56,7 +63,10 @@ export async function getStaticPaths() {
   const allShows = await getAllShows(false);
 
   return {
-    paths: allShows?.map(({ slug }) => `/radio/${slug}`) ?? [],
+    paths:
+      allShows
+        ?.filter((show) => typeof show.slug === "string")
+        ?.map(({ slug }) => `/radio/${slug}`) ?? [],
     fallback: true,
   };
 }
