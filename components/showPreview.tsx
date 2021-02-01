@@ -4,7 +4,7 @@ import PlayLarge from "../icons/playLarge";
 import { contentful } from "../lib/loaders";
 import { playerWidget, showKey } from "../lib/mixcloud";
 import type { ShowInterface } from "../types/shared";
-import { getMixcloudKey, sort } from "../util";
+import { getMixcloudKey, parseGenres } from "../util";
 import Badge from "./badge";
 import Date from "./date";
 
@@ -16,11 +16,7 @@ export default function ShowPreview({
   date,
   mixcloudLink,
 }: ShowInterface) {
-  const genres = genresCollection.items
-    .filter((genre) => Boolean(genre?.name))
-    .map((genre) => genre.name)
-    .sort(sort.alpha)
-    .slice(0, 3);
+  const genres = parseGenres(genresCollection).slice(0, 3);
 
   const [, setKey] = showKey.use();
 

@@ -1,5 +1,9 @@
 import { REGEX } from "./constants";
-import { ArtistFilterType, ArtistInterface } from "./types/shared";
+import {
+  ArtistFilterType,
+  ArtistInterface,
+  GenreInterface,
+} from "./types/shared";
 
 interface PageResponse {
   data: {
@@ -119,3 +123,9 @@ export const delay = (time = 1500) => {
     }, time);
   });
 };
+
+export const parseGenres = (genresCollection: { items: GenreInterface[] }) =>
+  genresCollection.items
+    .filter((genre) => Boolean(genre?.name))
+    .map((genre) => genre.name)
+    .sort(sort.alpha);

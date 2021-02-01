@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { contentful } from "../lib/loaders";
 import { ShowInterface } from "../types/shared";
-import { sort } from "../util";
+import { parseGenres } from "../util";
 import Badge from "./badge";
 import Date from "./date";
 
@@ -13,11 +13,7 @@ export default function RelatedShowPreview({
   date,
   genresCollection,
 }: ShowInterface) {
-  const genres = genresCollection.items
-    .filter((genre) => Boolean(genre?.name))
-    .map((genre) => genre.name)
-    .sort(sort.alpha)
-    .slice(0, 2);
+  const genres = parseGenres(genresCollection).slice(0, 2);
 
   return (
     <Link href={`/radio/${slug}`}>
