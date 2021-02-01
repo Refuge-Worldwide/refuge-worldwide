@@ -356,6 +356,7 @@ export async function getGenres(preview: boolean) {
 
   const allShowGenres = past
     .flatMap((show) => show.genresCollection.items)
+    .filter((genre) => Boolean(genre?.name))
     .map((genre) => genre.name);
 
   const uniqueGenres = Array.from(new Set(allShowGenres)).sort(sort.alpha);

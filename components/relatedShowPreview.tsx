@@ -14,6 +14,7 @@ export default function RelatedShowPreview({
   genresCollection,
 }: ShowInterface) {
   const genres = genresCollection.items
+    .filter((genre) => Boolean(genre?.name))
     .map((genre) => genre.name)
     .sort(sort.alpha)
     .slice(0, 2);

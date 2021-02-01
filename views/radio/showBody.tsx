@@ -20,6 +20,7 @@ export default function ShowBody({
   mixcloudLink,
 }: ShowInterface) {
   const genres = genresCollection.items
+    .filter((genre) => Boolean(genre?.name))
     .map((genre) => genre.name)
     .sort(sort.alpha);
 
