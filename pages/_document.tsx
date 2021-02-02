@@ -32,6 +32,8 @@ class RefugeDocument extends Document {
             as="style"
           />
           <link rel="stylesheet" href="https://use.typekit.net/rqu7mun.css" />
+          <link rel="preconnect" href="https://images.ctfassets.net" />
+          <link rel="dns-prefetch" href="https://images.ctfassets.net" />
           <link
             rel="apple-touch-icon"
             sizes="180x180"
