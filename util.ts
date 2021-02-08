@@ -22,10 +22,10 @@ interface CollectionResponse {
   };
 }
 
-export const extractCollection = (
+export const extractCollection = <T>(
   fetchResponse: CollectionResponse,
   key: string
-) => fetchResponse?.data?.[key]?.items;
+): T[] => fetchResponse?.data?.[key]?.items;
 
 export const extractCollectionItem = (
   fetchResponse: CollectionResponse,
