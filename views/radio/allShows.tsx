@@ -1,4 +1,5 @@
 import Badge from "../../components/badge";
+import GenresList from "../../components/genresList";
 import Pill from "../../components/pill";
 import ShowPreview from "../../components/showPreview";
 import useFilteredShows from "../../hooks/useFilteredShows";
@@ -24,26 +25,7 @@ export default function AllShows({
 
         <div className="h-5 sm:h-8" />
 
-        <ul className="w-full flex flex-wrap leading-none -mr-2 -mb-2">
-          <li className="inline-flex pr-2 pb-2">
-            <button
-              className="focus:outline-none focus:ring-4 rounded-full"
-              onClick={() => filterSet("All")}
-            >
-              <Badge invert={filter === "All"} text={"All"} />
-            </button>
-          </li>
-          {genres?.map((genre, i) => (
-            <li className="inline-flex pr-2 pb-2" key={i}>
-              <button
-                className="focus:outline-none focus:ring-4 rounded-full"
-                onClick={() => filterSet(genre)}
-              >
-                <Badge invert={filter === genre} text={genre} />
-              </button>
-            </li>
-          ))}
-        </ul>
+        <GenresList genres={genres} filter={filter} filterSet={filterSet} />
 
         <div className="h-4" />
 
