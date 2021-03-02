@@ -18,8 +18,6 @@ module.exports = {
     additionalSitemaps: ["https://refugeworldwide.com/server-sitemap.xml"],
   },
   transform: (config, path) => {
-    console.log(path);
-
     if (isServerSidePath(path)) {
       return null;
     }
