@@ -521,25 +521,6 @@ export async function getShowAndMoreShows(slug: string, preview: boolean) {
   };
 }
 
-export async function getAllGenres(
-  preview: boolean
-): Promise<GenreInterface[]> {
-  const data = await contentful(
-    /* GraphQL */ `
-      query {
-        genreCollection(order: name_ASC, preview: ${preview}) {
-          items {
-            name
-          }
-        }
-      }
-    `,
-    preview
-  );
-
-  return extractCollection(data, "genreCollection");
-}
-
 export async function getAllArticles(
   preview: boolean,
   limit = 250
