@@ -7,3 +7,4 @@ Host: https://refugeworldwide.com
 
 # Sitemaps
 Sitemap: https://refugeworldwide.com/sitemap.xml
+Sitemap: https://refugeworldwide.com/server-sitemap.xml

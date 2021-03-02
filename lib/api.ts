@@ -415,7 +415,10 @@ export async function getFeaturedShows(
     preview
   );
 
-  const featuredShows = extractCollection(data, "showCollection");
+  const featuredShows = extractCollection<ShowInterface>(
+    data,
+    "showCollection"
+  );
 
   const pastFeaturedShows = featuredShows
     .filter((show) => dayjs(show.date).isBefore(dayjs()))
@@ -516,25 +519,6 @@ export async function getShowAndMoreShows(slug: string, preview: boolean) {
     show: entry,
     relatedShows,
   };
-}
-
-export async function getAllGenres(
-  preview: boolean
-): Promise<GenreInterface[]> {
-  const data = await contentful(
-    /* GraphQL */ `
-      query {
-        genreCollection(order: name_ASC, preview: ${preview}) {
-          items {
-            name
-          }
-        }
-      }
-    `,
-    preview
-  );
-
-  return extractCollection(data, "genreCollection");
 }
 
 export async function getAllArticles(
@@ -730,5 +714,36 @@ export async function getArticleAndMoreArticles(
   return {
     article: extractCollectionItem(entry, "articleCollection"),
     relatedArticles,
+  };
+}
+
+export async function getPaths() {
+  const data = await contentful(/* GraphQL */ `
+    {
+      shows: showCollection(limit: 1000) {
+        items {
+          slug
+        }
+        total
+      }
+      artists: artistCollection(limit: 1000) {
+        items {
+          slug
+        }
+        total
+      }
+      articles: articleCollection(limit: 1000) {
+        items {
+          slug
+        }
+        total
+      }
+    }
+  `);
+
+  return {
+    shows: extractCollection<{ slug: string }>(data, "shows"),
+    articles: extractCollection<{ slug: string }>(data, "articles"),
+    artists: extractCollection<{ slug: string }>(data, "artists"),
   };
 }
