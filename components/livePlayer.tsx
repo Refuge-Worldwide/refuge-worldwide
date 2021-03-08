@@ -91,7 +91,7 @@ export default function LivePlayer() {
       )}
 
       <audio hidden id="refuge-live-player" preload="none" ref={player}>
-        <source ref={source} src={AUDIO_SRC} type="audio/mpeg" />
+        <source ref={source} type="audio/mpeg" />
         Your browser does not support the audio element.
       </audio>
     </section>

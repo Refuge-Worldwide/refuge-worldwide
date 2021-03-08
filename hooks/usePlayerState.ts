@@ -1,7 +1,6 @@
 import { MutableRefObject, useCallback, useEffect } from "react";
 import { newRidgeState } from "react-ridge-state";
 import { showKey } from "../lib/mixcloud";
-import { delay } from "../util";
 
 export const livePlayerState = newRidgeState(undefined);
 export const shouldUnloadLivePlayerState = newRidgeState(false);
@@ -38,6 +37,8 @@ export default function usePlayerState({
 
   const play = useCallback(async () => {
     try {
+      setIsPlaying(true);
+
       shouldUnloadLivePlayerSet(false);
 
       unmountMixcloudPlayer();
@@ -49,19 +50,21 @@ export default function usePlayerState({
 
       await audioRef?.current?.play();
     } catch (error) {
+      setIsPlaying(false);
+
       console.error(error);
     }
   }, [audioRef]);
 
   const pause = useCallback(async () => {
     try {
+      setIsPlaying(false);
+
       sourceRef?.current?.setAttribute("src", "");
       audioRef?.current?.pause();
-
-      await delay(1000);
-
-      audioRef?.current?.load();
     } catch (error) {
+      setIsPlaying(false);
+
       console.error(error);
     }
   }, [audioRef]);
