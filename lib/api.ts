@@ -17,6 +17,8 @@ import {
 } from "../util";
 import { ENDPOINT } from "./constants";
 
+const LIMITS = 500;
+
 export async function contentful(query: string, preview = false) {
   return fetch(ENDPOINT, {
     method: "POST",
@@ -180,7 +182,7 @@ export async function getNextUpSection(
 
 export async function getAllArtists(
   preview: boolean,
-  limit = 250
+  limit = LIMITS
 ): Promise<ArtistInterface[]> {
   const data = await contentful(
     /* GraphQL */ `
@@ -261,17 +263,15 @@ export async function getArtistAndMoreShows(
 
   const allShows = await getAllShows(preview);
 
-  const relatedShows = allShows
-    .filter((show) => {
-      const isRelatedArtistFilter =
-        show.artistsCollection.items.filter((artist) => artist?.slug === slug)
-          .length > 0;
+  const relatedShows = allShows.filter((show) => {
+    const isRelatedArtistFilter =
+      show.artistsCollection.items.filter((artist) => artist?.slug === slug)
+        .length > 0;
 
-      const isPastFilter = dayjs(show.date).isBefore(today);
+    const isPastFilter = dayjs(show.date).isBefore(today);
 
-      return isRelatedArtistFilter && isPastFilter;
-    })
-    .slice(0, 3);
+    return isRelatedArtistFilter && isPastFilter;
+  });
 
   return {
     artist: extractCollectionItem(entry, "artistCollection"),
@@ -281,7 +281,7 @@ export async function getArtistAndMoreShows(
 
 export async function getAllShows(
   preview: boolean,
-  limit = 250
+  limit = LIMITS
 ): Promise<ShowInterface[]> {
   const data = await contentful(
     /* GraphQL */ `
@@ -328,7 +328,10 @@ export async function getAllShows(
   return extractCollection(data, "showCollection");
 }
 
-export async function getUpcomingAndPastShows(preview: boolean, limit = 250) {
+export async function getUpcomingAndPastShows(
+  preview: boolean,
+  limit = LIMITS
+) {
   const today = dayjs();
 
   const shows = await getAllShows(preview, limit);
@@ -523,7 +526,7 @@ export async function getShowAndMoreShows(slug: string, preview: boolean) {
 
 export async function getAllArticles(
   preview: boolean,
-  limit = 250
+  limit = LIMITS
 ): Promise<ArticleInterface[]> {
   const data = await contentful(
     /* GraphQL */ `
