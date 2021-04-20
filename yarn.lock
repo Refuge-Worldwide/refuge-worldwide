@@ -1449,11 +1449,6 @@ es6-object-assign@^1.1.0:
   resolved "https://registry.yarnpkg.com/es6-object-assign/-/es6-object-assign-1.1.0.tgz#c2c3582656247c39ea107cb1e6652b6f9f24523c"
   integrity sha1-wsNYJlYkfDnqEHyx5mUrb58kUjw=
 
-esbuild@^0.9.0:
-  version "0.9.7"
-  resolved "https://registry.yarnpkg.com/esbuild/-/esbuild-0.9.7.tgz#ea0d639cbe4b88ec25fbed4d6ff00c8d788ef70b"
-  integrity sha512-VtUf6aQ89VTmMLKrWHYG50uByMF4JQlVysb8dmg6cOgW8JnFCipmz7p+HNBl+RR3LLCuBxFGVauAe2wfnF9bLg==
-
 escalade@^3.1.1:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/escalade/-/escalade-3.1.1.tgz#d8cfdc7000965c5a0174b4a82eaa5c0552742e40"
@@ -3429,12 +3424,10 @@ react-remove-scroll@^2.4.1:
     use-callback-ref "^1.2.3"
     use-sidecar "^1.0.1"
 
-react-ridge-state@^4.2.1:
-  version "4.2.1"
-  resolved "https://registry.yarnpkg.com/react-ridge-state/-/react-ridge-state-4.2.1.tgz#8473e975b845bca5bb4b332408ed6ac4a57f7285"
-  integrity sha512-eNFa/hvIJ1AWR5O1rNYC30wU/1JyEO6Mjrzgo0QtcdIlMBg8Uqp4y93pm+gTkxx32avI2jnU8DWFSwhaZBzGXg==
-  dependencies:
-    esbuild "^0.9.0"
+react-ridge-state@4.1.7:
+  version "4.1.7"
+  resolved "https://registry.yarnpkg.com/react-ridge-state/-/react-ridge-state-4.1.7.tgz#bbb565017311f89b68d579984eb9b734c470c246"
+  integrity sha512-rg10ib9xoaXEfsP4Bm/vnGTYDWmuKvGEoINGo46jsKoIl6rsxKcaucu0yU2y5hPdgoYuU+4/OprEkILePqBnqw==
 
 react-style-singleton@^2.1.0:
   version "2.1.1"
