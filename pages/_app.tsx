@@ -19,6 +19,8 @@ const LivePlayer = dynamic(() => import("../components/livePlayer"), {
 function RefugeApp({ Component, pageProps }: AppProps) {
   useSmoothscrollPolyfill();
 
+  if ((Component as any).noLayout) return <Component {...pageProps} />;
+
   return (
     <Fragment>
       <header>

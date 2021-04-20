@@ -1,12 +1,13 @@
 import VisuallyHidden from "@reach/visually-hidden";
 import Link from "next/link";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { INSTAGRAM_URL, TWITTER_URL } from "../constants";
 import Instagram from "../icons/instagram";
 import { Menu } from "../icons/menu";
 import Twitter from "../icons/twitter";
 import NavigationLink from "./navigationLink";
 import dynamic from "next/dynamic";
+import MessageSquare from "../icons/message-square";
 
 const MobileMenu = dynamic(() => import("../components/mobileMenu"));
 
@@ -14,6 +15,13 @@ export default function Navigation() {
   const [isOpen, isOpenSet] = useState(false);
   const openMenu = () => isOpenSet(true);
   const closeMenu = () => isOpenSet(false);
+
+  const openChat = useCallback(() => {
+    const chatOptions =
+      "width=480,height=520,menubar=no,location=no,resizable=no,scrollbars=no,status=no";
+
+    window.open("/chat", "refugechatwindow", chatOptions);
+  }, []);
 
   return (
     <nav className="text-black">
@@ -103,6 +111,11 @@ export default function Navigation() {
               </li>
               <li>
                 <ul className="flex space-x-6">
+                  <li className="h-6 leading-none">
+                    <button onClick={openChat}>
+                      <MessageSquare />
+                    </button>
+                  </li>
                   <li>
                     <a
                       target="_blank"
