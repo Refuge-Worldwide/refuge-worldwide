@@ -536,6 +536,9 @@ export async function getAllArticles(
             title
             subtitle
             articleType
+            author { 
+              name
+            }
             date
             slug
             coverImage {
@@ -578,6 +581,9 @@ export async function getLatestArticles(
             title
             subtitle
             articleType
+            author { 
+              name
+            }
             date
             slug
             coverImage {
@@ -620,6 +626,9 @@ export async function getFeaturedArticles(
             title
             subtitle
             articleType
+            author { 
+              name
+            }
             date
             slug
             coverImage {
@@ -666,6 +675,9 @@ export async function getArticleAndMoreArticles(
             title
             subtitle
             articleType
+            author { 
+              name
+            }
             date
             slug
             coverImage {

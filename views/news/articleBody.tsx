@@ -1,9 +1,9 @@
 import { Fragment } from "react";
-import { renderRichTextWithImages } from "../../lib/rich-text";
-import { ArticleInterface } from "../../types/shared";
 import Date from "../../components/date";
 import Pill from "../../components/pill";
 import ShareButton from "../../components/shareButton";
+import { renderRichTextWithImages } from "../../lib/rich-text";
+import { ArticleInterface } from "../../types/shared";
 
 export default function ArticleBody({
   title,
@@ -12,6 +12,7 @@ export default function ArticleBody({
   content,
   slug,
   articleType,
+  author,
 }: ArticleInterface) {
   return (
     <Fragment>
@@ -36,6 +37,14 @@ export default function ArticleBody({
               <div className="h-6" />
 
               <p className="font-medium text-center">{subtitle}</p>
+
+              {author?.name && (
+                <Fragment>
+                  <div className="h-6" />
+
+                  <p className="font-medium text-center">By {author.name}</p>
+                </Fragment>
+              )}
             </div>
 
             <div className="flex">

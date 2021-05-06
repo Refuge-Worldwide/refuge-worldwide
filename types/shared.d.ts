@@ -77,6 +77,9 @@ export interface ArticleInterface {
   title: string;
   subtitle?: string;
   articleType: ArticleType;
+  author?: {
+    name: string;
+  };
   date: string;
   slug: string;
   coverImage: CoverImage;
