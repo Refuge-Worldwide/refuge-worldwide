@@ -1,3 +1,4 @@
+import HeroCarousel from "../components/heroCarousel";
 import Layout from "../components/layout";
 import PageMeta from "../components/seo/page";
 import {
@@ -36,6 +37,8 @@ export default function HomePage({
       <PageMeta title="Refuge Worldwide" path="/" />
 
       <NextUp {...nextUp} />
+
+      <HeroCarousel />
 
       <FeaturedShows shows={featuredShows} />
 
