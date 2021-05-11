@@ -7,10 +7,16 @@ export default function HeroCarousel() {
         <li>
           <a className="flex flex-col-reverse md:grid h-full">
             <article className="bg-black text-white">
-              <header>
-                <h1 className="font-serif">Title</h1>
+              <header className="flex-1 p-4 lg:p-8">
+                <h1 className="font-serif text-base sm:text-large">Title</h1>
 
-                <p className="text-base">Subtitle</p>
+                <div className="h-4" />
+
+                <p>
+                  Lorem ipsum dolor, sit amet consectetur adipisicing elit.{" "}
+                </p>
+
+                <div className="h-6" />
 
                 <div className="inline-flex items-center space-x-5 font-medium leading-none ">
                   <span className="underline">Listen Now</span>
