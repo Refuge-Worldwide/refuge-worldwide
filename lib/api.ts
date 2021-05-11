@@ -425,7 +425,7 @@ export async function getFeaturedShows(
 
   const pastFeaturedShows = featuredShows
     .filter((show) => dayjs(show.date).isBefore(dayjs()))
-    .slice(0, 15);
+    .slice(0, 16);
 
   return pastFeaturedShows;
 }

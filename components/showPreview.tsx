@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import Image from "next/image";
 import Link from "next/link";
 import PlayLarge from "../icons/playLarge";
@@ -8,6 +9,8 @@ import { getMixcloudKey, parseGenres } from "../util";
 import Badge from "./badge";
 import Date from "./date";
 
+type ShowPreviewProps = ShowInterface & { className?: string };
+
 export default function ShowPreview({
   slug,
   title,
@@ -15,7 +18,10 @@ export default function ShowPreview({
   genresCollection,
   date,
   mixcloudLink,
-}: ShowInterface) {
+  className = "",
+}: ShowPreviewProps) {
+  const cachedClassNames = classNames("text-small", className);
+
   const genres = parseGenres(genresCollection).slice(0, 3);
 
   const [, setKey] = showKey.use();
@@ -37,7 +43,7 @@ export default function ShowPreview({
   };
 
   return (
-    <article className="text-small">
+    <article className={cachedClassNames}>
       <button onClick={handlePlayShow} className="flex relative group">
         <Image
           key={coverImage.sys.id}

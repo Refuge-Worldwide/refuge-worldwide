@@ -15,11 +15,18 @@ export default function FeaturedShows({ shows }: { shows: ShowInterface[] }) {
         <div className="h-5 sm:h-8" />
 
         <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-y-10 sm:gap-8">
-          {shows.map((show, i) => (
-            <li key={i}>
-              <ShowPreview {...show} />
-            </li>
-          ))}
+          {shows.map((show, i) => {
+            const isLast = shows.length === i + 1;
+
+            return (
+              <li key={i}>
+                <ShowPreview
+                  className={isLast ? "lg:hidden xl:block 2xl:hidden" : ""}
+                  {...show}
+                />
+              </li>
+            );
+          })}
         </ul>
 
         <div className="h-10 sm:h-16" />
