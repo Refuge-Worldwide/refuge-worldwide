@@ -1,9 +1,11 @@
 import useInterval from "@use-it/interval";
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useIntersection } from "use-intersection";
 import { CAROUSEL_DELAY } from "../constants";
 import { Arrow } from "../icons/arrow";
+import { contentful } from "../lib/loaders";
 import { HeroSection } from "../types/shared";
 import { formatArtistNames, isServer } from "../util";
 
@@ -64,8 +66,23 @@ export default function HeroCarousel({ items }: HeroSection) {
             <li ref={slide} key={item.slug} id={`hero-item-${item.slug}`}>
               <Link href={slug}>
                 <a aria-labelledby={`hero-item-title-${item.slug}`}>
-                  <article className="bg-black text-white flex flex-col-reverse md:grid h-full">
-                    <header className="flex-1 p-4 lg:p-8">
+                  <article className="flex flex-col md:grid grid-cols-10 h-full bg-black text-white">
+                    <div className="md:col-span-5 2xl:col-span-7 h-56 md:h-auto relative ">
+                      <Image
+                        key={item.coverImage.sys.id}
+                        draggable="false"
+                        alt={item.coverImage.title}
+                        src={item.coverImage.url}
+                        loader={contentful}
+                        objectFit="cover"
+                        objectPosition="top"
+                        layout="fill"
+                        loading="eager"
+                        priority
+                      />
+                    </div>
+
+                    <header className="flex-1 md:col-span-5 2xl:col-span-3 p-4 lg:p-8">
                       <h1
                         id={`hero-item-title-${item.slug}`}
                         className="font-serif text-base sm:text-large"
@@ -75,7 +92,7 @@ export default function HeroCarousel({ items }: HeroSection) {
 
                       <div className="h-4" />
 
-                      <p>
+                      <p className="font-medium">
                         {item.__typename === "Article"
                           ? item.subtitle
                           : formatArtistNames(item.artistsCollection.items)}
@@ -91,6 +108,8 @@ export default function HeroCarousel({ items }: HeroSection) {
                         </span>
                         <Arrow />
                       </div>
+
+                      <div className="hidden sm:block h-6" />
                     </header>
                   </article>
                 </a>
