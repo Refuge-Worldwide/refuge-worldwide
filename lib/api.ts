@@ -4,6 +4,8 @@ import type {
   ArticleInterface,
   ArtistInterface,
   ErrorPayload,
+  GenreInterface,
+  HeroSection,
   NewsletterPageData,
   NextUpSection,
   ShowInterface,
@@ -194,6 +196,57 @@ export async function getNextUpSection(
   `);
 
   return extractPage(data, "sectionToday");
+}
+
+export async function getHeroSection(preview: boolean): Promise<HeroSection> {
+  const data = await contentful(/* GraphQL */ `
+    {
+      sectionHero(id: "6tqG5jl7gSWGdEI1sA4cqN", preview: ${preview}) {
+        entriesCollection {
+          items {
+            ... on Show {
+              __typename
+              title
+              artistsCollection {
+                items {
+                  name
+                }
+              }
+              slug
+              coverImage {
+                sys {
+                  id
+                }
+                title
+                description
+                url
+                width
+                height
+              }
+            }
+            ... on Article {
+              __typename
+              title
+              subtitle
+              slug
+              coverImage {
+                sys {
+                  id
+                }
+                title
+                description
+                url
+                width
+                height
+              }
+            }
+          }
+        }
+      }
+    }
+  `);
+
+  return data?.data?.sectionHero?.entriesCollection;
 }
 
 export async function getAllArtists(

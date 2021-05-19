@@ -2,6 +2,7 @@ import useInterval from "@use-it/interval";
 import { useEffect, useRef, useState } from "react";
 import { useIntersection } from "use-intersection";
 import FeaturedArticlePreview from "../../components/featuredArticlePreview";
+import { CAROUSEL_DELAY } from "../../constants";
 import { ArticleInterface } from "../../types/shared";
 import { isServer } from "../../util";
 
@@ -10,44 +11,41 @@ export default function FeaturedArticles({
 }: {
   articles: ArticleInterface[];
 }) {
-  /**
-   * @note Time between carousel auto advance
-   */
-  const DELAY = 5000;
-
   const carousel = useRef<HTMLUListElement>(null);
 
   const intersecting = useIntersection(carousel, {
     threshold: 0.35,
   });
 
-  const [activeId, setActiveId] = useState(1);
+  const [activeId, setActiveId] = useState(0);
 
   function autoAdvanceCarousel() {
-    const isNotLastSlide = activeId < articles.length - 1;
+    const isLastSlide = activeId === articles.length - 1;
 
-    if (isNotLastSlide) {
+    if (isLastSlide) {
       carousel.current.scrollBy({
-        left: window.innerWidth * (activeId + 1),
+        left: -(window.innerWidth * articles.length),
         behavior: "smooth",
       });
-    } else {
-      carousel.current.scrollBy({
-        left: 0,
-        behavior: "smooth",
-      });
+
+      return;
     }
+
+    carousel.current.scrollBy({
+      left: window.innerWidth,
+      behavior: "smooth",
+    });
   }
 
   useInterval(() => {
     if (intersecting) autoAdvanceCarousel();
-  }, DELAY);
+  }, CAROUSEL_DELAY);
 
   return (
     <section className="relative">
       {/* Articles */}
       <ul ref={carousel} className="carousel">
-        {articles?.map((article, i) => {
+        {articles.map((article, i) => {
           const slide = useRef<HTMLLIElement>(null);
 
           const isSlideInView = useIntersection(slide, {
@@ -56,11 +54,17 @@ export default function FeaturedArticles({
           });
 
           useEffect(() => {
-            if (isSlideInView) setActiveId(i);
+            if (isSlideInView) {
+              setActiveId(i);
+            }
           }, [isSlideInView]);
 
           return (
-            <li ref={slide} key={i} id={String(i)}>
+            <li
+              ref={slide}
+              key={article.slug}
+              id={`featured-article-${article.slug}`}
+            >
               <FeaturedArticlePreview {...article} />
             </li>
           );
@@ -69,11 +73,13 @@ export default function FeaturedArticles({
 
       {/* Indicators */}
       <ul className="absolute top-44 md:top-auto md:bottom-8 inset-x-0 flex justify-center space-x-3">
-        {articles?.map((_, i) => {
-          const item = !isServer ? document?.getElementById(String(i)) : null;
+        {articles?.map((article, i) => {
+          const elem = !isServer
+            ? document?.getElementById(`featured-article-${article.slug}`)
+            : null;
 
           const handleOnClick = () =>
-            item?.scrollIntoView({
+            elem?.scrollIntoView({
               behavior: "smooth",
               block: "nearest",
             });

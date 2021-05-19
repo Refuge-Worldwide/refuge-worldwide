@@ -96,6 +96,19 @@ export interface NextUpSection {
   content: Content;
 }
 
+export type HeroSection = {
+  items: {
+    __typename: "Show" | "Article";
+    title: string;
+    subtitle?: string;
+    artistsCollection?: {
+      items: ArtistInterface[];
+    };
+    slug: string;
+    coverImage: CoverImage;
+  }[];
+};
+
 export interface NewsletterPageData {
   coverImage: CoverImage;
   content: Content;

@@ -50,3 +50,8 @@ export const REGEX = {
   NUMERIC: new RegExp(/^\d+$/),
   SPECIAL: new RegExp(/\W|_/g),
 };
+
+/**
+ * Delay in ms
+ */
+export const CAROUSEL_DELAY = 7.5 * 1000;

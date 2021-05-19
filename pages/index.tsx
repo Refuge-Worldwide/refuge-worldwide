@@ -4,11 +4,13 @@ import PageMeta from "../components/seo/page";
 import {
   getFeaturedArticles,
   getFeaturedShows,
+  getHeroSection,
   getLatestArticles,
   getNextUpSection,
 } from "../lib/api";
 import {
   ArticleInterface,
+  HeroSection,
   NextUpSection,
   ShowInterface,
 } from "../types/shared";
@@ -23,6 +25,7 @@ interface Page extends JSX.Element {
   latestArticles: ArticleInterface[];
   featuredArticles: ArticleInterface[];
   nextUp: NextUpSection;
+  hero: HeroSection;
 }
 
 export default function HomePage({
@@ -31,6 +34,7 @@ export default function HomePage({
   latestArticles,
   featuredArticles,
   nextUp,
+  hero,
 }: Page) {
   return (
     <Layout preview={preview}>
@@ -38,7 +42,7 @@ export default function HomePage({
 
       <NextUp {...nextUp} />
 
-      <HeroCarousel />
+      <HeroCarousel {...hero} />
 
       <FeaturedShows shows={featuredShows} />
 
@@ -56,6 +60,7 @@ export async function getStaticProps({ preview = false }) {
       featuredShows: await getFeaturedShows(preview),
       latestArticles: await getLatestArticles(preview),
       featuredArticles: await getFeaturedArticles(preview),
+      hero: await getHeroSection(preview),
       nextUp: await getNextUpSection(preview),
     },
   };
