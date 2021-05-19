@@ -36,13 +36,17 @@ export default function HomePage({
   nextUp,
   hero,
 }: Page) {
+  const shouldShowBanner = nextUp?.content && nextUp?.content?.json;
+
+  const shouldShowHero = hero?.items?.length > 0;
+
   return (
     <Layout preview={preview}>
       <PageMeta title="Refuge Worldwide" path="/" />
 
-      <NextUp {...nextUp} />
+      {shouldShowBanner && <NextUp {...nextUp} />}
 
-      <HeroCarousel {...hero} />
+      {shouldShowHero && <HeroCarousel {...hero} />}
 
       <FeaturedShows shows={featuredShows} />
 
