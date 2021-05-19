@@ -89,7 +89,7 @@ export default function HeroCarousel({ items }: HeroSection) {
               <Link href={slug}>
                 <a aria-labelledby={`hero-item-title-${item.slug}`}>
                   <article className={articleClassNames}>
-                    <div className="md:col-span-5 2xl:col-span-7 h-56 md:h-auto relative border-l-2 border-b-2 border-black">
+                    <div className="md:col-span-5 xl:col-span-6 2xl:col-span-7 h-56 md:h-auto relative border-l-2 border-b-2 border-black">
                       <Image
                         key={item.coverImage.sys.id}
                         draggable="false"
@@ -104,7 +104,7 @@ export default function HeroCarousel({ items }: HeroSection) {
                       />
                     </div>
 
-                    <header className="flex-1 md:col-span-5 2xl:col-span-3 p-4 lg:p-8 border-l-2 border-b-2 border-black">
+                    <header className="flex-1 md:col-span-5 xl:col-span-4 2xl:col-span-3 p-4 lg:p-8 border-l-2 border-b-2 border-black">
                       <Pill invert={item.__typename === "Show"}>
                         <span className="font-serif">
                           {item.__typename === "Article"
