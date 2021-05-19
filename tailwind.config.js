@@ -1,5 +1,5 @@
 module.exports = {
-  purge: ["./**/*.js", "./**/*.tsx"],
+  purge: ["./**/*.js", "./**/*.tsx", "./util.ts"],
   theme: {
     fontWeight: {
       light: 300,
