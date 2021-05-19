@@ -207,7 +207,12 @@ export async function getHeroSection(preview: boolean): Promise<HeroSection> {
             ... on Show {
               __typename
               title
-              artistsCollection {
+              artistsCollection(limit: 9) {
+                items {
+                  name
+                }
+              }
+              genresCollection(limit: 9) {
                 items {
                   name
                 }
@@ -229,6 +234,7 @@ export async function getHeroSection(preview: boolean): Promise<HeroSection> {
               title
               subtitle
               slug
+              articleType
               coverImage {
                 sys {
                   id

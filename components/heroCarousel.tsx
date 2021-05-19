@@ -1,13 +1,21 @@
 import useInterval from "@use-it/interval";
+import cn from "classnames";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { useIntersection } from "use-intersection";
 import { CAROUSEL_DELAY } from "../constants";
 import { Arrow } from "../icons/arrow";
 import { contentful } from "../lib/loaders";
 import { HeroSection } from "../types/shared";
-import { formatArtistNames, isServer } from "../util";
+import {
+  formatArtistNames,
+  getArticleBackgroundColor,
+  isServer,
+  parseGenres,
+} from "../util";
+import Badge from "./badge";
+import Pill from "./pill";
 
 export default function HeroCarousel({ items }: HeroSection) {
   const carousel = useRef<HTMLUListElement>(null);
@@ -62,12 +70,26 @@ export default function HeroCarousel({ items }: HeroSection) {
               ? `/news/${item.slug}`
               : `/radio/${item.slug}`;
 
+          const articleBackgroundClassName = getArticleBackgroundColor(
+            item?.articleType
+          );
+
+          const articleClassNames = cn(
+            "flex flex-col md:grid grid-cols-10 h-full",
+            articleBackgroundClassName
+          );
+
+          const genres =
+            item.__typename === "Show"
+              ? parseGenres(item?.genresCollection).slice(0, 3)
+              : null;
+
           return (
             <li ref={slide} key={item.slug} id={`hero-item-${item.slug}`}>
               <Link href={slug}>
                 <a aria-labelledby={`hero-item-title-${item.slug}`}>
-                  <article className="flex flex-col md:grid grid-cols-10 h-full bg-black text-white">
-                    <div className="md:col-span-5 2xl:col-span-7 h-56 md:h-auto relative ">
+                  <article className={articleClassNames}>
+                    <div className="md:col-span-5 2xl:col-span-7 h-56 md:h-auto relative border-l-2 border-b-2 border-black">
                       <Image
                         key={item.coverImage.sys.id}
                         draggable="false"
@@ -75,14 +97,24 @@ export default function HeroCarousel({ items }: HeroSection) {
                         src={item.coverImage.url}
                         loader={contentful}
                         objectFit="cover"
-                        objectPosition="top"
+                        objectPosition="center"
                         layout="fill"
                         loading="eager"
                         priority
                       />
                     </div>
 
-                    <header className="flex-1 md:col-span-5 2xl:col-span-3 p-4 lg:p-8">
+                    <header className="flex-1 md:col-span-5 2xl:col-span-3 p-4 lg:p-8 border-l-2 border-b-2 border-black">
+                      <Pill invert={item.__typename === "Show"}>
+                        <span className="font-serif">
+                          {item.__typename === "Article"
+                            ? item?.articleType
+                            : "Show"}
+                        </span>
+                      </Pill>
+
+                      <div className="h-3 sm:h-6" />
+
                       <h1
                         id={`hero-item-title-${item.slug}`}
                         className="font-serif text-base sm:text-large"
@@ -98,7 +130,21 @@ export default function HeroCarousel({ items }: HeroSection) {
                           : formatArtistNames(item.artistsCollection.items)}
                       </p>
 
-                      <div className="h-6" />
+                      {item.__typename === "Show" && (
+                        <Fragment>
+                          <div className="h-4" />
+
+                          <ul className="w-full flex flex-wrap -mr-2 -mb-2">
+                            {genres.map((genre, i) => (
+                              <li key={i} className="pr-2 pb-2">
+                                <Badge invert text={genre} />
+                              </li>
+                            ))}
+                          </ul>
+                        </Fragment>
+                      )}
+
+                      <div className="h-8" />
 
                       <div className="inline-flex items-center space-x-5 font-medium leading-none ">
                         <span className="underline">

@@ -1,23 +1,13 @@
+import { MenuItem } from "@reach/menu-button";
 import cn from "classnames";
 import Image from "next/image";
 import Link from "next/link";
 import { Arrow } from "../icons/arrow";
 import { contentful } from "../lib/loaders";
-import { ArticleInterface, ArticleType } from "../types/shared";
+import { ArticleInterface } from "../types/shared";
+import { getArticleBackgroundColor } from "../util";
 import Date from "./date";
 import Pill from "./pill";
-
-function getArticleBackgroundColor(type: ArticleType) {
-  let bg: string;
-
-  if (type === "Project") bg = "bg-orange";
-  if (type === "Blog") bg = "bg-blue";
-  if (type === "News") bg = "bg-pink";
-  if (type === "Event") bg = "bg-red";
-  if (type === "Interview") bg = "bg-green";
-
-  return bg;
-}
 
 export default function FeaturedArticlePreview({
   title,

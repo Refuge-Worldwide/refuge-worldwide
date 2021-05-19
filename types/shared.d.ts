@@ -101,8 +101,12 @@ export type HeroSection = {
     __typename: "Show" | "Article";
     title: string;
     subtitle?: string;
+    articleType?: ArticleType;
     artistsCollection?: {
       items: ArtistInterface[];
+    };
+    genresCollection?: {
+      items: GenreInterface[];
     };
     slug: string;
     coverImage: CoverImage;

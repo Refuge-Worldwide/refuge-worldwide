@@ -1,5 +1,6 @@
 import { REGEX } from "./constants";
 import {
+  ArticleType,
   ArtistFilterType,
   ArtistInterface,
   GenreInterface,
@@ -129,3 +130,30 @@ export const parseGenres = (genresCollection: { items: GenreInterface[] }) =>
     .filter((genre) => Boolean(genre?.name))
     .map((genre) => genre.name)
     .sort(sort.alpha);
+
+export function getArticleBackgroundColor(type?: ArticleType) {
+  let className: string;
+
+  switch (true) {
+    case type === "Project":
+      className = "text-black bg-orange";
+      break;
+    case type === "Blog":
+      className = "text-black bg-blue";
+      break;
+    case type === "News":
+      className = "text-black bg-pink";
+      break;
+    case type === "Event":
+      className = "text-black bg-red";
+      break;
+    case type === "Interview":
+      className = "text-black bg-green";
+      break;
+    default:
+      className = "text-white bg-black";
+      break;
+  }
+
+  return className;
+}
