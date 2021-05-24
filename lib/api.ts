@@ -4,6 +4,7 @@ import type {
   ArticleInterface,
   ArtistInterface,
   ErrorPayload,
+  BookingsPageData,
   NewsletterPageData,
   NextUpSection,
   ShowInterface,
@@ -178,6 +179,20 @@ export async function getNewsletterPage(
   );
 
   return extractPage(data, "pageNewsletter");
+}
+
+export async function getBookingsPage(
+  preview: boolean
+): Promise<BookingsPageData> {
+  const data = await contentful(/* GraphQL */ `
+    query {
+      pageBooking(id: "5ApzlspIzqeUmURGvpTCug", preview: ${preview}) {
+        bookingPassword
+      }
+    }
+  `);
+
+  return extractPage(data, "pageBooking");
 }
 
 export async function getNextUpSection(
