@@ -21,7 +21,7 @@ export default function AllShows({
   const loadMore = () => showCountSet((count) => count + 50);
 
   return (
-    <section>
+    <section id="shows">
       <div className="p-4 sm:p-8">
         <Pill>
           <h2>{filter} Shows</h2>
