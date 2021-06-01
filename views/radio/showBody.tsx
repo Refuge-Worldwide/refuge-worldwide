@@ -96,7 +96,9 @@ export default function ShowBody({
                 {genres.map((genre, i) => (
                   <li key={i} className="pr-2 pb-2">
                     <Badge
-                      onClick={() => router.push(`/radio?genre=${genre}`)}
+                      onClick={() =>
+                        router.push(`/radio?genre=${encodeURIComponent(genre)}`)
+                      }
                       as="button"
                       text={genre}
                     />
