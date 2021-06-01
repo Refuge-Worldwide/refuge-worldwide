@@ -17,7 +17,7 @@ import {
 } from "../util";
 import { ENDPOINT } from "./constants";
 
-const LIMITS = 500;
+const LIMITS = 750;
 
 export async function contentful(query: string, preview = false) {
   return fetch(ENDPOINT, {
