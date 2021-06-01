@@ -1,5 +1,6 @@
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { Fragment } from "react";
 import Badge from "../../components/badge";
 import Date from "../../components/date";
@@ -19,6 +20,8 @@ export default function ShowBody({
   content,
   mixcloudLink,
 }: ShowInterface) {
+  const router = useRouter();
+
   const genres = parseGenres(genresCollection);
 
   const artists = artistsCollection.items;
@@ -92,7 +95,11 @@ export default function ShowBody({
               <ul className="w-full flex flex-wrap justify-center -mr-2 -mb-2">
                 {genres.map((genre, i) => (
                   <li key={i} className="pr-2 pb-2">
-                    <Badge text={genre} />
+                    <Badge
+                      onClick={() => router.push(`/radio?genre=${genre}`)}
+                      as="button"
+                      text={genre}
+                    />
                   </li>
                 ))}
               </ul>

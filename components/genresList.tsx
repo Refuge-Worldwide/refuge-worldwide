@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import Badge from "./badge";
 import { useMedia } from "react-use";
+import { useRouter } from "next/router";
 
 type Props = {
   genres: string[];
@@ -8,17 +9,29 @@ type Props = {
   filterSet: Dispatch<SetStateAction<string>>;
 };
 
-export default function GenresList({ filter, filterSet, genres }: Props) {
+export default function GenresList({ filter, genres }: Props) {
+  const router = useRouter();
+
   const isLarge = useMedia("(min-width: 1024px)", true);
 
   const [showCount, showCountSet] = useState(isLarge ? 40 : 10);
+
+  const updateGenreParam = (genre: string) => () => {
+    router.push(`/radio?genre=${encodeURIComponent(genre)}`, undefined, {
+      shallow: true,
+    });
+  };
+
+  function sortActiveFilterFirst(a: string, b: string) {
+    return a === filter ? -1 : b === filter ? 1 : 0;
+  }
 
   return (
     <ul className="w-full flex flex-wrap leading-none -mr-2 -mb-2">
       <li className="inline-flex pr-2 pb-2">
         <button
           className="focus:outline-none focus:ring-4 rounded-full"
-          onClick={() => filterSet("All")}
+          onClick={updateGenreParam("All")}
         >
           <Badge invert={filter === "All"} text={"All"} />
         </button>
@@ -28,7 +41,7 @@ export default function GenresList({ filter, filterSet, genres }: Props) {
         <li className="inline-flex pr-2 pb-2" key={i}>
           <button
             className="focus:outline-none focus:ring-4 rounded-full"
-            onClick={() => filterSet(genre)}
+            onClick={updateGenreParam(genre)}
           >
             <Badge invert={filter === genre} text={genre} />
           </button>
