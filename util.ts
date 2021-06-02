@@ -151,7 +151,7 @@ export function getArticleBackgroundColor(type?: ArticleType) {
       className = "text-black bg-green";
       break;
     default:
-      className = "text-black bg-orange";
+      className = "text-white bg-black";
       break;
   }
 
