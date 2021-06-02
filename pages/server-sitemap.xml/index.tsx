@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { GetServerSideProps } from "next";
 import { getServerSideSitemap } from "next-sitemap";
-import { ISitemapFiled } from "next-sitemap/dist/@types/interface";
+import { ISitemapField } from "next-sitemap/dist/@types/interface";
 import { getPaths } from "../../lib/api";
 
 const createSlug = (slug: string, base: "artists" | "radio" | "news") =>
@@ -17,7 +17,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     ...shows.map(({ slug }) => createSlug(slug, "radio")),
   ];
 
-  const fields: ISitemapFiled[] = slugs.map((slug) => ({
+  const fields: ISitemapField[] = slugs.map((slug) => ({
     loc: slug,
     lastmod: new Date().toISOString(),
     changefreq: "daily",
