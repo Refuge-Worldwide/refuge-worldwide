@@ -4,6 +4,8 @@ import { ShowInterface } from "../types/shared";
 const getFilteredShows = (_: string, filter: string, data: ShowInterface[]) => {
   if (filter === "All") return data;
 
+  console.log(filter);
+
   const includesGenreFilter = (show: ShowInterface) =>
     show.genresCollection.items.filter((genre) => genre.name === filter)
       .length > 0;
