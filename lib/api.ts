@@ -3,6 +3,7 @@ import type {
   AboutPageData,
   ArticleInterface,
   ArtistInterface,
+  ErrorPayload,
   GenreInterface,
   NewsletterPageData,
   NextUpSection,
@@ -17,10 +18,18 @@ import {
 } from "../util";
 import { ENDPOINT } from "./constants";
 
-const LIMITS = 750;
+const LIMITS = {
+  SHOWS: 550,
+  ARTISTS: 500,
+  ARTICLES: 100,
+};
+
+function getErrorMessage(payload: ErrorPayload) {
+  return payload.errors[0].message;
+}
 
 export async function contentful(query: string, preview = false) {
-  return fetch(ENDPOINT, {
+  const r = await fetch(ENDPOINT, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -31,7 +40,15 @@ export async function contentful(query: string, preview = false) {
       }`,
     },
     body: JSON.stringify({ query }),
-  }).then((response) => response.json());
+  });
+
+  if (r.ok) {
+    const data = await r.json();
+
+    return data;
+  }
+
+  throw new Error(getErrorMessage(await r.json()));
 }
 
 export async function getAboutPage(preview: boolean): Promise<AboutPageData> {
@@ -182,7 +199,7 @@ export async function getNextUpSection(
 
 export async function getAllArtists(
   preview: boolean,
-  limit = LIMITS
+  limit = 500
 ): Promise<ArtistInterface[]> {
   const data = await contentful(
     /* GraphQL */ `
@@ -281,7 +298,7 @@ export async function getArtistAndMoreShows(
 
 export async function getAllShows(
   preview: boolean,
-  limit = LIMITS
+  limit = LIMITS.SHOWS
 ): Promise<ShowInterface[]> {
   const data = await contentful(
     /* GraphQL */ `
@@ -328,13 +345,10 @@ export async function getAllShows(
   return extractCollection(data, "showCollection");
 }
 
-export async function getUpcomingAndPastShows(
-  preview: boolean,
-  limit = LIMITS
-) {
+export async function getUpcomingAndPastShows(preview: boolean) {
   const today = dayjs();
 
-  const shows = await getAllShows(preview, limit);
+  const shows = await getAllShows(preview);
 
   /**
    * Upcoming & Featured
@@ -526,7 +540,7 @@ export async function getShowAndMoreShows(slug: string, preview: boolean) {
 
 export async function getAllArticles(
   preview: boolean,
-  limit = LIMITS
+  limit = LIMITS.ARTICLES
 ): Promise<ArticleInterface[]> {
   const data = await contentful(
     /* GraphQL */ `
