@@ -4,7 +4,6 @@ import type {
   ArticleInterface,
   ArtistInterface,
   ErrorPayload,
-  GenreInterface,
   NewsletterPageData,
   NextUpSection,
   ShowInterface,
