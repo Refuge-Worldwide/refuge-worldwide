@@ -98,7 +98,7 @@ export default function ShowBody({
                     <Badge
                       onClick={() =>
                         router.push(
-                          `/radio#shows?genre=${encodeURIComponent(genre)}`
+                          `/radio?genre=${encodeURIComponent(genre)}#shows`
                         )
                       }
                       as="button"
