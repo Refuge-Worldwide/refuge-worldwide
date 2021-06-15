@@ -51,7 +51,7 @@ export default function GenresList({ filter, genres }: Props) {
       {showCount < genres.length && (
         <li className="inline-flex pr-2 pb-2">
           <button
-            onClick={() => showCountSet((count) => count + 10)}
+            onClick={() => showCountSet((count) => count + 40)}
             className="focus:outline-none focus:ring-4 rounded-full"
           >
             <Badge invert text={"Show More"} />
