@@ -1,12 +1,13 @@
-import { useRouter } from "next/dist/client/router";
-import ErrorPage from "next/error";
 import Layout from "../../components/layout";
 import ArtistMeta from "../../components/seo/artist";
-import { getAllArtists, getArtistAndMoreShows } from "../../lib/api";
+import {
+  getAllArtistPaths,
+  getAllArtists,
+  getArtistAndMoreShows,
+} from "../../lib/api";
 import { ArtistInterface, ShowInterface } from "../../types/shared";
 import ArtistBody from "../../views/artists/artistBody";
 import RelatedShows from "../../views/artists/relatedShows";
-import Loading from "../../views/loading";
 import SinglePage from "../../views/singlePage";
 
 interface Page extends JSX.Element {
@@ -16,31 +17,19 @@ interface Page extends JSX.Element {
 }
 
 export default function Artist({ artist, relatedShows, preview }: Page) {
-  const router = useRouter();
-
-  if (!router.isFallback && !artist) {
-    return <ErrorPage statusCode={404} />;
-  }
-
   return (
     <Layout preview={preview}>
-      {router.isFallback ? (
-        <Loading />
-      ) : (
-        <>
-          <ArtistMeta {...artist} />
+      <ArtistMeta {...artist} />
 
-          <SinglePage
-            coverImage={artist.photo}
-            objectPosition={artist.coverImagePosition}
-            withBackButton
-          >
-            <ArtistBody {...artist} />
-          </SinglePage>
+      <SinglePage
+        coverImage={artist.photo}
+        objectPosition={artist.coverImagePosition}
+        withBackButton
+      >
+        <ArtistBody {...artist} />
+      </SinglePage>
 
-          {relatedShows?.length > 0 && <RelatedShows shows={relatedShows} />}
-        </>
-      )}
+      {relatedShows?.length > 0 && <RelatedShows shows={relatedShows} />}
     </Layout>
   );
 }
@@ -48,23 +37,25 @@ export default function Artist({ artist, relatedShows, preview }: Page) {
 export async function getStaticProps({ params, preview = false }) {
   const data = await getArtistAndMoreShows(params.slug, preview);
 
+  if (!data) {
+    return {
+      notFound: true,
+    };
+  }
+
   return {
     props: {
       preview,
-      artist: data?.artist,
+      artist: data.artist,
       relatedShows: data?.relatedShows,
     },
+    revalidate: 60,
   };
 }
 
 export async function getStaticPaths() {
-  const allArtists = await getAllArtists(false);
-
   return {
-    paths:
-      allArtists
-        ?.filter((artist) => typeof artist.slug === "string")
-        ?.map(({ slug }) => `/artists/${slug}`) ?? [],
-    fallback: true,
+    paths: await getAllArtistPaths(),
+    fallback: "blocking",
   };
 }

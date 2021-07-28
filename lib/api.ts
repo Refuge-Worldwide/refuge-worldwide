@@ -228,6 +228,29 @@ export async function getAllArtists(
   return extractCollection(data, "artistCollection");
 }
 
+export async function getAllArtistPaths() {
+  const data = await contentful(/* GraphQL */ `
+    query {
+      artistCollection(where: { slug_exists: true }) {
+        items {
+          slug
+        }
+      }
+    }
+  `);
+
+  const collection = extractCollection<{ slug: string }>(
+    data,
+    "artistCollection"
+  );
+
+  const paths = collection.map((el) => ({
+    params: { slug: `/artists/${el.slug}` },
+  }));
+
+  return paths;
+}
+
 export async function getArtistAndMoreShows(
   slug: string,
   preview: boolean
@@ -342,6 +365,29 @@ export async function getAllShows(
   );
 
   return extractCollection(data, "showCollection");
+}
+
+export async function getAllShowPaths() {
+  const data = await contentful(/* GraphQL */ `
+    query {
+      showCollection(where: { slug_exists: true }) {
+        items {
+          slug
+        }
+      }
+    }
+  `);
+
+  const collection = extractCollection<{ slug: string }>(
+    data,
+    "showCollection"
+  );
+
+  const paths = collection.map((el) => ({
+    params: { slug: `/radio/${el.slug}` },
+  }));
+
+  return paths;
 }
 
 export async function getUpcomingAndPastShows(preview: boolean) {
@@ -513,23 +559,21 @@ export async function getShowAndMoreShows(slug: string, preview: boolean) {
 
   const allShows = await getAllShows(preview);
 
-  const relatedShows = allShows
-    .filter((filterShow) => {
-      const currentShowGenres = filterShow.genresCollection.items.map(
-        (genre) => genre.name
-      );
+  const relatedShows = allShows.filter((filterShow) => {
+    const currentShowGenres = filterShow.genresCollection.items.map(
+      (genre) => genre.name
+    );
 
-      const isRelatedShowFilter =
-        currentShowGenres.filter((genre) => entryGenres.includes(genre))
-          .length > 0;
+    const isRelatedShowFilter =
+      currentShowGenres.filter((genre) => entryGenres.includes(genre)).length >
+      0;
 
-      const isNotOwnShow = filterShow.slug !== slug;
+    const isNotOwnShow = filterShow.slug !== slug;
 
-      const isPastFilter = dayjs(filterShow.date).isBefore(today);
+    const isPastFilter = dayjs(filterShow.date).isBefore(today);
 
-      return isNotOwnShow && isRelatedShowFilter && isPastFilter;
-    })
-    .slice(0, 3);
+    return isNotOwnShow && isRelatedShowFilter && isPastFilter;
+  });
 
   return {
     show: entry,
@@ -576,6 +620,29 @@ export async function getAllArticles(
   );
 
   return extractCollection(data, "articleCollection");
+}
+
+export async function getAllArticlePaths() {
+  const data = await contentful(/* GraphQL */ `
+    query {
+      articleCollection(where: { slug_exists: true }) {
+        items {
+          slug
+        }
+      }
+    }
+  `);
+
+  const collection = extractCollection<{ slug: string }>(
+    data,
+    "articleCollection"
+  );
+
+  const paths = collection.map((el) => ({
+    params: { slug: `/news/${el.slug}` },
+  }));
+
+  return paths;
 }
 
 export async function getLatestArticles(
