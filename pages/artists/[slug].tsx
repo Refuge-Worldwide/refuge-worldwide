@@ -1,10 +1,6 @@
 import Layout from "../../components/layout";
 import ArtistMeta from "../../components/seo/artist";
-import {
-  getAllArtistPaths,
-  getAllArtists,
-  getArtistAndMoreShows,
-} from "../../lib/api";
+import { getAllArtistPaths, getArtistAndMoreShows } from "../../lib/api";
 import { ArtistInterface, ShowInterface } from "../../types/shared";
 import ArtistBody from "../../views/artists/artistBody";
 import RelatedShows from "../../views/artists/relatedShows";

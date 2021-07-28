@@ -1,10 +1,6 @@
 import Layout from "../../components/layout";
 import ArticleMeta from "../../components/seo/article";
-import {
-  getAllArticlePaths,
-  getAllArticles,
-  getArticleAndMoreArticles,
-} from "../../lib/api";
+import { getAllArticlePaths, getArticleAndMoreArticles } from "../../lib/api";
 import { ArticleInterface } from "../../types/shared";
 import ArticleBody from "../../views/news/articleBody";
 import RelatedArticles from "../../views/news/relatedArticles";

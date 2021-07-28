@@ -231,7 +231,7 @@ export async function getAllArtists(
 export async function getAllArtistPaths() {
   const data = await contentful(/* GraphQL */ `
     query {
-      artistCollection(where: { slug_exists: true }) {
+      artistCollection(where: { slug_exists: true }, limit: 500) {
         items {
           slug
         }
@@ -245,7 +245,7 @@ export async function getAllArtistPaths() {
   );
 
   const paths = collection.map((el) => ({
-    params: { slug: `/artists/${el.slug}` },
+    params: { slug: el.slug },
   }));
 
   return paths;
@@ -370,7 +370,7 @@ export async function getAllShows(
 export async function getAllShowPaths() {
   const data = await contentful(/* GraphQL */ `
     query {
-      showCollection(where: { slug_exists: true }) {
+      showCollection(where: { slug_exists: true }, limit: 500) {
         items {
           slug
         }
@@ -384,7 +384,7 @@ export async function getAllShowPaths() {
   );
 
   const paths = collection.map((el) => ({
-    params: { slug: `/radio/${el.slug}` },
+    params: { slug: el.slug },
   }));
 
   return paths;
@@ -625,7 +625,7 @@ export async function getAllArticles(
 export async function getAllArticlePaths() {
   const data = await contentful(/* GraphQL */ `
     query {
-      articleCollection(where: { slug_exists: true }) {
+      articleCollection(where: { slug_exists: true }, limit: 500) {
         items {
           slug
         }
@@ -639,7 +639,7 @@ export async function getAllArticlePaths() {
   );
 
   const paths = collection.map((el) => ({
-    params: { slug: `/news/${el.slug}` },
+    params: { slug: el.slug },
   }));
 
   return paths;
