@@ -1,12 +1,11 @@
 import VisuallyHidden from "@reach/visually-hidden";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useState } from "react";
-import { INSTAGRAM_URL, TWITTER_URL } from "../constants";
+import { INSTAGRAM_URL } from "../constants";
 import Instagram from "../icons/instagram";
 import { Menu } from "../icons/menu";
-import Twitter from "../icons/twitter";
 import NavigationLink from "./navigationLink";
-import dynamic from "next/dynamic";
 
 const MobileMenu = dynamic(() => import("../components/mobileMenu"));
 
@@ -110,15 +109,6 @@ export default function Navigation() {
                       href={INSTAGRAM_URL}
                     >
                       <Instagram />
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      href={TWITTER_URL}
-                    >
-                      <Twitter />
                     </a>
                   </li>
                 </ul>

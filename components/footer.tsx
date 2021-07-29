@@ -4,9 +4,11 @@ import {
   PATREON_URL,
   SOUNDCLOUD_URL,
   CONTACT_URL,
+  TWITTER_URL,
 } from "../constants";
 import { Arrow } from "../icons/arrow";
 import Mixcloud from "../icons/mixcloud";
+import { TwitterFilled } from "../icons/twitter";
 import Soundcloud from "../icons/soundcloud";
 
 export default function Footer() {
@@ -82,6 +84,11 @@ export default function Footer() {
             <li>
               <a href={CONTACT_URL} className="font-medium">
                 Contact
+              </a>
+            </li>
+            <li>
+              <a target="_blank" rel="noopener noreferrer" href={TWITTER_URL}>
+                <TwitterFilled />
               </a>
             </li>
             <li>
