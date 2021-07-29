@@ -34,6 +34,7 @@ export interface Content {
 }
 
 export interface ArtistInterface {
+  sys: { id: string };
   name: string;
   slug: string;
   photo: CoverImage;

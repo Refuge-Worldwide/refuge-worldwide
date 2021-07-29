@@ -12,6 +12,7 @@ import type {
 import {
   extractCollection,
   extractCollectionItem,
+  extractLinkedFromCollection,
   extractPage,
   sort,
 } from "../util";
@@ -251,19 +252,14 @@ export async function getAllArtistPaths() {
   return paths;
 }
 
-export async function getArtistAndMoreShows(
-  slug: string,
-  preview: boolean
-): Promise<{
-  artist: ArtistInterface;
-  relatedShows: ShowInterface[];
-}> {
-  const today = dayjs();
-
+export async function getArtistAndMoreShows(slug: string, preview: boolean) {
   const entry = await contentful(/* GraphQL */ `
     query {
       artistCollection(where: { slug: "${slug}" }, limit: 1, preview: ${preview}) {
         items {
+          sys {
+            id
+          }
           name
           slug
           photo {
@@ -300,22 +296,72 @@ export async function getArtistAndMoreShows(
     }
   `);
 
-  const allShows = await getAllShows(preview);
+  const artist: ArtistInterface = extractCollectionItem(
+    entry,
+    "artistCollection"
+  );
 
-  const relatedShows = allShows.filter((show) => {
-    const isRelatedArtistFilter =
-      show.artistsCollection.items.filter((artist) => artist?.slug === slug)
-        .length > 0;
-
-    const isPastFilter = dayjs(show.date).isBefore(today);
-
-    return isRelatedArtistFilter && isPastFilter;
-  });
+  const relatedShows = await getLinkedShowsByArtistId(artist.sys.id, preview);
 
   return {
-    artist: extractCollectionItem(entry, "artistCollection"),
+    artist,
     relatedShows,
   };
+}
+
+export async function getLinkedShowsByArtistId(
+  artistId: string,
+  preview: boolean
+) {
+  const today = dayjs();
+
+  const data = await contentful(
+    /* GraphQL */ `
+    query {
+      artist(id: "${artistId}") {
+        linkedFrom {
+          showCollection(limit: 999) {
+            items {
+              title
+              date
+              slug
+              coverImage {
+                sys {
+                  id
+                }
+                title
+                description
+                url
+                width
+                height
+              }
+              genresCollection(limit: 9) {
+                items {
+                  name
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `,
+    preview
+  );
+
+  const collection = extractLinkedFromCollection<ShowInterface>(
+    data,
+    "artist",
+    "showCollection"
+  );
+
+  const isPastFilter = (show: ShowInterface) =>
+    dayjs(show.date).isBefore(today);
+
+  const sortDESC = (a: ShowInterface, b: ShowInterface) =>
+    dayjs(a.date).isAfter(b.date) ? -1 : 1;
+
+  return collection.filter(isPastFilter).sort(sortDESC);
 }
 
 export async function getAllShows(

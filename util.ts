@@ -27,6 +27,26 @@ export const extractCollection = <T>(
   key: string
 ): T[] => fetchResponse?.data?.[key]?.items;
 
+interface LinkedFromCollectionResponse {
+  data: Record<
+    string,
+    {
+      linkedFrom: Record<
+        string,
+        {
+          items: any[];
+        }
+      >;
+    }
+  >;
+}
+
+export const extractLinkedFromCollection = <T>(
+  fetchResponse: LinkedFromCollectionResponse,
+  key: string,
+  linkedFromKey: string
+): T[] => fetchResponse?.data?.[key]?.linkedFrom?.[linkedFromKey]?.items;
+
 export const extractCollectionItem = (
   fetchResponse: CollectionResponse,
   key: string
