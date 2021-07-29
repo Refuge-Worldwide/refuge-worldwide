@@ -103,6 +103,11 @@ function MobileMenuContent({ onDismiss }: { onDismiss: () => void }) {
         <li>
           <ul className="flex space-x-8">
             <li>
+              <button onClick={openChat}>
+                <MessageSquare size={40} />
+              </button>
+            </li>
+            <li>
               <a target="_blank" rel="noopener noreferrer" href={INSTAGRAM_URL}>
                 <Instagram size={40} />
               </a>
