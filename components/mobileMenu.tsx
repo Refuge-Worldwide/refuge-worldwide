@@ -2,10 +2,11 @@ import { Dialog } from "@reach/dialog";
 import VisuallyHidden from "@reach/visually-hidden";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { INSTAGRAM_URL } from "../constants";
 import Instagram from "../icons/instagram";
 import { Close } from "../icons/menu";
+import MessageSquare from "../icons/message-square";
 import MobileMenuLink from "./mobileMenuLink";
 
 export default function MobileMenu({
@@ -25,6 +26,13 @@ export default function MobileMenu({
     return () => {
       router.events.off("routeChangeStart", onDismiss);
     };
+  }, []);
+
+  const openChat = useCallback(() => {
+    const chatOptions =
+      "width=480,height=520,menubar=no,location=no,resizable=no,scrollbars=no,status=no";
+
+    window.open("/chat", "refugechatwindow", chatOptions);
   }, []);
 
   return (
@@ -103,6 +111,11 @@ export default function MobileMenu({
         </li>
         <li>
           <ul className="flex space-x-8">
+            <li>
+              <button onClick={openChat}>
+                <MessageSquare size={40} />
+              </button>
+            </li>
             <li>
               <a target="_blank" rel="noopener noreferrer" href={INSTAGRAM_URL}>
                 <Instagram size={40} />
