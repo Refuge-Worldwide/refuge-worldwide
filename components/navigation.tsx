@@ -2,7 +2,7 @@ import VisuallyHidden from "@reach/visually-hidden";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useState } from "react";
-import { INSTAGRAM_URL } from "../constants";
+import { INSTAGRAM_URL, SHOP_URL } from "../constants";
 import Instagram from "../icons/instagram";
 import { Menu } from "../icons/menu";
 import NavigationLink from "./navigationLink";
@@ -99,6 +99,16 @@ export default function Navigation() {
                 >
                   Newsletter
                 </NavigationLink>
+              </li>
+              <li>
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-medium transition-colors duration-150 ease-in-out hover:text-red focus:text-red"
+                  href={SHOP_URL}
+                >
+                  Shop
+                </a>
               </li>
               <li>
                 <ul className="flex space-x-6">
