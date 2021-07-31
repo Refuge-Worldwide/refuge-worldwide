@@ -47,7 +47,7 @@ export default function SearchPage({ preview, data }: Page) {
     key: "title",
     allowTypo: true,
     threshold: -999,
-    limit: 10,
+    limit: 20,
   });
 
   const showResults = useMemo(() => {
@@ -102,6 +102,7 @@ export default function SearchPage({ preview, data }: Page) {
               autoCapitalize="off"
               autoComplete="off"
               autoCorrect="off"
+              autoFocus
               className="pill-input-invert"
               id="search"
               name="search"
