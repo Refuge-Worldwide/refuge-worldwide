@@ -102,3 +102,51 @@ export default function ArticlePreview({
     </Link>
   );
 }
+
+export function ArticlePreviewForSearch({
+  slug,
+  title,
+  date,
+  articleType,
+  coverImage,
+}: ArticlePreview) {
+  return (
+    <Link href={`/news/${slug}`}>
+      <a aria-labelledby={`article-${slug}`}>
+        <article className="text-small font-medium leading-snug">
+          <div className="flex">
+            <Image
+              key={coverImage.sys.id}
+              src={coverImage.url}
+              loader={contentful}
+              width={590}
+              height={345}
+              objectFit="cover"
+              objectPosition="center"
+              alt={title}
+              className="bg-black bg-opacity-10"
+            />
+          </div>
+
+          <div className="h-4" />
+
+          <p>
+            <Date dateString={date} formatString={"DD.MM.YYYY"} />
+          </p>
+
+          <h2 id={`article-${slug}`} className="font-sans leading-none">
+            {title}
+          </h2>
+
+          <div className="h-2" />
+
+          <ul className="flex flex-wrap">
+            <li>
+              <Badge text={articleType} />
+            </li>
+          </ul>
+        </article>
+      </a>
+    </Link>
+  );
+}

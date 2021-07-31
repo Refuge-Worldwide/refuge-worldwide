@@ -5,6 +5,7 @@ import { useState } from "react";
 import { INSTAGRAM_URL } from "../constants";
 import Instagram from "../icons/instagram";
 import { Menu } from "../icons/menu";
+import Search from "../icons/search";
 import NavigationLink from "./navigationLink";
 
 const MobileMenu = dynamic(() => import("../components/mobileMenu"));
@@ -102,6 +103,15 @@ export default function Navigation() {
               </li>
               <li>
                 <ul className="flex space-x-6">
+                  <li>
+                    <NavigationLink
+                      href="/search"
+                      activeClassName="text-red"
+                      className="hover:text-red focus:text-red"
+                    >
+                      <Search />
+                    </NavigationLink>
+                  </li>
                   <li>
                     <a
                       target="_blank"

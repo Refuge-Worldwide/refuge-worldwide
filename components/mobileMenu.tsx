@@ -102,6 +102,11 @@ export default function MobileMenu({
           </MobileMenuLink>
         </li>
         <li>
+          <MobileMenuLink href="/search" activeClassName="text-red">
+            Search
+          </MobileMenuLink>
+        </li>
+        <li>
           <ul className="flex space-x-8">
             <li>
               <a target="_blank" rel="noopener noreferrer" href={INSTAGRAM_URL}>

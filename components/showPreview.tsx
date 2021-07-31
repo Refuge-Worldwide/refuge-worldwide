@@ -89,3 +89,58 @@ export default function ShowPreview({
     </article>
   );
 }
+
+export function ShowPreviewWithoutPlayer({
+  slug,
+  title,
+  coverImage,
+  genresCollection,
+  date,
+  className = "",
+}: ShowPreviewProps) {
+  const cachedClassNames = classNames("text-small", className);
+
+  const genres = parseGenres(genresCollection).slice(0, 3);
+
+  return (
+    <Link href={`/radio/${slug}`}>
+      <a aria-labelledby={`show-${slug}`}>
+        <article className={cachedClassNames}>
+          <div className="flex">
+            <Image
+              key={coverImage.sys.id}
+              src={coverImage.url}
+              loader={contentful}
+              width={590}
+              height={345}
+              objectFit="cover"
+              objectPosition="center"
+              alt={title}
+              className="bg-black bg-opacity-10"
+            />
+          </div>
+
+          <div className="h-2" />
+
+          <h2 id={`show-${slug}`} className="font-sans font-medium truncate">
+            {title}
+          </h2>
+
+          <p>
+            <Date dateString={date} />
+          </p>
+
+          <div className="h-2" />
+
+          <ul className="w-full flex flex-wrap -mr-2 -mb-2">
+            {genres.map((genre, i) => (
+              <li key={i} className="pr-2 pb-2">
+                <Badge small text={genre} />
+              </li>
+            ))}
+          </ul>
+        </article>
+      </a>
+    </Link>
+  );
+}
