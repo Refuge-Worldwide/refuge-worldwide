@@ -86,6 +86,11 @@ export default function SearchPage({ preview, data }: Page) {
     return dataset.filter((el) => el.type === "ARTIST").slice(0, 5);
   }, [result, search]);
 
+  const hasNoResults =
+    showResults.length === 0 &&
+    artistResults.length === 0 &&
+    articleResults.length === 0;
+
   return (
     <Layout preview={preview}>
       <PageMeta title="Search | Refuge Worldwide" path="search/" />
@@ -109,12 +114,13 @@ export default function SearchPage({ preview, data }: Page) {
         </div>
       </section>
 
-      {search && (
+      {hasNoResults && (
         <section>
           <div className="container-md p-4 sm:p-8">
             <div className="pt-10">
               <p>
-                Results for <span className="font-medium">{`"${search}"`}</span>
+                No results for{" "}
+                <span className="font-medium">{`"${search}"`}</span>
               </p>
             </div>
           </div>
