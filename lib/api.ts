@@ -888,3 +888,100 @@ export async function getPaths() {
     artists: extractCollection<{ slug: string }>(data, "artists"),
   };
 }
+
+export async function getSearchData() {
+  const today = dayjs();
+
+  const articleData = await contentful(/* GraphQL */ `
+    query {
+      articleCollection(limit: 2500, order: date_DESC) {
+        items {
+          coverImage {
+            sys {
+              id
+            }
+            title
+            description
+            url
+            width
+            height
+          }
+          title
+          slug
+          date
+          articleType
+        }
+      }
+    }
+  `);
+
+  const artistData = await contentful(/* GraphQL */ `
+    query {
+      artistCollection(limit: 2500, order: name_ASC) {
+        items {
+          photo {
+            sys {
+              id
+            }
+            title
+            description
+            url
+            width
+            height
+          }
+          title: name
+          slug
+        }
+      }
+    }
+  `);
+
+  const showData = await contentful(/* GraphQL */ `
+    query {
+      showCollection(limit: 2200, order: date_DESC) {
+        items {
+          coverImage {
+            sys {
+              id
+            }
+            title
+            description
+            url
+            width
+            height
+          }
+          genresCollection(limit: 3) {
+            items {
+              name
+            }
+          }
+          title
+          slug
+          date
+        }
+      }
+    }
+  `);
+
+  const isPastFilter = (show: ShowInterface) =>
+    dayjs(show.date).isBefore(today);
+
+  const articleCollection = extractCollection<ArticleInterface>(
+    articleData,
+    "articleCollection"
+  ).map((el) => ({ ...el, type: "ARTICLE" }));
+
+  const artistCollection = extractCollection<ArtistInterface>(
+    artistData,
+    "artistCollection"
+  ).map((el) => ({ ...el, type: "ARTIST" }));
+
+  const showCollection = extractCollection<ShowInterface>(
+    showData,
+    "showCollection"
+  )
+    .filter(isPastFilter)
+    .map((el) => ({ ...el, type: "SHOW" }));
+
+  return [...showCollection, ...articleCollection, ...artistCollection];
+}
