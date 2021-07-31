@@ -97,7 +97,7 @@ export default function SearchPage({ preview, data }: Page) {
 
       <section className="bg-black">
         <div className="container-md p-4 sm:p-8">
-          <div className="py-6">
+          <div className="pb-3 sm:pb-6">
             <input
               autoCapitalize="off"
               autoComplete="off"
