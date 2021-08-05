@@ -31,22 +31,30 @@ export default function Artist({ artist, relatedShows, preview }: Page) {
 }
 
 export async function getStaticProps({ params, preview = false }) {
-  const data = await getArtistAndMoreShows(params.slug, preview);
+  try {
+    const data = await getArtistAndMoreShows(params.slug, preview);
 
-  if (!data) {
+    if (!data) {
+      return {
+        notFound: true,
+      };
+    }
+
+    return {
+      props: {
+        preview,
+        artist: data.artist,
+        relatedShows: data?.relatedShows,
+      },
+      revalidate: 60,
+    };
+  } catch (error) {
+    console.error(error);
+
     return {
       notFound: true,
     };
   }
-
-  return {
-    props: {
-      preview,
-      artist: data.artist,
-      relatedShows: data?.relatedShows,
-    },
-    revalidate: 60,
-  };
 }
 
 export async function getStaticPaths() {

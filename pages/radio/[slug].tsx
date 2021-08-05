@@ -33,22 +33,30 @@ export default function Show({ show, relatedShows, preview }: Props) {
 }
 
 export async function getStaticProps({ params, preview = false }) {
-  const data = await getShowAndMoreShows(params.slug, preview);
+  try {
+    const data = await getShowAndMoreShows(params.slug, preview);
 
-  if (!data) {
+    if (!data) {
+      return {
+        notFound: true,
+      };
+    }
+
+    return {
+      props: {
+        preview,
+        show: data.show,
+        relatedShows: data?.relatedShows,
+      },
+      revalidate: 60,
+    };
+  } catch (error) {
+    console.error(error);
+
     return {
       notFound: true,
     };
   }
-
-  return {
-    props: {
-      preview,
-      show: data.show,
-      relatedShows: data?.relatedShows,
-    },
-    revalidate: 60,
-  };
 }
 
 export async function getStaticPaths() {

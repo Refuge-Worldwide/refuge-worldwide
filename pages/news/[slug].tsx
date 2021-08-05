@@ -33,16 +33,30 @@ export default function Article({ article, relatedArticles, preview }: Page) {
 }
 
 export async function getStaticProps({ params, preview = false }) {
-  const data = await getArticleAndMoreArticles(params.slug, preview);
+  try {
+    const data = await getArticleAndMoreArticles(params.slug, preview);
 
-  return {
-    props: {
-      preview,
-      article: data.article,
-      relatedArticles: data?.relatedArticles,
-    },
-    revalidate: 60,
-  };
+    if (!data) {
+      return {
+        notFound: true,
+      };
+    }
+
+    return {
+      props: {
+        preview,
+        article: data.article,
+        relatedArticles: data?.relatedArticles,
+      },
+      revalidate: 60,
+    };
+  } catch (error) {
+    console.error(error);
+
+    return {
+      notFound: true,
+    };
+  }
 }
 
 export async function getStaticPaths() {
