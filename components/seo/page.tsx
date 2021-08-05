@@ -6,7 +6,7 @@ export default function PageMeta({
   path,
 }: {
   title: string;
-  path: string;
+  path?: string;
 }) {
   const photo = {
     url: `${SEO.ROOT}/og-thumb.jpg`,
@@ -26,7 +26,7 @@ export default function PageMeta({
       <meta property="og:image:height" content="1000" />
       <meta property="og:image:alt" content={photo.title} />
 
-      <meta property="og:url" content={`${SEO.ROOT}/${path}`} />
+      {path && <meta property="og:url" content={`${SEO.ROOT}/${path}`} />}
 
       <meta property="og:type" content="website" />
 
