@@ -3,9 +3,10 @@ import VisuallyHidden from "@reach/visually-hidden";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useRef } from "react";
-import { INSTAGRAM_URL } from "../constants";
+import { INSTAGRAM_URL, TWITTER_URL } from "../constants";
 import Instagram from "../icons/instagram";
 import { Close } from "../icons/menu";
+import Twitter from "../icons/twitter";
 import MobileMenuLink from "./mobileMenuLink";
 
 export default function MobileMenu({
@@ -111,6 +112,11 @@ export default function MobileMenu({
             <li>
               <a target="_blank" rel="noopener noreferrer" href={INSTAGRAM_URL}>
                 <Instagram size={40} />
+              </a>
+            </li>
+            <li>
+              <a target="_blank" rel="noopener noreferrer" href={TWITTER_URL}>
+                <Twitter size={40} />
               </a>
             </li>
           </ul>
