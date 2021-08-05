@@ -90,17 +90,45 @@ module.exports = {
             /**
              * Headers
              */
-            "h1, h2, h3, h4, h5, h6": {
+            h1: {
               color: theme("colors.black"),
               fontWeight: "normal",
-            },
-            "h1, h2, h3": {
               fontSize: "30px",
               lineHeight: "38px",
 
               textAlign: "center",
             },
-            "h4, h5, h6": {
+            h2: {
+              color: theme("colors.black"),
+              fontWeight: "normal",
+              fontSize: "30px",
+              lineHeight: "38px",
+
+              textAlign: "center",
+            },
+            h3: {
+              color: theme("colors.black"),
+              fontWeight: "normal",
+              fontSize: "30px",
+              lineHeight: "38px",
+
+              textAlign: "center",
+            },
+            h4: {
+              color: theme("colors.black"),
+              fontWeight: "normal",
+              fontSize: "20px",
+              lineHeight: "30px",
+            },
+            h5: {
+              color: theme("colors.black"),
+              fontWeight: "normal",
+              fontSize: "20px",
+              lineHeight: "30px",
+            },
+            h6: {
+              color: theme("colors.black"),
+              fontWeight: "normal",
               fontSize: "20px",
               lineHeight: "30px",
             },
@@ -123,13 +151,33 @@ module.exports = {
             /**
              * Headers
              */
-            "h1, h2, h3": {
+            h1: {
               fontSize: "45px",
               lineHeight: "50px",
 
               textAlign: "center",
             },
-            "h4, h5, h6": {
+            h2: {
+              fontSize: "45px",
+              lineHeight: "50px",
+
+              textAlign: "center",
+            },
+            h3: {
+              fontSize: "45px",
+              lineHeight: "50px",
+
+              textAlign: "center",
+            },
+            h4: {
+              fontSize: "30px",
+              lineHeight: "38px",
+            },
+            h5: {
+              fontSize: "30px",
+              lineHeight: "38px",
+            },
+            h6: {
               fontSize: "30px",
               lineHeight: "38px",
             },
