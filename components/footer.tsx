@@ -87,6 +87,11 @@ export default function Footer() {
               </a>
             </li>
             <li>
+              <Link href="/bookings">
+                <a className="font-medium">Bookings</a>
+              </Link>
+            </li>
+            <li>
               <a target="_blank" rel="noopener noreferrer" href={TWITTER_URL}>
                 <TwitterFilled />
               </a>

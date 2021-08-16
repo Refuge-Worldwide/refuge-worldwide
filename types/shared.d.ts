@@ -124,3 +124,7 @@ export type ErrorPayloadMessage = {
 export type ErrorPayload = {
   errors: ErrorPayloadMessage[];
 };
+
+export type BookingsPageData = {
+  bookingPassword: string;
+};
