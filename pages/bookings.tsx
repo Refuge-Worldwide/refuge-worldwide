@@ -99,7 +99,7 @@ function CalendlyEmbed({ shouldInit }: { shouldInit: boolean }) {
     }
 
     (window as any).Calendly.initInlineWidget({
-      url: "https://calendly.com/studio-booking-refuge-worldwide",
+      url: "https://calendly.com/studio-booking-refuge-worldwide/booking",
       parentElement: document.getElementById("calendly-embed"),
       prefill: {},
       utm: {},
