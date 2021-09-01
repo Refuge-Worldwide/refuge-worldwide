@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import fuzzysort from "fuzzysort";
+import { InferGetStaticPropsType } from "next";
 import { ChangeEvent, useMemo, useState } from "react";
 import { ArticlePreviewForSearch } from "../components/articlePreview";
 import ArtistPreview from "../components/artistPreview";
@@ -27,14 +28,21 @@ interface SearchArticleInterface extends ArticleInterface {
   type: "ARTICLE";
 }
 
-interface Page extends JSX.Element {
-  preview: boolean;
-  data: Array<
-    SearchShowInterface | SearchArtistInterface | SearchArticleInterface
-  >;
+export async function getStaticProps({ preview = false }) {
+  return {
+    props: {
+      preview,
+      data: (await getSearchData()) as Array<
+        SearchShowInterface | SearchArtistInterface | SearchArticleInterface
+      >,
+    },
+  };
 }
 
-export default function SearchPage({ preview, data }: Page) {
+export default function SearchPage({
+  preview,
+  data,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   const [search, searchSet] = useState("");
   const searchOnChange = (event: ChangeEvent<HTMLInputElement>) =>
     searchSet(event.target.value?.toLowerCase());
@@ -196,13 +204,4 @@ export default function SearchPage({ preview, data }: Page) {
       <div className="h-10" />
     </Layout>
   );
-}
-
-export async function getStaticProps({ preview = false }) {
-  return {
-    props: {
-      preview,
-      data: await getSearchData(),
-    },
-  };
 }
