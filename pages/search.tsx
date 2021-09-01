@@ -29,11 +29,9 @@ interface SearchArticleInterface extends ArticleInterface {
 
 interface Page extends JSX.Element {
   preview: boolean;
-  data: (
-    | SearchShowInterface
-    | SearchArtistInterface
-    | SearchArticleInterface
-  )[];
+  data: Array<
+    SearchShowInterface | SearchArtistInterface | SearchArticleInterface
+  >;
 }
 
 export default function SearchPage({ preview, data }: Page) {
