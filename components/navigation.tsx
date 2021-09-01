@@ -1,4 +1,3 @@
-import VisuallyHidden from "@reach/visually-hidden";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useState } from "react";
