@@ -18,7 +18,12 @@ import {
   sort,
 } from "../util";
 import { ENDPOINT } from "./constants";
-import { ArtistFragment } from "./fragments";
+import {
+  ArticlePreviewFragment,
+  AllArtistFragment,
+  FeaturedArticleFragment,
+  ShowPreviewFragment,
+} from "./fragments";
 
 const LIMITS = {
   SHOWS: 550,
@@ -49,6 +54,64 @@ export async function contentful(query: string, preview = false) {
   }
 
   throw new Error(getErrorMessage(await r.json()));
+}
+
+export async function getHomePage() {
+  const today = dayjs().format("YYYY-MM-DD");
+
+  const data = await contentful(/* GraphQL */ `
+    query {
+      featuredArticles: articleCollection(
+        order: date_DESC
+        where: { isFeatured: false }
+        limit: 3
+      ) {
+        items {
+          ...FeaturedArticleFragment
+        }
+      }
+
+      featuredShows: showCollection(
+        order: [date_DESC, title_ASC]
+        where: { isFeatured: true, date_lt: "${today}" }
+        limit: 16
+      ) {
+        items {
+          ...ShowPreviewFragment
+        }
+      }
+
+      latestArticles: articleCollection(
+        order: date_DESC
+        where: { isFeatured: false }
+        limit: 3
+      ) {
+        items {
+          ...ArticlePreviewFragment
+        }
+      }
+
+      nextUp: sectionToday(id: "2bP8MlTMBYfe1paaxwwziy") {
+        content {
+          json
+        }
+      }
+    }
+
+    ${ShowPreviewFragment}
+    ${FeaturedArticleFragment}
+    ${ArticlePreviewFragment}
+  `);
+
+  return {
+    featuredArticles: extractCollection<ArticleInterface>(
+      data,
+      "featuredArticles"
+    ),
+    featuredShows: extractCollection<ShowInterface>(data, "featuredShows"),
+    latestArticles: extractCollection<ArticleInterface>(data, "latestArticles"),
+    nextUp: extractPage(data, "nextUp") as NextUpSection,
+  };
 }
 
 export async function getAboutPage(preview: boolean): Promise<AboutPageData> {
@@ -195,22 +258,6 @@ export async function getBookingsPage(
   return extractPage(data, "pageBooking");
 }
 
-export async function getNextUpSection(
-  preview: boolean
-): Promise<NextUpSection> {
-  const data = await contentful(/* GraphQL */ `
-    {
-      sectionToday(id: "2bP8MlTMBYfe1paaxwwziy", preview: ${preview}) {
-        content {
-          json
-        }
-      }
-    }
-  `);
-
-  return extractPage(data, "sectionToday");
-}
-
 export async function getAllArtists(
   preview: boolean,
   limit = LIMITS.ARTISTS
@@ -220,12 +267,12 @@ export async function getAllArtists(
       query {
         artistCollection(order: name_ASC, preview: ${preview}, limit: ${limit}) {
           items {
-            ...ArtistFragment
+            ...AllArtistFragment
           }
         }
       }
 
-      ${ArtistFragment}
+      ${AllArtistFragment}
     `,
     preview
   );
@@ -236,7 +283,7 @@ export async function getAllArtists(
 export async function getAllArtistPaths() {
   const data = await contentful(/* GraphQL */ `
     query {
-      artistCollection(where: { slug_exists: true }, limit: 500) {
+      artistCollection(where: { slug_exists: true }, limit: ${LIMITS.ARTISTS}) {
         items {
           slug
         }
@@ -478,67 +525,6 @@ export async function getGenres(preview: boolean) {
   return uniqueGenres;
 }
 
-export async function getFeaturedShows(
-  preview: boolean
-): Promise<ShowInterface[]> {
-  const data = await contentful(
-    /* GraphQL */ `
-      query {
-        showCollection(
-          order: date_DESC
-          where: { isFeatured: true }
-          preview: ${preview}
-        ) {
-          items {
-            title
-            date
-            slug
-            mixcloudLink
-            isFeatured
-            coverImage {
-              sys {
-                id
-              }
-              title
-              description
-              url
-              width
-              height
-            }
-            coverImagePosition
-            artistsCollection(limit: 9) {
-              items {
-                name
-                slug
-              }
-            }
-            genresCollection(limit: 9) {
-              items {
-                name
-              }
-            }
-            content {
-              json
-            }
-          }
-        }
-      }
-    `,
-    preview
-  );
-
-  const featuredShows = extractCollection<ShowInterface>(
-    data,
-    "showCollection"
-  );
-
-  const pastFeaturedShows = featuredShows
-    .filter((show) => dayjs(show.date).isBefore(dayjs()))
-    .slice(0, 16);
-
-  return pastFeaturedShows;
-}
-
 export async function getShowAndMoreShows(slug: string, preview: boolean) {
   const today = dayjs();
 
@@ -695,54 +681,7 @@ export async function getAllArticlePaths() {
   return paths;
 }
 
-export async function getLatestArticles(
-  preview: boolean
-): Promise<ArticleInterface[]> {
-  const data = await contentful(
-    /* GraphQL */ `
-      query {
-        articleCollection(
-          order: date_DESC
-          where: { isFeatured: false }
-          limit: 3
-          preview: ${preview}
-        ) {
-          items {
-            title
-            subtitle
-            articleType
-            author { 
-              name
-            }
-            date
-            slug
-            coverImage {
-              sys {
-                id
-              }
-              title
-              description
-              url
-              width
-              height
-            }
-            coverImagePosition
-            content {
-              json
-            }
-          }
-        }
-      }
-    `,
-    preview
-  );
-
-  return extractCollection(data, "articleCollection");
-}
-
-export async function getFeaturedArticles(
-  preview: boolean
-): Promise<ArticleInterface[]> {
+export async function getFeaturedArticles(preview: boolean) {
   const data = await contentful(
     /* GraphQL */ `
       query {
@@ -753,36 +692,17 @@ export async function getFeaturedArticles(
           preview: ${preview}
         ) {
           items {
-            title
-            subtitle
-            articleType
-            author { 
-              name
-            }
-            date
-            slug
-            coverImage {
-              sys {
-                id
-              }
-              title
-              description
-              url
-              width
-              height
-            }
-            coverImagePosition
-            content {
-              json
-            }
+            ...FeaturedArticleFragment
           }
         }
       }
+
+      ${FeaturedArticleFragment}
     `,
     preview
   );
 
-  return extractCollection(data, "articleCollection");
+  return extractCollection<ArticleInterface>(data, "articleCollection");
 }
 
 export async function getArticleAndMoreArticles(
