@@ -511,34 +511,33 @@ export async function getUpcomingAndPastShows(preview: boolean) {
   /**
    * Upcoming & Featured
    */
-  const upcoming = shows
-    .sort((a, b) => (dayjs(a.date).isBefore(b.date) ? -1 : 1))
-    .filter((show) => dayjs(show.date).isAfter(today) && show.isFeatured);
+  const upcomingShows = shows
+    .sort(sort.date_ASC)
+    .filter((show) => dayjs(show.date).isAfter(today))
+    .filter((show) => show.isFeatured);
 
   /**
    * All Past Shows
    */
-  const past = shows
-    .sort((a, b) => (dayjs(a.date).isAfter(b.date) ? -1 : 1))
+  const pastShows = shows
+    .sort(sort.date_DESC)
     .filter((show) => dayjs(show.date).isBefore(today));
 
-  return {
-    upcoming,
-    past,
-  };
-}
-
-export async function getGenres(preview: boolean) {
-  const { past } = await getUpcomingAndPastShows(preview);
-
-  const allShowGenres = past
+  /**
+   * All Past Show Genres
+   */
+  const pastShowGenres = pastShows
     .flatMap((show) => show.genresCollection.items)
     .filter((genre) => Boolean(genre?.name))
     .map((genre) => genre.name);
 
-  const uniqueGenres = Array.from(new Set(allShowGenres)).sort(sort.alpha);
+  const genres = Array.from(new Set(pastShowGenres)).sort(sort.alpha);
 
-  return uniqueGenres;
+  return {
+    upcomingShows,
+    pastShows,
+    genres,
+  };
 }
 
 export async function getShowAndMoreShows(slug: string, preview: boolean) {

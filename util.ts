@@ -139,6 +139,8 @@ export const sort = {
     a.localeCompare(b, "en", { sensitivity: "base" }),
   date_DESC: (a: ShowInterface, b: ShowInterface) =>
     dayjs(a.date).isAfter(b.date) ? -1 : 1,
+  date_ASC: (a: ShowInterface, b: ShowInterface) =>
+    dayjs(a.date).isBefore(b.date) ? -1 : 1,
 };
 
 export const delay = (time = 1500) => {
