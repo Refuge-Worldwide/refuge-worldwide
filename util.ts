@@ -1,8 +1,10 @@
+import dayjs from "dayjs";
 import { REGEX } from "./constants";
 import {
   ArtistFilterType,
   ArtistInterface,
   GenreInterface,
+  ShowInterface,
 } from "./types/shared";
 
 interface PageResponse {
@@ -134,6 +136,8 @@ export const isServer = typeof window === "undefined";
 export const sort = {
   alpha: (a: string, b: string) =>
     a.localeCompare(b, "en", { sensitivity: "base" }),
+  date_DESC: (a: ShowInterface, b: ShowInterface) =>
+    dayjs(a.date).isAfter(b.date) ? -1 : 1,
 };
 
 export const delay = (time = 1500) => {
