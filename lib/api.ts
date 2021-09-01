@@ -801,7 +801,7 @@ export async function getPaths() {
 }
 
 export async function getSearchData() {
-  const today = dayjs();
+  const today = dayjs().format("YYYY-MM-DD");
 
   const articleData = await contentful(/* GraphQL */ `
     query {
@@ -849,7 +849,11 @@ export async function getSearchData() {
 
   const showData = await contentful(/* GraphQL */ `
     query {
-      showCollection(limit: 2200, order: date_DESC) {
+      showCollection(
+        limit: 2200
+        order: date_DESC
+        where: { date_lt: "${today}" }
+      ) {
         items {
           coverImage {
             sys {
@@ -874,9 +878,6 @@ export async function getSearchData() {
     }
   `);
 
-  const isPastFilter = (show: ShowInterface) =>
-    dayjs(show.date).isBefore(today);
-
   const articleCollection = extractCollection<ArticleInterface>(
     articleData,
     "articleCollection"
@@ -890,9 +891,7 @@ export async function getSearchData() {
   const showCollection = extractCollection<ShowInterface>(
     showData,
     "showCollection"
-  )
-    .filter(isPastFilter)
-    .map((el) => ({ ...el, type: "SHOW" }));
+  ).map((el) => ({ ...el, type: "SHOW" }));
 
   return [...showCollection, ...articleCollection, ...artistCollection];
 }
