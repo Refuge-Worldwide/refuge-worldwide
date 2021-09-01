@@ -431,10 +431,7 @@ export async function getArtistAndRelatedShows(slug: string, preview: boolean) {
   };
 }
 
-export async function getAllShows(
-  preview: boolean,
-  limit = LIMITS.SHOWS
-): Promise<ShowInterface[]> {
+export async function getAllShows(preview: boolean, limit = LIMITS.SHOWS) {
   const data = await contentful(
     /* GraphQL */ `
       query {
@@ -477,7 +474,7 @@ export async function getAllShows(
     preview
   );
 
-  return extractCollection(data, "showCollection");
+  return extractCollection<ShowInterface>(data, "showCollection");
 }
 
 export async function getAllShowPaths() {
@@ -543,7 +540,7 @@ export async function getUpcomingAndPastShows(preview: boolean) {
 export async function getShowAndMoreShows(slug: string, preview: boolean) {
   const today = dayjs();
 
-  const res = await contentful(
+  const data = await contentful(
     /* GraphQL */ `
       query {
         showCollection(
@@ -605,7 +602,7 @@ export async function getShowAndMoreShows(slug: string, preview: boolean) {
     preview
   );
 
-  const entry: ShowInterface = extractCollectionItem(res, "showCollection");
+  const entry: ShowInterface = extractCollectionItem(data, "showCollection");
   const entryGenres = entry.genresCollection.items.map((genre) => genre.name);
 
   const allShows = await getAllShows(preview);
@@ -630,30 +627,6 @@ export async function getShowAndMoreShows(slug: string, preview: boolean) {
     show: entry,
     relatedShows,
   };
-}
-
-export async function getRelatedArticles(preview: boolean, slug: string) {
-  const data = await contentful(
-    /* GraphQL */ `
-      query {
-        articleCollection(
-          order: date_DESC
-          preview: ${preview}
-          limit: 3
-          where: { slug_not: "${slug}" }
-        ) {
-          items {
-            ...RelatedArticleFragment
-          }
-        }
-      }
-
-      ${RelatedArticleFragment}
-    `,
-    preview
-  );
-
-  return extractCollection<ArticleInterface>(data, "articleCollection");
 }
 
 export async function getAllArticlePaths() {
@@ -686,7 +659,7 @@ export async function getArticleAndMoreArticles(
   const data = await contentful(
     /* GraphQL */ `
       query {
-        articleCollection(
+        article: articleCollection(
           limit: 1
           where: { slug: "${slug}" }
           order: date_DESC
@@ -732,16 +705,30 @@ export async function getArticleAndMoreArticles(
             }
           }
         }
+
+        relatedArticles: articleCollection(
+          limit: 3
+          where: { slug_not: "${slug}" }
+          order: date_DESC
+          preview: ${preview}
+        ) {
+          items {
+            ...RelatedArticleFragment
+          }
+        }
       }
+
+      ${RelatedArticleFragment}
     `,
     preview
   );
 
-  const relatedArticles = await getRelatedArticles(preview, slug);
-
   return {
-    article: extractCollectionItem<ArticleInterface>(data, "articleCollection"),
-    relatedArticles,
+    article: extractCollectionItem<ArticleInterface>(data, "article"),
+    relatedArticles: extractCollection<ArticleInterface>(
+      data,
+      "relatedArticles"
+    ),
   };
 }
 

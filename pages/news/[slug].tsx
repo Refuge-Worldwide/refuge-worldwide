@@ -47,8 +47,7 @@ export async function getStaticProps({ params, preview = false }) {
     return {
       props: {
         preview,
-        article: data.article,
-        relatedArticles: data.relatedArticles,
+        ...data,
       },
     };
   } catch (error) {
