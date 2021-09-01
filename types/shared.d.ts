@@ -53,6 +53,13 @@ export type ArtistEntry = {
   linkedFrom?: { showCollection: { items: ShowInterface[] | [] } };
 };
 
+export type AllArtistEntry = {
+  name: string;
+  slug: string;
+  isResident: boolean;
+  photo: CoverImage;
+};
+
 export type ArtistFilterType = "All" | "Residents" | "Guests";
 
 export interface GenreInterface {

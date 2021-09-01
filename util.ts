@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import { REGEX } from "./constants";
 import {
+  AllArtistEntry,
   ArtistFilterType,
   ArtistInterface,
   GenreInterface,
@@ -56,14 +57,14 @@ export const extractCollectionItem = <T>(
 
 interface GroupedArtists {
   alphabet: string;
-  artists: ArtistInterface[];
+  artists: AllArtistEntry[];
 }
 
 export const sortAndGroup = (
-  data: ArtistInterface[],
+  data: AllArtistEntry[],
   role: ArtistFilterType
 ): GroupedArtists[] => {
-  const residencyFilter = (artist: ArtistInterface) => {
+  const residencyFilter = (artist: AllArtistEntry) => {
     if (role === "All") return artist;
     if (role === "Residents" && artist.isResident === true) return artist;
     if (role === "Guests" && artist.isResident === false) return artist;
@@ -73,10 +74,10 @@ export const sortAndGroup = (
     accumulator: {
       [key: string]: {
         alphabet: string;
-        artists: ArtistInterface[];
+        artists: AllArtistEntry[];
       };
     },
-    current: ArtistInterface
+    current: AllArtistEntry
   ) => {
     let alphabet = current.name[0];
 

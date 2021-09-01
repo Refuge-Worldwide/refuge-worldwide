@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import type {
   AboutPageData,
+  AllArtistEntry,
   ArticleInterface,
   ArtistEntry,
   ArtistInterface,
@@ -14,7 +15,6 @@ import type {
 import {
   extractCollection,
   extractCollectionItem,
-  extractLinkedFromCollection,
   extractPage,
   sort,
 } from "../util";
@@ -298,10 +298,7 @@ export async function getNewsPage(preview: boolean, limit = LIMITS.ARTICLES) {
   };
 }
 
-export async function getAllArtists(
-  preview: boolean,
-  limit = LIMITS.ARTISTS
-): Promise<ArtistInterface[]> {
+export async function getAllArtists(preview: boolean, limit = LIMITS.ARTISTS) {
   const data = await contentful(
     /* GraphQL */ `
       query {
@@ -317,7 +314,7 @@ export async function getAllArtists(
     preview
   );
 
-  return extractCollection(data, "artistCollection");
+  return extractCollection<AllArtistEntry>(data, "artistCollection");
 }
 
 export async function getAllArtistPaths() {
