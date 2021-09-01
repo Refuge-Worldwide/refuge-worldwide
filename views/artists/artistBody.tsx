@@ -1,10 +1,14 @@
 import { Fragment } from "react";
-import { renderRichTextWithImages } from "../../lib/rich-text";
-import { ArtistInterface } from "../../types/shared";
 import Pill from "../../components/pill";
 import ShareButton from "../../components/shareButton";
+import { renderRichTextWithImages } from "../../lib/rich-text";
+import { ArtistEntry } from "../../types/shared";
 
-export default function ArtistBody({ slug, name, content }: ArtistInterface) {
+export default function ArtistBody({
+  slug,
+  name,
+  content,
+}: Pick<ArtistEntry, "slug" | "content" | "name">) {
   return (
     <Fragment>
       <section>

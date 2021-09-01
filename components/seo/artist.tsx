@@ -1,8 +1,12 @@
 import Head from "next/head";
 import { SEO } from "../../constants";
-import { ArtistInterface } from "../../types/shared";
+import { ArtistEntry } from "../../types/shared";
 
-export default function ArtistMeta({ photo, name, slug }: ArtistInterface) {
+export default function ArtistMeta({
+  photo,
+  name,
+  slug,
+}: Pick<ArtistEntry, "photo" | "name" | "slug">) {
   const image = `${photo.url}?w=1200&h=630&fit=pad`;
 
   return (

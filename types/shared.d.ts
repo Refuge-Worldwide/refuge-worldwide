@@ -43,6 +43,16 @@ export interface ArtistInterface {
   content?: Content;
 }
 
+export type ArtistEntry = {
+  sys: { id: string };
+  name: string;
+  slug: string;
+  photo: CoverImage;
+  coverImagePosition: CoverImagePosition;
+  content?: Content;
+  linkedFrom?: { showCollection: { items: ShowInterface[] | [] } };
+};
+
 export type ArtistFilterType = "All" | "Residents" | "Guests";
 
 export interface GenreInterface {
