@@ -46,7 +46,6 @@ export async function getStaticProps({ params, preview = false }) {
         artist: data.artist,
         relatedShows: data?.relatedShows,
       },
-      revalidate: 60,
     };
   } catch (error) {
     console.error(error);
