@@ -1,5 +1,4 @@
 import { Dialog } from "@reach/dialog";
-import VisuallyHidden from "@reach/visually-hidden";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useRef } from "react";
@@ -59,7 +58,7 @@ export default function MobileMenu({
                 onClick={onDismiss}
                 className="flex focus:outline-none focus:ring-4"
               >
-                <VisuallyHidden>Close</VisuallyHidden>
+                <span className="sr-only">Close</span>
                 <span aria-hidden>
                   <Close />
                 </span>

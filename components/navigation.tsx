@@ -38,7 +38,7 @@ export default function Navigation() {
               onClick={openMenu}
               className="flex focus:outline-none focus:ring-4"
             >
-              <VisuallyHidden>Open Menu</VisuallyHidden>
+              <span className="sr-only">Open Menu</span>
               <span aria-hidden>
                 <Menu />
               </span>
