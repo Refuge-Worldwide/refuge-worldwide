@@ -44,19 +44,15 @@
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^10.2.3",
-    "@next/eslint-plugin-next": "^10.2.3",
     "@tailwindcss/forms": "^0.3.3",
     "@tailwindcss/typography": "^0.4.1",
     "@types/classnames": "^2.3.1",
-    "@types/node": "^15.6.2",
-    "@types/react": "^17.0.9",
+    "@types/react": "^17.0.19",
     "@types/smoothscroll-polyfill": "^0.3.1",
-    "@types/wicg-mediasession": "^1.1.0",
-    "@typescript-eslint/eslint-plugin": "^4.26.0",
-    "@typescript-eslint/parser": "^4.26.0",
+    "@types/wicg-mediasession": "^1.1.2",
     "autoprefixer": "^10.3.3",
-    "eslint": "^7.27.0",
-    "eslint-plugin-react": "^7.24.0",
+    "eslint": "^7.32.0",
+    "eslint-config-next": "^11.1.2",
     "husky": "^4.3.8",
     "lint-staged": "^11.0.0",
     "next-sitemap": "^1.6.99",
@@ -64,6 +60,6 @@
     "prettier": "^2.3.0",
     "pretty-quick": "^3.1.0",
     "tailwindcss": "^2.2.9",
-    "typescript": "^4.3.2"
+    "typescript": "^4.4.2"
   }
 }
