@@ -47,10 +47,10 @@ export const extractLinkedFromCollection = <T>(
   linkedFromKey: string
 ): T[] => fetchResponse?.data?.[key]?.linkedFrom?.[linkedFromKey]?.items;
 
-export const extractCollectionItem = (
+export const extractCollectionItem = <T>(
   fetchResponse: CollectionResponse,
   key: string
-) => fetchResponse?.data?.[key]?.items?.[0];
+): T => fetchResponse?.data?.[key]?.items?.[0];
 
 interface GroupedArtists {
   alphabet: string;

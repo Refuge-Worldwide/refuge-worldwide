@@ -3,8 +3,8 @@ import type {
   AboutPageData,
   ArticleInterface,
   ArtistInterface,
-  ErrorPayload,
   BookingsPageData,
+  ErrorPayload,
   NewsletterPageData,
   NextUpSection,
   ShowInterface,
@@ -19,9 +19,10 @@ import {
 } from "../util";
 import { ENDPOINT } from "./constants";
 import {
-  ArticlePreviewFragment,
   AllArtistFragment,
+  ArticlePreviewFragment,
   FeaturedArticleFragment,
+  RelatedArticleFragment,
   ShowPreviewFragment,
 } from "./fragments";
 
@@ -256,6 +257,44 @@ export async function getBookingsPage(
   `);
 
   return extractPage(data, "pageBooking");
+}
+
+export async function getNewsPage(preview: boolean, limit = LIMITS.ARTICLES) {
+  const data = await contentful(/* GraphQL */ `
+    query {
+      articles: articleCollection(
+        order: date_DESC
+        preview: ${preview}
+        limit: ${limit}
+      ) {
+        items {
+          ...ArticlePreviewFragment
+        }
+      }
+
+      featuredArticles: articleCollection(
+        where: { isFeatured: true }
+        order: date_DESC
+        limit: 3
+        preview: ${preview}
+      ) {
+        items {
+          ...FeaturedArticleFragment
+        }
+      }
+    }
+
+    ${ArticlePreviewFragment}
+    ${FeaturedArticleFragment}
+  `);
+
+  return {
+    articles: extractCollection<ArticleInterface>(data, "articles"),
+    featuredArticles: extractCollection<ArticleInterface>(
+      data,
+      "featuredArticles"
+    ),
+  };
 }
 
 export async function getAllArtists(
@@ -617,45 +656,28 @@ export async function getShowAndMoreShows(slug: string, preview: boolean) {
   };
 }
 
-export async function getAllArticles(
-  preview: boolean,
-  limit = LIMITS.ARTICLES
-): Promise<ArticleInterface[]> {
+export async function getRelatedArticles(preview: boolean, slug: string) {
   const data = await contentful(
     /* GraphQL */ `
       query {
-        articleCollection(order: date_DESC, preview: ${preview}, limit: ${limit}) {
+        articleCollection(
+          order: date_DESC
+          preview: ${preview}
+          limit: 3
+          where: { slug_not: "${slug}" }
+        ) {
           items {
-            title
-            subtitle
-            articleType
-            author { 
-              name
-            }
-            date
-            slug
-            coverImage {
-              sys {
-                id
-              }
-              title
-              description
-              url
-              width
-              height
-            }
-            coverImagePosition
-            content {
-              json
-            }
+            ...RelatedArticleFragment
           }
         }
       }
+
+      ${RelatedArticleFragment}
     `,
     preview
   );
 
-  return extractCollection(data, "articleCollection");
+  return extractCollection<ArticleInterface>(data, "articleCollection");
 }
 
 export async function getAllArticlePaths() {
@@ -681,38 +703,11 @@ export async function getAllArticlePaths() {
   return paths;
 }
 
-export async function getFeaturedArticles(preview: boolean) {
-  const data = await contentful(
-    /* GraphQL */ `
-      query {
-        articleCollection(
-          where: { isFeatured: true }
-          order: date_DESC
-          limit: 3
-          preview: ${preview}
-        ) {
-          items {
-            ...FeaturedArticleFragment
-          }
-        }
-      }
-
-      ${FeaturedArticleFragment}
-    `,
-    preview
-  );
-
-  return extractCollection<ArticleInterface>(data, "articleCollection");
-}
-
 export async function getArticleAndMoreArticles(
   slug: string,
   preview: boolean
-): Promise<{
-  article: ArticleInterface;
-  relatedArticles: ArticleInterface[];
-}> {
-  const entry = await contentful(
+) {
+  const data = await contentful(
     /* GraphQL */ `
       query {
         articleCollection(
@@ -766,18 +761,10 @@ export async function getArticleAndMoreArticles(
     preview
   );
 
-  const allArticles = await getAllArticles(preview);
-
-  const relatedArticles = allArticles
-    .filter((article) => {
-      const isNotOwnArticle = article.slug !== slug;
-
-      return isNotOwnArticle;
-    })
-    .slice(0, 3);
+  const relatedArticles = await getRelatedArticles(preview, slug);
 
   return {
-    article: extractCollectionItem(entry, "articleCollection"),
+    article: extractCollectionItem<ArticleInterface>(data, "articleCollection"),
     relatedArticles,
   };
 }
