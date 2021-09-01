@@ -18,6 +18,7 @@ import {
   sort,
 } from "../util";
 import { ENDPOINT } from "./constants";
+import { ArtistFragment } from "./fragments";
 
 const LIMITS = {
   SHOWS: 550,
@@ -44,9 +45,7 @@ export async function contentful(query: string, preview = false) {
   });
 
   if (r.ok) {
-    const data = await r.json();
-
-    return data;
+    return r.json();
   }
 
   throw new Error(getErrorMessage(await r.json()));
@@ -214,29 +213,19 @@ export async function getNextUpSection(
 
 export async function getAllArtists(
   preview: boolean,
-  limit = 500
+  limit = LIMITS.ARTISTS
 ): Promise<ArtistInterface[]> {
   const data = await contentful(
     /* GraphQL */ `
       query {
         artistCollection(order: name_ASC, preview: ${preview}, limit: ${limit}) {
           items {
-            name
-            slug
-            isResident: role
-            photo {
-              sys {
-                id
-              }
-              title
-              description
-              url
-              width
-              height
-            }
+            ...ArtistFragment
           }
         }
       }
+
+      ${ArtistFragment}
     `,
     preview
   );
