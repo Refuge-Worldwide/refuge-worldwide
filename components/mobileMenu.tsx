@@ -26,7 +26,7 @@ export default function MobileMenu({
     return () => {
       router.events.off("routeChangeStart", onDismiss);
     };
-  }, [router]);
+  }, [router, onDismiss]);
 
   return (
     <Dialog
