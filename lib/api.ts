@@ -36,12 +36,8 @@ async function contentfulWithCache(
   const value = memoryCache.get(key);
 
   if (value) {
-    console.log(key, "HIT");
-
     return value;
   } else {
-    console.log(key, "MISS");
-
     const data = await contentful(query, preview);
 
     memoryCache.put(key, data, 1000 * 60 * 60);
