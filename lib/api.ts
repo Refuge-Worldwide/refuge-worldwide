@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import memoryCache from "memory-cache";
 import type {
   AboutPageData,
   AllArtistEntry,
@@ -26,6 +27,28 @@ import {
   RelatedArticleFragment,
   ShowPreviewFragment,
 } from "./fragments";
+
+async function contentfulWithCache(
+  key: string,
+  query: string,
+  preview = false
+) {
+  const value = memoryCache.get(key);
+
+  if (value) {
+    console.log(key, "HIT");
+
+    return value;
+  } else {
+    console.log(key, "MISS");
+
+    const data = await contentful(query, preview);
+
+    memoryCache.put(key, data, 1000 * 60 * 60);
+
+    return data;
+  }
+}
 
 const LIMITS = {
   SHOWS: 550,
@@ -432,7 +455,8 @@ export async function getArtistAndRelatedShows(slug: string, preview: boolean) {
 }
 
 export async function getAllShows(preview: boolean, limit = LIMITS.SHOWS) {
-  const data = await contentful(
+  const data = await contentfulWithCache(
+    "getAllShows",
     /* GraphQL */ `
       query {
         showCollection(order: date_DESC, where: { artistsCollection_exists: true }, preview: ${preview}, limit: ${limit}) {
