@@ -37,9 +37,9 @@
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-ridge-state": "^4.1.7",
-    "react-use": "^17.2.4",
+    "react-use": "^17.3.1",
     "smoothscroll-polyfill": "^0.4.4",
-    "swr": "^0.5.6",
+    "swr": "^1.0.0",
     "use-intersection": "^0.2.1"
   },
   "devDependencies": {
