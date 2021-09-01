@@ -14,7 +14,7 @@ interface PageResponse {
   };
 }
 
-export const extractPage = (fetchResponse: PageResponse, key: string) =>
+export const extractPage = <T>(fetchResponse: PageResponse, key: string): T =>
   fetchResponse?.data?.[key];
 
 interface CollectionResponse {

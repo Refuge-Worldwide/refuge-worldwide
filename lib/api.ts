@@ -116,7 +116,7 @@ export async function getHomePage() {
   };
 }
 
-export async function getAboutPage(preview: boolean): Promise<AboutPageData> {
+export async function getAboutPage(preview: boolean) {
   const data = await contentful(
     /* GraphQL */ `
       query {
@@ -155,7 +155,7 @@ export async function getAboutPage(preview: boolean): Promise<AboutPageData> {
     preview
   );
 
-  return extractPage(data, "pageAbout");
+  return extractPage<AboutPageData>(data, "pageAbout");
 }
 
 export async function getSupportPage(
