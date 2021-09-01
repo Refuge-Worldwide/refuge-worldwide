@@ -11,12 +11,11 @@
     "analyze": "ANALYZE=true yarn build",
     "start": "next start",
     "format": "prettier --write \"**/*.tsx\" \"**/*.ts\"",
-    "lint": "eslint . --ext ts --ext tsx --cache"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
+    "lint": "next lint",
+    "type-check": "tsc --pretty --noEmit",
+    "postinstall": "husky install",
+    "format-staged": "pretty-quick --staged",
+    "lint-staged": "lint-staged"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
@@ -53,7 +52,7 @@
     "autoprefixer": "^10.3.3",
     "eslint": "^7.32.0",
     "eslint-config-next": "^11.1.2",
-    "husky": "^4.3.8",
+    "husky": "^7.0.2",
     "lint-staged": "^11.0.0",
     "next-sitemap": "^1.6.99",
     "postcss": "^8.3.6",
