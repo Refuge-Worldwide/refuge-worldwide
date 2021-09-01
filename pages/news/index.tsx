@@ -4,7 +4,7 @@ import PageMeta from "../../components/seo/page";
 import { getAllArticles, getFeaturedArticles } from "../../lib/api";
 import { ArticleInterface } from "../../types/shared";
 import AllArticles from "../../views/news/allArticles";
-import FeaturedArticle from "../../views/news/featuredArticles";
+import FeaturedArticles from "../../views/news/featuredArticles";
 
 interface Page extends JSX.Element {
   preview: boolean;
@@ -21,7 +21,7 @@ export default function NewsPage({
     <Layout preview={preview}>
       <PageMeta title="News | Refuge Worldwide" path="news/" />
 
-      <FeaturedArticle articles={featuredArticles} />
+      <FeaturedArticles articles={featuredArticles} />
 
       <section className="block sm:hidden px-4 pt-4 border-t-2">
         <Pill>
