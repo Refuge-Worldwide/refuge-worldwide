@@ -37,13 +37,11 @@ interface Page extends JSX.Element {
 }
 
 export default function SearchPage({ preview, data }: Page) {
-  const dataset = data;
-
   const [search, searchSet] = useState("");
   const searchOnChange = (event: ChangeEvent<HTMLInputElement>) =>
     searchSet(event.target.value?.toLowerCase());
 
-  const result = fuzzysort.go(search ? search.trim() : undefined, dataset, {
+  const result = fuzzysort.go(search ? search.trim() : undefined, data, {
     key: "title",
     allowTypo: true,
     threshold: -999,
@@ -60,8 +58,8 @@ export default function SearchPage({ preview, data }: Page) {
         );
     }
 
-    return dataset.filter((el) => el.type === "SHOW").slice(0, 5);
-  }, [result, search]);
+    return data.filter((el) => el.type === "SHOW").slice(0, 5);
+  }, [result, search, data]);
 
   const articleResults = useMemo(() => {
     if (search) {
@@ -73,8 +71,8 @@ export default function SearchPage({ preview, data }: Page) {
         );
     }
 
-    return dataset.filter((el) => el.type === "ARTICLE").slice(0, 5);
-  }, [result, search]);
+    return data.filter((el) => el.type === "ARTICLE").slice(0, 5);
+  }, [result, search, data]);
 
   const artistResults = useMemo(() => {
     if (search) {
@@ -83,8 +81,8 @@ export default function SearchPage({ preview, data }: Page) {
         .map((el) => el.obj);
     }
 
-    return dataset.filter((el) => el.type === "ARTIST").slice(0, 5);
-  }, [result, search]);
+    return data.filter((el) => el.type === "ARTIST").slice(0, 5);
+  }, [result, search, data]);
 
   const hasNoResults =
     showResults.length === 0 &&
