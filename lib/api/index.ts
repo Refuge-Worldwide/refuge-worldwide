@@ -1,7 +1,6 @@
 import dayjs from "dayjs";
 import memoryCache from "memory-cache";
 import type {
-  AllArtistEntry,
   ArticleInterface,
   ArtistEntry,
   ErrorPayload,
@@ -9,25 +8,7 @@ import type {
 } from "../../types/shared";
 import { extractCollection, extractCollectionItem, sort } from "../../util";
 import { ENDPOINT } from "../constants";
-import { AllArtistFragment, RelatedArticleFragment } from "../fragments";
-
-async function contentfulWithCache(
-  key: string,
-  query: string,
-  preview = false
-) {
-  const value = memoryCache.get(key);
-
-  if (value) {
-    return value;
-  } else {
-    const data = await contentful(query, preview);
-
-    memoryCache.put(key, data, 1000 * 60 * 60);
-
-    return data;
-  }
-}
+import { RelatedArticleFragment } from "../fragments";
 
 const LIMITS = {
   SHOWS: 550,
@@ -60,20 +41,22 @@ export async function contentful(query: string, preview = false) {
   throw new Error(getErrorMessage(await r.json()));
 }
 
-export async function getAllArtists(limit = LIMITS.ARTISTS) {
-  const data = await contentful(/* GraphQL */ `
-      query {
-        artistCollection(order: name_ASC, limit: ${limit}) {
-          items {
-            ...AllArtistFragment
-          }
-        }
-      }
+async function contentfulWithCache(
+  key: string,
+  query: string,
+  preview = false
+) {
+  const value = memoryCache.get(key);
 
-      ${AllArtistFragment}
-    `);
+  if (value) {
+    return value;
+  } else {
+    const data = await contentful(query, preview);
 
-  return extractCollection<AllArtistEntry>(data, "artistCollection");
+    memoryCache.put(key, data, 1000 * 60 * 60);
+
+    return data;
+  }
 }
 
 export async function getArtistAndRelatedShows(slug: string, preview: boolean) {

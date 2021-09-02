@@ -6,14 +6,14 @@ import Pill from "../../components/pill";
 import PageMeta from "../../components/seo/page";
 import { ALPHABET } from "../../constants";
 import useArtistRoleFilter from "../../hooks/useArtistRoleFilter";
-import { getAllArtists } from "../../lib/api";
+import { getArtistsPage } from "../../lib/api/pages";
 import type { ArtistFilterType } from "../../types/shared";
 import { sortAndGroup } from "../../util";
 
 export async function getStaticProps() {
   return {
     props: {
-      allArtists: await getAllArtists(),
+      allArtists: await getArtistsPage(),
     },
   };
 }

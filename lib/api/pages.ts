@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import { contentful, getAllShows } from ".";
 import type {
   AboutPageData,
+  AllArtistEntry,
   ArticleInterface,
   ArtistInterface,
   BookingsPageData,
@@ -12,6 +13,7 @@ import type {
 } from "../../types/shared";
 import { extractCollection, extractPage, sort } from "../../util";
 import {
+  AllArtistFragment,
   ArticlePreviewFragment,
   FeaturedArticleFragment,
   ShowPreviewFragment,
@@ -219,13 +221,13 @@ export async function getBookingsPage(
   return extractPage(data, "pageBooking");
 }
 
-export async function getNewsPage(preview: boolean, limit = 100) {
+export async function getNewsPage(preview: boolean) {
   const data = await contentful(/* GraphQL */ `
     query {
       articles: articleCollection(
         order: date_DESC
         preview: ${preview}
-        limit: ${limit}
+        limit: 100
       ) {
         items {
           ...ArticlePreviewFragment
@@ -388,4 +390,20 @@ export async function getSearchPage() {
   ).map((el) => ({ ...el, type: "SHOW" }));
 
   return [...showCollection, ...articleCollection, ...artistCollection];
+}
+
+export async function getArtistsPage() {
+  const data = await contentful(/* GraphQL */ `
+    query {
+      artistCollection(order: name_ASC, limit: 2000) {
+        items {
+          ...AllArtistFragment
+        }
+      }
+    }
+
+    ${AllArtistFragment}
+  `);
+
+  return extractCollection<AllArtistEntry>(data, "artistCollection");
 }
