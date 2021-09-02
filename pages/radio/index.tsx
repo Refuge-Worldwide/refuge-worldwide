@@ -5,6 +5,15 @@ import { getRadioPage } from "../../lib/api";
 import AllShows from "../../views/radio/allShows";
 import NextShows from "../../views/radio/nextShows";
 
+export async function getStaticProps({ preview = false }) {
+  return {
+    props: {
+      preview,
+      ...(await getRadioPage(preview)),
+    },
+  };
+}
+
 export default function RadioPage({
   genres,
   pastShows,
@@ -22,13 +31,4 @@ export default function RadioPage({
       <AllShows genres={genres} pastShows={pastShows} />
     </Layout>
   );
-}
-
-export async function getStaticProps({ preview = false }) {
-  return {
-    props: {
-      preview,
-      ...(await getRadioPage(preview)),
-    },
-  };
 }
