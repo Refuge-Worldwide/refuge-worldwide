@@ -8,7 +8,7 @@ import type {
   ShowInterface,
 } from "../../types/shared";
 import { extractCollection, extractCollectionItem, sort } from "../../util";
-import { RelatedArticleFragment } from "../fragments";
+import { RelatedArticleFragment } from "./fragments";
 
 const LIMITS = {
   SHOWS: 550,

@@ -17,7 +17,7 @@ import {
   ArticlePreviewFragment,
   FeaturedArticleFragment,
   ShowPreviewFragment,
-} from "../fragments";
+} from "./fragments";
 
 export async function getHomePage() {
   const today = dayjs().format("YYYY-MM-DD");
