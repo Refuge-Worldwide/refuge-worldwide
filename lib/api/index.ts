@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import memoryCache from "memory-cache";
+import { ENDPOINT } from "../../constants";
 import type {
   ArticleInterface,
   ArtistEntry,
@@ -7,7 +8,6 @@ import type {
   ShowInterface,
 } from "../../types/shared";
 import { extractCollection, extractCollectionItem, sort } from "../../util";
-import { ENDPOINT } from "../constants";
 import { RelatedArticleFragment } from "../fragments";
 
 const LIMITS = {
