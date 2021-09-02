@@ -336,29 +336,6 @@ export async function getAllArtists(preview: boolean, limit = LIMITS.ARTISTS) {
   return extractCollection<AllArtistEntry>(data, "artistCollection");
 }
 
-export async function getAllArtistPaths() {
-  const data = await contentful(/* GraphQL */ `
-    query {
-      artistCollection(where: { slug_exists: true }, limit: ${LIMITS.ARTISTS}) {
-        items {
-          slug
-        }
-      }
-    }
-  `);
-
-  const collection = extractCollection<{ slug: string }>(
-    data,
-    "artistCollection"
-  );
-
-  const paths = collection.map((el) => ({
-    params: { slug: el.slug },
-  }));
-
-  return paths;
-}
-
 export async function getArtistAndRelatedShows(slug: string, preview: boolean) {
   const today = dayjs();
 
