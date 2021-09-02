@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { contentful, getAllShows } from ".";
+import { graphql, getAllShows } from ".";
 import type {
   AboutPageData,
   AllArtistEntry,
@@ -22,7 +22,7 @@ import {
 export async function getHomePage() {
   const today = dayjs().format("YYYY-MM-DD");
 
-  const data = await contentful(/* GraphQL */ `
+  const data = await graphql(/* GraphQL */ `
     query {
       featuredArticles: articleCollection(
         order: date_DESC
@@ -78,7 +78,7 @@ export async function getHomePage() {
 }
 
 export async function getAboutPage(preview: boolean) {
-  const data = await contentful(
+  const data = await graphql(
     /* GraphQL */ `
       query {
         pageAbout(id: "z1SsoA1K4SMJryGuYjzhK", preview: ${preview}) {
@@ -122,7 +122,7 @@ export async function getAboutPage(preview: boolean) {
 export async function getSupportPage(
   preview: boolean
 ): Promise<SupportPageData> {
-  const data = await contentful(
+  const data = await graphql(
     /* GraphQL */ `
     query {
       pageSupport(id: "Aa4GRMf6fuDtkH0UhkX19", preview: ${preview}) {
@@ -166,7 +166,7 @@ export async function getSupportPage(
 export async function getNewsletterPage(
   preview: boolean
 ): Promise<NewsletterPageData> {
-  const data = await contentful(
+  const data = await graphql(
     /* GraphQL */ `
     query {
       pageNewsletter(id: "7t2jOQoBCZ6sGK4HgBZZ42", preview: ${preview}) {
@@ -210,7 +210,7 @@ export async function getNewsletterPage(
 export async function getBookingsPage(
   preview: boolean
 ): Promise<BookingsPageData> {
-  const data = await contentful(/* GraphQL */ `
+  const data = await graphql(/* GraphQL */ `
     query {
       pageBooking(id: "5ApzlspIzqeUmURGvpTCug", preview: ${preview}) {
         bookingPassword
@@ -222,7 +222,7 @@ export async function getBookingsPage(
 }
 
 export async function getNewsPage(preview: boolean) {
-  const data = await contentful(/* GraphQL */ `
+  const data = await graphql(/* GraphQL */ `
     query {
       articles: articleCollection(
         order: date_DESC
@@ -299,7 +299,7 @@ export async function getRadioPage(preview: boolean) {
 export async function getSearchPage() {
   const today = dayjs().format("YYYY-MM-DD");
 
-  const articleData = await contentful(/* GraphQL */ `
+  const articleData = await graphql(/* GraphQL */ `
     query {
       articleCollection(limit: 2500, order: date_DESC) {
         items {
@@ -322,7 +322,7 @@ export async function getSearchPage() {
     }
   `);
 
-  const artistData = await contentful(/* GraphQL */ `
+  const artistData = await graphql(/* GraphQL */ `
     query {
       artistCollection(limit: 2500, order: name_ASC) {
         items {
@@ -343,7 +343,7 @@ export async function getSearchPage() {
     }
   `);
 
-  const showData = await contentful(/* GraphQL */ `
+  const showData = await graphql(/* GraphQL */ `
     query {
       showCollection(
         limit: 2200
@@ -393,7 +393,7 @@ export async function getSearchPage() {
 }
 
 export async function getArtistsPage() {
-  const data = await contentful(/* GraphQL */ `
+  const data = await graphql(/* GraphQL */ `
     query {
       artistCollection(order: name_ASC, limit: 2000) {
         items {

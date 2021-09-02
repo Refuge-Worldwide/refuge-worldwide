@@ -20,7 +20,7 @@ function getErrorMessage(payload: ErrorPayload) {
   return payload.errors[0].message;
 }
 
-export async function contentful(query: string, preview = false) {
+export async function graphql(query: string, preview = false) {
   const r = await fetch(ENDPOINT, {
     method: "POST",
     headers: {
@@ -51,7 +51,7 @@ async function contentfulWithCache(
   if (value) {
     return value;
   } else {
-    const data = await contentful(query, preview);
+    const data = await graphql(query, preview);
 
     memoryCache.put(key, data, 1000 * 60 * 60);
 
@@ -62,7 +62,7 @@ async function contentfulWithCache(
 export async function getArtistAndRelatedShows(slug: string, preview: boolean) {
   const today = dayjs();
 
-  const entry = await contentful(/* GraphQL */ `
+  const entry = await graphql(/* GraphQL */ `
     query {
       artistCollection(where: { slug: "${slug}" }, limit: 1, preview: ${preview}) {
         items {
@@ -200,7 +200,7 @@ export async function getAllShows(preview: boolean, limit = LIMITS.SHOWS) {
 export async function getShowAndMoreShows(slug: string, preview: boolean) {
   const today = dayjs();
 
-  const data = await contentful(
+  const data = await graphql(
     /* GraphQL */ `
       query {
         showCollection(
@@ -293,7 +293,7 @@ export async function getArticleAndMoreArticles(
   slug: string,
   preview: boolean
 ) {
-  const data = await contentful(
+  const data = await graphql(
     /* GraphQL */ `
       query {
         article: articleCollection(

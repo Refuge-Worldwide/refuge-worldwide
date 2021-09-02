@@ -1,9 +1,9 @@
 import dayjs from "dayjs";
-import { contentful } from ".";
+import { graphql } from ".";
 import { extractCollection } from "../../util";
 
 export async function getArtistPathsToPreRender() {
-  const data = await contentful(/* GraphQL */ `
+  const data = await graphql(/* GraphQL */ `
     query {
       artistCollection(
         where: { slug_exists: true }
@@ -30,7 +30,7 @@ export async function getArtistPathsToPreRender() {
 }
 
 export async function getArticlePathsToPreRender() {
-  const data = await contentful(/* GraphQL */ `
+  const data = await graphql(/* GraphQL */ `
     query {
       articleCollection(
         where: { slug_exists: true }
@@ -59,7 +59,7 @@ export async function getArticlePathsToPreRender() {
 export async function getShowPathsToPreRender() {
   const today = dayjs().format("YYYY-MM-DD");
 
-  const data = await contentful(/* GraphQL */ `
+  const data = await graphql(/* GraphQL */ `
     query {
       showCollection(
         where: { slug_exists: true, date_lt: "${today}" }
@@ -86,7 +86,7 @@ export async function getShowPathsToPreRender() {
 }
 
 export async function getSitemapPaths() {
-  const data = await contentful(/* GraphQL */ `
+  const data = await graphql(/* GraphQL */ `
     query {
       shows: showCollection(limit: 4000) {
         items {
