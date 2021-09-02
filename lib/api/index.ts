@@ -48,7 +48,7 @@ async function contentfulWithCache(
 
 const LIMITS = {
   SHOWS: 550,
-  ARTISTS: 500,
+  ARTISTS: 2000,
   ARTICLES: 100,
 };
 
@@ -317,11 +317,10 @@ export async function getNewsPage(preview: boolean, limit = LIMITS.ARTICLES) {
   };
 }
 
-export async function getAllArtists(preview: boolean, limit = LIMITS.ARTISTS) {
-  const data = await contentful(
-    /* GraphQL */ `
+export async function getAllArtists(limit = LIMITS.ARTISTS) {
+  const data = await contentful(/* GraphQL */ `
       query {
-        artistCollection(order: name_ASC, preview: ${preview}, limit: ${limit}) {
+        artistCollection(order: name_ASC, limit: ${limit}) {
           items {
             ...AllArtistFragment
           }
@@ -329,9 +328,7 @@ export async function getAllArtists(preview: boolean, limit = LIMITS.ARTISTS) {
       }
 
       ${AllArtistFragment}
-    `,
-    preview
-  );
+    `);
 
   return extractCollection<AllArtistEntry>(data, "artistCollection");
 }
