@@ -474,29 +474,6 @@ export async function getAllShows(preview: boolean, limit = LIMITS.SHOWS) {
   return extractCollection<ShowInterface>(data, "showCollection");
 }
 
-export async function getAllShowPaths() {
-  const data = await contentful(/* GraphQL */ `
-    query {
-      showCollection(where: { slug_exists: true }, limit: 500) {
-        items {
-          slug
-        }
-      }
-    }
-  `);
-
-  const collection = extractCollection<{ slug: string }>(
-    data,
-    "showCollection"
-  );
-
-  const paths = collection.map((el) => ({
-    params: { slug: el.slug },
-  }));
-
-  return paths;
-}
-
 export async function getRadioPage(preview: boolean) {
   const today = dayjs();
 
@@ -626,29 +603,6 @@ export async function getShowAndMoreShows(slug: string, preview: boolean) {
   };
 }
 
-export async function getAllArticlePaths() {
-  const data = await contentful(/* GraphQL */ `
-    query {
-      articleCollection(where: { slug_exists: true }, limit: 500) {
-        items {
-          slug
-        }
-      }
-    }
-  `);
-
-  const collection = extractCollection<{ slug: string }>(
-    data,
-    "articleCollection"
-  );
-
-  const paths = collection.map((el) => ({
-    params: { slug: el.slug },
-  }));
-
-  return paths;
-}
-
 export async function getArticleAndMoreArticles(
   slug: string,
   preview: boolean
@@ -726,37 +680,6 @@ export async function getArticleAndMoreArticles(
       data,
       "relatedArticles"
     ),
-  };
-}
-
-export async function getPaths() {
-  const data = await contentful(/* GraphQL */ `
-    {
-      shows: showCollection(limit: 1000) {
-        items {
-          slug
-        }
-        total
-      }
-      artists: artistCollection(limit: 1000) {
-        items {
-          slug
-        }
-        total
-      }
-      articles: articleCollection(limit: 1000) {
-        items {
-          slug
-        }
-        total
-      }
-    }
-  `);
-
-  return {
-    shows: extractCollection<{ slug: string }>(data, "shows"),
-    articles: extractCollection<{ slug: string }>(data, "articles"),
-    artists: extractCollection<{ slug: string }>(data, "artists"),
   };
 }
 

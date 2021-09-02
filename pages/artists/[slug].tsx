@@ -1,7 +1,7 @@
 import Layout from "../../components/layout";
 import ArtistMeta from "../../components/seo/artist";
 import { getArtistAndRelatedShows } from "../../lib/api";
-import { getAllArtistPaths } from "../../lib/api/paths";
+import { getArtistPathsToPreRender } from "../../lib/api/paths";
 import { ArtistEntry, ShowInterface } from "../../types/shared";
 import ArtistBody from "../../views/artists/artistBody";
 import RelatedShows from "../../views/artists/relatedShows";
@@ -58,7 +58,7 @@ export async function getStaticProps({ params, preview = false }) {
 
 export async function getStaticPaths() {
   return {
-    paths: await getAllArtistPaths(),
+    paths: await getArtistPathsToPreRender(),
     fallback: "blocking",
   };
 }
