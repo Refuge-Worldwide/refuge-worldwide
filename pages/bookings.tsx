@@ -4,7 +4,7 @@ import Layout from "../components/layout";
 import PageMeta from "../components/seo/page";
 import useScript from "../hooks/useScript";
 import { Arrow } from "../icons/arrow";
-import { getBookingsPage } from "../lib/api";
+import { getBookingsPage } from "../lib/api/pages";
 
 function BookingPasswordForm({
   bookingPassword,

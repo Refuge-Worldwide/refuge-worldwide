@@ -1,7 +1,7 @@
 import { InferGetStaticPropsType } from "next";
 import Layout from "../components/layout";
 import PageMeta from "../components/seo/page";
-import { getAboutPage } from "../lib/api";
+import { getAboutPage } from "../lib/api/pages";
 import { renderRichTextWithImages } from "../lib/rich-text";
 import SinglePage from "../views/singlePage";
 
