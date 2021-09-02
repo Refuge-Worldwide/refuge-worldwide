@@ -48,7 +48,6 @@ export async function getStaticProps({ params, preview = false }) {
         show: data.show,
         relatedShows: data?.relatedShows,
       },
-      revalidate: 60,
     };
   } catch (error) {
     console.error(error);

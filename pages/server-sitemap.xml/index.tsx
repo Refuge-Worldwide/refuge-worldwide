@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable @typescript-eslint/no-empty-function */
 import { GetServerSideProps } from "next";
 import { getServerSideSitemap } from "next-sitemap";
 import { ISitemapField } from "next-sitemap/dist/@types/interface";
@@ -21,7 +19,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     loc: slug,
     lastmod: new Date().toISOString(),
     changefreq: "daily",
-    priority: "0.7",
+    priority: 0.7,
   }));
 
   return getServerSideSitemap(ctx, fields);

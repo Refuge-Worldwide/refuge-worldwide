@@ -80,7 +80,7 @@ export default function Footer() {
             </button>
           </div>
 
-          <ul className="flex-1 flex lg:justify-end items-center space-x-8 xl:space-x-12">
+          <ul className="flex-1 flex flex-wrap gap-8 xl:gap-12 lg:justify-end items-center">
             <li>
               <a href={CONTACT_URL} className="font-medium">
                 Contact

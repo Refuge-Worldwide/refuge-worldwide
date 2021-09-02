@@ -6,13 +6,17 @@ import ArticleBody from "../../views/news/articleBody";
 import RelatedArticles from "../../views/news/relatedArticles";
 import SinglePage from "../../views/singlePage";
 
-interface Page extends JSX.Element {
+type ArticleProps = {
   article: ArticleInterface;
   preview: boolean;
   relatedArticles?: ArticleInterface[];
-}
+};
 
-export default function Article({ article, relatedArticles, preview }: Page) {
+export default function Article({
+  article,
+  preview,
+  relatedArticles,
+}: ArticleProps) {
   return (
     <Layout preview={preview}>
       <ArticleMeta {...article} />
@@ -25,9 +29,7 @@ export default function Article({ article, relatedArticles, preview }: Page) {
         <ArticleBody {...article} />
       </SinglePage>
 
-      {relatedArticles?.length > 0 && (
-        <RelatedArticles articles={relatedArticles} />
-      )}
+      <RelatedArticles articles={relatedArticles} />
     </Layout>
   );
 }
@@ -45,10 +47,8 @@ export async function getStaticProps({ params, preview = false }) {
     return {
       props: {
         preview,
-        article: data.article,
-        relatedArticles: data?.relatedArticles,
+        ...data,
       },
-      revalidate: 60,
     };
   } catch (error) {
     console.error(error);

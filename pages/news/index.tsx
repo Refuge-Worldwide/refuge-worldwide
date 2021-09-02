@@ -1,27 +1,30 @@
+import { InferGetStaticPropsType } from "next";
 import Layout from "../../components/layout";
 import Pill from "../../components/pill";
 import PageMeta from "../../components/seo/page";
-import { getAllArticles, getFeaturedArticles } from "../../lib/api";
-import { ArticleInterface } from "../../types/shared";
+import { getNewsPage } from "../../lib/api";
 import AllArticles from "../../views/news/allArticles";
-import FeaturedArticle from "../../views/news/featuredArticles";
+import FeaturedArticles from "../../views/news/featuredArticles";
 
-interface Page extends JSX.Element {
-  preview: boolean;
-  articles: ArticleInterface[];
-  featuredArticles: ArticleInterface[];
+export async function getStaticProps({ preview = false }) {
+  return {
+    props: {
+      preview,
+      ...(await getNewsPage(preview)),
+    },
+  };
 }
 
 export default function NewsPage({
-  preview,
   articles,
   featuredArticles,
-}: Page) {
+  preview,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <Layout preview={preview}>
       <PageMeta title="News | Refuge Worldwide" path="news/" />
 
-      <FeaturedArticle articles={featuredArticles} />
+      <FeaturedArticles articles={featuredArticles} />
 
       <section className="block sm:hidden px-4 pt-4 border-t-2">
         <Pill>
@@ -32,14 +35,4 @@ export default function NewsPage({
       <AllArticles articles={articles} />
     </Layout>
   );
-}
-
-export async function getStaticProps({ preview = false }) {
-  return {
-    props: {
-      articles: await getAllArticles(preview),
-      featuredArticles: await getFeaturedArticles(preview),
-      preview,
-    },
-  };
 }

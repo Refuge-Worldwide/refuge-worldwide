@@ -1,14 +1,13 @@
-import { ArtistInterface } from "../types/shared";
+import { AllArtistEntry } from "../types/shared";
 import ArtistPreview from "./artistPreview";
 import Pill from "./pill";
 
-export default function ArtistRow({
-  alphabet,
-  artists,
-}: {
+type ArtistRowProps = {
   alphabet: string;
-  artists: ArtistInterface[];
-}) {
+  artists: AllArtistEntry[];
+};
+
+export default function ArtistRow({ alphabet, artists }: ArtistRowProps) {
   return (
     <section id={alphabet} className="border-t-2 border-black">
       <div className="p-4 sm:p-8">

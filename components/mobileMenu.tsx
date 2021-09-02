@@ -1,5 +1,4 @@
-import { Dialog } from "@reach/dialog";
-import VisuallyHidden from "@reach/visually-hidden";
+import { Dialog } from "@headlessui/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useRef } from "react";
@@ -26,16 +25,16 @@ export default function MobileMenu({
     return () => {
       router.events.off("routeChangeStart", onDismiss);
     };
-  }, []);
+  }, [router, onDismiss]);
 
   return (
     <Dialog
-      onDismiss={onDismiss}
-      isOpen={isOpen}
-      aria-label="Mobile Navigation"
-      className="bg-black h-full"
-      initialFocusRef={closeButton}
+      onClose={onDismiss}
+      open={isOpen}
+      className="bg-black h-full fixed inset-0 z-50 overflow-y-auto"
     >
+      <Dialog.Title className="sr-only">Mobile Navigation</Dialog.Title>
+
       <nav className="text-white">
         <div className="px-4 py-2.5">
           <ul className="flex items-center">
@@ -59,7 +58,7 @@ export default function MobileMenu({
                 onClick={onDismiss}
                 className="flex focus:outline-none focus:ring-4"
               >
-                <VisuallyHidden>Close</VisuallyHidden>
+                <span className="sr-only">Close</span>
                 <span aria-hidden>
                   <Close />
                 </span>

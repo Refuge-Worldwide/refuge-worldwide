@@ -1,9 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { contentful } from "../lib/loaders";
-import type { ArtistInterface } from "../types/shared";
+import type { AllArtistEntry } from "../types/shared";
 
-export default function ArtistPreview({ name, photo, slug }: ArtistInterface) {
+export default function ArtistPreview({
+  name,
+  photo,
+  slug,
+}: Pick<AllArtistEntry, "name" | "photo" | "slug">) {
   return (
     <Link href={`/artists/${slug}`}>
       <a>

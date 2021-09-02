@@ -1,15 +1,10 @@
+import { InferGetStaticPropsType } from "next";
 import { FormEvent, Fragment, useCallback, useEffect, useState } from "react";
 import Layout from "../components/layout";
 import PageMeta from "../components/seo/page";
 import useScript from "../hooks/useScript";
 import { Arrow } from "../icons/arrow";
 import { getBookingsPage } from "../lib/api";
-import type { BookingsPageData } from "../types/shared";
-
-type Props = {
-  preview: boolean;
-  data: BookingsPageData;
-};
 
 function BookingPasswordForm({
   bookingPassword,
@@ -109,7 +104,19 @@ function CalendlyEmbed({ shouldInit }: { shouldInit: boolean }) {
   return <div id="calendly-embed" className="h-screen" />;
 }
 
-function BookingsPage({ preview, data }: Props) {
+export async function getStaticProps({ preview = false }) {
+  return {
+    props: {
+      preview,
+      data: await getBookingsPage(preview),
+    },
+  };
+}
+
+export default function BookingsPage({
+  preview,
+  data,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   const [passwordCorrect, passwordCorrectSet] = useState(false);
 
   const onPasswordCorrect = useCallback(() => {
@@ -137,14 +144,3 @@ function BookingsPage({ preview, data }: Props) {
     </Layout>
   );
 }
-
-export async function getStaticProps({ preview = false }) {
-  return {
-    props: {
-      preview,
-      data: await getBookingsPage(preview),
-    },
-  };
-}
-
-export default BookingsPage;

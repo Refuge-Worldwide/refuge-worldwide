@@ -1,18 +1,18 @@
 import Layout from "../../components/layout";
 import ArtistMeta from "../../components/seo/artist";
-import { getAllArtistPaths, getArtistAndMoreShows } from "../../lib/api";
-import { ArtistInterface, ShowInterface } from "../../types/shared";
+import { getAllArtistPaths, getArtistAndRelatedShows } from "../../lib/api";
+import { ArtistEntry, ShowInterface } from "../../types/shared";
 import ArtistBody from "../../views/artists/artistBody";
 import RelatedShows from "../../views/artists/relatedShows";
 import SinglePage from "../../views/singlePage";
 
-interface Page extends JSX.Element {
-  artist: ArtistInterface;
-  relatedShows?: ShowInterface[];
+type ArtistProps = {
+  artist: ArtistEntry;
   preview: boolean;
-}
+  relatedShows?: ShowInterface[];
+};
 
-export default function Artist({ artist, relatedShows, preview }: Page) {
+export default function Artist({ artist, relatedShows, preview }: ArtistProps) {
   return (
     <Layout preview={preview}>
       <ArtistMeta {...artist} />
@@ -25,14 +25,14 @@ export default function Artist({ artist, relatedShows, preview }: Page) {
         <ArtistBody {...artist} />
       </SinglePage>
 
-      {relatedShows?.length > 0 && <RelatedShows shows={relatedShows} />}
+      {relatedShows.length > 0 && <RelatedShows shows={relatedShows} />}
     </Layout>
   );
 }
 
 export async function getStaticProps({ params, preview = false }) {
   try {
-    const data = await getArtistAndMoreShows(params.slug, preview);
+    const data = await getArtistAndRelatedShows(params.slug, preview);
 
     if (!data) {
       return {
@@ -43,10 +43,8 @@ export async function getStaticProps({ params, preview = false }) {
     return {
       props: {
         preview,
-        artist: data.artist,
-        relatedShows: data?.relatedShows,
+        ...data,
       },
-      revalidate: 60,
     };
   } catch (error) {
     console.error(error);

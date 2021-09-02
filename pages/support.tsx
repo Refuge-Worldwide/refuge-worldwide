@@ -1,16 +1,23 @@
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
+import { InferGetStaticPropsType } from "next";
 import Layout from "../components/layout";
 import PageMeta from "../components/seo/page";
 import { getSupportPage } from "../lib/api";
-import { SupportPageData } from "../types/shared";
 import SinglePage from "../views/singlePage";
 
-interface Page extends JSX.Element {
-  preview: boolean;
-  data: SupportPageData;
+export async function getStaticProps({ preview = false }) {
+  return {
+    props: {
+      preview,
+      data: await getSupportPage(preview),
+    },
+  };
 }
 
-export default function SupportPage({ preview, data }: Page) {
+export default function SupportPage({
+  preview,
+  data,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <Layout preview={preview}>
       <PageMeta title="Support | Refuge Worldwide" path="support/" />
@@ -26,13 +33,4 @@ export default function SupportPage({ preview, data }: Page) {
       </SinglePage>
     </Layout>
   );
-}
-
-export async function getStaticProps({ preview = false }) {
-  return {
-    props: {
-      preview,
-      data: await getSupportPage(preview),
-    },
-  };
 }

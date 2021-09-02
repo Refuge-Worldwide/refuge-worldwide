@@ -1,6 +1,6 @@
 import useSWR from "swr";
 
-export interface RadioCoInterface {
+type RadioCo = {
   status: "online" | "offline";
   source: {
     type: string;
@@ -23,18 +23,18 @@ export interface RadioCoInterface {
     format: string;
     bitrate: number;
   }[];
-}
+};
 
-const getRadioCoStatus = async (_: string, stationId: string) => {
+async function getRadioCoStatus(_: string, stationId: string) {
   const URL = `https://public.radio.co/stations/${stationId}/status`;
 
   const res = await fetch(URL);
 
   return res.json();
-};
+}
 
 export default function useRadioCoStatus(stationId: string) {
-  return useSWR<RadioCoInterface>(["RadioCo", stationId], getRadioCoStatus, {
+  return useSWR<RadioCo>(["RadioCo", stationId], getRadioCoStatus, {
     refreshInterval: 10 * 60 * 1000,
   });
 }

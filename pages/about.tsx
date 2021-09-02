@@ -1,16 +1,23 @@
+import { InferGetStaticPropsType } from "next";
 import Layout from "../components/layout";
 import PageMeta from "../components/seo/page";
 import { getAboutPage } from "../lib/api";
 import { renderRichTextWithImages } from "../lib/rich-text";
-import { AboutPageData } from "../types/shared";
 import SinglePage from "../views/singlePage";
 
-interface Page extends JSX.Element {
-  preview: boolean;
-  data: AboutPageData;
+export async function getStaticProps({ preview = false }) {
+  return {
+    props: {
+      preview,
+      data: await getAboutPage(preview),
+    },
+  };
 }
 
-export default function AboutPage({ preview, data }: Page) {
+export default function AboutPage({
+  preview,
+  data,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <Layout preview={preview}>
       <PageMeta title="About | Refuge Worldwide" path="about/" />
@@ -26,13 +33,4 @@ export default function AboutPage({ preview, data }: Page) {
       </SinglePage>
     </Layout>
   );
-}
-
-export async function getStaticProps({ preview = false }) {
-  return {
-    props: {
-      preview,
-      data: await getAboutPage(preview),
-    },
-  };
 }
