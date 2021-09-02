@@ -12,21 +12,21 @@ import type {
   NextUpSection,
   ShowInterface,
   SupportPageData,
-} from "../types/shared";
+} from "../../types/shared";
 import {
   extractCollection,
   extractCollectionItem,
   extractPage,
   sort,
-} from "../util";
-import { ENDPOINT } from "./constants";
+} from "../../util";
+import { ENDPOINT } from "../constants";
 import {
   AllArtistFragment,
   ArticlePreviewFragment,
   FeaturedArticleFragment,
   RelatedArticleFragment,
   ShowPreviewFragment,
-} from "./fragments";
+} from "../fragments";
 
 async function contentfulWithCache(
   key: string,
