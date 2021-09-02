@@ -41,11 +41,7 @@ export async function graphql(query: string, preview = false) {
   throw new Error(getErrorMessage(await r.json()));
 }
 
-async function contentfulWithCache(
-  key: string,
-  query: string,
-  preview = false
-) {
+async function graphqlWithCache(key: string, query: string, preview = false) {
   const value = memoryCache.get(key);
 
   if (value) {
@@ -151,7 +147,7 @@ export async function getArtistAndRelatedShows(slug: string, preview: boolean) {
 }
 
 export async function getAllShows(preview: boolean, limit = LIMITS.SHOWS) {
-  const data = await contentfulWithCache(
+  const data = await graphqlWithCache(
     "getAllShows",
     /* GraphQL */ `
       query {
