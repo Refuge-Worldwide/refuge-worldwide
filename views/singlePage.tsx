@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { ReactNode } from "react";
-import { contentful } from "../lib/loaders";
+import loaders from "../lib/loaders";
 import { CoverImage, CoverImagePosition } from "../types/shared";
 import BackButton from "../components/backButton";
 
@@ -31,7 +31,7 @@ export default function SinglePage({
           draggable={false}
           key={coverImage.sys.id}
           layout="fill"
-          loader={contentful}
+          loader={loaders.contentful}
           loading="eager"
           objectFit="cover"
           objectPosition={objectPosition}

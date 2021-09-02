@@ -7,7 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Fragment } from "react";
 import { Arrow } from "../icons/arrow";
-import { contentful } from "../lib/loaders";
+import loaders from "../lib/loaders";
 import type { ArticleInterface } from "../types/shared";
 import Badge from "./badge";
 import Date from "./date";
@@ -49,7 +49,7 @@ export default function ArticlePreview({
             <Image
               key={coverImage.sys.id}
               src={coverImage.url}
-              loader={contentful}
+              loader={loaders.contentful}
               width={590}
               height={345}
               objectFit="cover"
@@ -118,7 +118,7 @@ export function ArticlePreviewForSearch({
             <Image
               key={coverImage.sys.id}
               src={coverImage.url}
-              loader={contentful}
+              loader={loaders.contentful}
               width={590}
               height={345}
               objectFit="cover"
