@@ -520,7 +520,7 @@ export async function getAllShowPaths() {
   return paths;
 }
 
-export async function getUpcomingAndPastShows(preview: boolean) {
+export async function getRadioPage(preview: boolean) {
   const today = dayjs();
 
   const shows = await getAllShows(preview);

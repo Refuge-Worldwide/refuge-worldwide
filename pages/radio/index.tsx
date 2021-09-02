@@ -1,7 +1,7 @@
 import { InferGetStaticPropsType } from "next";
 import Layout from "../../components/layout";
 import PageMeta from "../../components/seo/page";
-import { getUpcomingAndPastShows } from "../../lib/api";
+import { getRadioPage } from "../../lib/api";
 import AllShows from "../../views/radio/allShows";
 import NextShows from "../../views/radio/nextShows";
 
@@ -28,7 +28,7 @@ export async function getStaticProps({ preview = false }) {
   return {
     props: {
       preview,
-      ...(await getUpcomingAndPastShows(preview)),
+      ...(await getRadioPage(preview)),
     },
   };
 }
