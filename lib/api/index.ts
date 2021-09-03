@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import memoryCache from "memory-cache";
-import { ENDPOINT } from "../../constants";
+import { ENDPOINT, GRAPHCDN_ENDPOINT } from "../../constants";
 import type {
   ArticleInterface,
   ArtistEntry,
@@ -29,7 +29,7 @@ export async function graphql(
   query: string,
   { preview, variables }: GraphQLInterface = { preview: false, variables: {} }
 ) {
-  const r = await fetch(ENDPOINT, {
+  const r = await fetch(GRAPHCDN_ENDPOINT, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
