@@ -1,7 +1,7 @@
 import Layout from "../../components/layout";
 import ArticleMeta from "../../components/seo/article";
-import { getArticleAndMoreArticles } from "../../lib/api";
-import { getArticlePathsToPreRender } from "../../lib/api/paths";
+import { getArticleAndMoreArticles } from "../../lib/contentful";
+import { getArticlePathsToPreRender } from "../../lib/contentful/paths";
 import { ArticleInterface } from "../../types/shared";
 import ArticleBody from "../../views/news/articleBody";
 import RelatedArticles from "../../views/news/relatedArticles";

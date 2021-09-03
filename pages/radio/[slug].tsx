@@ -1,7 +1,7 @@
 import Layout from "../../components/layout";
 import ShowMeta from "../../components/seo/show";
-import { getShowAndMoreShows } from "../../lib/api";
-import { getShowPathsToPreRender } from "../../lib/api/paths";
+import { getShowAndMoreShows } from "../../lib/contentful";
+import { getShowPathsToPreRender } from "../../lib/contentful/paths";
 import { ShowInterface } from "../../types/shared";
 import RelatedShows from "../../views/artists/relatedShows";
 import ShowBody from "../../views/radio/showBody";

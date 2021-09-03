@@ -2,7 +2,7 @@ import { InferGetStaticPropsType } from "next";
 import Layout from "../../components/layout";
 import Pill from "../../components/pill";
 import PageMeta from "../../components/seo/page";
-import { getNewsPage } from "../../lib/api/pages";
+import { getNewsPage } from "../../lib/contentful/pages";
 import AllArticles from "../../views/news/allArticles";
 import FeaturedArticles from "../../views/news/featuredArticles";
 

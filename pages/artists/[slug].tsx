@@ -1,7 +1,7 @@
 import Layout from "../../components/layout";
 import ArtistMeta from "../../components/seo/artist";
-import { getArtistAndRelatedShows } from "../../lib/api";
-import { getArtistPathsToPreRender } from "../../lib/api/paths";
+import { getArtistAndRelatedShows } from "../../lib/contentful";
+import { getArtistPathsToPreRender } from "../../lib/contentful/paths";
 import { ArtistEntry, ShowInterface } from "../../types/shared";
 import ArtistBody from "../../views/artists/artistBody";
 import RelatedShows from "../../views/artists/relatedShows";

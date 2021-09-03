@@ -1,7 +1,7 @@
 import { GetServerSideProps } from "next";
 import { getServerSideSitemap } from "next-sitemap";
 import { ISitemapField } from "next-sitemap/dist/@types/interface";
-import { getSitemapPaths } from "../../lib/api/paths";
+import { getSitemapPaths } from "../../lib/contentful/paths";
 
 const createSlug = (slug: string, base: "artists" | "radio" | "news") =>
   `https://refugeworldwide.com/${base}/${slug}`;

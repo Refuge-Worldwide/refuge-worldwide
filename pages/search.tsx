@@ -8,7 +8,7 @@ import Layout from "../components/layout";
 import Pill from "../components/pill";
 import PageMeta from "../components/seo/page";
 import { ShowPreviewWithoutPlayer } from "../components/showPreview";
-import { getSearchPage } from "../lib/api/pages";
+import { getSearchPage } from "../lib/contentful/pages";
 import {
   ArticleInterface,
   ArtistInterface,

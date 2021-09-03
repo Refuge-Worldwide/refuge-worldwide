@@ -3,7 +3,7 @@ import { InferGetStaticPropsType } from "next";
 import Layout from "../components/layout";
 import PageMeta from "../components/seo/page";
 import Subscribe from "../components/subscribe";
-import { getNewsletterPage } from "../lib/api/pages";
+import { getNewsletterPage } from "../lib/contentful/pages";
 import SinglePage from "../views/singlePage";
 
 export async function getStaticProps({ preview = false }) {
