@@ -79,7 +79,13 @@ export const sortAndGroup = (
     },
     current: AllArtistEntry
   ) => {
-    let alphabet = current.name[0];
+    /**
+     * @note Fix for names that have a lowercase letter as the first character as well as those with accents in their names
+     */
+    let alphabet = current.name[0]
+      .toUpperCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
 
     if (REGEX.NUMERIC.test(alphabet) || REGEX.SPECIAL.test(alphabet))
       alphabet = "#";

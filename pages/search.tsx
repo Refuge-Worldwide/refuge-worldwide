@@ -8,7 +8,7 @@ import Layout from "../components/layout";
 import Pill from "../components/pill";
 import PageMeta from "../components/seo/page";
 import { ShowPreviewWithoutPlayer } from "../components/showPreview";
-import { getSearchData } from "../lib/api";
+import { getSearchPage } from "../lib/api/pages";
 import {
   ArticleInterface,
   ArtistInterface,
@@ -32,10 +32,11 @@ export async function getStaticProps({ preview = false }) {
   return {
     props: {
       preview,
-      data: (await getSearchData()) as Array<
+      data: (await getSearchPage()) as Array<
         SearchShowInterface | SearchArtistInterface | SearchArticleInterface
       >,
     },
+    revalidate: 60,
   };
 }
 

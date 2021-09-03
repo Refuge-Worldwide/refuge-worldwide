@@ -1,6 +1,7 @@
 import Layout from "../../components/layout";
 import ShowMeta from "../../components/seo/show";
-import { getAllShowPaths, getShowAndMoreShows } from "../../lib/api";
+import { getShowAndMoreShows } from "../../lib/api";
+import { getShowPathsToPreRender } from "../../lib/api/paths";
 import { ShowInterface } from "../../types/shared";
 import RelatedShows from "../../views/artists/relatedShows";
 import ShowBody from "../../views/radio/showBody";
@@ -45,9 +46,9 @@ export async function getStaticProps({ params, preview = false }) {
     return {
       props: {
         preview,
-        show: data.show,
-        relatedShows: data?.relatedShows,
+        ...data,
       },
+      revalidate: 60,
     };
   } catch (error) {
     console.error(error);
@@ -60,7 +61,7 @@ export async function getStaticProps({ params, preview = false }) {
 
 export async function getStaticPaths() {
   return {
-    paths: await getAllShowPaths(),
+    paths: await getShowPathsToPreRender(),
     fallback: "blocking",
   };
 }

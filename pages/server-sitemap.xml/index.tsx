@@ -1,13 +1,13 @@
 import { GetServerSideProps } from "next";
 import { getServerSideSitemap } from "next-sitemap";
 import { ISitemapField } from "next-sitemap/dist/@types/interface";
-import { getPaths } from "../../lib/api";
+import { getSitemapPaths } from "../../lib/api/paths";
 
 const createSlug = (slug: string, base: "artists" | "radio" | "news") =>
   `https://refugeworldwide.com/${base}/${slug}`;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { artists, articles, shows } = await getPaths();
+  const { artists, articles, shows } = await getSitemapPaths();
 
   const slugs = [
     ...articles.map(({ slug }) => createSlug(slug, "news")),

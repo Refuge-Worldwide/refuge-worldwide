@@ -6,22 +6,23 @@ import Pill from "../../components/pill";
 import PageMeta from "../../components/seo/page";
 import { ALPHABET } from "../../constants";
 import useArtistRoleFilter from "../../hooks/useArtistRoleFilter";
-import { getAllArtists } from "../../lib/api";
+import { getArtistsPage } from "../../lib/api/pages";
 import type { ArtistFilterType } from "../../types/shared";
 import { sortAndGroup } from "../../util";
 
 export async function getStaticProps({ preview = false }) {
   return {
     props: {
-      allArtists: await getAllArtists(preview),
       preview,
+      allArtists: await getArtistsPage(),
     },
+    revalidate: 60,
   };
 }
 
 export default function ArtistsPage({
-  allArtists,
   preview,
+  allArtists,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const filters: ArtistFilterType[] = ["All", "Residents", "Guests"];
   const { filter, filterSet } = useArtistRoleFilter("All");
@@ -29,8 +30,8 @@ export default function ArtistsPage({
 
   return (
     <Layout
-      className="bg-purple flex flex-col-reverse sm:flex-row-reverse"
       preview={preview}
+      className="bg-purple flex flex-col-reverse sm:flex-row-reverse"
     >
       <PageMeta title="Artists | Refuge Worldwide" path="artists/" />
 

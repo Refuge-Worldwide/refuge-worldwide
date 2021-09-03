@@ -1,9 +1,19 @@
 import { InferGetStaticPropsType } from "next";
 import Layout from "../../components/layout";
 import PageMeta from "../../components/seo/page";
-import { getRadioPage } from "../../lib/api";
+import { getRadioPage } from "../../lib/api/pages";
 import AllShows from "../../views/radio/allShows";
 import NextShows from "../../views/radio/nextShows";
+
+export async function getStaticProps({ preview = false }) {
+  return {
+    props: {
+      preview,
+      ...(await getRadioPage(preview)),
+    },
+    revalidate: 60,
+  };
+}
 
 export default function RadioPage({
   genres,
@@ -22,13 +32,4 @@ export default function RadioPage({
       <AllShows genres={genres} pastShows={pastShows} />
     </Layout>
   );
-}
-
-export async function getStaticProps({ preview = false }) {
-  return {
-    props: {
-      preview,
-      ...(await getRadioPage(preview)),
-    },
-  };
 }

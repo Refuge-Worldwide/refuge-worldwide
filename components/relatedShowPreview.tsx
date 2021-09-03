@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { contentful } from "../lib/loaders";
+import loaders from "../lib/loaders";
 import { ShowInterface } from "../types/shared";
 import { parseGenres } from "../util";
 import Badge from "./badge";
@@ -23,7 +23,7 @@ export default function RelatedShowPreview({
             <Image
               key={coverImage.sys.id}
               src={coverImage.url}
-              loader={contentful}
+              loader={loaders.contentful}
               width={590}
               height={345}
               objectFit="cover"

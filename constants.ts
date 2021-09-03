@@ -50,3 +50,7 @@ export const REGEX = {
   NUMERIC: new RegExp(/^\d+$/),
   SPECIAL: new RegExp(/\W|_/g),
 };
+
+export const GRAPHCDN_ENDPOINT = `https://contentful-refuge-worldwide.graphcdn.app`;
+
+export const ENDPOINT = `https://graphql.contentful.com/content/v1/spaces/${process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID}`;

@@ -2,7 +2,7 @@ import { InferGetStaticPropsType } from "next";
 import Layout from "../../components/layout";
 import Pill from "../../components/pill";
 import PageMeta from "../../components/seo/page";
-import { getNewsPage } from "../../lib/api";
+import { getNewsPage } from "../../lib/api/pages";
 import AllArticles from "../../views/news/allArticles";
 import FeaturedArticles from "../../views/news/featuredArticles";
 
@@ -12,6 +12,7 @@ export async function getStaticProps({ preview = false }) {
       preview,
       ...(await getNewsPage(preview)),
     },
+    revalidate: 60,
   };
 }
 

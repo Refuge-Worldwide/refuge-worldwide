@@ -1,18 +1,16 @@
 import { InferGetStaticPropsType } from "next";
 import Layout from "../components/layout";
 import PageMeta from "../components/seo/page";
-import { getHomePage } from "../lib/api";
+import { getHomePage } from "../lib/api/pages";
 import FeaturedShows from "../views/home/featuredShows";
 import LatestNews from "../views/home/latestNews";
 import NextUp from "../views/home/nextUp";
 import FeaturedArticles from "../views/news/featuredArticles";
 
-export async function getStaticProps({ preview = false }) {
+export async function getStaticProps() {
   return {
-    props: {
-      preview,
-      ...(await getHomePage()),
-    },
+    props: await getHomePage(),
+    revalidate: 60,
   };
 }
 
@@ -21,10 +19,9 @@ export default function HomePage({
   featuredShows,
   latestArticles,
   nextUp,
-  preview,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
-    <Layout preview={preview}>
+    <Layout>
       <PageMeta title="Refuge Worldwide" path="/" />
 
       <NextUp {...nextUp} />

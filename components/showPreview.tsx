@@ -2,7 +2,7 @@ import classNames from "classnames";
 import Image from "next/image";
 import Link from "next/link";
 import PlayLarge from "../icons/playLarge";
-import { contentful } from "../lib/loaders";
+import loaders from "../lib/loaders";
 import { playerWidget, showKey } from "../lib/mixcloud";
 import type { ShowInterface } from "../types/shared";
 import { getMixcloudKey, parseGenres } from "../util";
@@ -48,7 +48,7 @@ export default function ShowPreview({
         <Image
           key={coverImage.sys.id}
           src={coverImage.url}
-          loader={contentful}
+          loader={loaders.contentful}
           width={590}
           height={345}
           objectFit="cover"
@@ -110,7 +110,7 @@ export function ShowPreviewWithoutPlayer({
             <Image
               key={coverImage.sys.id}
               src={coverImage.url}
-              loader={contentful}
+              loader={loaders.contentful}
               width={590}
               height={345}
               objectFit="cover"

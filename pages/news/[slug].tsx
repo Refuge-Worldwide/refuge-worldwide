@@ -1,6 +1,7 @@
 import Layout from "../../components/layout";
 import ArticleMeta from "../../components/seo/article";
-import { getAllArticlePaths, getArticleAndMoreArticles } from "../../lib/api";
+import { getArticleAndMoreArticles } from "../../lib/api";
+import { getArticlePathsToPreRender } from "../../lib/api/paths";
 import { ArticleInterface } from "../../types/shared";
 import ArticleBody from "../../views/news/articleBody";
 import RelatedArticles from "../../views/news/relatedArticles";
@@ -49,6 +50,7 @@ export async function getStaticProps({ params, preview = false }) {
         preview,
         ...data,
       },
+      revalidate: 60,
     };
   } catch (error) {
     console.error(error);
@@ -61,7 +63,7 @@ export async function getStaticProps({ params, preview = false }) {
 
 export async function getStaticPaths() {
   return {
-    paths: await getAllArticlePaths(),
+    paths: await getArticlePathsToPreRender(),
     fallback: "blocking",
   };
 }
