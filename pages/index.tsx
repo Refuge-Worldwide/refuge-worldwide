@@ -13,6 +13,7 @@ export async function getStaticProps({ preview = false }) {
       preview,
       ...(await getHomePage()),
     },
+    revalidate: 60,
   };
 }
 
