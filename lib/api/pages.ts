@@ -119,9 +119,7 @@ export async function getAboutPage(preview: boolean) {
   return extractPage<AboutPageData>(data, "pageAbout");
 }
 
-export async function getSupportPage(
-  preview: boolean
-): Promise<SupportPageData> {
+export async function getSupportPage(preview: boolean) {
   const data = await graphql(
     /* GraphQL */ `
     query {
@@ -160,12 +158,10 @@ export async function getSupportPage(
     preview
   );
 
-  return extractPage(data, "pageSupport");
+  return extractPage<SupportPageData>(data, "pageSupport");
 }
 
-export async function getNewsletterPage(
-  preview: boolean
-): Promise<NewsletterPageData> {
+export async function getNewsletterPage(preview: boolean) {
   const data = await graphql(
     /* GraphQL */ `
     query {
@@ -204,12 +200,10 @@ export async function getNewsletterPage(
     preview
   );
 
-  return extractPage(data, "pageNewsletter");
+  return extractPage<NewsletterPageData>(data, "pageNewsletter");
 }
 
-export async function getBookingsPage(
-  preview: boolean
-): Promise<BookingsPageData> {
+export async function getBookingsPage(preview: boolean) {
   const data = await graphql(/* GraphQL */ `
     query {
       pageBooking(id: "5ApzlspIzqeUmURGvpTCug", preview: ${preview}) {
@@ -218,7 +212,7 @@ export async function getBookingsPage(
     }
   `);
 
-  return extractPage(data, "pageBooking");
+  return extractPage<BookingsPageData>(data, "pageBooking");
 }
 
 export async function getNewsPage(preview: boolean) {
