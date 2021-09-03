@@ -3,27 +3,10 @@ originUrl: 'https://graphql.contentful.com/content/v1/spaces/taoiy3h84mql'
 headers:
   Authorization: Bearer 0WSsmLXlRBzl-t6psuCSIc-T8PodnFri2cIyu7TUzDs
 rules:
-  - description: Cache Show-Related Queries
+  - description: Cache All
     maxAge: 900
     scope: PUBLIC
     swr: 900
     types:
-      Show: true
-      ShowArtistsCollection: true
-      ShowCollection: true
-      ShowGenresCollection: true
-  - description: Cache Artist-Related Queries
-    maxAge: 900
-    scope: PUBLIC
-    swr: 900
-    types:
-      Artist: true
-      ArtistCollection: true
-  - description: Cache Article-Related Queries
-    maxAge: 900
-    scope: PUBLIC
-    swr: 900
-    types:
-      Article: true
-      ArticleCollection: true
+      Query: true
 schema: 'https://graphql.contentful.com/content/v1/spaces/taoiy3h84mql'
