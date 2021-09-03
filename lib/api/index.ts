@@ -25,9 +25,10 @@ interface GraphQLInterface {
   preview?: boolean;
 }
 
-export async function graphql(query: string, options?: GraphQLInterface) {
-  const { preview = false, variables = {} } = options;
-
+export async function graphql(
+  query: string,
+  { preview, variables }: GraphQLInterface = { preview: false, variables: {} }
+) {
   const r = await fetch(ENDPOINT, {
     method: "POST",
     headers: {
