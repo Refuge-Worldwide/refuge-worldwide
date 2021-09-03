@@ -4,7 +4,7 @@ import { extractCollection } from "../../util";
 
 export async function getArtistPathsToPreRender() {
   const data = await graphql(/* GraphQL */ `
-    query {
+    query ArtistPathsToPreRenderQuery {
       artistCollection(
         where: { slug_exists: true }
         limit: 100
@@ -31,7 +31,7 @@ export async function getArtistPathsToPreRender() {
 
 export async function getArticlePathsToPreRender() {
   const data = await graphql(/* GraphQL */ `
-    query {
+    query ArticlePathsToPreRenderQuery {
       articleCollection(
         where: { slug_exists: true }
         limit: 100
@@ -91,7 +91,7 @@ export async function getShowPathsToPreRender() {
 
 export async function getSitemapPaths() {
   const data = await graphql(/* GraphQL */ `
-    query {
+    query SitemapPathsQuery {
       shows: showCollection(limit: 4000) {
         items {
           slug
