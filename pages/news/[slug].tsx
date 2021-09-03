@@ -50,6 +50,7 @@ export async function getStaticProps({ params, preview = false }) {
         preview,
         ...data,
       },
+      revalidate: 60,
     };
   } catch (error) {
     console.error(error);

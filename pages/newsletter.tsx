@@ -10,24 +10,26 @@ export async function getStaticProps({ preview = false }) {
   return {
     props: {
       preview,
-      data: await getNewsletterPage(preview),
+      ...(await getNewsletterPage(preview)),
     },
+    revalidate: 60,
   };
 }
 
 export default function NewsletterPage({
   preview,
-  data,
+  content,
+  coverImage,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <Layout preview={preview}>
       <PageMeta title="Newsletter | Refuge Worldwide" path="newsletter/" />
 
-      <SinglePage coverImage={data.coverImage}>
+      <SinglePage coverImage={coverImage}>
         <section>
           <div className="container-md p-4 sm:p-8 bg-white">
             <div className="prose sm:prose-lg max-w-none">
-              {documentToReactComponents(data?.content?.json)}
+              {documentToReactComponents(content?.json)}
             </div>
 
             <div className="h-10" />

@@ -9,24 +9,26 @@ export async function getStaticProps({ preview = false }) {
   return {
     props: {
       preview,
-      data: await getAboutPage(preview),
+      ...(await getAboutPage(preview)),
     },
+    revalidate: 60,
   };
 }
 
 export default function AboutPage({
   preview,
-  data,
+  coverImage,
+  content,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <Layout preview={preview}>
       <PageMeta title="About | Refuge Worldwide" path="about/" />
 
-      <SinglePage coverImage={data.coverImage}>
+      <SinglePage coverImage={coverImage}>
         <section>
           <div className="container-md p-4 sm:p-8 bg-white">
             <div className="prose sm:prose-lg max-w-none">
-              {renderRichTextWithImages(data.content)}
+              {renderRichTextWithImages(content)}
             </div>
           </div>
         </section>

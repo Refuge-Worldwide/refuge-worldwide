@@ -10,14 +10,15 @@ export async function getStaticProps({ preview = false }) {
   return {
     props: {
       preview,
-      data: await getBookingsPage(preview),
+      ...(await getBookingsPage(preview)),
     },
+    revalidate: 60,
   };
 }
 
 export default function BookingsPage({
   preview,
-  data,
+  bookingPassword,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const [passwordCorrect, passwordCorrectSet] = useState(false);
 
@@ -37,7 +38,7 @@ export default function BookingsPage({
         <section className="py-48 md:py-72">
           <div className="container-md p-4 sm:p-8">
             <BookingPasswordForm
-              bookingPassword={data.bookingPassword}
+              bookingPassword={bookingPassword}
               onPasswordCorrect={onPasswordCorrect}
             />
           </div>

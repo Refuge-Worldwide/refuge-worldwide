@@ -11,6 +11,7 @@ export async function getStaticProps({ preview = false }) {
       preview,
       ...(await getRadioPage(preview)),
     },
+    revalidate: 60,
   };
 }
 

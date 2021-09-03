@@ -12,6 +12,7 @@ export async function getStaticProps({ preview = false }) {
       preview,
       ...(await getNewsPage(preview)),
     },
+    revalidate: 60,
   };
 }
 

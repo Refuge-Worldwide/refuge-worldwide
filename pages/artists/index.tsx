@@ -10,15 +10,18 @@ import { getArtistsPage } from "../../lib/api/pages";
 import type { ArtistFilterType } from "../../types/shared";
 import { sortAndGroup } from "../../util";
 
-export async function getStaticProps() {
+export async function getStaticProps({ preview = false }) {
   return {
     props: {
+      preview,
       allArtists: await getArtistsPage(),
     },
+    revalidate: 60,
   };
 }
 
 export default function ArtistsPage({
+  preview,
   allArtists,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const filters: ArtistFilterType[] = ["All", "Residents", "Guests"];
@@ -26,7 +29,10 @@ export default function ArtistsPage({
   const sections = sortAndGroup(allArtists, filter);
 
   return (
-    <Layout className="bg-purple flex flex-col-reverse sm:flex-row-reverse">
+    <Layout
+      preview={preview}
+      className="bg-purple flex flex-col-reverse sm:flex-row-reverse"
+    >
       <PageMeta title="Artists | Refuge Worldwide" path="artists/" />
 
       <div>
