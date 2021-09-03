@@ -22,8 +22,8 @@ import {
 export async function getHomePage() {
   const today = dayjs().format("YYYY-MM-DD");
 
-  const data = await graphql(/* GraphQL */ `
-    query {
+  const HomePageQuery = /* GraphQL */ `
+    query HomePageQuery($today: String) {
       featuredArticles: articleCollection(
         order: date_DESC
         where: { isFeatured: false }
@@ -36,7 +36,7 @@ export async function getHomePage() {
 
       featuredShows: showCollection(
         order: [date_DESC, title_ASC]
-        where: { isFeatured: true, date_lt: "${today}" }
+        where: { isFeatured: true, date_lt: $today }
         limit: 16
       ) {
         items {
@@ -64,7 +64,11 @@ export async function getHomePage() {
     ${ShowPreviewFragment}
     ${FeaturedArticleFragment}
     ${ArticlePreviewFragment}
-  `);
+  `;
+
+  const data = await graphql(HomePageQuery, {
+    variables: { today },
+  });
 
   return {
     featuredArticles: extractCollection<ArticleInterface>(
@@ -78,52 +82,53 @@ export async function getHomePage() {
 }
 
 export async function getAboutPage(preview: boolean) {
-  const data = await graphql(
-    /* GraphQL */ `
-      query {
-        pageAbout(id: "z1SsoA1K4SMJryGuYjzhK", preview: ${preview}) {
-          coverImage {
-            sys {
-              id
-            }
-            title
-            description
-            url
-            width
-            height
+  const AboutPageQuery = /* GraphQL */ `
+    query AboutPageQuery($preview: Boolean) {
+      pageAbout(id: "z1SsoA1K4SMJryGuYjzhK", preview: $preview) {
+        coverImage {
+          sys {
+            id
           }
-          content {
-            json
-            links {
-              assets {
-                block {
-                  sys {
-                    id
-                  }
-                  contentType
-                  title
-                  description
-                  url
-                  width
-                  height
+          title
+          description
+          url
+          width
+          height
+        }
+        content {
+          json
+          links {
+            assets {
+              block {
+                sys {
+                  id
                 }
+                contentType
+                title
+                description
+                url
+                width
+                height
               }
             }
           }
         }
       }
-    `,
-    preview
-  );
+    }
+  `;
+
+  const data = await graphql(AboutPageQuery, {
+    variables: { preview },
+    preview,
+  });
 
   return extractPage<AboutPageData>(data, "pageAbout");
 }
 
 export async function getSupportPage(preview: boolean) {
-  const data = await graphql(
-    /* GraphQL */ `
-    query {
-      pageSupport(id: "Aa4GRMf6fuDtkH0UhkX19", preview: ${preview}) {
+  const SupportPageQuery = /* GraphQL */ `
+    query SupportPageQuery($preview: Boolean) {
+      pageSupport(id: "Aa4GRMf6fuDtkH0UhkX19", preview: $preview) {
         coverImage {
           sys {
             id
@@ -154,18 +159,20 @@ export async function getSupportPage(preview: boolean) {
         }
       }
     }
-  `,
-    preview
-  );
+  `;
+
+  const data = await graphql(SupportPageQuery, {
+    variables: { preview },
+    preview,
+  });
 
   return extractPage<SupportPageData>(data, "pageSupport");
 }
 
 export async function getNewsletterPage(preview: boolean) {
-  const data = await graphql(
-    /* GraphQL */ `
-    query {
-      pageNewsletter(id: "7t2jOQoBCZ6sGK4HgBZZ42", preview: ${preview}) {
+  const NewsletterPageQuery = /* GraphQL */ `
+    query NewsletterPageQuery($preview: Boolean) {
+      pageNewsletter(id: "7t2jOQoBCZ6sGK4HgBZZ42", preview: $preview) {
         coverImage {
           sys {
             id
@@ -196,31 +203,39 @@ export async function getNewsletterPage(preview: boolean) {
         }
       }
     }
-  `,
-    preview
-  );
+  `;
+
+  const data = await graphql(NewsletterPageQuery, {
+    variables: { preview },
+    preview,
+  });
 
   return extractPage<NewsletterPageData>(data, "pageNewsletter");
 }
 
 export async function getBookingsPage(preview: boolean) {
-  const data = await graphql(/* GraphQL */ `
-    query {
-      pageBooking(id: "5ApzlspIzqeUmURGvpTCug", preview: ${preview}) {
+  const BookingPageQuery = /* GraphQL */ `
+    query BookingPageQuery($preview: Boolean) {
+      pageBooking(id: "5ApzlspIzqeUmURGvpTCug", preview: $preview) {
         bookingPassword
       }
     }
-  `);
+  `;
+
+  const data = await graphql(BookingPageQuery, {
+    variables: { preview },
+    preview,
+  });
 
   return extractPage<BookingsPageData>(data, "pageBooking");
 }
 
 export async function getNewsPage(preview: boolean) {
-  const data = await graphql(/* GraphQL */ `
-    query {
+  const NewsPageQuery = /* GraphQL */ `
+    query NewsPageQuery($preview: Boolean) {
       articles: articleCollection(
         order: date_DESC
-        preview: ${preview}
+        preview: $preview
         limit: 100
       ) {
         items {
@@ -232,7 +247,7 @@ export async function getNewsPage(preview: boolean) {
         where: { isFeatured: true }
         order: date_DESC
         limit: 3
-        preview: ${preview}
+        preview: $preview
       ) {
         items {
           ...FeaturedArticleFragment
@@ -242,7 +257,12 @@ export async function getNewsPage(preview: boolean) {
 
     ${ArticlePreviewFragment}
     ${FeaturedArticleFragment}
-  `);
+  `;
+
+  const data = await graphql(NewsPageQuery, {
+    variables: { preview },
+    preview,
+  });
 
   return {
     articles: extractCollection<ArticleInterface>(data, "articles"),
@@ -290,11 +310,29 @@ export async function getRadioPage(preview: boolean) {
   };
 }
 
+export async function getArtistsPage() {
+  const ArtistsPageQuery = /* GraphQL */ `
+    query ArtistsPageQuery {
+      artistCollection(order: name_ASC, limit: 2000) {
+        items {
+          ...AllArtistFragment
+        }
+      }
+    }
+
+    ${AllArtistFragment}
+  `;
+
+  const data = await graphql(ArtistsPageQuery);
+
+  return extractCollection<AllArtistEntry>(data, "artistCollection");
+}
+
 export async function getSearchPage() {
   const today = dayjs().format("YYYY-MM-DD");
 
-  const articleData = await graphql(/* GraphQL */ `
-    query {
+  const ArticleDataQuery = /* GraphQL */ `
+    query ArticleDataQuery {
       articleCollection(limit: 2500, order: date_DESC) {
         items {
           coverImage {
@@ -314,10 +352,12 @@ export async function getSearchPage() {
         }
       }
     }
-  `);
+  `;
 
-  const artistData = await graphql(/* GraphQL */ `
-    query {
+  const articleData = await graphql(ArticleDataQuery);
+
+  const ArtistDataQuery = /* GraphQL */ `
+    query ArtistDataQuery {
       artistCollection(limit: 2500, order: name_ASC) {
         items {
           photo {
@@ -335,14 +375,16 @@ export async function getSearchPage() {
         }
       }
     }
-  `);
+  `;
 
-  const showData = await graphql(/* GraphQL */ `
-    query {
+  const artistData = await graphql(ArtistDataQuery);
+
+  const ShowDataQuery = /* GraphQL */ `
+    query ShowDataQuery($today: String) {
       showCollection(
         limit: 2200
         order: date_DESC
-        where: { date_lt: "${today}" }
+        where: { date_lt: $today }
       ) {
         items {
           coverImage {
@@ -366,7 +408,11 @@ export async function getSearchPage() {
         }
       }
     }
-  `);
+  `;
+
+  const showData = await graphql(ShowDataQuery, {
+    variables: { today },
+  });
 
   const articleCollection = extractCollection<ArticleInterface>(
     articleData,
@@ -384,20 +430,4 @@ export async function getSearchPage() {
   ).map((el) => ({ ...el, type: "SHOW" }));
 
   return [...showCollection, ...articleCollection, ...artistCollection];
-}
-
-export async function getArtistsPage() {
-  const data = await graphql(/* GraphQL */ `
-    query {
-      artistCollection(order: name_ASC, limit: 2000) {
-        items {
-          ...AllArtistFragment
-        }
-      }
-    }
-
-    ${AllArtistFragment}
-  `);
-
-  return extractCollection<AllArtistEntry>(data, "artistCollection");
 }

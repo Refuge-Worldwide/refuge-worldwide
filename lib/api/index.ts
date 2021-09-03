@@ -20,7 +20,14 @@ function getErrorMessage(payload: ErrorPayload) {
   return payload.errors[0].message;
 }
 
-export async function graphql(query: string, preview = false) {
+interface GraphQLInterface {
+  variables?: Record<string, string | boolean | number>;
+  preview?: boolean;
+}
+
+export async function graphql(query: string, options?: GraphQLInterface) {
+  const { preview = false, variables = {} } = options;
+
   const r = await fetch(ENDPOINT, {
     method: "POST",
     headers: {
@@ -31,7 +38,7 @@ export async function graphql(query: string, preview = false) {
           : process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN
       }`,
     },
-    body: JSON.stringify({ query }),
+    body: JSON.stringify({ query, variables }),
   });
 
   if (r.ok) {
@@ -41,13 +48,20 @@ export async function graphql(query: string, preview = false) {
   throw new Error(getErrorMessage(await r.json()));
 }
 
-async function graphqlWithCache(key: string, query: string, preview = false) {
+async function graphqlWithCache(
+  key: string,
+  query: string,
+  { preview = false, variables = {} }: GraphQLInterface
+) {
   const value = memoryCache.get(key);
 
   if (value) {
     return value;
   } else {
-    const data = await graphql(query, preview);
+    const data = await graphql(query, {
+      variables,
+      preview,
+    });
 
     memoryCache.put(key, data, 1000 * 60 * 60);
 
@@ -58,9 +72,9 @@ async function graphqlWithCache(key: string, query: string, preview = false) {
 export async function getArtistAndRelatedShows(slug: string, preview: boolean) {
   const today = dayjs();
 
-  const entry = await graphql(/* GraphQL */ `
-    query {
-      artistCollection(where: { slug: "${slug}" }, limit: 1, preview: ${preview}) {
+  const ArtistAndRelatedShowsQuery = /* GraphQL */ `
+    query ArtistAndRelatedShowsQuery($slug: String, $preview: Boolean) {
+      artistCollection(where: { slug: $slug }, limit: 1, preview: $preview) {
         items {
           sys {
             id
@@ -123,7 +137,12 @@ export async function getArtistAndRelatedShows(slug: string, preview: boolean) {
         }
       }
     }
-  `);
+  `;
+
+  const entry = await graphql(ArtistAndRelatedShowsQuery, {
+    variables: { slug, preview },
+    preview,
+  });
 
   const artist = extractCollectionItem<ArtistEntry>(entry, "artistCollection");
 
@@ -147,48 +166,54 @@ export async function getArtistAndRelatedShows(slug: string, preview: boolean) {
 }
 
 export async function getAllShows(preview: boolean, limit = LIMITS.SHOWS) {
-  const data = await graphqlWithCache(
-    "getAllShows",
-    /* GraphQL */ `
-      query {
-        showCollection(order: date_DESC, where: { artistsCollection_exists: true }, preview: ${preview}, limit: ${limit}) {
-          items {
+  const AllShowsQuery = /* GraphQL */ `
+    query AllShowsQuery($preview: Boolean, $limit: Int) {
+      showCollection(
+        order: date_DESC
+        where: { artistsCollection_exists: true }
+        preview: $preview
+        limit: $limit
+      ) {
+        items {
+          title
+          date
+          slug
+          mixcloudLink
+          isFeatured
+          coverImage {
+            sys {
+              id
+            }
             title
-            date
-            slug
-            mixcloudLink
-            isFeatured
-            coverImage {
-              sys {
-                id
-              }
-              title
-              description
-              url
-              width
-              height
+            description
+            url
+            width
+            height
+          }
+          coverImagePosition
+          artistsCollection(limit: 9) {
+            items {
+              name
+              slug
             }
-            coverImagePosition
-            artistsCollection(limit: 9) {
-              items {
-                name
-                slug
-              }
+          }
+          genresCollection(limit: 9) {
+            items {
+              name
             }
-            genresCollection(limit: 9) {
-              items {
-                name
-              }
-            }
-            content {
-              json
-            }
+          }
+          content {
+            json
           }
         }
       }
-    `,
-    preview
-  );
+    }
+  `;
+
+  const data = await graphqlWithCache("getAllShows", AllShowsQuery, {
+    variables: { preview, limit },
+    preview,
+  });
 
   return extractCollection<ShowInterface>(data, "showCollection");
 }
@@ -196,67 +221,69 @@ export async function getAllShows(preview: boolean, limit = LIMITS.SHOWS) {
 export async function getShowAndMoreShows(slug: string, preview: boolean) {
   const today = dayjs();
 
-  const data = await graphql(
-    /* GraphQL */ `
-      query {
-        showCollection(
-          where: { slug: "${slug}" }
-          order: date_DESC
-          preview: ${preview}
-          limit: 1
-        ) {
-          items {
+  const ShowAndMoreShowsQuery = /* GraphQL */ `
+    query ShowAndMoreShowsQuery($slug: String, $preview: Boolean) {
+      showCollection(
+        where: { slug: $slug }
+        order: date_DESC
+        preview: $preview
+        limit: 1
+      ) {
+        items {
+          title
+          date
+          slug
+          mixcloudLink
+          isFeatured
+          coverImage {
+            sys {
+              id
+            }
             title
-            date
-            slug
-            mixcloudLink
-            isFeatured
-            coverImage {
-              sys {
-                id
-              }
-              title
-              description
-              url
-              width
-              height
+            description
+            url
+            width
+            height
+          }
+          coverImagePosition
+          artistsCollection(limit: 9) {
+            items {
+              name
+              slug
             }
-            coverImagePosition
-            artistsCollection(limit: 9) {
-              items {
-                name
-                slug
-              }
+          }
+          genresCollection(limit: 9) {
+            items {
+              name
             }
-            genresCollection(limit: 9) {
-              items {
-                name
-              }
-            }
-            content {
-              json
-              links {
-                assets {
-                  block {
-                    sys {
-                      id
-                    }
-                    contentType
-                    title
-                    description
-                    url
-                    width
-                    height
+          }
+          content {
+            json
+            links {
+              assets {
+                block {
+                  sys {
+                    id
                   }
+                  contentType
+                  title
+                  description
+                  url
+                  width
+                  height
                 }
               }
             }
           }
         }
       }
-    `,
-    preview
-  );
+    }
+  `;
+
+  const data = await graphql(ShowAndMoreShowsQuery, {
+    variables: { slug, preview },
+    preview,
+  });
 
   const entry: ShowInterface = extractCollectionItem(data, "showCollection");
   const entryGenres = entry.genresCollection.items.map((genre) => genre.name);
@@ -289,72 +316,74 @@ export async function getArticleAndMoreArticles(
   slug: string,
   preview: boolean
 ) {
-  const data = await graphql(
-    /* GraphQL */ `
-      query {
-        article: articleCollection(
-          limit: 1
-          where: { slug: "${slug}" }
-          order: date_DESC
-          preview: ${preview}
-        ) {
-          items {
+  const ArticleAndMoreArticlesQuery = /* GraphQL */ `
+    query ArticleAndMoreArticlesQuery($slug: String, $preview: Boolean) {
+      article: articleCollection(
+        limit: 1
+        where: { slug: $slug }
+        order: date_DESC
+        preview: $preview
+      ) {
+        items {
+          title
+          subtitle
+          articleType
+          author {
+            name
+          }
+          date
+          slug
+          coverImage {
+            sys {
+              id
+            }
             title
-            subtitle
-            articleType
-            author { 
-              name
-            }
-            date
-            slug
-            coverImage {
-              sys {
-                id
-              }
-              title
-              description
-              url
-              width
-              height
-            }
-            coverImagePosition
-            content {
-              json
-              links {
-                assets {
-                  block {
-                    sys {
-                      id
-                    }
-                    contentType
-                    title
-                    description
-                    url
-                    width
-                    height
+            description
+            url
+            width
+            height
+          }
+          coverImagePosition
+          content {
+            json
+            links {
+              assets {
+                block {
+                  sys {
+                    id
                   }
+                  contentType
+                  title
+                  description
+                  url
+                  width
+                  height
                 }
               }
             }
           }
         }
-
-        relatedArticles: articleCollection(
-          limit: 3
-          where: { slug_not: "${slug}" }
-          order: date_DESC
-          preview: ${preview}
-        ) {
-          items {
-            ...RelatedArticleFragment
-          }
-        }
       }
 
-      ${RelatedArticleFragment}
-    `,
-    preview
-  );
+      relatedArticles: articleCollection(
+        limit: 3
+        where: { slug_not: $slug }
+        order: date_DESC
+        preview: $preview
+      ) {
+        items {
+          ...RelatedArticleFragment
+        }
+      }
+    }
+
+    ${RelatedArticleFragment}
+  `;
+
+  const data = await graphql(ArticleAndMoreArticlesQuery, {
+    variables: { slug, preview },
+    preview,
+  });
 
   return {
     article: extractCollectionItem<ArticleInterface>(data, "article"),

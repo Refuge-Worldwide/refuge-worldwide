@@ -7,12 +7,9 @@ import LatestNews from "../views/home/latestNews";
 import NextUp from "../views/home/nextUp";
 import FeaturedArticles from "../views/news/featuredArticles";
 
-export async function getStaticProps({ preview = false }) {
+export async function getStaticProps() {
   return {
-    props: {
-      preview,
-      ...(await getHomePage()),
-    },
+    props: await getHomePage(),
     revalidate: 60,
   };
 }
@@ -22,10 +19,9 @@ export default function HomePage({
   featuredShows,
   latestArticles,
   nextUp,
-  preview,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
-    <Layout preview={preview}>
+    <Layout>
       <PageMeta title="Refuge Worldwide" path="/" />
 
       <NextUp {...nextUp} />

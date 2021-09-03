@@ -59,10 +59,10 @@ export async function getArticlePathsToPreRender() {
 export async function getShowPathsToPreRender() {
   const today = dayjs().format("YYYY-MM-DD");
 
-  const data = await graphql(/* GraphQL */ `
-    query {
+  const ShowPathsToPreRenderQuery = /* GraphQL */ `
+    query ShowPathsToPreRenderQuery($today: String) {
       showCollection(
-        where: { slug_exists: true, date_lt: "${today}" }
+        where: { slug_exists: true, date_lt: $today }
         limit: 100
         order: date_DESC
       ) {
@@ -71,7 +71,11 @@ export async function getShowPathsToPreRender() {
         }
       }
     }
-  `);
+  `;
+
+  const data = await graphql(ShowPathsToPreRenderQuery, {
+    variables: { today },
+  });
 
   const collection = extractCollection<{ slug: string }>(
     data,
