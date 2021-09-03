@@ -60,7 +60,7 @@ export async function getShowPathsToPreRender() {
   const today = dayjs().format("YYYY-MM-DD");
 
   const ShowPathsToPreRenderQuery = /* GraphQL */ `
-    query ShowPathsToPreRenderQuery($today: String) {
+    query ShowPathsToPreRenderQuery($today: DateTime) {
       showCollection(
         where: { slug_exists: true, date_lt: $today }
         limit: 100

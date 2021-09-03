@@ -23,7 +23,7 @@ export async function getHomePage() {
   const today = dayjs().format("YYYY-MM-DD");
 
   const HomePageQuery = /* GraphQL */ `
-    query HomePageQuery($today: String) {
+    query HomePageQuery($today: DateTime) {
       featuredArticles: articleCollection(
         order: date_DESC
         where: { isFeatured: false }
@@ -380,7 +380,7 @@ export async function getSearchPage() {
   const artistData = await graphql(ArtistDataQuery);
 
   const ShowDataQuery = /* GraphQL */ `
-    query ShowDataQuery($today: String) {
+    query ShowDataQuery($today: DateTime) {
       showCollection(
         limit: 2200
         order: date_DESC
