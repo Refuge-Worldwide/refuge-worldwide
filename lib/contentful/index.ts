@@ -1,6 +1,5 @@
 import dayjs from "dayjs";
-import memoryCache from "memory-cache";
-import { ENDPOINT, GRAPHCDN_ENDPOINT } from "../../constants";
+import { GRAPHCDN_ENDPOINT } from "../../constants";
 import type {
   ArticleInterface,
   ArtistEntry,
@@ -47,27 +46,6 @@ export async function graphql(
   }
 
   throw new Error(getErrorMessage(await r.json()));
-}
-
-async function graphqlWithCache(
-  key: string,
-  query: string,
-  { preview = false, variables = {} }: GraphQLInterface
-) {
-  const value = memoryCache.get(key);
-
-  if (value) {
-    return value;
-  } else {
-    const data = await graphql(query, {
-      variables,
-      preview,
-    });
-
-    memoryCache.put(key, data, 1000 * 60 * 60);
-
-    return data;
-  }
 }
 
 export async function getArtistAndRelatedShows(slug: string, preview: boolean) {
@@ -211,7 +189,7 @@ export async function getAllShows(preview: boolean, limit = LIMITS.SHOWS) {
     }
   `;
 
-  const data = await graphqlWithCache("getAllShows", AllShowsQuery, {
+  const data = await graphql(AllShowsQuery, {
     variables: { preview, limit },
     preview,
   });
@@ -224,12 +202,7 @@ export async function getShowAndMoreShows(slug: string, preview: boolean) {
 
   const ShowAndMoreShowsQuery = /* GraphQL */ `
     query ShowAndMoreShowsQuery($slug: String, $preview: Boolean) {
-      showCollection(
-        where: { slug: $slug }
-        order: date_DESC
-        preview: $preview
-        limit: 1
-      ) {
+      showCollection(where: { slug: $slug }, limit: 1, preview: $preview) {
         items {
           title
           date
@@ -320,9 +293,8 @@ export async function getArticleAndMoreArticles(
   const ArticleAndMoreArticlesQuery = /* GraphQL */ `
     query ArticleAndMoreArticlesQuery($slug: String, $preview: Boolean) {
       article: articleCollection(
-        limit: 1
         where: { slug: $slug }
-        order: date_DESC
+        limit: 1
         preview: $preview
       ) {
         items {
