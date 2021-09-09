@@ -34,34 +34,16 @@ export default function Show({ show, relatedShows, preview }: Props) {
 }
 
 export async function getStaticProps({ params, preview = false }) {
-  try {
-    const data = await getShowAndMoreShows(params.slug, preview);
+  const data = await getShowAndMoreShows(params.slug, preview);
 
-    if (!data) {
-      return {
-        notFound: true,
-      };
-    }
-
-    return {
-      props: {
-        preview,
-        ...data,
-      },
-      revalidate: 60,
-    };
-  } catch (error) {
-    console.error(error);
-
-    return {
-      notFound: true,
-    };
-  }
+  return {
+    props: { preview, ...data },
+    revalidate: 60,
+  };
 }
 
 export async function getStaticPaths() {
-  return {
-    paths: await getShowPathsToPreRender(),
-    fallback: "blocking",
-  };
+  const paths = await getShowPathsToPreRender();
+
+  return { paths, fallback: "blocking" };
 }

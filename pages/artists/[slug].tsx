@@ -32,34 +32,16 @@ export default function Artist({ artist, relatedShows, preview }: ArtistProps) {
 }
 
 export async function getStaticProps({ params, preview = false }) {
-  try {
-    const data = await getArtistAndRelatedShows(params.slug, preview);
+  const data = await getArtistAndRelatedShows(params.slug, preview);
 
-    if (!data) {
-      return {
-        notFound: true,
-      };
-    }
-
-    return {
-      props: {
-        preview,
-        ...data,
-      },
-      revalidate: 60,
-    };
-  } catch (error) {
-    console.error(error);
-
-    return {
-      notFound: true,
-    };
-  }
+  return {
+    props: { preview, ...data },
+    revalidate: 60,
+  };
 }
 
 export async function getStaticPaths() {
-  return {
-    paths: await getArtistPathsToPreRender(),
-    fallback: "blocking",
-  };
+  const paths = await getArtistPathsToPreRender();
+
+  return { paths, fallback: "blocking" };
 }

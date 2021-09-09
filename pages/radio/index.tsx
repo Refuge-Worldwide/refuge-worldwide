@@ -7,10 +7,7 @@ import NextShows from "../../views/radio/nextShows";
 
 export async function getStaticProps({ preview = false }) {
   return {
-    props: {
-      preview,
-      ...(await getRadioPage(preview)),
-    },
+    props: { preview, ...(await getRadioPage(preview)) },
     revalidate: 60,
   };
 }

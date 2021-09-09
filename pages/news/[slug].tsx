@@ -36,34 +36,16 @@ export default function Article({
 }
 
 export async function getStaticProps({ params, preview = false }) {
-  try {
-    const data = await getArticleAndMoreArticles(params.slug, preview);
+  const data = await getArticleAndMoreArticles(params.slug, preview);
 
-    if (!data) {
-      return {
-        notFound: true,
-      };
-    }
-
-    return {
-      props: {
-        preview,
-        ...data,
-      },
-      revalidate: 60,
-    };
-  } catch (error) {
-    console.error(error);
-
-    return {
-      notFound: true,
-    };
-  }
+  return {
+    props: { preview, ...data },
+    revalidate: 60,
+  };
 }
 
 export async function getStaticPaths() {
-  return {
-    paths: await getArticlePathsToPreRender(),
-    fallback: "blocking",
-  };
+  const paths = await getArticlePathsToPreRender();
+
+  return { paths, fallback: "blocking" };
 }
