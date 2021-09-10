@@ -115,7 +115,7 @@ export default function Footer() {
       </div>
 
       <div className="px-4 md:px-8 border-t border-white py-4 md:py-8">
-        <div className="font-medium text-center text-xxs">
+        <div className="font-medium text-center text-xxs leading-normal">
           <p>
             Designed by{" "}
             <a
@@ -137,12 +137,15 @@ export default function Footer() {
             </a>
             . Powered by{" "}
             <a
-              className="underline"
               target="_blank"
               rel="noopener noreferrer"
               href="https://vercel.com/?utm_source=refugeworldwide&utm_campaign=oss"
             >
-              Vercel
+              <img
+                className="inline h-3 w-auto"
+                src="/vercel-logotype-light.svg"
+                alt="Vercel"
+              />
             </a>
           </p>
         </div>
