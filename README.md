@@ -1,5 +1,7 @@
 # Refuge Worldwide
 
+[![Powered by Vervel](/powered-by-vercel.svg)](https://vercel.com/?utm_source=refugeworldwide&utm_campaign=oss)
+
 The [refugeworldwide.com](https://refugeworldwide.com) website, built with Next.js & Tailwind CSS, deployed on Vercel.
 
 The site is using Contentful as our CMS backend, and at build we're statically generating the the top Shows, Articles, and Artist pages, any page that gets added in the CMS or is updated is added on the fly using Next.js's ISR feature.
