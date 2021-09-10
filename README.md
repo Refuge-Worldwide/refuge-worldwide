@@ -6,7 +6,7 @@ The site is using Contentful as our CMS backend, and at build we're statically g
 
 ## Contributing
 
-We're always looking for ways to improve the performance of the site
+We're always looking for ways to improve the performance and accessibility of the site so feel free to open a PR and help out!
 
 ## Next.js
 
