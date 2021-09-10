@@ -135,6 +135,15 @@ export default function Footer() {
             >
               mirshko
             </a>
+            . Powered by{" "}
+            <a
+              className="underline"
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://vercel.com/?utm_source=refugeworldwide&utm_campaign=oss"
+            >
+              Vercel
+            </a>
           </p>
         </div>
       </div>
