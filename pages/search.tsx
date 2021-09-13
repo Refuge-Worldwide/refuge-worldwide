@@ -36,7 +36,7 @@ export async function getStaticProps({ preview = false }) {
         SearchShowInterface | SearchArtistInterface | SearchArticleInterface
       >,
     },
-    revalidate: 60,
+    revalidate: 60 * 60,
   };
 }
 

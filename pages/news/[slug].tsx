@@ -41,7 +41,7 @@ export async function getStaticProps({ params, preview = false }) {
 
     return {
       props: { preview, ...data },
-      revalidate: 60,
+      revalidate: 60 * 60,
     };
   } catch (error) {
     console.error(error);

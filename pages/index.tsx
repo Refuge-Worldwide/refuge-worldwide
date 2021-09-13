@@ -10,7 +10,7 @@ import FeaturedArticles from "../views/news/featuredArticles";
 export async function getStaticProps() {
   return {
     props: await getHomePage(),
-    revalidate: 60,
+    revalidate: 60 * 60,
   };
 }
 
