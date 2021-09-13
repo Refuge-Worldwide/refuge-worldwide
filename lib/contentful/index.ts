@@ -367,15 +367,19 @@ export async function getArticleAndMoreArticles(
     preview,
   });
 
-  if (!data) {
+  const article = extractCollectionItem<ArticleInterface>(data, "article");
+
+  if (!article) {
     throw new Error(`No Article found for slug '${slug}'`);
   }
 
+  const relatedArticles = extractCollection<ArticleInterface>(
+    data,
+    "relatedArticles"
+  );
+
   return {
-    article: extractCollectionItem<ArticleInterface>(data, "article"),
-    relatedArticles: extractCollection<ArticleInterface>(
-      data,
-      "relatedArticles"
-    ),
+    article,
+    relatedArticles,
   };
 }
