@@ -11,7 +11,7 @@ export async function getStaticProps({ preview = false }) {
       preview,
       ...(await getAboutPage(preview)),
     },
-    revalidate: 60 * 60,
+    revalidate: 60 * 60 * 24,
   };
 }
 

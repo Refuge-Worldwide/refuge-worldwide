@@ -12,7 +12,7 @@ export async function getStaticProps({ preview = false }) {
       preview,
       ...(await getBookingsPage(preview)),
     },
-    revalidate: 60 * 60,
+    revalidate: 60 * 60 * 24,
   };
 }
 
