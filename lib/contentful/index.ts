@@ -126,7 +126,7 @@ export async function getArtistAndRelatedShows(slug: string, preview: boolean) {
   const artist = extractCollectionItem<ArtistEntry>(entry, "artistCollection");
 
   if (!artist) {
-    throw new Error(`Artist with slug '${slug}' not found`);
+    throw new Error(`No Artist found for slug '${slug}'`);
   }
 
   let relatedShows: ShowInterface[] = [];
@@ -266,7 +266,7 @@ export async function getShowAndMoreShows(slug: string, preview: boolean) {
   const entry: ShowInterface = extractCollectionItem(data, "showCollection");
 
   if (!entry) {
-    throw new Error(`Show with slug '${slug}' not found`);
+    throw new Error(`No Show found for slug '${slug}'`);
   }
 
   const entryGenres = entry.genresCollection.items.map((genre) => genre.name);
@@ -368,7 +368,7 @@ export async function getArticleAndMoreArticles(
   });
 
   if (!data) {
-    throw new Error(`Article with slug '${slug}' not found`);
+    throw new Error(`No Article found for slug '${slug}'`);
   }
 
   return {
