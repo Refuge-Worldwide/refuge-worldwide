@@ -36,20 +36,12 @@ export default function Article({
 }
 
 export async function getStaticProps({ params, preview = false }) {
-  try {
-    const data = await getArticleAndMoreArticles(params.slug, preview);
+  const data = await getArticleAndMoreArticles(params.slug, preview);
 
-    return {
-      props: { preview, ...data },
-      revalidate: 60 * 60,
-    };
-  } catch (error) {
-    console.error(error);
-
-    return {
-      notFound: true,
-    };
-  }
+  return {
+    props: { preview, ...data },
+    revalidate: 60 * 60,
+  };
 }
 
 export async function getStaticPaths() {
