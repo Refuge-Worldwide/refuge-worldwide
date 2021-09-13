@@ -32,12 +32,20 @@ export default function Artist({ artist, relatedShows, preview }: ArtistProps) {
 }
 
 export async function getStaticProps({ params, preview = false }) {
-  const data = await getArtistAndRelatedShows(params.slug, preview);
+  try {
+    const data = await getArtistAndRelatedShows(params.slug, preview);
 
-  return {
-    props: { preview, ...data },
-    revalidate: 60,
-  };
+    return {
+      props: { preview, ...data },
+      revalidate: 60,
+    };
+  } catch (error) {
+    console.error(error);
+
+    return {
+      notFound: true,
+    };
+  }
 }
 
 export async function getStaticPaths() {
