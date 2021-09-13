@@ -65,7 +65,7 @@ export default function ShowPreview({
 
       <div className="h-2" />
 
-      <Link href={`/radio/${slug}`} prefetch={false}>
+      <Link href={`/radio/${slug}`}>
         <a aria-labelledby={`show-${slug}`}>
           <h2 id={`show-${slug}`} className="font-sans font-medium truncate">
             {title}
@@ -103,7 +103,7 @@ export function ShowPreviewWithoutPlayer({
   const genres = parseGenres(genresCollection).slice(0, 3);
 
   return (
-    <Link href={`/radio/${slug}`} prefetch={false}>
+    <Link href={`/radio/${slug}`}>
       <a aria-labelledby={`show-${slug}`}>
         <article className={cachedClassNames}>
           <div className="flex">

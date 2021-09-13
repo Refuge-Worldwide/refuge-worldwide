@@ -16,7 +16,7 @@ export default function RelatedShowPreview({
   const genres = parseGenres(genresCollection).slice(0, 2);
 
   return (
-    <Link href={`/radio/${slug}`} prefetch={false}>
+    <Link href={`/radio/${slug}`}>
       <a>
         <article className="text-small text-white">
           <div className="flex">

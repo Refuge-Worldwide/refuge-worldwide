@@ -42,7 +42,7 @@ export default function ArticlePreview({
   };
 
   return (
-    <Link href={`/news/${slug}`} prefetch={false}>
+    <Link href={`/news/${slug}`}>
       <a aria-labelledby={`article-${slug}`}>
         <article className="text-small font-medium leading-snug">
           <div className="flex">
@@ -111,7 +111,7 @@ export function ArticlePreviewForSearch({
   coverImage,
 }: ArticlePreview) {
   return (
-    <Link href={`/news/${slug}`} prefetch={false}>
+    <Link href={`/news/${slug}`}>
       <a aria-labelledby={`article-${slug}`}>
         <article className="text-small font-medium leading-snug">
           <div className="flex">

@@ -20,7 +20,7 @@ export default function UpcomingShowPreview({
   const artists = formatArtistNames(artistsCollection.items);
 
   return (
-    <Link href={`/radio/${slug}`} prefetch={false}>
+    <Link href={`/radio/${slug}`}>
       <a aria-labelledby={`upcoming-${slug}`}>
         <article>
           <div className="flex w-full">
