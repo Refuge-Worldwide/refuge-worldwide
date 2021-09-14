@@ -7,7 +7,7 @@ export async function getArtistPathsToPreRender() {
     query ArtistPathsToPreRenderQuery {
       artistCollection(
         where: { slug_exists: true }
-        limit: 1000
+        limit: 100
         order: name_ASC
       ) {
         items {
@@ -34,7 +34,7 @@ export async function getArticlePathsToPreRender() {
     query ArticlePathsToPreRenderQuery {
       articleCollection(
         where: { slug_exists: true }
-        limit: 500
+        limit: 50
         order: date_DESC
       ) {
         items {
@@ -63,10 +63,9 @@ export async function getShowPathsToPreRender() {
     query ShowPathsToPreRenderQuery($today: DateTime) {
       showCollection(
         where: { slug_exists: true, date_lt: $today }
-        limit: 1000
+        limit: 100
         order: date_DESC
       ) {
-        total
         items {
           slug
         }
