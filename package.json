@@ -36,6 +36,7 @@
     "react-dom": "^17.0.2",
     "react-ridge-state": "^4.1.7",
     "react-use": "^17.3.1",
+    "sharp": "^0.29.1",
     "smoothscroll-polyfill": "^0.4.4",
     "swr": "^1.0.0",
     "use-intersection": "^0.2.1"
