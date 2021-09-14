@@ -1,6 +1,6 @@
 import Layout from "../../components/layout";
 import ArtistMeta from "../../components/seo/artist";
-import { getArtistAndRelatedShows } from "../../lib/contentful";
+import { getArtistsPageSingle } from "../../lib/contentful/pages/artists";
 import { getArtistPathsToPreRender } from "../../lib/contentful/paths";
 import { ArtistEntry, ShowInterface } from "../../types/shared";
 import ArtistBody from "../../views/artists/artistBody";
@@ -33,7 +33,7 @@ export default function Artist({ artist, relatedShows, preview }: ArtistProps) {
 
 export async function getStaticProps({ params, preview = false }) {
   try {
-    const data = await getArtistAndRelatedShows(params.slug, preview);
+    const data = await getArtistsPageSingle(params.slug, preview);
 
     return {
       props: { preview, ...data },

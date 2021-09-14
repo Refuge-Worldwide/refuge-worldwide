@@ -6,7 +6,7 @@ import Pill from "../../components/pill";
 import PageMeta from "../../components/seo/page";
 import { ALPHABET } from "../../constants";
 import useArtistRoleFilter from "../../hooks/useArtistRoleFilter";
-import { getArtistsPage } from "../../lib/contentful/pages";
+import { getArtistsPage } from "../../lib/contentful/pages/artists";
 import type { ArtistFilterType } from "../../types/shared";
 import { sortAndGroup } from "../../util";
 

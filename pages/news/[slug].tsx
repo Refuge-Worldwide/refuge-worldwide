@@ -1,6 +1,6 @@
 import Layout from "../../components/layout";
 import ArticleMeta from "../../components/seo/article";
-import { getArticleAndMoreArticles } from "../../lib/contentful";
+import { getNewsPageSingle } from "../../lib/contentful/pages/news";
 import { getArticlePathsToPreRender } from "../../lib/contentful/paths";
 import { ArticleInterface } from "../../types/shared";
 import ArticleBody from "../../views/news/articleBody";
@@ -37,7 +37,7 @@ export default function Article({
 
 export async function getStaticProps({ params, preview = false }) {
   try {
-    const data = await getArticleAndMoreArticles(params.slug, preview);
+    const data = await getNewsPageSingle(params.slug, preview);
 
     return {
       props: { preview, ...data },

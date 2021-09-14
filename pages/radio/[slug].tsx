@@ -1,6 +1,6 @@
 import Layout from "../../components/layout";
 import ShowMeta from "../../components/seo/show";
-import { getShowAndMoreShows } from "../../lib/contentful";
+import { getRadioPageSingle } from "../../lib/contentful/pages/radio";
 import { getShowPathsToPreRender } from "../../lib/contentful/paths";
 import { ShowInterface } from "../../types/shared";
 import RelatedShows from "../../views/artists/relatedShows";
@@ -35,7 +35,7 @@ export default function Show({ show, relatedShows, preview }: Props) {
 
 export async function getStaticProps({ params, preview = false }) {
   try {
-    const data = await getShowAndMoreShows(params.slug, preview);
+    const data = await getRadioPageSingle(params.slug, preview);
 
     return {
       props: { preview, ...data },

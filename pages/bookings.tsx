@@ -4,7 +4,7 @@ import BookingPasswordForm from "../components/bookingForm";
 import CalendlyEmbed from "../components/calendly";
 import Layout from "../components/layout";
 import PageMeta from "../components/seo/page";
-import { getBookingsPage } from "../lib/contentful/pages";
+import { getBookingsPage } from "../lib/contentful/pages/bookings";
 
 export async function getStaticProps({ preview = false }) {
   return {

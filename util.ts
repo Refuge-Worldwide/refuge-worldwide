@@ -162,3 +162,5 @@ export const parseGenres = (genresCollection: { items: GenreInterface[] }) =>
     .filter((genre) => Boolean(genre?.name))
     .map((genre) => genre.name)
     .sort(sort.alpha);
+
+export const uniq = <T>(arr: T[]) => Array.from(new Set(arr));

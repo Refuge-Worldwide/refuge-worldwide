@@ -1,7 +1,7 @@
 import { InferGetStaticPropsType } from "next";
 import Layout from "../../components/layout";
 import PageMeta from "../../components/seo/page";
-import { getRadioPage } from "../../lib/contentful/pages";
+import { getRadioPage } from "../../lib/contentful/pages/radio";
 import AllShows from "../../views/radio/allShows";
 import NextShows from "../../views/radio/nextShows";
 
