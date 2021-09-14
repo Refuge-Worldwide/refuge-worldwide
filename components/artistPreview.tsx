@@ -9,7 +9,7 @@ export default function ArtistPreview({
   slug,
 }: Pick<AllArtistEntry, "name" | "photo" | "slug">) {
   return (
-    <Link href={`/artists/${slug}`}>
+    <Link href={`/artists/${slug}`} prefetch={false}>
       <a>
         <Image
           key={photo.sys.id}
