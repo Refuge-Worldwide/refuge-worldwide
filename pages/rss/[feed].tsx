@@ -2,6 +2,7 @@ import { documentToPlainTextString } from "@contentful/rich-text-plain-text-rend
 import { Feed } from "feed";
 import type { GetServerSidePropsContext, GetServerSidePropsResult } from "next";
 import { getNewsPage } from "../../lib/contentful/pages/news";
+import { getRSSFeed } from "../../lib/contentful/pages/rss";
 
 type RSSFeeds = "feed.json" | "feed.xml" | "atom.xml";
 
@@ -23,7 +24,7 @@ export async function getServerSideProps(
       };
     }
 
-    const { articles } = await getNewsPage(false);
+    const articles = await getRSSFeed();
 
     const siteURL = `https://refugeworldwide.com`;
 
@@ -37,14 +38,12 @@ export async function getServerSideProps(
 
     const feed = new Feed({
       title: "Refuge Worldwide News",
-      description: "",
       id: siteURL,
       link: siteURL,
       image: `${siteURL}/android-chrome-512x512.png`,
       favicon: `${siteURL}/favicon-32x32.png`,
       copyright: `All rights reserved ${date.getFullYear()}, Refuge Worldwide`,
       updated: date,
-      generator: "Feed for Node.js",
       feedLinks: {
         rss2: `${siteURL}/rss/feed.xml`,
         json: `${siteURL}/rss/feed.json`,
