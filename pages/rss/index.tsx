@@ -1,28 +1,13 @@
 import { documentToPlainTextString } from "@contentful/rich-text-plain-text-renderer";
 import { Feed } from "feed";
 import type { GetServerSidePropsContext, GetServerSidePropsResult } from "next";
-import { getNewsPage } from "../../lib/contentful/pages/news";
 import { getRSSFeed } from "../../lib/contentful/pages/rss";
 
-type RSSFeeds = "feed.json" | "feed.xml" | "atom.xml";
-
-type ContentTypeHeader = "application/json" | "text/xml";
-
 export async function getServerSideProps(
-  context: GetServerSidePropsContext<{ feed: RSSFeeds }>
+  context: GetServerSidePropsContext
 ): Promise<GetServerSidePropsResult<{}>> {
   if (context && context.res) {
-    const { res, params } = context;
-
-    if (
-      params.feed !== "atom.xml" &&
-      params.feed !== "feed.xml" &&
-      params.feed !== "feed.json"
-    ) {
-      return {
-        notFound: true,
-      };
-    }
+    const { res } = context;
 
     const articles = await getRSSFeed();
 
@@ -44,11 +29,6 @@ export async function getServerSideProps(
       favicon: `${siteURL}/favicon-32x32.png`,
       copyright: `All rights reserved ${date.getFullYear()}, Refuge Worldwide`,
       updated: date,
-      feedLinks: {
-        rss2: `${siteURL}/rss/feed.xml`,
-        json: `${siteURL}/rss/feed.json`,
-        atom: `${siteURL}/rss/atom.xml`,
-      },
       author,
     });
 
@@ -67,27 +47,9 @@ export async function getServerSideProps(
       });
     });
 
-    let writeChunk: string;
-    let contentTypeHeader: ContentTypeHeader = "text/xml";
+    res.setHeader("Content-Type", "text/xml");
 
-    switch (true) {
-      case params.feed === "feed.json":
-        writeChunk = feed.json1();
-        contentTypeHeader = "application/json";
-        break;
-
-      case params.feed === "atom.xml":
-        writeChunk = feed.atom1();
-        break;
-
-      default:
-        writeChunk = feed.rss2();
-        break;
-    }
-
-    res.setHeader("Content-Type", contentTypeHeader);
-
-    res.write(writeChunk);
+    res.write(feed.rss2());
 
     res.end();
   }
