@@ -63,6 +63,9 @@ export const FeaturedArticleFragment = /* GraphQL */ `
 export const ArticlePreviewFragment = /* GraphQL */ `
   fragment ArticlePreviewFragment on Article {
     articleType
+    author {
+      name
+    }
     content {
       json
     }
