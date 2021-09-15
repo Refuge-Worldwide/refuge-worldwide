@@ -1,6 +1,7 @@
 import { Feed } from "feed";
 import type { GetServerSidePropsContext, GetServerSidePropsResult } from "next";
 import { getNewsPage } from "../../lib/contentful/pages/news";
+import { documentToPlainTextString } from "@contentful/rich-text-plain-text-renderer";
 
 type RSSFeedTypes = "feed.json" | "feed.xml" | "atom.xml";
 
@@ -59,9 +60,10 @@ export async function getServerSideProps(
         title: article.title,
         id: url,
         link: url,
-        description: article.subtitle ?? undefined,
+        description: article?.subtitle ?? undefined,
+        content: documentToPlainTextString(article.content.json),
         author: [{ name: article?.author?.name ?? "Staff" }],
-        image: article.coverImage.url,
+        image: article?.coverImage?.url ?? undefined,
         date: new Date(article.date),
       });
     });

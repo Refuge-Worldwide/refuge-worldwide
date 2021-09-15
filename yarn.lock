@@ -77,6 +77,13 @@
     "@babel/helper-validator-identifier" "^7.14.9"
     to-fast-properties "^2.0.0"
 
+"@contentful/rich-text-plain-text-renderer@^15.3.5":
+  version "15.3.5"
+  resolved "https://registry.yarnpkg.com/@contentful/rich-text-plain-text-renderer/-/rich-text-plain-text-renderer-15.3.5.tgz#d92761ca118c5f0b16b2c55c9a190a8c02e75ffd"
+  integrity sha512-AFNP1gAopmFiFK8E4qzMcgemYzSUHfmgVZeZAzypPDKQhhS3x/L4u9kihZcK55YkLpSJgUisc8XcrJlUTYMl4g==
+  dependencies:
+    "@contentful/rich-text-types" "^15.3.5"
+
 "@contentful/rich-text-react-renderer@^15.2.0":
   version "15.2.0"
   resolved "https://registry.yarnpkg.com/@contentful/rich-text-react-renderer/-/rich-text-react-renderer-15.2.0.tgz#b5ff25b4746f063f15d83eccaff555597d46683e"
@@ -88,6 +95,11 @@
   version "15.1.0"
   resolved "https://registry.yarnpkg.com/@contentful/rich-text-types/-/rich-text-types-15.1.0.tgz#5637452257e6c7c6fc406ec1ec6ab7fcc1158105"
   integrity sha512-3PgQi/B5yKC3xXDar1Ry4i4l9jgt56PFZ40cOkE+oCNLmNlFtZolo6cTrf4VunuufSsCfjTs4iWovy7fbM1I8Q==
+
+"@contentful/rich-text-types@^15.3.5":
+  version "15.3.5"
+  resolved "https://registry.yarnpkg.com/@contentful/rich-text-types/-/rich-text-types-15.3.5.tgz#414e7b4e671d9c3a4f75e5c762e4e109ccd4ba20"
+  integrity sha512-NOAdIfWUadOxhnv4IR+vBtgPtAtV0hv1uoZJogm2mniXZHRIpmKNbEBncjfr/SSHhOG98tQgHCUw6b/nvDTVaQ==
 
 "@corex/deepmerge@^2.6.34":
   version "2.6.34"
