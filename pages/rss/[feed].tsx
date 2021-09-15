@@ -1,14 +1,14 @@
+import { documentToPlainTextString } from "@contentful/rich-text-plain-text-renderer";
 import { Feed } from "feed";
 import type { GetServerSidePropsContext, GetServerSidePropsResult } from "next";
 import { getNewsPage } from "../../lib/contentful/pages/news";
-import { documentToPlainTextString } from "@contentful/rich-text-plain-text-renderer";
 
-type RSSFeedTypes = "feed.json" | "feed.xml" | "atom.xml";
+type RSSFeeds = "feed.json" | "feed.xml" | "atom.xml";
 
-type ContentTypeHeaderTypes = "application/json" | "text/xml";
+type ContentTypeHeader = "application/json" | "text/xml";
 
 export async function getServerSideProps(
-  context: GetServerSidePropsContext<{ feed: RSSFeedTypes }>
+  context: GetServerSidePropsContext<{ feed: RSSFeeds }>
 ): Promise<GetServerSidePropsResult<{}>> {
   if (context && context.res) {
     const { res, params } = context;
@@ -69,7 +69,7 @@ export async function getServerSideProps(
     });
 
     let writeChunk: string;
-    let contentTypeHeader: ContentTypeHeaderTypes = "text/xml";
+    let contentTypeHeader: ContentTypeHeader = "text/xml";
 
     switch (true) {
       case params.feed === "feed.json":
