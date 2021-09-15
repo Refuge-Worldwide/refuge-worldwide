@@ -1,5 +1,5 @@
 import { documentToPlainTextString } from "@contentful/rich-text-plain-text-renderer";
-import { Feed } from "feed";
+import { Author, Feed } from "feed";
 import type { GetServerSidePropsContext, GetServerSidePropsResult } from "next";
 import { getRSSFeed } from "../../lib/contentful/pages/rss";
 
@@ -15,7 +15,7 @@ export async function getServerSideProps(
 
     const date = new Date();
 
-    const author = {
+    const author: Author = {
       name: "Refuge Worldwide",
       email: "hello@refugeworldwide.com",
       link: "https://twitter.com/RefugeWorldwide",
@@ -25,6 +25,7 @@ export async function getServerSideProps(
       title: "Refuge Worldwide News",
       id: siteURL,
       link: siteURL,
+      language: "en",
       image: `${siteURL}/android-chrome-512x512.png`,
       favicon: `${siteURL}/favicon-32x32.png`,
       copyright: `All rights reserved ${date.getFullYear()}, Refuge Worldwide`,
