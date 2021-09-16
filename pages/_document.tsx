@@ -46,6 +46,12 @@ class RefugeDocument extends Document {
             href="/favicon-16x16.png"
           />
           <link rel="manifest" href="/site.webmanifest" />
+          <link
+            href="/rss"
+            type="application/rss+xml"
+            rel="alternate"
+            title="Refuge Worldwide News"
+          />
           <meta name="msapplication-TileColor" content="#000000" />
           <meta name="theme-color" content="#000000" />
           <meta property="og:site_name" content="Refuge Worldwide" />
