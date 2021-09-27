@@ -1,4 +1,4 @@
-import { GRAPHCDN_ENDPOINT } from "../../constants";
+import { ENDPOINT } from "../../constants";
 import type { ErrorPayload } from "../../types/shared";
 
 export const LIMITS = {
@@ -26,7 +26,7 @@ export async function graphql(
     console.log("[graphql]", queryName, variables);
   }
 
-  const r = await fetch(GRAPHCDN_ENDPOINT, {
+  const r = await fetch(ENDPOINT, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
