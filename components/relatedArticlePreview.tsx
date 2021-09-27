@@ -13,7 +13,7 @@ export default function RelatedArticlePreview({
   articleType,
 }: ArticleInterface) {
   return (
-    <Link href={`/news/${slug}`}>
+    <Link href={`/news/${slug}`} prefetch={false}>
       <a>
         <article className="text-small text-white">
           <div className="flex">

@@ -65,7 +65,7 @@ export default function ShowPreview({
 
       <div className="h-2" />
 
-      <Link href={`/radio/${slug}`}>
+      <Link href={`/radio/${slug}`} prefetch={false}>
         <a aria-labelledby={`show-${slug}`}>
           <h2 id={`show-${slug}`} className="font-sans font-medium truncate">
             {title}
