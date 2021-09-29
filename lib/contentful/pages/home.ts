@@ -19,7 +19,7 @@ export async function getHomePage() {
     query HomePageQuery($today: DateTime) {
       featuredArticles: articleCollection(
         order: date_DESC
-        where: { isFeatured: false }
+        where: { isFeatured: true }
         limit: 3
       ) {
         items {
