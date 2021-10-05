@@ -14,7 +14,7 @@ import {
 
 export async function getHomePage() {
   const HomePageQuery = /* GraphQL */ `
-    query HomePageQuery() {
+    query HomePageQuery {
       featuredArticles: articleCollection(
         order: date_DESC
         where: { isFeatured: true }
