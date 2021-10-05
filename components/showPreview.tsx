@@ -4,12 +4,12 @@ import Link from "next/link";
 import PlayLarge from "../icons/playLarge";
 import loaders from "../lib/loaders";
 import { playerWidget, showKey } from "../lib/mixcloud";
-import type { ShowInterface } from "../types/shared";
+import type { ShowPreviewEntry } from "../types/shared";
 import { getMixcloudKey, parseGenres } from "../util";
 import Badge from "./badge";
 import Date from "./date";
 
-type ShowPreviewProps = ShowInterface & { className?: string };
+type ShowPreviewProps = ShowPreviewEntry & { className?: string };
 
 export default function ShowPreview({
   slug,

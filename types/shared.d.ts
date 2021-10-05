@@ -114,6 +114,23 @@ export interface NextUpSection {
   content: Content;
 }
 
+export type HomePageData = {
+  featuredShowsCollection: {
+    items: Array<ShowPreviewEntry>;
+  };
+};
+
+type ShowPreviewEntry = {
+  coverImage: CoverImage;
+  date: string;
+  genresCollection: {
+    items: GenreInterface[];
+  };
+  mixcloudLink: string;
+  slug: string;
+  title: string;
+};
+
 export interface NewsletterPageData {
   coverImage: CoverImage;
   content: Content;

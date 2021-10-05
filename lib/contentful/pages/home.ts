@@ -1,7 +1,7 @@
-import dayjs from "dayjs";
 import { graphql } from "..";
 import {
   ArticleInterface,
+  HomePageData,
   NextUpSection,
   ShowInterface,
 } from "../../../types/shared";
@@ -13,10 +13,8 @@ import {
 } from "../fragments";
 
 export async function getHomePage() {
-  const today = dayjs().format("YYYY-MM-DD");
-
   const HomePageQuery = /* GraphQL */ `
-    query HomePageQuery($today: DateTime) {
+    query HomePageQuery() {
       featuredArticles: articleCollection(
         order: date_DESC
         where: { isFeatured: true }
@@ -27,13 +25,11 @@ export async function getHomePage() {
         }
       }
 
-      featuredShows: showCollection(
-        order: [date_DESC, title_ASC]
-        where: { isFeatured: true, date_lt: $today }
-        limit: 16
-      ) {
-        items {
-          ...ShowPreviewFragment
+      pageHome(id: "3xN3mbIMb4CwtrZqlRbYyu") {
+        featuredShowsCollection {
+          items {
+            ...ShowPreviewFragment
+          }
         }
       }
 
@@ -59,16 +55,15 @@ export async function getHomePage() {
     ${ArticlePreviewFragment}
   `;
 
-  const data = await graphql(HomePageQuery, {
-    variables: { today },
-  });
+  const data = await graphql(HomePageQuery);
 
   return {
     featuredArticles: extractCollection<ArticleInterface>(
       data,
       "featuredArticles"
     ),
-    featuredShows: extractCollection<ShowInterface>(data, "featuredShows"),
+    featuredShows: extractPage<HomePageData>(data, "pageHome")
+      .featuredShowsCollection.items,
     latestArticles: extractCollection<ArticleInterface>(data, "latestArticles"),
     nextUp: extractPage<NextUpSection>(data, "nextUp"),
   };

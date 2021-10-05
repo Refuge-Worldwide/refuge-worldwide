@@ -2,9 +2,13 @@ import Link from "next/link";
 import Pill from "../../components/pill";
 import ShowPreview from "../../components/showPreview";
 import { Arrow } from "../../icons/arrow";
-import { ShowInterface } from "../../types/shared";
+import { ShowPreviewEntry } from "../../types/shared";
 
-export default function FeaturedShows({ shows }: { shows: ShowInterface[] }) {
+type FeaturedShowsProps = {
+  shows: ShowPreviewEntry[];
+};
+
+export default function FeaturedShows({ shows }: FeaturedShowsProps) {
   return (
     <section>
       <div className="p-4 sm:p-8">
