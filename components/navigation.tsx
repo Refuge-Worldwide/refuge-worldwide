@@ -45,7 +45,7 @@ export default function Navigation() {
           </li>
 
           <li className="hidden lg:block flex-1">
-            <ul className="md:flex justify-end items-center space-x-6 lg:space-x-8 xl:space-x-14">
+            <ul className="md:flex justify-end items-center  space-x-6 xl:space-x-8 2xl:space-x-14">
               <li>
                 <NavigationLink
                   href="/radio"
