@@ -1,3 +1,4 @@
+import { InferGetStaticPropsType } from "next";
 import ArtistRow from "../../components/artistRow";
 import Badge from "../../components/badge";
 import Layout from "../../components/layout";
@@ -5,24 +6,29 @@ import Pill from "../../components/pill";
 import PageMeta from "../../components/seo/page";
 import { ALPHABET } from "../../constants";
 import useArtistRoleFilter from "../../hooks/useArtistRoleFilter";
-import { getAllArtists } from "../../lib/api";
-import type { ArtistFilterType, ArtistInterface } from "../../types/shared";
+import { getArtistsPage } from "../../lib/contentful/pages/artists";
+import type { ArtistFilterType } from "../../types/shared";
 import { sortAndGroup } from "../../util";
 
-interface Page extends JSX.Element {
-  allArtists: ArtistInterface[];
-  preview: boolean;
+export async function getStaticProps({ preview = false }) {
+  return {
+    props: { preview, allArtists: await getArtistsPage() },
+    revalidate: 60 * 60,
+  };
 }
 
-export default function ArtistsPage({ allArtists, preview }: Page) {
+export default function ArtistsPage({
+  preview,
+  allArtists,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   const filters: ArtistFilterType[] = ["All", "Residents", "Guests"];
   const { filter, filterSet } = useArtistRoleFilter("All");
   const sections = sortAndGroup(allArtists, filter);
 
   return (
     <Layout
-      className="bg-purple flex flex-col-reverse sm:flex-row-reverse"
       preview={preview}
+      className="bg-purple flex flex-col-reverse sm:flex-row-reverse"
     >
       <PageMeta title="Artists | Refuge Worldwide" path="artists/" />
 
@@ -81,15 +87,4 @@ export default function ArtistsPage({ allArtists, preview }: Page) {
       </aside>
     </Layout>
   );
-}
-
-export async function getStaticProps({ preview = false }) {
-  const allArtists = await getAllArtists(preview, 500);
-
-  return {
-    props: {
-      preview,
-      allArtists,
-    },
-  };
 }

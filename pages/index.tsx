@@ -1,38 +1,27 @@
+import { InferGetStaticPropsType } from "next";
 import Layout from "../components/layout";
 import PageMeta from "../components/seo/page";
-import {
-  getFeaturedArticles,
-  getFeaturedShows,
-  getLatestArticles,
-  getNextUpSection,
-} from "../lib/api";
-import {
-  ArticleInterface,
-  NextUpSection,
-  ShowInterface,
-} from "../types/shared";
+import { getHomePage } from "../lib/contentful/pages/home";
 import FeaturedShows from "../views/home/featuredShows";
 import LatestNews from "../views/home/latestNews";
 import NextUp from "../views/home/nextUp";
 import FeaturedArticles from "../views/news/featuredArticles";
 
-interface Page extends JSX.Element {
-  preview: boolean;
-  featuredShows: ShowInterface[];
-  latestArticles: ArticleInterface[];
-  featuredArticles: ArticleInterface[];
-  nextUp: NextUpSection;
+export async function getStaticProps() {
+  return {
+    props: await getHomePage(),
+    revalidate: 60 * 60,
+  };
 }
 
 export default function HomePage({
-  preview,
+  featuredArticles,
   featuredShows,
   latestArticles,
-  featuredArticles,
   nextUp,
-}: Page) {
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
-    <Layout preview={preview}>
+    <Layout>
       <PageMeta title="Refuge Worldwide" path="/" />
 
       <NextUp {...nextUp} />
@@ -44,16 +33,4 @@ export default function HomePage({
       <LatestNews articles={latestArticles} />
     </Layout>
   );
-}
-
-export async function getStaticProps({ preview = false }) {
-  return {
-    props: {
-      preview,
-      featuredShows: await getFeaturedShows(preview),
-      latestArticles: await getLatestArticles(preview),
-      featuredArticles: await getFeaturedArticles(preview),
-      nextUp: await getNextUpSection(preview),
-    },
-  };
 }

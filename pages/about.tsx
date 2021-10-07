@@ -1,38 +1,38 @@
+import { InferGetStaticPropsType } from "next";
 import Layout from "../components/layout";
 import PageMeta from "../components/seo/page";
-import { getAboutPage } from "../lib/api";
+import { getAboutPage } from "../lib/contentful/pages/about";
 import { renderRichTextWithImages } from "../lib/rich-text";
-import { AboutPageData } from "../types/shared";
 import SinglePage from "../views/singlePage";
 
-interface Page extends JSX.Element {
-  preview: boolean;
-  data: AboutPageData;
+export async function getStaticProps({ preview = false }) {
+  return {
+    props: {
+      preview,
+      ...(await getAboutPage(preview)),
+    },
+    revalidate: 60 * 60 * 24,
+  };
 }
 
-export default function AboutPage({ preview, data }: Page) {
+export default function AboutPage({
+  preview,
+  coverImage,
+  content,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <Layout preview={preview}>
       <PageMeta title="About | Refuge Worldwide" path="about/" />
 
-      <SinglePage coverImage={data.coverImage}>
+      <SinglePage coverImage={coverImage}>
         <section>
           <div className="container-md p-4 sm:p-8 bg-white">
             <div className="prose sm:prose-lg max-w-none">
-              {renderRichTextWithImages(data.content)}
+              {renderRichTextWithImages(content)}
             </div>
           </div>
         </section>
       </SinglePage>
     </Layout>
   );
-}
-
-export async function getStaticProps({ preview = false }) {
-  return {
-    props: {
-      preview,
-      data: await getAboutPage(preview),
-    },
-  };
 }

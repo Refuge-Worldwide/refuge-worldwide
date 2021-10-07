@@ -25,12 +25,6 @@ class RefugeDocument extends Document {
             as="image"
             href="/images/navigation-smile-white.svg"
           />
-          <link rel="dns-prefetch" href="https://use.typekit.net/" />
-          <link
-            rel="preload"
-            href="https://use.typekit.net/rqu7mun.css"
-            as="style"
-          />
           <link rel="stylesheet" href="https://use.typekit.net/rqu7mun.css" />
           <link rel="preconnect" href="https://images.ctfassets.net" />
           <link rel="dns-prefetch" href="https://images.ctfassets.net" />
@@ -52,12 +46,20 @@ class RefugeDocument extends Document {
             href="/favicon-16x16.png"
           />
           <link rel="manifest" href="/site.webmanifest" />
+          <link
+            href="/rss"
+            type="application/rss+xml"
+            rel="alternate"
+            title="Refuge Worldwide News"
+          />
           <meta name="msapplication-TileColor" content="#000000" />
           <meta name="theme-color" content="#000000" />
           <meta property="og:site_name" content="Refuge Worldwide" />
         </Head>
+
         <body className="text-small sm:text-base font-light">
           <Main />
+
           <NextScript />
         </body>
       </Html>

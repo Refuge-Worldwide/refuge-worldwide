@@ -2,7 +2,7 @@ import cn from "classnames";
 import Image from "next/image";
 import Link from "next/link";
 import { Arrow } from "../icons/arrow";
-import { contentful } from "../lib/loaders";
+import loaders from "../lib/loaders";
 import { ArticleInterface, ArticleType } from "../types/shared";
 import Date from "./date";
 import Pill from "./pill";
@@ -78,7 +78,7 @@ export default function FeaturedArticlePreview({
               draggable="false"
               alt={coverImage.title}
               src={coverImage.url}
-              loader={contentful}
+              loader={loaders.contentful}
               objectFit="cover"
               objectPosition="center"
               layout="fill"

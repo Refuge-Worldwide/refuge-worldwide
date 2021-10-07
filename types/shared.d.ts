@@ -34,6 +34,7 @@ export interface Content {
 }
 
 export interface ArtistInterface {
+  sys: { id: string };
   name: string;
   slug: string;
   photo: CoverImage;
@@ -41,6 +42,23 @@ export interface ArtistInterface {
   isResident: boolean;
   content?: Content;
 }
+
+export type ArtistEntry = {
+  sys: { id: string };
+  name: string;
+  slug: string;
+  photo: CoverImage;
+  coverImagePosition: CoverImagePosition;
+  content?: Content;
+  linkedFrom?: { showCollection: { items: ShowInterface[] | [] } };
+};
+
+export type AllArtistEntry = {
+  name: string;
+  slug: string;
+  isResident: boolean;
+  photo: CoverImage;
+};
 
 export type ArtistFilterType = "All" | "Residents" | "Guests";
 
@@ -96,6 +114,23 @@ export interface NextUpSection {
   content: Content;
 }
 
+export type HomePageData = {
+  featuredShowsCollection: {
+    items: Array<ShowPreviewEntry>;
+  };
+};
+
+type ShowPreviewEntry = {
+  coverImage: CoverImage;
+  date: string;
+  genresCollection: {
+    items: GenreInterface[];
+  };
+  mixcloudLink: string;
+  slug: string;
+  title: string;
+};
+
 export interface NewsletterPageData {
   coverImage: CoverImage;
   content: Content;
@@ -122,4 +157,8 @@ export type ErrorPayloadMessage = {
 
 export type ErrorPayload = {
   errors: ErrorPayloadMessage[];
+};
+
+export type BookingsPageData = {
+  bookingPassword: string;
 };

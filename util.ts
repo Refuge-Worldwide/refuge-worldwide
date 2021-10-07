@@ -1,8 +1,11 @@
+import dayjs from "dayjs";
 import { REGEX } from "./constants";
 import {
+  AllArtistEntry,
   ArtistFilterType,
   ArtistInterface,
   GenreInterface,
+  ShowInterface,
 } from "./types/shared";
 
 interface PageResponse {
@@ -11,7 +14,7 @@ interface PageResponse {
   };
 }
 
-export const extractPage = (fetchResponse: PageResponse, key: string) =>
+export const extractPage = <T>(fetchResponse: PageResponse, key: string): T =>
   fetchResponse?.data?.[key];
 
 interface CollectionResponse {
@@ -27,21 +30,41 @@ export const extractCollection = <T>(
   key: string
 ): T[] => fetchResponse?.data?.[key]?.items;
 
-export const extractCollectionItem = (
+interface LinkedFromCollectionResponse {
+  data: Record<
+    string,
+    {
+      linkedFrom: Record<
+        string,
+        {
+          items: any[];
+        }
+      >;
+    }
+  >;
+}
+
+export const extractLinkedFromCollection = <T>(
+  fetchResponse: LinkedFromCollectionResponse,
+  key: string,
+  linkedFromKey: string
+): T[] => fetchResponse?.data?.[key]?.linkedFrom?.[linkedFromKey]?.items;
+
+export const extractCollectionItem = <T>(
   fetchResponse: CollectionResponse,
   key: string
-) => fetchResponse?.data?.[key]?.items?.[0];
+): T => fetchResponse?.data?.[key]?.items?.[0];
 
 interface GroupedArtists {
   alphabet: string;
-  artists: ArtistInterface[];
+  artists: AllArtistEntry[];
 }
 
 export const sortAndGroup = (
-  data: ArtistInterface[],
+  data: AllArtistEntry[],
   role: ArtistFilterType
 ): GroupedArtists[] => {
-  const residencyFilter = (artist: ArtistInterface) => {
+  const residencyFilter = (artist: AllArtistEntry) => {
     if (role === "All") return artist;
     if (role === "Residents" && artist.isResident === true) return artist;
     if (role === "Guests" && artist.isResident === false) return artist;
@@ -51,12 +74,18 @@ export const sortAndGroup = (
     accumulator: {
       [key: string]: {
         alphabet: string;
-        artists: ArtistInterface[];
+        artists: AllArtistEntry[];
       };
     },
-    current: ArtistInterface
+    current: AllArtistEntry
   ) => {
-    let alphabet = current.name[0];
+    /**
+     * @note Fix for names that have a lowercase letter as the first character as well as those with accents in their names
+     */
+    let alphabet = current.name[0]
+      .toUpperCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
 
     if (REGEX.NUMERIC.test(alphabet) || REGEX.SPECIAL.test(alphabet))
       alphabet = "#";
@@ -114,6 +143,10 @@ export const isServer = typeof window === "undefined";
 export const sort = {
   alpha: (a: string, b: string) =>
     a.localeCompare(b, "en", { sensitivity: "base" }),
+  date_DESC: (a: ShowInterface, b: ShowInterface) =>
+    dayjs(a.date).isAfter(b.date) ? -1 : 1,
+  date_ASC: (a: ShowInterface, b: ShowInterface) =>
+    dayjs(a.date).isBefore(b.date) ? -1 : 1,
 };
 
 export const delay = (time = 1500) => {
@@ -129,3 +162,5 @@ export const parseGenres = (genresCollection: { items: GenreInterface[] }) =>
     .filter((genre) => Boolean(genre?.name))
     .map((genre) => genre.name)
     .sort(sort.alpha);
+
+export const uniq = <T>(arr: T[]) => Array.from(new Set(arr));

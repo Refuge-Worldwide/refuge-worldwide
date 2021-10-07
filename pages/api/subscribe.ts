@@ -1,6 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   // 1. Destructure the email address from the request body.
   const { email } = req.body;
 
@@ -53,4 +56,4 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       error: error.message || error.toString(),
     });
   }
-};
+}

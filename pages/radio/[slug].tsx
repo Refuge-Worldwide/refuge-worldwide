@@ -1,6 +1,7 @@
 import Layout from "../../components/layout";
 import ShowMeta from "../../components/seo/show";
-import { getAllShowPaths, getShowAndMoreShows } from "../../lib/api";
+import { getRadioPageSingle } from "../../lib/contentful/pages/radio";
+import { getShowPathsToPreRender } from "../../lib/contentful/paths";
 import { ShowInterface } from "../../types/shared";
 import RelatedShows from "../../views/artists/relatedShows";
 import ShowBody from "../../views/radio/showBody";
@@ -33,27 +34,16 @@ export default function Show({ show, relatedShows, preview }: Props) {
 }
 
 export async function getStaticProps({ params, preview = false }) {
-  const data = await getShowAndMoreShows(params.slug, preview);
-
-  if (!data) {
-    return {
-      notFound: true,
-    };
-  }
+  const data = await getRadioPageSingle(params.slug, preview);
 
   return {
-    props: {
-      preview,
-      show: data.show,
-      relatedShows: data?.relatedShows,
-    },
-    revalidate: 60,
+    props: { preview, ...data },
+    revalidate: 60 * 60,
   };
 }
 
 export async function getStaticPaths() {
-  return {
-    paths: await getAllShowPaths(),
-    fallback: "blocking",
-  };
+  const paths = await getShowPathsToPreRender();
+
+  return { paths, fallback: "blocking" };
 }

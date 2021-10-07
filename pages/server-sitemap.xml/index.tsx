@@ -1,15 +1,13 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable @typescript-eslint/no-empty-function */
 import { GetServerSideProps } from "next";
 import { getServerSideSitemap } from "next-sitemap";
 import { ISitemapField } from "next-sitemap/dist/@types/interface";
-import { getPaths } from "../../lib/api";
+import { getSitemapPaths } from "../../lib/contentful/paths";
 
 const createSlug = (slug: string, base: "artists" | "radio" | "news") =>
   `https://refugeworldwide.com/${base}/${slug}`;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { artists, articles, shows } = await getPaths();
+  const { artists, articles, shows } = await getSitemapPaths();
 
   const slugs = [
     ...articles.map(({ slug }) => createSlug(slug, "news")),
@@ -21,7 +19,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     loc: slug,
     lastmod: new Date().toISOString(),
     changefreq: "daily",
-    priority: "0.7",
+    priority: 0.7,
   }));
 
   return getServerSideSitemap(ctx, fields);

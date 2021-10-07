@@ -1,18 +1,23 @@
 import Layout from "../../components/layout";
 import ArticleMeta from "../../components/seo/article";
-import { getAllArticlePaths, getArticleAndMoreArticles } from "../../lib/api";
+import { getNewsPageSingle } from "../../lib/contentful/pages/news";
+import { getArticlePathsToPreRender } from "../../lib/contentful/paths";
 import { ArticleInterface } from "../../types/shared";
 import ArticleBody from "../../views/news/articleBody";
 import RelatedArticles from "../../views/news/relatedArticles";
 import SinglePage from "../../views/singlePage";
 
-interface Page extends JSX.Element {
+type ArticleProps = {
   article: ArticleInterface;
   preview: boolean;
   relatedArticles?: ArticleInterface[];
-}
+};
 
-export default function Article({ article, relatedArticles, preview }: Page) {
+export default function Article({
+  article,
+  preview,
+  relatedArticles,
+}: ArticleProps) {
   return (
     <Layout preview={preview}>
       <ArticleMeta {...article} />
@@ -25,29 +30,22 @@ export default function Article({ article, relatedArticles, preview }: Page) {
         <ArticleBody {...article} />
       </SinglePage>
 
-      {relatedArticles?.length > 0 && (
-        <RelatedArticles articles={relatedArticles} />
-      )}
+      <RelatedArticles articles={relatedArticles} />
     </Layout>
   );
 }
 
 export async function getStaticProps({ params, preview = false }) {
-  const data = await getArticleAndMoreArticles(params.slug, preview);
+  const data = await getNewsPageSingle(params.slug, preview);
 
   return {
-    props: {
-      preview,
-      article: data.article,
-      relatedArticles: data?.relatedArticles,
-    },
-    revalidate: 60,
+    props: { preview, ...data },
+    revalidate: 60 * 60,
   };
 }
 
 export async function getStaticPaths() {
-  return {
-    paths: await getAllArticlePaths(),
-    fallback: "blocking",
-  };
+  const paths = await getArticlePathsToPreRender();
+
+  return { paths, fallback: "blocking" };
 }

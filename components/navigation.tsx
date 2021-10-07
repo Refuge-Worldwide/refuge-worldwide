@@ -1,10 +1,10 @@
-import VisuallyHidden from "@reach/visually-hidden";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useState } from "react";
 import { INSTAGRAM_URL, SHOP_URL } from "../constants";
 import Instagram from "../icons/instagram";
 import { Menu } from "../icons/menu";
+import Search from "../icons/search";
 import NavigationLink from "./navigationLink";
 
 const MobileMenu = dynamic(() => import("../components/mobileMenu"));
@@ -37,7 +37,7 @@ export default function Navigation() {
               onClick={openMenu}
               className="flex focus:outline-none focus:ring-4"
             >
-              <VisuallyHidden>Open Menu</VisuallyHidden>
+              <span className="sr-only">Open Menu</span>
               <span aria-hidden>
                 <Menu />
               </span>
@@ -112,6 +112,15 @@ export default function Navigation() {
               </li>
               <li>
                 <ul className="flex space-x-6">
+                  <li>
+                    <NavigationLink
+                      href="/search"
+                      activeClassName="text-red"
+                      className="hover:text-red focus:text-red"
+                    >
+                      <Search />
+                    </NavigationLink>
+                  </li>
                   <li>
                     <a
                       target="_blank"
