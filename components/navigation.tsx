@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useState } from "react";
-import { INSTAGRAM_URL } from "../constants";
+import { INSTAGRAM_URL, SHOP_URL } from "../constants";
 import Instagram from "../icons/instagram";
 import { Menu } from "../icons/menu";
 import Search from "../icons/search";
@@ -45,7 +45,7 @@ export default function Navigation() {
           </li>
 
           <li className="hidden lg:block flex-1">
-            <ul className="md:flex justify-end items-center space-x-6 lg:space-x-8 xl:space-x-14">
+            <ul className="md:flex justify-end items-center  space-x-6 xl:space-x-8 2xl:space-x-14">
               <li>
                 <NavigationLink
                   href="/radio"
@@ -99,6 +99,16 @@ export default function Navigation() {
                 >
                   Newsletter
                 </NavigationLink>
+              </li>
+              <li>
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-medium transition-colors duration-150 ease-in-out hover:text-red focus:text-red"
+                  href={SHOP_URL}
+                >
+                  Shop
+                </a>
               </li>
               <li>
                 <ul className="flex space-x-6">

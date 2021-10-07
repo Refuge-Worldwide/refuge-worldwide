@@ -2,7 +2,7 @@ import { Dialog } from "@headlessui/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useRef } from "react";
-import { INSTAGRAM_URL, TWITTER_URL } from "../constants";
+import { INSTAGRAM_URL, SHOP_URL, TWITTER_URL } from "../constants";
 import Instagram from "../icons/instagram";
 import { Close } from "../icons/menu";
 import Twitter from "../icons/twitter";
@@ -100,6 +100,16 @@ export default function MobileMenu({
           <MobileMenuLink href="/newsletter" activeClassName="text-blue">
             Newsletter
           </MobileMenuLink>
+        </li>
+        <li>
+          <a
+            className="text-large font-medium transition-colors duration-150 ease-in-out focus:outline-none"
+            target="_blank"
+            rel="noopener noreferrer"
+            href={SHOP_URL}
+          >
+            Shop
+          </a>
         </li>
         <li>
           <MobileMenuLink href="/search" activeClassName="text-red">
