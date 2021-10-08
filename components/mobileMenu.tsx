@@ -131,6 +131,8 @@ export default function MobileMenu({
           </ul>
         </li>
       </ul>
+
+      <div className="h-8" />
     </Dialog>
   );
 }
