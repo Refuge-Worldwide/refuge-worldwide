@@ -16,7 +16,7 @@ export const PATREON_URL = "https://www.patreon.com/refugeworldwide";
 
 export const CONTACT_URL = "mailto:hello@refugeworldwide.com";
 
-export const SHOP_URL = "https://refuge-worldwide.myshopify.com";
+export const SHOP_URL = "https://shop.refugeworldwide.com";
 
 export const ALPHABET = [
   "A",
