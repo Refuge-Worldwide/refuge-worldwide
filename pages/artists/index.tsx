@@ -13,7 +13,7 @@ import { sortAndGroup } from "../../util";
 export async function getStaticProps({ preview = false }) {
   return {
     props: { preview, allArtists: await getArtistsPage() },
-    revalidate: 60 * 60,
+    revalidate: 60 * 5,
   };
 }
 
