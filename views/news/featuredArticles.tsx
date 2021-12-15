@@ -84,7 +84,7 @@ function FeaturedArticleSlide({
   }, [isIntersecting, setActiveId, index]);
 
   return (
-    <li ref={slide} key={index} id={String(index)}>
+    <li ref={slide} id={String(index)}>
       <FeaturedArticlePreview {...article} />
     </li>
   );
@@ -103,14 +103,15 @@ export default function FeaturedArticles({
     <section className="relative">
       {/* Articles */}
       <ul ref={carousel} className="carousel">
-        {articles.map((article, index) => {
+        {articles.map((article, index) => (
           <FeaturedArticleSlide
+            key={index}
             article={article}
             index={index}
             root={carousel}
             setActiveId={setActiveId}
-          />;
-        })}
+          />
+        ))}
       </ul>
 
       {/* Indicators */}
