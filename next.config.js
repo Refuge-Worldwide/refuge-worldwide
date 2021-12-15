@@ -7,4 +7,5 @@ module.exports = withBundleAnalyzer({
     domains: ["images.ctfassets.net"],
   },
   reactStrictMode: true,
+  swcMinify: true,
 });
