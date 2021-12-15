@@ -3867,10 +3867,10 @@ react-refresh@0.8.3:
   resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.8.3.tgz#721d4657672d400c5e3c75d063c4a85fb2d5d68f"
   integrity sha512-X8jZHc7nCMjaCqoU+V2I0cOhNW+QMBwSUkeXnTi8IPe6zaRWfn60ZzvFDZqWPfmSJfjub7dDW1SP0jaHWLu/hg==
 
-react-ridge-state@^4.2.2:
-  version "4.2.2"
-  resolved "https://registry.yarnpkg.com/react-ridge-state/-/react-ridge-state-4.2.2.tgz#56f1756e300ff7a13e3eec9ce9261077e13b8e9c"
-  integrity sha512-5Qd3LlcVI9yeKz4f+9Mj12PwGBlqcWXsuSTJocLCk9XFMjLfaZFL6ANj6oX/ABls4T+1AmXvg6oY/FJkDTLQ1Q==
+react-ridge-state@^4.1.7:
+  version "4.1.7"
+  resolved "https://registry.yarnpkg.com/react-ridge-state/-/react-ridge-state-4.1.7.tgz#bbb565017311f89b68d579984eb9b734c470c246"
+  integrity sha512-rg10ib9xoaXEfsP4Bm/vnGTYDWmuKvGEoINGo46jsKoIl6rsxKcaucu0yU2y5hPdgoYuU+4/OprEkILePqBnqw==
 
 react-universal-interface@^0.6.2:
   version "0.6.2"
