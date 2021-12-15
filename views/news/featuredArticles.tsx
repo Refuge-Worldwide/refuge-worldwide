@@ -103,10 +103,10 @@ export default function FeaturedArticles({
     <section className="relative">
       {/* Articles */}
       <ul ref={carousel} className="carousel">
-        {articles.map((article, idx) => {
+        {articles.map((article, index) => {
           <FeaturedArticleSlide
             article={article}
-            index={idx}
+            index={index}
             root={carousel}
             setActiveId={setActiveId}
           />;
@@ -115,10 +115,10 @@ export default function FeaturedArticles({
 
       {/* Indicators */}
       <ul className="absolute top-52 md:top-auto md:bottom-8 inset-x-0 flex justify-center space-x-3">
-        {articles?.map((_, i) => {
+        {articles.map((_, idx) => {
           const indicatorClassNames = cn(
             "block h-6 w-6 rounded-full border-2 border-white focus:outline-none focus:ring-4",
-            i === activeId ? "bg-white" : "bg-transparent "
+            idx === activeId ? "bg-white" : "bg-transparent "
           );
 
           const onClick = () => {
@@ -126,17 +126,17 @@ export default function FeaturedArticles({
               return;
             }
 
-            document.getElementById(String(i)).scrollIntoView({
+            document.getElementById(String(idx)).scrollIntoView({
               behavior: "smooth",
               block: "nearest",
             });
           };
 
           return (
-            <li key={i}>
+            <li key={idx}>
               <button
                 onClick={onClick}
-                aria-label={`Carousel Item ${i + 1}`}
+                aria-label={`Carousel Item ${idx + 1}`}
                 className={indicatorClassNames}
               />
             </li>
