@@ -19,12 +19,16 @@ export default function SupportPage({
   preview,
   content,
   coverImage,
+  coverImageBlurDataURL,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <Layout preview={preview}>
       <PageMeta title="Support | Refuge Worldwide" path="support/" />
 
-      <SinglePage coverImage={coverImage}>
+      <SinglePage
+        coverImage={coverImage}
+        coverImageBlurDataURL={coverImageBlurDataURL}
+      >
         <section>
           <div className="container-md p-4 sm:p-8 bg-white">
             <div className="prose sm:prose-lg max-w-none">
