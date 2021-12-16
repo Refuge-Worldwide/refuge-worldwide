@@ -1,3 +1,4 @@
+import { getPlaiceholder } from "plaiceholder";
 import { graphql } from "..";
 import { AboutPageData } from "../../../types/shared";
 import { extractPage } from "../../../util";
@@ -43,5 +44,12 @@ export async function getAboutPage(preview: boolean) {
     preview,
   });
 
-  return extractPage<AboutPageData>(data, "pageAbout");
+  const page = extractPage<AboutPageData>(data, "pageAbout");
+
+  const { base64 } = await getPlaiceholder(page.coverImage.url);
+
+  return {
+    ...page,
+    coverImageBlurDataURL: base64,
+  };
 }

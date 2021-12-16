@@ -49,7 +49,7 @@ export default function SearchPage({
     searchSet(event.target.value?.toLowerCase());
 
   const result = fuzzysort.go(search ? search.trim() : undefined, data, {
-    key: "title",
+    keys: ["title", "artist"],
     allowTypo: true,
     threshold: -999,
     limit: 20,
