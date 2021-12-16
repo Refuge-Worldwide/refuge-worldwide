@@ -18,13 +18,17 @@ export async function getStaticProps({ preview = false }) {
 export default function AboutPage({
   preview,
   coverImage,
+  coverImageBlurDataURL,
   content,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <Layout preview={preview}>
       <PageMeta title="About | Refuge Worldwide" path="about/" />
 
-      <SinglePage coverImage={coverImage}>
+      <SinglePage
+        coverImage={coverImage}
+        coverImageBlurDataURL={coverImageBlurDataURL}
+      >
         <section>
           <div className="container-md p-4 sm:p-8 bg-white">
             <div className="prose sm:prose-lg max-w-none">

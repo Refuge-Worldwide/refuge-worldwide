@@ -20,12 +20,16 @@ export default function NewsletterPage({
   preview,
   content,
   coverImage,
+  coverImageBlurDataURL,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <Layout preview={preview}>
       <PageMeta title="Newsletter | Refuge Worldwide" path="newsletter/" />
 
-      <SinglePage coverImage={coverImage}>
+      <SinglePage
+        coverImage={coverImage}
+        coverImageBlurDataURL={coverImageBlurDataURL}
+      >
         <section>
           <div className="container-md p-4 sm:p-8 bg-white">
             <div className="prose sm:prose-lg max-w-none">
