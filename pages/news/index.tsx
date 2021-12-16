@@ -24,7 +24,7 @@ export default function NewsPage({
 
       <FeaturedArticles articles={featuredArticles} />
 
-      <section className="block sm:hidden px-4 pt-4">
+      <section className="block sm:hidden px-4 pt-4 border-t-2">
         <Pill>
           <h1>News</h1>
         </Pill>

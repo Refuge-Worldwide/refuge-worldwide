@@ -61,7 +61,7 @@ export async function getSearchPage() {
   const ShowDataQuery = /* GraphQL */ `
     query ShowDataQuery($today: DateTime) {
       showCollection(
-        limit: 1800
+        limit: 2200
         order: date_DESC
         where: { date_lt: $today }
       ) {
@@ -70,12 +70,11 @@ export async function getSearchPage() {
             sys {
               id
             }
+            title
+            description
             url
-          }
-          artistsCollection(limit: 1) {
-            items {
-              name
-            }
+            width
+            height
           }
           genresCollection(limit: 3) {
             items {
@@ -107,11 +106,7 @@ export async function getSearchPage() {
   const showCollection = extractCollection<ShowInterface>(
     showData,
     "showCollection"
-  ).map((el) => ({
-    ...el,
-    artist: el.artistsCollection.items[0].name,
-    type: "SHOW",
-  }));
+  ).map((el) => ({ ...el, type: "SHOW" }));
 
   return [...showCollection, ...articleCollection, ...artistCollection];
 }

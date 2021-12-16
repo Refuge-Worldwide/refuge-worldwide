@@ -1,18 +1,16 @@
 import Image from "next/image";
 import { ReactNode } from "react";
-import BackButton from "../components/backButton";
 import loaders from "../lib/loaders";
 import { CoverImage, CoverImagePosition } from "../types/shared";
+import BackButton from "../components/backButton";
 
 export default function SinglePage({
   coverImage,
-  coverImageBlurDataURL,
   children,
   withBackButton = false,
   objectPosition = "center",
 }: {
   coverImage: CoverImage;
-  coverImageBlurDataURL?: string;
   children: ReactNode;
   withBackButton?: boolean;
   objectPosition?: CoverImagePosition;
@@ -39,10 +37,6 @@ export default function SinglePage({
           objectPosition={objectPosition}
           priority
           src={coverImage.url}
-          {...(!!coverImageBlurDataURL && {
-            placeholder: "blur",
-            blurDataURL: coverImageBlurDataURL,
-          })}
         />
       </div>
 
