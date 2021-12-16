@@ -91,24 +91,24 @@
     "@babel/helper-validator-identifier" "^7.14.9"
     to-fast-properties "^2.0.0"
 
-"@contentful/rich-text-plain-text-renderer@^15.9.1":
-  version "15.9.1"
-  resolved "https://registry.yarnpkg.com/@contentful/rich-text-plain-text-renderer/-/rich-text-plain-text-renderer-15.9.1.tgz#0a7b265f87904b616cb1db3f1376dbb028e98d9d"
-  integrity sha512-WUUlktscF8IBjXHkt0HBAUJfOolpJ+frYLi5X7BU9UtEXCeT2aYsuYNZ/dxIyRGF/poDDliX5d3rJ2oTlr+8xw==
+"@contentful/rich-text-plain-text-renderer@15.3.5":
+  version "15.3.5"
+  resolved "https://registry.yarnpkg.com/@contentful/rich-text-plain-text-renderer/-/rich-text-plain-text-renderer-15.3.5.tgz#d92761ca118c5f0b16b2c55c9a190a8c02e75ffd"
+  integrity sha512-AFNP1gAopmFiFK8E4qzMcgemYzSUHfmgVZeZAzypPDKQhhS3x/L4u9kihZcK55YkLpSJgUisc8XcrJlUTYMl4g==
   dependencies:
-    "@contentful/rich-text-types" "^15.9.1"
+    "@contentful/rich-text-types" "^15.3.5"
 
-"@contentful/rich-text-react-renderer@^15.9.1":
-  version "15.9.1"
-  resolved "https://registry.yarnpkg.com/@contentful/rich-text-react-renderer/-/rich-text-react-renderer-15.9.1.tgz#ba44acf181f8b4f30552aa913003eb3818e5a60d"
-  integrity sha512-bkreSqJmMkWoyfBgRpwo/a3vA+ryqG30I52bYxThzm6/BO0ORvnawxYnT8A5cEp6Y6CrJgkMSzFYFIMVF8LDQA==
+"@contentful/rich-text-react-renderer@15.2.0":
+  version "15.2.0"
+  resolved "https://registry.yarnpkg.com/@contentful/rich-text-react-renderer/-/rich-text-react-renderer-15.2.0.tgz#b5ff25b4746f063f15d83eccaff555597d46683e"
+  integrity sha512-mMvs1tvd8Uab1Rqu1oNNqrVwaiQ3+EiLbjZQkBuQ0vTpVCmFI5w60X/mUg5aLMQzJMyEW/kzzcGEjo5oG7im5Q==
   dependencies:
-    "@contentful/rich-text-types" "^15.9.1"
+    "@contentful/rich-text-types" "^15.1.0"
 
-"@contentful/rich-text-types@^15.9.1":
-  version "15.9.1"
-  resolved "https://registry.yarnpkg.com/@contentful/rich-text-types/-/rich-text-types-15.9.1.tgz#fc4ee83239cff7daaef439b5ca8297489ed59f61"
-  integrity sha512-Ef9cJCosgBzJajOaxGJQqMWw/Y/thwaKZ5y6VjBwG1JURbAXUqN1uYoukQjboxOAhwUMY9mU8EwB6dZtnzL0xw==
+"@contentful/rich-text-types@^15.1.0", "@contentful/rich-text-types@^15.3.5":
+  version "15.10.0"
+  resolved "https://registry.yarnpkg.com/@contentful/rich-text-types/-/rich-text-types-15.10.0.tgz#093f8389e2fb549b40b57f36c3b85e6809f794ad"
+  integrity sha512-GlwG8hrmX9DxszrErdbVM3PBZVPZ9xCRIXB8PNwtTpA/QprfGNFAtJipIPr6LBHqeslmA2KAFjnQ7J+c3lmlgA==
   dependencies:
     ajv "^8.8.2"
 
