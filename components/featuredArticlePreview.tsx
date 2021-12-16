@@ -28,7 +28,7 @@ export default function FeaturedArticlePreview({
   coverImage,
 }: ArticleInterface) {
   const articleClassNames = cn(
-    "flex flex-col-reverse md:grid grid-cols-10 h-full",
+    "flex flex-col-reverse md:grid grid-cols-10 h-full md:items-stretch md:justify-items-stretch",
     getArticleBackgroundColor(articleType)
   );
 
