@@ -82,12 +82,13 @@ export const sortAndGroup = (
     /**
      * @note Fix for names that have a lowercase letter as the first character as well as those with accents in their names
      */
-    let alphabet = current.name[0]
+    let alphabet = current.name
+      .trim()[0]
       .toUpperCase()
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "");
 
-    if (REGEX.NUMERIC.test(alphabet) || REGEX.SPECIAL.test(alphabet))
+    if (REGEX.SPECIAL.test(alphabet) || REGEX.NUMERIC.test(alphabet))
       alphabet = "#";
 
     if (!accumulator[alphabet]) {
