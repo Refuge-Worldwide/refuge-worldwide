@@ -1,3 +1,5 @@
+// @ts-check
+
 /**
  * @name isServerSidePath
  * @param {string} path
@@ -10,6 +12,9 @@ function isServerSidePath(path) {
   return false;
 }
 
+/**
+ * @type {import('next-sitemap').IConfig}
+ */
 module.exports = {
   siteUrl: "https://refugeworldwide.com",
   generateRobotsTxt: true,
