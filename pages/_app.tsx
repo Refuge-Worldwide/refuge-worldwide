@@ -4,6 +4,7 @@ import { Fragment } from "react";
 import Footer from "../components/footer";
 import { LivePlayerLoading } from "../components/livePlayer";
 import Navigation from "../components/navigation";
+import useFathom from "../hooks/useFathom";
 import useSmoothscrollPolyfill from "../hooks/useSmoothscrollPolyfill";
 import "../styles/globals.css";
 
@@ -18,6 +19,7 @@ const LivePlayer = dynamic(() => import("../components/livePlayer"), {
 
 function RefugeApp({ Component, pageProps }: AppProps) {
   useSmoothscrollPolyfill();
+  useFathom();
 
   return (
     <Fragment>
