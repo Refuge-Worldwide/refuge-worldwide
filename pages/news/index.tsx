@@ -9,7 +9,6 @@ import FeaturedArticles from "../../views/news/featuredArticles";
 export async function getStaticProps({ preview = false }) {
   return {
     props: { preview, ...(await getNewsPage(preview)) },
-    revalidate: 60,
   };
 }
 
