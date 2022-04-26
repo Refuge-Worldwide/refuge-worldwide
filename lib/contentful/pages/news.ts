@@ -7,20 +7,42 @@ import {
   RelatedArticleFragment,
 } from "../fragments";
 
-export async function getNewsPage(preview: boolean) {
-  const NewsPageQuery = /* GraphQL */ `
-    query NewsPageQuery($preview: Boolean) {
-      articles: articleCollection(
+export const NEWS_ARTICLES_PAGE_SIZE = 12;
+
+export async function getNewsPageArticles(
+  preview: boolean,
+  limit?: number,
+  skip?: number
+) {
+  const NewsPageArticlesQuery = /* GraphQL */ `
+    query NewsPageArticlesQuery($preview: Boolean, $limit: Int, $skip: Int) {
+      articleCollection(
         order: date_DESC
         preview: $preview
-        limit: 100
+        limit: $limit
+        skip: $skip
       ) {
         items {
           ...ArticlePreviewFragment
         }
       }
+    }
 
-      featuredArticles: articleCollection(
+    ${ArticlePreviewFragment}
+  `;
+
+  const res = await graphql(NewsPageArticlesQuery, {
+    variables: { preview, limit, skip },
+    preview,
+  });
+
+  return extractCollection<ArticleInterface>(res, "articleCollection");
+}
+
+export async function getNewsPageFeaturedArticles(preview: boolean) {
+  const FeaturedArticlesNewsPageQuery = /* GraphQL */ `
+    query FeaturedArticlesNewsPageQuery($preview: Boolean) {
+      articleCollection(
         where: { isFeatured: true }
         order: date_DESC
         limit: 3
@@ -31,22 +53,21 @@ export async function getNewsPage(preview: boolean) {
         }
       }
     }
-
-    ${ArticlePreviewFragment}
     ${FeaturedArticleFragment}
   `;
 
-  const data = await graphql(NewsPageQuery, {
+  const res = await graphql(FeaturedArticlesNewsPageQuery, {
     variables: { preview },
     preview,
   });
 
+  return extractCollection<ArticleInterface>(res, "articleCollection");
+}
+
+export async function getNewsPage(preview: boolean) {
   return {
-    articles: extractCollection<ArticleInterface>(data, "articles"),
-    featuredArticles: extractCollection<ArticleInterface>(
-      data,
-      "featuredArticles"
-    ),
+    articles: await getNewsPageArticles(preview, NEWS_ARTICLES_PAGE_SIZE),
+    featuredArticles: await getNewsPageFeaturedArticles(preview),
   };
 }
 

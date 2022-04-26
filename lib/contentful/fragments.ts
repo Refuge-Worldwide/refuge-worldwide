@@ -48,10 +48,7 @@ export const FeaturedArticleFragment = /* GraphQL */ `
         id
       }
       title
-      description
       url
-      width
-      height
     }
     date
     slug
@@ -74,10 +71,7 @@ export const ArticlePreviewFragment = /* GraphQL */ `
         id
       }
       title
-      description
       url
-      width
-      height
     }
     date
     slug
