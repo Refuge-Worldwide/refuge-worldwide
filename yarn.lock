@@ -52,24 +52,24 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@contentful/rich-text-plain-text-renderer@^15.11.1":
-  version "15.11.1"
-  resolved "https://registry.yarnpkg.com/@contentful/rich-text-plain-text-renderer/-/rich-text-plain-text-renderer-15.11.1.tgz#1784eed15209e7ee36e446bd73fa281fdd74fe84"
-  integrity sha512-g1rk4u4MNyp7FypY5BbXM/EzdUDbHm6Ur2CHRGYGLTz0/DPsyiU186tazTvSRYI4mMU3zjj8+5kLgNpCdj3bFQ==
+"@contentful/rich-text-plain-text-renderer@^15.12.1":
+  version "15.12.1"
+  resolved "https://registry.yarnpkg.com/@contentful/rich-text-plain-text-renderer/-/rich-text-plain-text-renderer-15.12.1.tgz#1a83958db2a788e5226d372671d1467112b8e0c8"
+  integrity sha512-0pDLs4V1dhK98yoIFq8e16Ey54uyAPLKeqMtry3db4X0zEuA/+6CEetoyEdJrySAaCkfB7+Y6n4vKMFUSPHs3Q==
   dependencies:
-    "@contentful/rich-text-types" "^15.11.1"
+    "@contentful/rich-text-types" "^15.12.1"
 
-"@contentful/rich-text-react-renderer@^15.11.1":
-  version "15.11.1"
-  resolved "https://registry.yarnpkg.com/@contentful/rich-text-react-renderer/-/rich-text-react-renderer-15.11.1.tgz#54305dc9561ed5d98bb65e8eb054ba1707d44af0"
-  integrity sha512-u1dSlUDSDR19/RGVbmwkbhEOTwRerIaMbea92vchd2mM6lk6X+qp6BS6HTABROcXGVAwhIHtarZ8fX5Zu7uiYA==
+"@contentful/rich-text-react-renderer@^15.12.1":
+  version "15.12.1"
+  resolved "https://registry.yarnpkg.com/@contentful/rich-text-react-renderer/-/rich-text-react-renderer-15.12.1.tgz#978c335e7ad5284dc6790a6a8c0ec16878b957b0"
+  integrity sha512-bQ69cN51iGBTF3/nYi5MGUaDJ/lnrEXtCUBCxulIZ0fLS/AAEledZTJcEKs+PKeYYgDqiUVDsmx2xZP2QsJJ+Q==
   dependencies:
-    "@contentful/rich-text-types" "^15.11.1"
+    "@contentful/rich-text-types" "^15.12.1"
 
-"@contentful/rich-text-types@^15.11.1":
-  version "15.11.1"
-  resolved "https://registry.yarnpkg.com/@contentful/rich-text-types/-/rich-text-types-15.11.1.tgz#755e3efd5e0ac277d554e6f731ba9fdc1c45f6fe"
-  integrity sha512-seO8Nl9cp894v7an6R8isX+HqYwVUesviGULTh/rIj2DCv2tXUU1GCqzSkt84XN6c6nbFYow9+Wzezkxx/IdIA==
+"@contentful/rich-text-types@^15.12.1":
+  version "15.12.1"
+  resolved "https://registry.yarnpkg.com/@contentful/rich-text-types/-/rich-text-types-15.12.1.tgz#3b131f03fc55b6001f6eb5f5615aefb22678b3d3"
+  integrity sha512-WQJic0fnAbTa8xzO3Z+aVqDmA5+JMNQlATQMVJ40GoOrnM8YoJZsKGf6xX/O6Y6Eq10T1LrpxIOslODFI9qFgg==
 
 "@corex/deepmerge@^2.6.148":
   version "2.6.148"
