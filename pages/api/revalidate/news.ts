@@ -9,7 +9,7 @@ export default async function handler(
   }
 
   try {
-    const slug = JSON.parse(req.body)?.parameters?.slug?.["en-US"];
+    const slug = JSON.parse(req.body)?.fields?.slug?.["en-US"];
 
     if (slug) {
       await res.unstable_revalidate(`/news/${slug}`);
