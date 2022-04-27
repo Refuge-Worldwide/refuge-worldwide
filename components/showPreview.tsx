@@ -22,7 +22,7 @@ export default function ShowPreview({
 }: ShowPreviewProps) {
   const cachedClassNames = classNames("text-small", className);
 
-  const genres = parseGenres(genresCollection).slice(0, 3);
+  const genres = parseGenres(genresCollection);
 
   const [, setKey] = showKey.use();
 

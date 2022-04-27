@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
+import { UpcomingShowType } from "../lib/contentful/pages/radio";
 import loaders from "../lib/loaders";
-import { ShowInterface } from "../types/shared";
 import { formatArtistNames, parseGenres } from "../util";
 import Badge from "./badge";
 import Date from "./date";
@@ -14,8 +14,8 @@ export default function UpcomingShowPreview({
   slug,
   genresCollection,
   date,
-}: ShowInterface) {
-  const genres = parseGenres(genresCollection).slice(0, 3);
+}: UpcomingShowType) {
+  const genres = parseGenres(genresCollection);
 
   const artists = formatArtistNames(artistsCollection.items);
 

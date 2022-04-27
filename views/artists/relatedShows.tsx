@@ -1,9 +1,9 @@
 import Pill from "../../components/pill";
 import RelatedShowPreview from "../../components/relatedShowPreview";
-import { ShowInterface } from "../../types/shared";
+import { RelatedShowsType } from "../../lib/contentful/pages/radio";
 
 type Props = {
-  shows: ShowInterface[];
+  shows: RelatedShowsType[];
   title?: string;
 };
 

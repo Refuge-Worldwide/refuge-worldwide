@@ -8,7 +8,6 @@ import NextShows from "../../views/radio/nextShows";
 export async function getStaticProps({ preview = false }) {
   return {
     props: { preview, ...(await getRadioPage(preview)) },
-    revalidate: 60 * 5,
   };
 }
 
@@ -24,7 +23,7 @@ export default function RadioPage({
 
       <h1 hidden>Radio</h1>
 
-      <NextShows upcomingShows={upcomingShows} />
+      {upcomingShows.length > 0 && <NextShows upcomingShows={upcomingShows} />}
 
       <AllShows genres={genres} pastShows={pastShows} />
     </Layout>

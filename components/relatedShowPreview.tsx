@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
+import { RelatedShowsType } from "../lib/contentful/pages/radio";
 import loaders from "../lib/loaders";
-import { ShowInterface } from "../types/shared";
 import { parseGenres } from "../util";
 import Badge from "./badge";
 import Date from "./date";
@@ -12,8 +12,8 @@ export default function RelatedShowPreview({
   coverImage,
   date,
   genresCollection,
-}: ShowInterface) {
-  const genres = parseGenres(genresCollection).slice(0, 2);
+}: RelatedShowsType) {
+  const genres = parseGenres(genresCollection);
 
   return (
     <Link href={`/radio/${slug}`} prefetch={false}>

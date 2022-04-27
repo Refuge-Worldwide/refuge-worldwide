@@ -1,11 +1,11 @@
 import Pill from "../../components/pill";
 import UpcomingShowPreview from "../../components/upcomingShowPreview";
-import { ShowInterface } from "../../types/shared";
+import { UpcomingShowType } from "../../lib/contentful/pages/radio";
 
 export default function NextShows({
   upcomingShows,
 }: {
-  upcomingShows: ShowInterface[];
+  upcomingShows: UpcomingShowType[];
 }) {
   return (
     <section className="bg-orange border-2">
@@ -17,7 +17,7 @@ export default function NextShows({
         <div className="h-5 sm:h-8" />
 
         <ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-          {upcomingShows?.slice(0, 3)?.map((show, i) => (
+          {upcomingShows.map((show, i) => (
             <li key={i}>
               <UpcomingShowPreview {...show} />
             </li>

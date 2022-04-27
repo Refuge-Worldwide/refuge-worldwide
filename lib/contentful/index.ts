@@ -12,7 +12,7 @@ function getErrorMessage(payload: ErrorPayload) {
 }
 
 interface GraphQLInterface {
-  variables?: Record<string, string | boolean | number>;
+  variables?: Record<string, string | boolean | number | string[]>;
   preview?: boolean;
 }
 
