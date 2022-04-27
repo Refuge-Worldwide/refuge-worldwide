@@ -309,3 +309,39 @@ export async function getRelatedShows(
 
   return filteredShows;
 }
+
+const Query = /* GraphQL */ `
+  query PastShowsQueryByGenre($genre: String, $limit: Int, $skip: Int) {
+    genreCollection(where: { name: $genre }, limit: 1) {
+      items {
+        linkedFrom {
+          showCollection(limit: $limit, skip: $skip) {
+            items {
+              title
+              date
+              slug
+              mixcloudLink
+              coverImage {
+                sys {
+                  id
+                }
+                url
+              }
+              artistsCollection(limit: 9) {
+                items {
+                  name
+                  slug
+                }
+              }
+              genresCollection(limit: 3) {
+                items {
+                  name
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
