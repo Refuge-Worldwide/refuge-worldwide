@@ -37,7 +37,7 @@ export const ArticleRSSFeedFragment = /* GraphQL */ `
 export async function getRSSFeed() {
   const ArticlesRSSFeedQuery = /* GraphQL */ `
     query ArticlesRSSFeedQuery {
-      articleCollection(order: date_DESC, limit: 100) {
+      articleCollection(order: date_DESC, limit: 1000) {
         items {
           ...ArticleRSSFeedFragment
         }

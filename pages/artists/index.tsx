@@ -1,29 +1,25 @@
 import { InferGetStaticPropsType } from "next";
+import Link from "next/link";
 import ArtistRow from "../../components/artistRow";
 import Badge from "../../components/badge";
 import Layout from "../../components/layout";
 import Pill from "../../components/pill";
 import PageMeta from "../../components/seo/page";
 import { ALPHABET } from "../../constants";
-import useArtistRoleFilter from "../../hooks/useArtistRoleFilter";
 import { getArtistsPage } from "../../lib/contentful/pages/artists";
-import type { ArtistFilterType } from "../../types/shared";
 import { sortAndGroup } from "../../util";
 
 export async function getStaticProps({ preview = false }) {
   return {
-    props: { preview, allArtists: await getArtistsPage() },
-    revalidate: 60 * 5,
+    props: { preview, residents: await getArtistsPage(true, 1000, 0) },
   };
 }
 
 export default function ArtistsPage({
   preview,
-  allArtists,
+  residents,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const filters: ArtistFilterType[] = ["All", "Residents", "Guests"];
-  const { filter, filterSet } = useArtistRoleFilter("All");
-  const sections = sortAndGroup(allArtists, filter);
+  const sections = sortAndGroup(residents);
 
   return (
     <Layout
@@ -40,17 +36,18 @@ export default function ArtistsPage({
 
           <div className="h-8" />
 
-          <ul className="w-full flex flex-wrap leading-none -mr-2 -mb-2">
-            {filters.map((type, i) => (
-              <li key={i} className="inline-flex pr-2 pb-2">
-                <button
-                  className="focus:outline-none focus:ring-4 rounded-full"
-                  onClick={() => filterSet(type)}
-                >
-                  <Badge invert={filter === type} text={type} />
-                </button>
-              </li>
-            ))}
+          <ul className="w-full flex flex-wrap leading-none gap-2">
+            <Link href="/artists">
+              <a className="focus:outline-none focus:ring-4 rounded-full">
+                <Badge invert text={"Residents"} />
+              </a>
+            </Link>
+
+            <Link href="/artists/guests">
+              <a className="focus:outline-none focus:ring-4 rounded-full">
+                <Badge text={"Guests"} />
+              </a>
+            </Link>
           </ul>
         </section>
 
