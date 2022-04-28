@@ -60,16 +60,7 @@ interface GroupedArtists {
   artists: AllArtistEntry[];
 }
 
-export const sortAndGroup = (
-  data: AllArtistEntry[],
-  role: ArtistFilterType
-): GroupedArtists[] => {
-  const residencyFilter = (artist: AllArtistEntry) => {
-    if (role === "All") return artist;
-    if (role === "Residents" && artist.isResident === true) return artist;
-    if (role === "Guests" && artist.isResident === false) return artist;
-  };
-
+export const sortAndGroup = (data: AllArtistEntry[]): GroupedArtists[] => {
   const alphaReducer = (
     accumulator: {
       [key: string]: {
@@ -110,9 +101,7 @@ export const sortAndGroup = (
     return 0;
   };
 
-  return Object.values(
-    data.filter(residencyFilter).reduce(alphaReducer, {})
-  ).sort(sortHashtagToEnd);
+  return Object.values(data.reduce(alphaReducer, {})).sort(sortHashtagToEnd);
 };
 
 export const formatArtistNames = (data: ArtistInterface[]) => {

@@ -8,10 +8,21 @@ import {
 import { extractCollection, extractCollectionItem, sort } from "../../../util";
 import { AllArtistFragment } from "../fragments";
 
-export async function getArtistsPage() {
+export const ARTISTS_GUESTS_PAGE_SIZE = 50;
+
+export async function getArtistsPage(
+  role: boolean,
+  limit: number,
+  skip: number
+) {
   const ArtistsPageQuery = /* GraphQL */ `
-    query ArtistsPageQuery {
-      artistCollection(order: name_ASC, limit: 2000) {
+    query ArtistsPageQuery($limit: Int, $skip: Int, $role: Boolean) {
+      artistCollection(
+        order: name_ASC
+        limit: $limit
+        skip: $skip
+        where: { role: $role }
+      ) {
         items {
           ...AllArtistFragment
         }
@@ -21,7 +32,9 @@ export async function getArtistsPage() {
     ${AllArtistFragment}
   `;
 
-  const data = await graphql(ArtistsPageQuery);
+  const data = await graphql(ArtistsPageQuery, {
+    variables: { limit, skip, role },
+  });
 
   return extractCollection<AllArtistEntry>(data, "artistCollection");
 }
