@@ -14,7 +14,7 @@ export default function useRadioShows(
     async (_, skip) =>
       getPastShows(false, RADIO_SHOWS_PAGE_SIZE, skip as number, filter),
     {
-      fallbackData: [fallbackData],
+      fallbackData: filter === "All" ? [fallbackData] : [],
       revalidateFirstPage: false,
     }
   );

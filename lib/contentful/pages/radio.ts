@@ -179,48 +179,91 @@ export async function getPastShows(
   skip: number,
   filter?: string
 ) {
-  console.log(filter);
+  if (typeof filter === "undefined" || filter === "All") {
+    const today = dayjs().format("YYYY-MM-DD");
 
-  const today = dayjs().format("YYYY-MM-DD");
-
-  const PastShowsQuery = /* GraphQL */ `
-    query PastShowsQuery(
-      $preview: Boolean
-      $limit: Int
-      $skip: Int
-      $today: DateTime
-    ) {
-      showCollection(
-        order: date_DESC
-        where: {
-          date_lte: $today
-          coverImage_exists: true
-          artistsCollection_exists: true
-        }
-        preview: $preview
-        limit: $limit
-        skip: $skip
+    const PastShowsQuery = /* GraphQL */ `
+      query PastShowsQuery(
+        $preview: Boolean
+        $limit: Int
+        $skip: Int
+        $today: DateTime
       ) {
+        showCollection(
+          order: date_DESC
+          where: {
+            date_lte: $today
+            coverImage_exists: true
+            artistsCollection_exists: true
+          }
+          preview: $preview
+          limit: $limit
+          skip: $skip
+        ) {
+          items {
+            title
+            date
+            slug
+            mixcloudLink
+            coverImage {
+              sys {
+                id
+              }
+              url
+            }
+            artistsCollection(limit: 9) {
+              items {
+                name
+                slug
+              }
+            }
+            genresCollection(limit: 3) {
+              items {
+                name
+              }
+            }
+          }
+        }
+      }
+    `;
+
+    const res = await graphql(PastShowsQuery, {
+      variables: { preview, limit, today, skip },
+      preview,
+    });
+
+    return extractCollection<PastShowType>(res, "showCollection");
+  }
+
+  const PastShowsQueryByGenre = /* GraphQL */ `
+    query PastShowsQueryByGenre($genre: String, $limit: Int, $skip: Int) {
+      genreCollection(where: { name: $genre }, limit: 1) {
         items {
-          title
-          date
-          slug
-          mixcloudLink
-          coverImage {
-            sys {
-              id
-            }
-            url
-          }
-          artistsCollection(limit: 9) {
-            items {
-              name
-              slug
-            }
-          }
-          genresCollection(limit: 3) {
-            items {
-              name
+          linkedFrom {
+            showCollection(limit: $limit, skip: $skip) {
+              items {
+                title
+                date
+                slug
+                mixcloudLink
+                coverImage {
+                  sys {
+                    id
+                  }
+                  url
+                }
+                artistsCollection(limit: 9) {
+                  items {
+                    name
+                    slug
+                  }
+                }
+                genresCollection(limit: 3) {
+                  items {
+                    name
+                  }
+                }
+              }
             }
           }
         }
@@ -228,12 +271,22 @@ export async function getPastShows(
     }
   `;
 
-  const res = await graphql(PastShowsQuery, {
-    variables: { preview, limit, today, skip },
+  const res = await graphql(PastShowsQueryByGenre, {
+    variables: { genre: filter, limit, skip },
     preview,
   });
 
-  return extractCollection<PastShowType>(res, "showCollection");
+  const linkedFromShows = extractLinkedFromCollection<PastShowType>(
+    res,
+    "genreCollection",
+    "showCollection"
+  );
+
+  const filteredShows = linkedFromShows
+    .filter((show) => dayjs(show.date).isBefore(dayjs()))
+    .sort(sort.date_DESC);
+
+  return filteredShows;
 }
 
 export async function getAllGenres() {
@@ -309,39 +362,3 @@ export async function getRelatedShows(
 
   return filteredShows;
 }
-
-const Query = /* GraphQL */ `
-  query PastShowsQueryByGenre($genre: String, $limit: Int, $skip: Int) {
-    genreCollection(where: { name: $genre }, limit: 1) {
-      items {
-        linkedFrom {
-          showCollection(limit: $limit, skip: $skip) {
-            items {
-              title
-              date
-              slug
-              mixcloudLink
-              coverImage {
-                sys {
-                  id
-                }
-                url
-              }
-              artistsCollection(limit: 9) {
-                items {
-                  name
-                  slug
-                }
-              }
-              genresCollection(limit: 3) {
-                items {
-                  name
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`;
