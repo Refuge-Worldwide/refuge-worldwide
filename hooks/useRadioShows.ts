@@ -1,18 +1,27 @@
 import useSWRInfinite from "swr/infinite";
-import {
-  getPastShows,
-  PastShowType,
-  RADIO_SHOWS_PAGE_SIZE,
-} from "../lib/contentful/pages/radio";
+import { RADIO_SHOWS_PAGE_SIZE } from "../lib/contentful/pages/radio";
 
 export default function useRadioShows(
-  fallbackData: PastShowType[],
+  fallbackData: {
+    date: string;
+    updatedAt: string;
+    id: string;
+    title: string;
+    slug: string;
+    coverImage: string;
+    mixcloudLink: string;
+  }[],
   filter: string
 ) {
   const { data, setSize } = useSWRInfinite(
     (pageIndex) => ["RadioShows", pageIndex * RADIO_SHOWS_PAGE_SIZE, filter],
-    async (_, skip) =>
-      getPastShows(false, RADIO_SHOWS_PAGE_SIZE, skip as number, filter),
+    async (_, skip) => {
+      const r = await fetch(
+        `/api/shows-db?take=${RADIO_SHOWS_PAGE_SIZE}&skip=${skip}&filter=${filter}`
+      );
+
+      return await r.json();
+    },
     {
       fallbackData: filter === "All" ? [fallbackData] : [],
       revalidateFirstPage: false,

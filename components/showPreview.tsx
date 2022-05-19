@@ -15,14 +15,21 @@ export default function ShowPreview({
   slug,
   title,
   coverImage,
-  genresCollection,
+  genres,
   date,
   mixcloudLink,
   className = "",
-}: ShowPreviewProps) {
+}: {
+  date: string;
+  updatedAt: string;
+  id: string;
+  title: string;
+  slug: string;
+  coverImage: string;
+  mixcloudLink: string;
+  genres: string[];
+} & { className?: string }) {
   const cachedClassNames = classNames("text-small", className);
-
-  const genres = parseGenres(genresCollection);
 
   const [, setKey] = showKey.use();
 
@@ -46,8 +53,8 @@ export default function ShowPreview({
     <article className={cachedClassNames}>
       <button onClick={handlePlayShow} className="flex relative group">
         <Image
-          key={coverImage.sys.id}
-          src={coverImage.url}
+          key={slug}
+          src={coverImage}
           loader={loaders.contentful}
           width={590}
           height={345}

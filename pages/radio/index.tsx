@@ -2,12 +2,49 @@ import { InferGetStaticPropsType } from "next";
 import Layout from "../../components/layout";
 import PageMeta from "../../components/seo/page";
 import { getRadioPage } from "../../lib/contentful/pages/radio";
+import prisma from "../../lib/prisma";
 import AllShows from "../../views/radio/allShows";
 import NextShows from "../../views/radio/nextShows";
 
 export async function getStaticProps({ preview = false }) {
+  const { upcomingShows } = await getRadioPage(preview);
+
+  const shows = await prisma.show.findMany({
+    take: 5,
+    skip: 0,
+    include: {
+      genres: true,
+    },
+    orderBy: {
+      date: "desc",
+    },
+  });
+
+  const processed = shows.map((show) => ({
+    ...show,
+    date: show.date.toString(),
+    updatedAt: show.updatedAt.toString(),
+    genres: show.genres.map((genre) => genre.name),
+  }));
+
+  const genres = await prisma.genre.findMany({
+    where: {
+      shows: {
+        some: {},
+      },
+    },
+    orderBy: {
+      name: "asc",
+    },
+  });
+
   return {
-    props: { preview, ...(await getRadioPage(preview)) },
+    props: {
+      preview,
+      upcomingShows,
+      genres: genres.map((genre) => genre.name),
+      pastShows: processed,
+    },
   };
 }
 

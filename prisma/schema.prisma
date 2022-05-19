@@ -13,13 +13,12 @@ model Show {
   id String @id @db.VarChar(255)
 
   title        String   @db.VarChar(255)
-  date         DateTime @db.DateTime()
+  slug         String   @unique @db.VarChar(255)
+  date         DateTime @db.DateTime(0)
   updatedAt    DateTime @updatedAt
   coverImage   String   @db.VarChar(255)
   mixcloudLink String   @db.VarChar(255)
   genres       Genre[]
-  assetId      String   @db.VarChar(255)
-
 }
 
 model Genre {

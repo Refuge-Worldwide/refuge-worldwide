@@ -8,7 +8,7 @@ import {
   sort,
 } from "../../../util";
 
-export const RADIO_SHOWS_PAGE_SIZE = 20;
+export const RADIO_SHOWS_PAGE_SIZE = 5;
 
 export async function getRadioPage(preview: boolean) {
   const pastShows = await getPastShows(preview, RADIO_SHOWS_PAGE_SIZE, 0);
@@ -164,6 +164,7 @@ export async function getUpcomingShows(preview: boolean) {
 
 export type PastShowType = Pick<
   ShowInterface,
+  | "sys"
   | "title"
   | "date"
   | "slug"
@@ -201,6 +202,9 @@ export async function getPastShows(
           skip: $skip
         ) {
           items {
+            sys {
+              id
+            }
             title
             date
             slug
@@ -219,6 +223,9 @@ export async function getPastShows(
             }
             genresCollection(limit: 3) {
               items {
+                sys {
+                  id
+                }
                 name
               }
             }
@@ -294,6 +301,9 @@ export async function getAllGenres() {
     query AllGenresQuery {
       genreCollection(limit: 1000) {
         items {
+          sys {
+            id
+          }
           name
         }
       }
