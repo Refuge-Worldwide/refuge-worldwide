@@ -27,7 +27,7 @@ export default async function handler(
             where: {
               genres: {
                 some: {
-                  name: filter,
+                  name: decodeURIComponent(filter),
                 },
               },
             },
