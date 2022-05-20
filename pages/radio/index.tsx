@@ -1,7 +1,10 @@
 import { InferGetStaticPropsType } from "next";
 import Layout from "../../components/layout";
 import PageMeta from "../../components/seo/page";
-import { getUpcomingShows } from "../../lib/contentful/pages/radio";
+import {
+  getUpcomingShows,
+  RADIO_SHOWS_PAGE_SIZE,
+} from "../../lib/contentful/pages/radio";
 import prisma from "../../lib/prisma";
 import AllShows from "../../views/radio/allShows";
 import NextShows from "../../views/radio/nextShows";
@@ -10,7 +13,7 @@ export async function getStaticProps({ preview = false }) {
   const upcomingShows = await getUpcomingShows(preview);
 
   const shows = await prisma.show.findMany({
-    take: 5,
+    take: RADIO_SHOWS_PAGE_SIZE,
     skip: 0,
     include: {
       genres: true,
