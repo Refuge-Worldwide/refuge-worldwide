@@ -8,23 +8,7 @@ import {
   sort,
 } from "../../../util";
 
-export const RADIO_SHOWS_PAGE_SIZE = 5;
-
-export async function getRadioPage(preview: boolean) {
-  const pastShows = await getPastShows(preview, RADIO_SHOWS_PAGE_SIZE, 0);
-
-  const upcomingShows = await getUpcomingShows(preview);
-
-  const allGenres = await getAllGenres();
-
-  const genres = allGenres.map((genre) => genre.name).sort(sort.alpha);
-
-  return {
-    upcomingShows,
-    pastShows,
-    genres,
-  };
-}
+export const RADIO_SHOWS_PAGE_SIZE = 20;
 
 export async function getRadioPageSingle(slug: string, preview: boolean) {
   const RadioPageSingleQuery = /* GraphQL */ `
