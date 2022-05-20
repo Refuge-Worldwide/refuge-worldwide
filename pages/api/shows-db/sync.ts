@@ -9,6 +9,10 @@ export default async function handler(
   }
 
   try {
+    const body = JSON.parse(req.body);
+
+    console.log(body);
+
     return res.json({});
   } catch (error) {
     console.error(error);
