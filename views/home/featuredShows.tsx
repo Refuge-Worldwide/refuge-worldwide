@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Pill from "../../components/pill";
-import ShowPreview from "../../components/showPreview";
+import { FeaturedShowPreview } from "../../components/showPreview";
 import { Arrow } from "../../icons/arrow";
 import { ShowPreviewEntry } from "../../types/shared";
 
@@ -24,7 +24,7 @@ export default function FeaturedShows({ shows }: FeaturedShowsProps) {
 
             return (
               <li key={i}>
-                <ShowPreview
+                <FeaturedShowPreview
                   className={isLast ? "lg:hidden xl:block 2xl:hidden" : ""}
                   {...show}
                 />
