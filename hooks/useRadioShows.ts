@@ -17,7 +17,9 @@ export default function useRadioShows(
     (pageIndex) => ["RadioShows", pageIndex * RADIO_SHOWS_PAGE_SIZE, filter],
     async (_, skip) => {
       const r = await fetch(
-        `/api/shows-db?take=${RADIO_SHOWS_PAGE_SIZE}&skip=${skip}&filter=${filter}`
+        `/api/shows-db?take=${RADIO_SHOWS_PAGE_SIZE}&skip=${skip}&filter=${encodeURIComponent(
+          filter
+        )}`
       );
 
       return await r.json();
