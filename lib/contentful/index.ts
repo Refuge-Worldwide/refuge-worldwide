@@ -1,5 +1,6 @@
 import { ENDPOINT } from "../../constants";
 import type { ErrorPayload } from "../../types/shared";
+import { delay } from "../../util";
 
 export const LIMITS = {
   SHOWS: 550,
@@ -12,7 +13,7 @@ function getErrorMessage(payload: ErrorPayload) {
 }
 
 interface GraphQLInterface {
-  variables?: Record<string, string | boolean | number>;
+  variables?: Record<string, string | boolean | number | string[]>;
   preview?: boolean;
 }
 

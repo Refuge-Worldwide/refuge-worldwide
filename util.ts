@@ -30,25 +30,28 @@ export const extractCollection = <T>(
   key: string
 ): T[] => fetchResponse?.data?.[key]?.items;
 
-interface LinkedFromCollectionResponse {
-  data: Record<
-    string,
-    {
-      linkedFrom: Record<
-        string,
-        {
-          items: any[];
-        }
-      >;
-    }
-  >;
+interface LinkedFromCollectionResponse<T = any> {
+  data: {
+    [key: string]: {
+      items: {
+        linkedFrom: {
+          [key: string]: {
+            items: T[];
+          };
+        };
+      }[];
+    };
+  };
 }
 
 export const extractLinkedFromCollection = <T>(
-  fetchResponse: LinkedFromCollectionResponse,
+  fetchResponse: LinkedFromCollectionResponse<T>,
   key: string,
   linkedFromKey: string
-): T[] => fetchResponse?.data?.[key]?.linkedFrom?.[linkedFromKey]?.items;
+): T[] =>
+  fetchResponse.data[key].items.flatMap(
+    (item) => item.linkedFrom[linkedFromKey].items
+  );
 
 export const extractCollectionItem = <T>(
   fetchResponse: CollectionResponse,

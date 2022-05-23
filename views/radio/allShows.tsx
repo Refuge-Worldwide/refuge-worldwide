@@ -1,24 +1,30 @@
-import { useState } from "react";
 import GenresList from "../../components/genresList";
 import Pill from "../../components/pill";
 import ShowPreview from "../../components/showPreview";
-import useFilteredShows from "../../hooks/useFilteredShows";
 import useGenreFilter from "../../hooks/useGenreFilter";
-import { ShowInterface } from "../../types/shared";
+import useRadioShows from "../../hooks/useRadioShows";
 
 export default function AllShows({
   genres,
-  pastShows,
+  pastShows: fallbackData,
 }: {
   genres: string[];
-  pastShows: ShowInterface[];
+  pastShows: {
+    date: string;
+    updatedAt: string;
+    id: string;
+    title: string;
+    slug: string;
+    coverImage: string;
+    mixcloudLink: string;
+  }[];
 }) {
   const { filter, filterSet } = useGenreFilter();
-  const { data: shows } = useFilteredShows(pastShows, filter);
 
-  const [showCount, showCountSet] = useState(50);
-
-  const loadMore = () => showCountSet((count) => count + 50);
+  const { shows, loadMore, isReachingEnd } = useRadioShows(
+    fallbackData,
+    filter
+  );
 
   return (
     <section>
@@ -36,14 +42,14 @@ export default function AllShows({
         <div className="h-4" />
 
         <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-y-10 sm:gap-8">
-          {shows?.slice(0, showCount)?.map((show, i) => (
+          {shows.map((show, i) => (
             <li key={i}>
               <ShowPreview {...show} />
             </li>
           ))}
         </ul>
 
-        {showCount < shows?.length && (
+        {!isReachingEnd && (
           <div className="flex justify-center mt-10 sm:mt-8">
             <button
               onClick={loadMore}

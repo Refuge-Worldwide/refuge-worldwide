@@ -63,10 +63,16 @@ export type AllArtistEntry = {
 export type ArtistFilterType = "All" | "Residents" | "Guests";
 
 export interface GenreInterface {
+  sys: {
+    id: string;
+  };
   name: string;
 }
 
 export interface ShowInterface {
+  sys: {
+    id: string;
+  };
   mixcloudLink: string;
   title: string;
   date: string;
