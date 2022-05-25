@@ -13,7 +13,7 @@
     "format": "prettier --write \"**/*.tsx\" \"**/*.ts\"",
     "lint": "next lint",
     "type-check": "tsc --pretty --noEmit",
-    "postinstall": "husky install",
+    "postinstall": "husky install && prisma generate",
     "format-staged": "pretty-quick --staged",
     "lint-staged": "lint-staged"
   },
