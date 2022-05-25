@@ -50,7 +50,6 @@ export default function SearchPage({
 
   const result = fuzzysort.go(search ? search.trim() : undefined, data, {
     keys: ["title", "artist"],
-    allowTypo: true,
     threshold: -999,
     limit: 20,
   });
