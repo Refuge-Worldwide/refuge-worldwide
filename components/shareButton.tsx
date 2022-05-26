@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 import Share from "../icons/share";
-import { isServer } from "../util";
+import { __SERVER__ } from "../util";
 
 const ShareMenu = dynamic(() => import("../components/shareMenu"));
 
@@ -30,7 +30,7 @@ export default function ShareButton({
     }
   };
 
-  if (!isServer && navigator.share)
+  if (!__SERVER__ && navigator.share)
     return (
       <button
         className="w-20 h-20 sm:w-28 sm:h-28 focus:outline-none"

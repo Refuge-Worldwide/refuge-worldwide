@@ -13,7 +13,7 @@ import {
 import { useIntersection } from "use-intersection";
 import FeaturedArticlePreview from "../../components/featuredArticlePreview";
 import { ArticleInterface } from "../../types/shared";
-import { isServer } from "../../util";
+import { __SERVER__ } from "../../util";
 
 function useCarousel<T>(
   ref: RefObject<HTMLUListElement>,
@@ -123,7 +123,7 @@ export default function FeaturedArticles({
           );
 
           const onClick = () => {
-            if (isServer) {
+            if (__SERVER__) {
               return;
             }
 
