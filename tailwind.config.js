@@ -201,6 +201,7 @@ module.exports = {
   variants: {
     extend: {
       ringWidth: ["group-focus"],
+      textColor: ["group-focus"],
     },
   },
   plugins: [

@@ -1,6 +1,6 @@
+import dynamic from "next/dynamic";
 import Share from "../icons/share";
 import { isServer } from "../util";
-import dynamic from "next/dynamic";
 
 const ShareMenu = dynamic(() => import("../components/shareMenu"));
 
@@ -14,7 +14,7 @@ export default function ShareButton({
 }) {
   const { title, slug } = details;
 
-  const URL = `https://refuge-worldwide.vercel.app${slug}`;
+  const URL = `https://refugeworldwide.com${slug}`;
 
   const handleOnClick = async () => {
     const shareData: ShareData = {

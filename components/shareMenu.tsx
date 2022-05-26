@@ -1,5 +1,4 @@
-import { Menu } from "@headlessui/react";
-import classNames from "classnames";
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import Share from "../icons/share";
 
 export default function ShareMenu({ url }: { url: string }) {
@@ -7,46 +6,32 @@ export default function ShareMenu({ url }: { url: string }) {
     "Refuge Worldwide is a community radio station and fundraising platform based in Berlin.";
 
   return (
-    <Menu as="div" className="relative inline-block text-left">
-      <div>
-        <Menu.Button className="w-20 h-20 sm:w-28 sm:h-28 focus:outline-none">
-          <Share />
-        </Menu.Button>
-      </div>
+    <DropdownMenu.Root modal={false}>
+      <DropdownMenu.Trigger className="w-20 h-20 sm:w-28 sm:h-28 focus:outline-none">
+        <Share />
+      </DropdownMenu.Trigger>
 
-      <Menu.Items className="absolute left-0 mt-2 bg-black text-white focus:outline-none">
-        <div className="pt-4 pb-4">
-          <Menu.Item>
-            {({ active }) => (
-              <WhatsApp link={url} text={TEXT} active={active} />
-            )}
-          </Menu.Item>
-          <Menu.Item>
-            {({ active }) => <Facebook link={url} active={active} />}
-          </Menu.Item>
-          <Menu.Item>
-            {({ active }) => <Twitter link={url} text={TEXT} active={active} />}
-          </Menu.Item>
-          <Menu.Item>
-            {({ active }) => (
-              <Telegram link={url} text={TEXT} active={active} />
-            )}
-          </Menu.Item>
-        </div>
-      </Menu.Items>
-    </Menu>
+      <DropdownMenu.Content className="mt-2 pt-4 pb-4 bg-black text-white focus:outline-none">
+        <DropdownMenu.Item className="group focus:outline-none">
+          <WhatsApp link={url} text={TEXT} />
+        </DropdownMenu.Item>
+        <DropdownMenu.Item className="group focus:outline-none">
+          <Facebook link={url} />
+        </DropdownMenu.Item>
+        <DropdownMenu.Item className="group focus:outline-none">
+          <Twitter link={url} text={TEXT} />
+        </DropdownMenu.Item>
+        <DropdownMenu.Item className="group focus:outline-none">
+          <Telegram link={url} text={TEXT} />
+        </DropdownMenu.Item>
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
   );
 }
 
-const menuItemClasses = "block text-small font-medium py-2 px-6";
-
-const WhatsApp = ({ link, text, active = false }) => (
+const WhatsApp = ({ link, text }: { link: string; text: string }) => (
   <a
-    className={classNames(
-      menuItemClasses,
-      "hover:text-social-whatsapp",
-      active ? "text-social-whatsapp" : ""
-    )}
+    className="block text-small font-medium py-2 px-6 hover:text-social-whatsapp group-focus:text-social-whatsapp"
     target="_blank"
     rel="noopener noreferrer"
     href={`https://wa.me/?text=${encodeURI(`${text} ${link}`)}`}
@@ -55,13 +40,9 @@ const WhatsApp = ({ link, text, active = false }) => (
   </a>
 );
 
-const Facebook = ({ link, active = false }) => (
+const Facebook = ({ link }: { link: string }) => (
   <a
-    className={classNames(
-      menuItemClasses,
-      "hover:text-social-facebook",
-      active ? "text-social-facebook" : ""
-    )}
+    className="block text-small font-medium py-2 px-6 hover:text-social-facebook group-focus:text-social-facebook"
     target="_blank"
     rel="noopener noreferrer"
     href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURI(link)}`}
@@ -70,13 +51,9 @@ const Facebook = ({ link, active = false }) => (
   </a>
 );
 
-const Twitter = ({ link, text, active = false }) => (
+const Twitter = ({ link, text }: { link: string; text: string }) => (
   <a
-    className={classNames(
-      menuItemClasses,
-      "hover:text-social-twitter",
-      active ? "text-social-twitter" : ""
-    )}
+    className="block text-small font-medium py-2 px-6 hover:text-social-twitter group-focus:text-social-twitter"
     target="_blank"
     rel="noopener noreferrer"
     href={`https://twitter.com/intent/tweet?text=${encodeURI(
@@ -87,13 +64,9 @@ const Twitter = ({ link, text, active = false }) => (
   </a>
 );
 
-const Telegram = ({ link, text, active = false }) => (
+const Telegram = ({ link, text }: { link: string; text: string }) => (
   <a
-    className={classNames(
-      menuItemClasses,
-      "hover:text-social-telegram",
-      active ? "text-social-telegram" : ""
-    )}
+    className="block text-small font-medium py-2 px-6 hover:text-social-telegram group-focus:text-social-telegram"
     target="_blank"
     rel="noopener noreferrer"
     href={`https://telegram.me/share/url?url=${encodeURI(

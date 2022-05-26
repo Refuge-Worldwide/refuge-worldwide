@@ -32,6 +32,7 @@
     "@headlessui/react": "^1.5.0",
     "@prisma/client": "^3.14.0",
     "@radix-ui/react-dialog": "^0.1.7",
+    "@radix-ui/react-dropdown-menu": "^0.1.6",
     "@radix-ui/react-visually-hidden": "^0.1.4",
     "@use-it/interval": "^1.0.0",
     "classnames": "^2.3.1",
