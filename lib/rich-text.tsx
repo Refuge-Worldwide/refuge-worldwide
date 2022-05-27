@@ -33,9 +33,7 @@ export function renderRichTextWithImages(content: Content) {
 
           const allowedEmbedHosts = ["mixcloud.com"];
 
-          const { host } = new URL(
-            uri.startsWith("http") ? uri : `https://${uri}`
-          );
+          const { host } = new URL(uri);
 
           if (allowedEmbedHosts.includes(host)) {
             return <iframe width="100%" height="120" src={uri} />;
