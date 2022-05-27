@@ -92,16 +92,38 @@ export async function getShowPathsToPreRender() {
 export async function getSitemapPaths() {
   const data = await graphql(/* GraphQL */ `
     query SitemapPathsQuery {
-      shows: showCollection(limit: 4000) {
+      shows_1: showCollection(limit: 1000) {
         items {
           slug
         }
       }
-      artists: artistCollection(limit: 4000) {
+      shows_2: showCollection(skip: 1000, limit: 1000) {
         items {
           slug
         }
       }
+      shows_3: showCollection(skip: 2000, limit: 1000) {
+        items {
+          slug
+        }
+      }
+
+      artists_1: artistCollection(limit: 1000) {
+        items {
+          slug
+        }
+      }
+      artists_2: artistCollection(skip: 1000, limit: 1000) {
+        items {
+          slug
+        }
+      }
+      artists_3: artistCollection(skip: 2000, limit: 1000) {
+        items {
+          slug
+        }
+      }
+
       articles: articleCollection(limit: 1000) {
         items {
           slug
@@ -111,8 +133,18 @@ export async function getSitemapPaths() {
   `);
 
   return {
-    shows: extractCollection<{ slug: string }>(data, "shows"),
+    shows: [
+      ...extractCollection<{ slug: string }>(data, "shows_1"),
+      ...extractCollection<{ slug: string }>(data, "shows_2"),
+      ...extractCollection<{ slug: string }>(data, "shows_3"),
+    ],
+
+    artists: [
+      ...extractCollection<{ slug: string }>(data, "artists_1"),
+      ...extractCollection<{ slug: string }>(data, "artists_2"),
+      ...extractCollection<{ slug: string }>(data, "artists_3"),
+    ],
+
     articles: extractCollection<{ slug: string }>(data, "articles"),
-    artists: extractCollection<{ slug: string }>(data, "artists"),
   };
 }
