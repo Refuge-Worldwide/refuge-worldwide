@@ -1,8 +1,8 @@
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
-import { Block, BLOCKS, Inline, INLINES } from "@contentful/rich-text-types";
+import { Block, BLOCKS, INLINES, Inline } from "@contentful/rich-text-types";
 import Image from "next/image";
-import Link from "next/link";
 import { Asset, Content } from "../types/shared";
+import Link from "next/link";
 
 interface EmbeddedAssetBlock extends Block {
   data: {
@@ -26,20 +26,11 @@ export function renderRichTextWithImages(content: Content) {
         [INLINES.HYPERLINK]: function InlineHyperlink(node: Inline, children) {
           const uri = node.data.uri as string;
 
-          const allowedHosts = [
-            "refugeworldwide.com",
-            "www.refugeworldwide.com",
-          ];
-
-          const allowedEmbedHosts = ["mixcloud.com"];
-
-          const { host } = new URL(uri);
-
-          if (allowedEmbedHosts.includes(host)) {
+          if (uri.includes("mixcloud.com/widget")) {
             return <iframe width="100%" height="120" src={uri} />;
           }
 
-          if (allowedHosts.includes(host)) {
+          if (uri.includes("refugeworldwide.com")) {
             return (
               <Link href={uri.replace("https://refugeworldwide.com", "")}>
                 <a>{children}</a>
