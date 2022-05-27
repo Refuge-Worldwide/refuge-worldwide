@@ -12,7 +12,7 @@ export async function getSearchPage() {
 
   const ArticleDataQuery = /* GraphQL */ `
     query ArticleDataQuery {
-      articleCollection(limit: 2500, order: date_DESC) {
+      articleCollection(limit: 1000, order: date_DESC) {
         items {
           coverImage {
             sys {
@@ -37,7 +37,7 @@ export async function getSearchPage() {
 
   const ArtistDataQuery = /* GraphQL */ `
     query ArtistDataQuery {
-      artistCollection(limit: 2500, order: name_ASC) {
+      artistCollection(limit: 1000, order: name_ASC) {
         items {
           photo {
             sys {
@@ -61,7 +61,7 @@ export async function getSearchPage() {
   const ShowDataQuery = /* GraphQL */ `
     query ShowDataQuery($today: DateTime) {
       showCollection(
-        limit: 1800
+        limit: 1000
         order: date_DESC
         where: { date_lt: $today }
       ) {

@@ -1,5 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
+type MailchimpError = {
+  title: string;
+  status: number;
+  detail: string;
+  instance: string;
+};
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -42,6 +49,14 @@ export default async function handler(
 
     // 7. Swallow any errors from Mailchimp and return a better error message.
     if (response.status >= 400) {
+      const message: MailchimpError = await response.json();
+
+      if (message.title === "Member Exists") {
+        return res.status(201).json({
+          error: "You're already subscribed!",
+        });
+      }
+
       return res.status(400).json({
         error: `There was an error subscribing to the newsletter. Shoot us an email at [hello@refugeworldwide.com] and we'll add you to the list.`,
       });

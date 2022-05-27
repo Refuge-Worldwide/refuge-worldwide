@@ -1,22 +1,15 @@
-import { Dialog } from "@headlessui/react";
+import * as Dialog from "@radix-ui/react-dialog";
+import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useRef } from "react";
+import { forwardRef, useEffect } from "react";
 import { INSTAGRAM_URL, SHOP_URL, TWITTER_URL } from "../constants";
 import Instagram from "../icons/instagram";
 import { Close } from "../icons/menu";
 import Twitter from "../icons/twitter";
 import MobileMenuLink from "./mobileMenuLink";
 
-export default function MobileMenu({
-  isOpen,
-  onDismiss,
-}: {
-  isOpen: boolean;
-  onDismiss: () => void;
-}) {
-  const closeButton = useRef<HTMLButtonElement>(null);
-
+function MobileMenuContent({ onDismiss }: { onDismiss: () => void }) {
   const router = useRouter();
 
   useEffect(() => {
@@ -28,49 +21,37 @@ export default function MobileMenu({
   }, [router, onDismiss]);
 
   return (
-    <Dialog
-      onClose={onDismiss}
-      open={isOpen}
-      className="bg-black h-full fixed inset-0 z-50 overflow-y-auto"
-    >
-      <Dialog.Title className="sr-only">Mobile Navigation</Dialog.Title>
+    <div className="px-4 pb-4 text-white">
+      <nav className="py-2.5">
+        <ul className="flex items-center justify-between">
+          <li>
+            <Link href="/">
+              <a className="flex">
+                <img
+                  src="/images/navigation-smile-white.svg"
+                  width={66}
+                  height={40}
+                  alt="Refuge"
+                  loading="eager"
+                />
+              </a>
+            </Link>
+          </li>
 
-      <nav className="text-white">
-        <div className="px-4 py-2.5">
-          <ul className="flex items-center">
-            <li>
-              <Link href="/">
-                <a className="flex">
-                  <img
-                    src="/images/navigation-smile-white.svg"
-                    width={66}
-                    height={40}
-                    alt="Refuge"
-                    loading="eager"
-                  />
-                </a>
-              </Link>
-            </li>
-
-            <li className="ml-auto">
-              <button
-                ref={closeButton}
-                onClick={onDismiss}
-                className="flex focus:outline-none focus:ring-4"
-              >
-                <span className="sr-only">Close</span>
-                <span aria-hidden>
-                  <Close />
-                </span>
-              </button>
-            </li>
-          </ul>
-        </div>
+          <li>
+            <Dialog.Close className="flex focus:outline-none focus:ring-4">
+              <span className="sr-only">Close</span>
+              <span aria-hidden>
+                <Close />
+              </span>
+            </Dialog.Close>
+          </li>
+        </ul>
       </nav>
 
-      <div className="h-8" />
+      <div className="h-8" aria-hidden />
 
-      <ul className="px-4 space-y-4 text-white">
+      <ul className="space-y-4">
         <li>
           <MobileMenuLink href="/radio" activeClassName="text-orange">
             Radio
@@ -103,7 +84,7 @@ export default function MobileMenu({
         </li>
         <li>
           <a
-            className="text-large font-medium transition-colors duration-150 ease-in-out focus:outline-none"
+            className="text-large font-medium focus:outline-none"
             target="_blank"
             rel="noopener noreferrer"
             href={SHOP_URL}
@@ -131,8 +112,26 @@ export default function MobileMenu({
           </ul>
         </li>
       </ul>
-
-      <div className="h-8" />
-    </Dialog>
+    </div>
   );
 }
+
+export const MobileMenu = forwardRef<HTMLDivElement, { onDismiss: () => void }>(
+  ({ onDismiss, ...props }, forwardedRef) => {
+    return (
+      <Dialog.Portal>
+        <Dialog.Overlay className="fixed inset-0 bg-black focus:outline-none z-50 overflow-y-scroll">
+          <Dialog.Content {...props} ref={forwardedRef}>
+            <VisuallyHidden.Root asChild>
+              <Dialog.Title>Mobile Navigation</Dialog.Title>
+            </VisuallyHidden.Root>
+
+            <MobileMenuContent onDismiss={onDismiss} />
+          </Dialog.Content>
+        </Dialog.Overlay>
+      </Dialog.Portal>
+    );
+  }
+);
+
+MobileMenu.displayName = "MobileMenu";
