@@ -1,5 +1,6 @@
-import * as Contentful from "contentful";
+import type * as Contentful from "contentful";
 import dayjs from "dayjs";
+import { client } from "../lib/contentful/client";
 import prisma from "../lib/prisma";
 import {
   TypeGenre,
@@ -8,20 +9,15 @@ import {
 } from "../types/contentful";
 import { delay } from "../util";
 
-const contentful = Contentful.createClient({
-  accessToken: process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN,
-  space: process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID,
-});
-
 async function getAllGenres(perPage = 100) {
-  const { total } = await contentful.getEntries<TypeGenreFields>({
+  const { total } = await client.getEntries<TypeGenreFields>({
     content_type: "genre",
     limit: 1,
   });
 
   const allGenres = await Promise.all(
     [...Array(Math.round(total / perPage + 1))].map(async (_, index) => {
-      const { items } = await contentful.getEntries<TypeGenreFields>({
+      const { items } = await client.getEntries<TypeGenreFields>({
         content_type: "genre",
         limit: perPage,
         skip: index * perPage,
@@ -35,14 +31,14 @@ async function getAllGenres(perPage = 100) {
 }
 
 async function getAllShows(perPage = 100) {
-  const { total } = await contentful.getEntries<TypeShowFields>({
+  const { total } = await client.getEntries<TypeShowFields>({
     content_type: "show",
     limit: 1,
   });
 
   const allShows = await Promise.all(
     [...Array(Math.round(total / perPage + 1))].map(async (_, index) => {
-      const { items } = await contentful.getEntries<TypeShowFields>({
+      const { items } = await client.getEntries<TypeShowFields>({
         content_type: "show",
         limit: perPage,
         skip: index * perPage,
