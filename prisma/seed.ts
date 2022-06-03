@@ -3,6 +3,7 @@ import dayjs from "dayjs";
 import { client } from "../lib/contentful/client";
 import prisma from "../lib/prisma";
 import {
+  TypeArticleFields,
   TypeGenre,
   TypeGenreFields,
   TypeShowFields,
@@ -50,6 +51,27 @@ async function getAllShows(perPage = 100) {
   );
 
   return allShows.flat();
+}
+
+async function getAllArticles(perPage = 500) {
+  const { total } = await client.getEntries<TypeArticleFields>({
+    content_type: "article",
+    limit: 1,
+  });
+
+  const allArticles = await Promise.all(
+    [...Array(Math.round(total / perPage + 1))].map(async (_, index) => {
+      const { items } = await client.getEntries<TypeArticleFields>({
+        content_type: "article",
+        limit: perPage,
+        skip: index * perPage,
+      });
+
+      return items;
+    })
+  );
+
+  return allArticles.flat();
 }
 
 async function main() {
