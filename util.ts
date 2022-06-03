@@ -2,7 +2,6 @@ import dayjs from "dayjs";
 import { REGEX } from "./constants";
 import {
   AllArtistEntry,
-  ArtistFilterType,
   ArtistInterface,
   GenreInterface,
   ShowInterface,

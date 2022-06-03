@@ -1,15 +1,15 @@
-import { Dispatch, SetStateAction, useState } from "react";
-import Badge from "./badge";
-import { useMedia } from "react-use";
 import { useRouter } from "next/router";
+import { Dispatch, SetStateAction, useState } from "react";
+import { useMedia } from "react-use";
+import Badge from "./badge";
 
-type Props = {
+type GenreListProps = {
   genres: string[];
   filter: string;
   filterSet: Dispatch<SetStateAction<string>>;
 };
 
-export default function GenresList({ filter, genres }: Props) {
+export default function GenresList({ filter, genres }: GenreListProps) {
   const router = useRouter();
 
   const isLarge = useMedia("(min-width: 1024px)", true);
@@ -22,8 +22,10 @@ export default function GenresList({ filter, genres }: Props) {
     });
   };
 
-  function sortActiveFilterFirst(a: string, b: string) {
-    return a === filter ? -1 : b === filter ? 1 : 0;
+  function sortActiveFilterAndAlpha(a: string, b: string) {
+    if (a === filter && b !== filter) return -1;
+    if (a !== filter && b === filter) return 1;
+    return a.localeCompare(b, "en", { sensitivity: "base" });
   }
 
   return (
@@ -37,16 +39,19 @@ export default function GenresList({ filter, genres }: Props) {
         </button>
       </li>
 
-      {genres.slice(0, showCount)?.map((genre, i) => (
-        <li className="inline-flex pr-2 pb-2" key={i}>
-          <button
-            className="focus:outline-none focus:ring-4 rounded-full"
-            onClick={updateGenreParam(genre)}
-          >
-            <Badge invert={filter === genre} text={genre} />
-          </button>
-        </li>
-      ))}
+      {genres
+        .sort(sortActiveFilterAndAlpha)
+        .slice(0, showCount)
+        .map((genre, i) => (
+          <li className="inline-flex pr-2 pb-2" key={i}>
+            <button
+              className="focus:outline-none focus:ring-4 rounded-full"
+              onClick={updateGenreParam(genre)}
+            >
+              <Badge invert={filter === genre} text={genre} />
+            </button>
+          </li>
+        ))}
 
       {showCount < genres.length && (
         <li className="inline-flex pr-2 pb-2">
