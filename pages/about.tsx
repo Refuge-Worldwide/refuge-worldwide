@@ -1,5 +1,6 @@
 import { InferGetStaticPropsType } from "next";
 import Layout from "../components/layout";
+import Prose from "../components/Prose";
 import PageMeta from "../components/seo/page";
 import { getAboutPage } from "../lib/contentful/pages/about";
 import { renderRichTextWithImages } from "../lib/rich-text";
@@ -27,9 +28,7 @@ export default function AboutPage({
       <SinglePage coverImage={coverImage}>
         <section>
           <div className="container-md p-4 sm:p-8 bg-white">
-            <div className="prose sm:prose-lg max-w-none">
-              {renderRichTextWithImages(content)}
-            </div>
+            <Prose>{renderRichTextWithImages(content)}</Prose>
           </div>
         </section>
       </SinglePage>

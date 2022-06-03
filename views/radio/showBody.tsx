@@ -5,6 +5,7 @@ import { Fragment } from "react";
 import Badge from "../../components/badge";
 import Date from "../../components/date";
 import Pill from "../../components/pill";
+import Prose from "../../components/Prose";
 import ShareButton from "../../components/shareButton";
 import PlayCircle from "../../icons/playCircle";
 import { playerWidget, showKey } from "../../lib/mixcloud";
@@ -125,9 +126,7 @@ export default function ShowBody({
 
           <div className="h-6" />
 
-          <div className="prose sm:prose-lg max-w-none">
-            {documentToReactComponents(content?.json)}
-          </div>
+          <Prose>{documentToReactComponents(content?.json)}</Prose>
         </div>
       </section>
 
