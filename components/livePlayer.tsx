@@ -13,15 +13,15 @@ const BroadcastingIndicator = ({
 }) => {
   if (status === "online")
     return (
-      <div className="flex-grow-0 flex items-center space-x-6">
-        <div className="flex-shrink-0 w-7 h-7 sm:h-10 sm:w-10 rounded-full bg-red animate-pulse" />
+      <div className="grow-0 flex items-center space-x-6">
+        <div className="shrink-0 w-7 h-7 sm:h-10 sm:w-10 rounded-full bg-red animate-pulse" />
         <p className="hidden md:block leading-none mt-1">Live</p>
       </div>
     );
 
   return (
-    <div className="flex-grow-0 flex items-center space-x-6">
-      <div className="flex-shrink-0 w-7 h-7 sm:h-10 sm:w-10 rounded-full bg-white opacity-25" />
+    <div className="grow-0 flex items-center space-x-6">
+      <div className="shrink-0 w-7 h-7 sm:h-10 sm:w-10 rounded-full bg-white/25" />
       <p className="leading-none mt-1">Offline</p>
     </div>
   );
@@ -80,7 +80,7 @@ export default function LivePlayer() {
 
       {isOnline && (
         <button
-          className="flex-grow-0 h-7 w-7 sm:h-9 sm:w-9 focus:outline-none focus:ring-4"
+          className="grow-0 h-7 w-7 sm:h-9 sm:w-9 focus:outline-none focus:ring-4"
           onClick={isPlaying ? pause : play}
           aria-label={
             isPlaying ? "Pause Live Broadcast" : "Play Live Broadcast"
@@ -101,8 +101,8 @@ export default function LivePlayer() {
 export function LivePlayerLoading() {
   return (
     <section className="bg-black text-white h-12 sm:h-16 px-4 sm:px-8 flex items-center">
-      <div className="flex-grow-0 flex items-center space-x-6">
-        <div className="flex-shrink-0 w-7 h-7 sm:h-10 sm:w-10 rounded-full bg-white opacity-25" />
+      <div className="grow-0 flex items-center space-x-6">
+        <div className="shrink-0 w-7 h-7 sm:h-10 sm:w-10 rounded-full bg-white/25" />
         <p className="hidden md:block leading-none mt-1">Loading Broadcast</p>
       </div>
     </section>

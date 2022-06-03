@@ -61,9 +61,9 @@ export default function ShowPreview({
           objectFit="cover"
           objectPosition="center"
           alt={title}
-          className="bg-black bg-opacity-10"
+          className="bg-black/10"
         />
-        <div className="inset-0 absolute bg-black bg-opacity-0 transition-colors duration-150 group-hover:bg-opacity-60 flex items-center justify-center text-white text-opacity-0 group-hover:text-opacity-100">
+        <div className="inset-0 absolute bg-black/0 transition-colors duration-150 group-hover:bg-black/60 flex items-center justify-center text-white/10 group-hover:text-white/100">
           <div className="-mr-4">
             <PlayLarge />
           </div>
@@ -123,7 +123,7 @@ export function ShowPreviewWithoutPlayer({
               objectFit="cover"
               objectPosition="center"
               alt={title}
-              className="bg-black bg-opacity-10"
+              className="bg-black/10"
             />
           </div>
 
@@ -195,9 +195,9 @@ export function FeaturedShowPreview({
           objectFit="cover"
           objectPosition="center"
           alt={title}
-          className="bg-black bg-opacity-10"
+          className="bg-black/10"
         />
-        <div className="inset-0 absolute bg-black bg-opacity-0 transition-colors duration-150 group-hover:bg-opacity-60 flex items-center justify-center text-white text-opacity-0 group-hover:text-opacity-100">
+        <div className="inset-0 absolute bg-black/0 transition-colors duration-150 group-hover:bg-black/60 flex items-center justify-center text-white/0 group-hover:text-white/100">
           <div className="-mr-4">
             <PlayLarge />
           </div>

@@ -1,108 +1,58 @@
-import type * as Contentful from "contentful";
+import type { Prisma } from "@prisma/client";
 import dayjs from "dayjs";
-import { client } from "../lib/contentful/client";
+import { getAllEntries } from "../lib/contentful/client";
 import prisma from "../lib/prisma";
 import {
+  TypeArticleFields,
+  TypeArtistFields,
   TypeGenre,
   TypeGenreFields,
+  TypeShow,
   TypeShowFields,
 } from "../types/contentful";
-import { delay } from "../util";
 
-async function getAllGenres(perPage = 100) {
-  const { total } = await client.getEntries<TypeGenreFields>({
-    content_type: "genre",
-    limit: 1,
-  });
+const createGenreSchema = (genre: TypeGenre): Prisma.GenreCreateInput => ({
+  id: genre.sys.id,
+  name: genre.fields.name,
+});
 
-  const allGenres = await Promise.all(
-    [...Array(Math.round(total / perPage + 1))].map(async (_, index) => {
-      const { items } = await client.getEntries<TypeGenreFields>({
-        content_type: "genre",
-        limit: perPage,
-        skip: index * perPage,
-      });
-
-      return items;
-    })
-  );
-
-  return allGenres.flat();
-}
-
-async function getAllShows(perPage = 100) {
-  const { total } = await client.getEntries<TypeShowFields>({
-    content_type: "show",
-    limit: 1,
-  });
-
-  const allShows = await Promise.all(
-    [...Array(Math.round(total / perPage + 1))].map(async (_, index) => {
-      const { items } = await client.getEntries<TypeShowFields>({
-        content_type: "show",
-        limit: perPage,
-        skip: index * perPage,
-        "fields.mixcloudLink[exists]": true,
-        "fields.date[lte]": dayjs().format("YYYY-MM-DD"),
-      });
-
-      return items;
-    })
-  );
-
-  return allShows.flat();
-}
+const createShowSchema = (show: TypeShow): Prisma.ShowCreateInput => ({
+  id: show.sys.id,
+  title: show.fields.title,
+  date: new Date(show.fields.date),
+  coverImage: show.fields.coverImage.fields.file.url,
+  mixcloudLink: show.fields.mixcloudLink,
+  slug: show.fields.slug,
+  genres: {
+    connect: show.fields.genres.map((genre) => ({
+      id: genre.sys.id,
+    })),
+  },
+});
 
 async function main() {
-  const allGenresContentful = await getAllGenres();
-  const allShowsContentful = await getAllShows();
+  const allGenres = await getAllEntries<TypeGenreFields>("genre", 100);
+  const allShows = await getAllEntries<TypeShowFields>("show", 500, {
+    "fields.mixcloudLink[exists]": true,
+    "fields.date[lte]": dayjs().format("YYYY-MM-DD"),
+  });
+  const allArticles = await getAllEntries<TypeArticleFields>("show", 100);
+  const allArtists = await getAllEntries<TypeArtistFields>("artist", 100);
 
-  const genreUpserts = allGenresContentful.map(async (genre) =>
+  const genreUpserts = allGenres.map(async (genre) =>
     prisma.genre.upsert({
-      create: {
-        id: genre.sys.id,
-        name: genre.fields.name,
-      },
-      update: {
-        id: genre.sys.id,
-        name: genre.fields.name,
-      },
+      create: createGenreSchema(genre),
+      update: createGenreSchema(genre),
       where: {
         id: genre.sys.id,
       },
     })
   );
 
-  const showUpserts = allShowsContentful.map(async (show) =>
+  const showUpserts = allShows.map(async (show) =>
     prisma.show.upsert({
-      create: {
-        id: show.sys.id,
-        title: show.fields.title,
-        date: new Date(show.fields.date),
-        coverImage: (show.fields.coverImage as Contentful.Asset).fields.file
-          .url,
-        mixcloudLink: show.fields.mixcloudLink,
-        slug: show.fields.slug,
-        genres: {
-          connect: (show.fields.genres as TypeGenre[]).map((genre) => ({
-            id: genre.sys.id,
-          })),
-        },
-      },
-      update: {
-        id: show.sys.id,
-        title: show.fields.title,
-        date: new Date(show.fields.date),
-        coverImage: (show.fields.coverImage as Contentful.Asset).fields.file
-          .url,
-        mixcloudLink: show.fields.mixcloudLink,
-        slug: show.fields.slug,
-        genres: {
-          connect: (show.fields.genres as TypeGenre[]).map((genre) => ({
-            id: genre.sys.id,
-          })),
-        },
-      },
+      create: createShowSchema(show),
+      update: createShowSchema(show),
       where: {
         slug: show.fields.slug,
       },
@@ -111,8 +61,6 @@ async function main() {
 
   for await (const upsert of [...genreUpserts, ...showUpserts]) {
     console.log(upsert);
-
-    await delay(500);
   }
 }
 

@@ -18,9 +18,7 @@ export default async function handler(
       include: {
         genres: true,
       },
-      orderBy: {
-        date: "desc",
-      },
+      orderBy: [{ date: "desc" }, { title: "asc" }],
       ...(filter === "All"
         ? {}
         : {

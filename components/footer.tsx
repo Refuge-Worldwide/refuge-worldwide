@@ -75,7 +75,7 @@ export default function Footer() {
             >
               <span>Go up</span>
               <span className="mt-1">
-                <Arrow className="transform -rotate-90" size={24} />
+                <Arrow className="-rotate-90" size={24} />
               </span>
             </button>
           </div>

@@ -18,9 +18,7 @@ export async function getStaticProps({ preview = false }) {
     include: {
       genres: true,
     },
-    orderBy: {
-      date: "desc",
-    },
+    orderBy: [{ date: "desc" }, { title: "asc" }],
   });
 
   const processed = shows.map((show) => ({

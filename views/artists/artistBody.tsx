@@ -1,5 +1,6 @@
 import { Fragment } from "react";
 import Pill from "../../components/pill";
+import Prose from "../../components/Prose";
 import ShareButton from "../../components/shareButton";
 import { renderRichTextWithImages } from "../../lib/rich-text";
 import { ArtistEntry } from "../../types/shared";
@@ -38,9 +39,7 @@ export default function ArtistBody({
             <Fragment>
               <div className="h-6" />
 
-              <div className="prose sm:prose-lg max-w-none">
-                {renderRichTextWithImages(content)}
-              </div>
+              <Prose>{renderRichTextWithImages(content)}</Prose>
             </Fragment>
           )}
 

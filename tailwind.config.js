@@ -1,5 +1,11 @@
 module.exports = {
-  purge: ["./**/*.js", "./**/*.tsx"],
+  content: [
+    "./components/**/*.{ts,tsx}",
+    "./icons/**/*.{ts,tsx}",
+    "./pages/**/*.{ts,tsx}",
+    "./views/**/*.{ts,tsx}",
+    "./lib/**/*.{ts,tsx}",
+  ],
   theme: {
     fontWeight: {
       light: 300,
@@ -72,26 +78,29 @@ module.exports = {
         112: "32rem",
         "cover-image": "45rem",
       },
-      zIndex: {
-        "-10": "-10",
-      },
       typography: (theme) => ({
         DEFAULT: {
           css: {
-            color: theme("colors.black"),
+            "--tw-prose-body": theme("colors.black"),
+            "--tw-prose-headings": theme("colors.black"),
+            "--tw-prose-lead": theme("colors.black"),
+            "--tw-prose-links": theme("colors.black"),
+            "--tw-prose-bold": theme("colors.black"),
+            "--tw-prose-counters": theme("colors.black"),
+            "--tw-prose-bullets": theme("colors.black"),
+            "--tw-prose-hr": theme("colors.black"),
+            "--tw-prose-quotes": theme("colors.black"),
+            "--tw-prose-quote-borders": theme("colors.black"),
+            "--tw-prose-captions": theme("colors.black"),
+            "--tw-prose-code": theme("colors.black"),
+            "--tw-prose-pre-code": theme("colors.black"),
+            "--tw-prose-pre-bg": theme("colors.black"),
+            "--tw-prose-th-borders": theme("colors.black"),
+            "--tw-prose-td-borders": theme("colors.black"),
+
             fontSize: "20px",
             lineHeight: "30px",
-            strong: {
-              fontWeight: theme("fontWeight.medium"),
-            },
-            a: {
-              fontWeight: theme("fontWeight.medium"),
-            },
-            /**
-             * Headers
-             */
             h1: {
-              color: theme("colors.black"),
               fontWeight: "normal",
               fontSize: "30px",
               lineHeight: "38px",
@@ -99,7 +108,6 @@ module.exports = {
               textAlign: "center",
             },
             h2: {
-              color: theme("colors.black"),
               fontWeight: "normal",
               fontSize: "30px",
               lineHeight: "38px",
@@ -107,7 +115,6 @@ module.exports = {
               textAlign: "center",
             },
             h3: {
-              color: theme("colors.black"),
               fontWeight: "normal",
               fontSize: "30px",
               lineHeight: "38px",
@@ -115,32 +122,19 @@ module.exports = {
               textAlign: "center",
             },
             h4: {
-              color: theme("colors.black"),
               fontWeight: "normal",
               fontSize: "20px",
               lineHeight: "30px",
             },
             h5: {
-              color: theme("colors.black"),
               fontWeight: "normal",
               fontSize: "20px",
               lineHeight: "30px",
             },
             h6: {
-              color: theme("colors.black"),
               fontWeight: "normal",
               fontSize: "20px",
               lineHeight: "30px",
-            },
-            /**
-             * Lists
-             */
-            "ul > li": {
-              paddingLeft: "1.5em",
-            },
-            "ul > li::before": {
-              backgroundColor: theme("colors.black"),
-              top: "0.5em",
             },
           },
         },
@@ -148,9 +142,6 @@ module.exports = {
           css: {
             fontSize: "30px",
             lineHeight: "38px",
-            /**
-             * Headers
-             */
             h1: {
               fontSize: "45px",
               lineHeight: "50px",
@@ -180,15 +171,6 @@ module.exports = {
             h6: {
               fontSize: "30px",
               lineHeight: "38px",
-            },
-            /**
-             * Lists
-             */
-            "ul > li": {
-              paddingLeft: "1.5em",
-            },
-            "ul > li::before": {
-              top: "0.5em",
             },
           },
         },
@@ -197,12 +179,6 @@ module.exports = {
   },
   corePlugins: {
     container: false,
-  },
-  variants: {
-    extend: {
-      ringWidth: ["group-focus"],
-      textColor: ["group-focus"],
-    },
   },
   plugins: [
     require("@tailwindcss/typography")({
