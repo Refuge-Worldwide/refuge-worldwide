@@ -1,5 +1,11 @@
 module.exports = {
-  purge: ["./**/*.js", "./**/*.tsx"],
+  content: [
+    "./components/**/*.{js,jsx,ts,tsx}",
+    "./icons/**/*.{js,jsx,ts,tsx}",
+    "./pages/**/*.{js,jsx,ts,tsx}",
+    "./views/**/*.{js,jsx,ts,tsx}",
+    "./lib/**/*.{js,jsx,ts,tsx}",
+  ],
   theme: {
     fontWeight: {
       light: 300,
