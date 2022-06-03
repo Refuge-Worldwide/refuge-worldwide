@@ -111,8 +111,6 @@ async function main() {
 
   for await (const upsert of [...genreUpserts, ...showUpserts]) {
     console.log(upsert);
-
-    await delay(500);
   }
 }
 
