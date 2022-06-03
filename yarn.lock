@@ -57,10 +57,10 @@
   resolved "https://registry.yarnpkg.com/@contentful/rich-text-types/-/rich-text-types-15.12.1.tgz#3b131f03fc55b6001f6eb5f5615aefb22678b3d3"
   integrity sha512-WQJic0fnAbTa8xzO3Z+aVqDmA5+JMNQlATQMVJ40GoOrnM8YoJZsKGf6xX/O6Y6Eq10T1LrpxIOslODFI9qFgg==
 
-"@corex/deepmerge@^2.6.148":
-  version "2.6.148"
-  resolved "https://registry.yarnpkg.com/@corex/deepmerge/-/deepmerge-2.6.148.tgz#8fa825d53ffd1cbcafce1b6a830eefd3dcc09dd5"
-  integrity sha512-6QMz0/2h5C3ua51iAnXMPWFbb1QOU1UvSM4bKBw5mzdT+WtLgjbETBBIQZ+Sh9WvEcGwlAt/DEdRpIC3XlDBMA==
+"@corex/deepmerge@^4.0.14":
+  version "4.0.16"
+  resolved "https://registry.yarnpkg.com/@corex/deepmerge/-/deepmerge-4.0.16.tgz#2fca1db87ebdfd3faa2798cdbde1b02e73b11f4a"
+  integrity sha512-NjPTizUx0ovYv7WiC8Erq/yMGjc4OfSMywbEUkb1QpaBb4tgD9fe2DwRy3hfogrMZ30nWxwOtMg7hwuY67RYnQ==
 
 "@cspotcode/source-map-support@^0.8.0":
   version "0.8.1"
@@ -2771,12 +2771,12 @@ natural-compare@^1.4.0:
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
   integrity sha1-Sr6/7tdUHywnrPspvbvRXI1bpPc=
 
-next-sitemap@^2.5.25:
-  version "2.5.25"
-  resolved "https://registry.yarnpkg.com/next-sitemap/-/next-sitemap-2.5.25.tgz#63cecd19b85657109bc6420d75e2cbdbab029a6d"
-  integrity sha512-0YB6VnawGxXu9B/pppJ35vwGUQb6T004zVtAsfxb/KrDPXo/BM6QtuZO25WDmCL56HSlSvgPOderPKdsgLYqZg==
+next-sitemap@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/next-sitemap/-/next-sitemap-3.0.3.tgz#fc360bf663c9e0baeddaa6255825f3902a7e03f6"
+  integrity sha512-wMIJMU8LD6END/fmTfGnH1C6i16Wmshbu0PJo/dXXoLKVRj1/qq7WHoELT3js+UkLAwHQPxE7Hv4bsN9JN+W2Q==
   dependencies:
-    "@corex/deepmerge" "^2.6.148"
+    "@corex/deepmerge" "^4.0.14"
     minimist "^1.2.6"
 
 next@^12.1.7-canary.24:
