@@ -7,7 +7,6 @@ import {
   TypeGenreFields,
   TypeShowFields,
 } from "../types/contentful";
-import { delay } from "../util";
 
 async function getAllGenres(perPage = 100) {
   const { total } = await client.getEntries<TypeGenreFields>({
