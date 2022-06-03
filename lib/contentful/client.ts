@@ -27,3 +27,33 @@ export const getBookingsPage = async (preview?: boolean) => {
 
   return fields;
 };
+
+export async function getAllEntries<Fields>(
+  contentType: "genre" | "show" | "article" | "artist",
+  perPage: number,
+  options: Contentful.EntriesQueries<Fields> = {}
+) {
+  console.log(`[Contentful] Running getEntries for ${contentType}`);
+
+  const { total } = await client.getEntries<Fields>({
+    content_type: contentType,
+    limit: 1,
+  });
+
+  console.log(`[Contentful] [${contentType}] Entries: ${total}`);
+
+  const entries = await Promise.all(
+    [...Array(Math.round(total / perPage + 1))].map(async (_, index) => {
+      const { items } = await client.getEntries<Fields>({
+        ...options,
+        content_type: contentType,
+        limit: perPage,
+        skip: index * perPage,
+      });
+
+      return items;
+    })
+  );
+
+  return entries.flat() as Contentful.Entry<Fields>[];
+}
