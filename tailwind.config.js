@@ -204,12 +204,6 @@ module.exports = {
   corePlugins: {
     container: false,
   },
-  variants: {
-    extend: {
-      ringWidth: ["group-focus"],
-      textColor: ["group-focus"],
-    },
-  },
   plugins: [
     require("@tailwindcss/typography")({
       modifiers: ["lg"],
