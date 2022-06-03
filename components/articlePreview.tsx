@@ -55,7 +55,7 @@ export default function ArticlePreview({
               objectFit="cover"
               objectPosition="center"
               alt={title}
-              className="bg-black bg-opacity-10"
+              className="bg-black/10"
             />
           </div>
 
@@ -124,7 +124,7 @@ export function ArticlePreviewForSearch({
               objectFit="cover"
               objectPosition="center"
               alt={title}
-              className="bg-black bg-opacity-10"
+              className="bg-black/10"
             />
           </div>
 

@@ -19,7 +19,7 @@ export default function ArtistPreview({
           height={345}
           objectFit="cover"
           objectPosition="center"
-          className="bg-black bg-opacity-10"
+          className="bg-black/10"
           alt={name}
         />
         <p>{name}</p>

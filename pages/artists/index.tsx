@@ -74,7 +74,7 @@ export default function ArtistsPage({
 
             return (
               <li key={i}>
-                <span className="text-black text-opacity-25">{letter}</span>
+                <span className="text-black/25">{letter}</span>
               </li>
             );
           })}
