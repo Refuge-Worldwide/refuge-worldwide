@@ -39,6 +39,8 @@ async function main() {
   const allArticles = await getAllEntries<TypeArticleFields>("show", 100);
   const allArtists = await getAllEntries<TypeArtistFields>("artist", 100);
 
+  await prisma.show.deleteMany();
+
   const genreUpserts = allGenres.map(async (genre) =>
     prisma.genre.upsert({
       create: createGenreSchema(genre),
