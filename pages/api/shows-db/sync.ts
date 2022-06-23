@@ -19,6 +19,19 @@ export default async function handler(
   try {
     const body = JSON.parse(req.body);
 
+    if (body.sys.type === "DeletedEntry") {
+      const deletedEntry = await prisma.show.delete({
+        where: {
+          id: body.sys.id,
+        },
+      });
+
+      return res.json({
+        success: true,
+        deletedEntry,
+      });
+    }
+
     const show = await contentful.getEntry<TypeShowFields>(body.sys.id);
 
     const upsertGenres = (show.fields.genres as TypeGenre[]).map((genre) =>
