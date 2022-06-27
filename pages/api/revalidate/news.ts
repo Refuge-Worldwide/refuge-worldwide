@@ -12,10 +12,10 @@ export default async function handler(
     const slug = JSON.parse(req.body)?.fields?.slug?.["en-US"];
 
     if (slug) {
-      await res.unstable_revalidate(`/news/${slug}`);
+      await res.revalidate(`/news/${slug}`);
     }
 
-    await res.unstable_revalidate(`/news`);
+    await res.revalidate(`/news`);
 
     return res.json({ revalidated: true });
   } catch (error) {

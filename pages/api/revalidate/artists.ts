@@ -12,12 +12,12 @@ export default async function handler(
     const slug = JSON.parse(req.body)?.fields?.slug?.["en-US"];
 
     if (slug) {
-      await res.unstable_revalidate(`/artists/${slug}`);
+      await res.revalidate(`/artists/${slug}`);
     }
 
-    await res.unstable_revalidate(`/artists`);
+    await res.revalidate(`/artists`);
 
-    await res.unstable_revalidate(`/artists/guests`);
+    await res.revalidate(`/artists/guests`);
 
     return res.json({ revalidated: true });
   } catch (error) {
