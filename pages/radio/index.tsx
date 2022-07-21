@@ -13,7 +13,7 @@ import NextShows from "../../views/radio/nextShows";
 export async function getStaticProps({ preview = false }) {
   const upcomingShows = await getUpcomingShows(preview);
 
-  const pastShows = await getPastShows(0, RADIO_SHOWS_PAGE_SIZE, "All");
+  const pastShows = await getPastShows(RADIO_SHOWS_PAGE_SIZE, 0, "All");
 
   const genres = await getAllGenres();
 
