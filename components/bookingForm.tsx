@@ -1,11 +1,11 @@
 import { FormEvent, Fragment, useState } from "react";
 import { Arrow } from "../icons/arrow";
 
+const PASSWORD = "weserstrasse166";
+
 export default function BookingPasswordForm({
-  bookingPassword,
   onPasswordCorrect,
 }: {
-  bookingPassword: string;
   onPasswordCorrect: () => void;
 }) {
   const [message, setMessage] = useState<string>();
@@ -18,7 +18,7 @@ export default function BookingPasswordForm({
         password: { value: string };
       };
 
-      if (target.password.value === bookingPassword) {
+      if (target.password.value === PASSWORD) {
         onPasswordCorrect();
 
         return;

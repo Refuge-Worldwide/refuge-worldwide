@@ -3,21 +3,14 @@ import Pill from "../../components/pill";
 import ShowPreview from "../../components/showPreview";
 import useGenreFilter from "../../hooks/useGenreFilter";
 import useRadioShows from "../../hooks/useRadioShows";
+import { PastShowSchema } from "../../lib/contentful/client";
 
 export default function AllShows({
   genres,
   pastShows: fallbackData,
 }: {
   genres: string[];
-  pastShows: {
-    date: string;
-    updatedAt: string;
-    id: string;
-    title: string;
-    slug: string;
-    coverImage: string;
-    mixcloudLink: string;
-  }[];
+  pastShows: PastShowSchema[];
 }) {
   const { filter, filterSet } = useGenreFilter();
 

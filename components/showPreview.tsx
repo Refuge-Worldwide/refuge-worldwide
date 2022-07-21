@@ -2,6 +2,7 @@ import classNames from "classnames";
 import Image from "next/image";
 import Link from "next/link";
 import PlayLarge from "../icons/playLarge";
+import { PastShowSchema } from "../lib/contentful/client";
 import loaders from "../lib/loaders";
 import { playerWidget, showKey } from "../lib/mixcloud";
 import type { ShowPreviewEntry } from "../types/shared";
@@ -19,16 +20,7 @@ export default function ShowPreview({
   date,
   mixcloudLink,
   className = "",
-}: {
-  date: string;
-  updatedAt: string;
-  id: string;
-  title: string;
-  slug: string;
-  coverImage: string;
-  mixcloudLink: string;
-  genres: string[];
-} & { className?: string }) {
+}: PastShowSchema & { className?: string }) {
   const cachedClassNames = classNames("text-small", className);
 
   const [, setKey] = showKey.use();

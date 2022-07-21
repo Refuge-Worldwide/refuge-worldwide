@@ -1,25 +1,10 @@
-import { InferGetStaticPropsType } from "next";
 import { useCallback, useState } from "react";
 import BookingPasswordForm from "../components/bookingForm";
 import CalendlyEmbed from "../components/calendly";
 import Layout from "../components/layout";
 import PageMeta from "../components/seo/page";
-import { getBookingsPage } from "../lib/contentful/client";
 
-export async function getStaticProps({ preview = false }) {
-  return {
-    props: {
-      preview,
-      ...(await getBookingsPage(preview)),
-    },
-    revalidate: 60 * 60 * 24,
-  };
-}
-
-export default function BookingsPage({
-  preview,
-  bookingPassword,
-}: InferGetStaticPropsType<typeof getStaticProps>) {
+export default function BookingsPage() {
   const [passwordCorrect, passwordCorrectSet] = useState(false);
 
   const onPasswordCorrect = useCallback(() => {
@@ -27,7 +12,7 @@ export default function BookingsPage({
   }, []);
 
   return (
-    <Layout preview={preview}>
+    <Layout>
       <PageMeta title="Bookings | Refuge Worldwide" path="bookings/" />
 
       {passwordCorrect ? (
@@ -37,10 +22,7 @@ export default function BookingsPage({
       ) : (
         <section className="py-48 md:py-72">
           <div className="container-md p-4 sm:p-8">
-            <BookingPasswordForm
-              bookingPassword={bookingPassword}
-              onPasswordCorrect={onPasswordCorrect}
-            />
+            <BookingPasswordForm onPasswordCorrect={onPasswordCorrect} />
           </div>
         </section>
       )}
