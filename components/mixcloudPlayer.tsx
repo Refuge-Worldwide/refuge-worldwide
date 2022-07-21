@@ -5,10 +5,8 @@ import { playerWidget, showKey } from "../lib/mixcloud";
 import { PlayerWidget } from "../types/mixcloud";
 
 export default function MixcloudPlayer({ mini = true }: { mini?: boolean }) {
-  const [
-    shouldUnloadLivePlayer,
-    shouldUnloadLivePlayerSet,
-  ] = shouldUnloadLivePlayerState.use();
+  const [shouldUnloadLivePlayer, shouldUnloadLivePlayerSet] =
+    shouldUnloadLivePlayerState.use();
 
   const key = showKey.useValue();
 

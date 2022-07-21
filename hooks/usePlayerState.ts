@@ -15,10 +15,8 @@ export default function usePlayerState({
   url: string;
 }) {
   const [isPlaying, setIsPlaying] = livePlayerState.use();
-  const [
-    shouldUnloadLivePlayer,
-    shouldUnloadLivePlayerSet,
-  ] = shouldUnloadLivePlayerState.use();
+  const [shouldUnloadLivePlayer, shouldUnloadLivePlayerSet] =
+    shouldUnloadLivePlayerState.use();
   useEffect(() => {
     const setStatePlaying = () => setIsPlaying(true);
     const setStatePaused = () => setIsPlaying(false);
