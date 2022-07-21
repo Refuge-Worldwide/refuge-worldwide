@@ -1,6 +1,12 @@
 import dayjs from "dayjs";
 import { graphql } from ".";
+import {
+  TypeArticleFields,
+  TypeArtistFields,
+  TypeShowFields,
+} from "../../types/contentful";
 import { extractCollection } from "../../util";
+import { getAllEntries } from "./client";
 
 export async function getArtistPathsToPreRender() {
   const data = await graphql(/* GraphQL */ `
@@ -89,62 +95,25 @@ export async function getShowPathsToPreRender() {
   return paths;
 }
 
-export async function getSitemapPaths() {
-  const data = await graphql(/* GraphQL */ `
-    query SitemapPathsQuery {
-      shows_1: showCollection(limit: 1000) {
-        items {
-          slug
-        }
-      }
-      shows_2: showCollection(skip: 1000, limit: 1000) {
-        items {
-          slug
-        }
-      }
-      shows_3: showCollection(skip: 2000, limit: 1000) {
-        items {
-          slug
-        }
-      }
+const createSlug = (slug: string, base: "artists" | "radio" | "news") =>
+  `https://refugeworldwide.com/${base}/${slug}`;
 
-      artists_1: artistCollection(limit: 1000) {
-        items {
-          slug
-        }
-      }
-      artists_2: artistCollection(skip: 1000, limit: 1000) {
-        items {
-          slug
-        }
-      }
-      artists_3: artistCollection(skip: 2000, limit: 1000) {
-        items {
-          slug
-        }
-      }
-
-      articles: articleCollection(limit: 1000) {
-        items {
-          slug
-        }
-      }
-    }
-  `);
+export async function getSitemapSlugs() {
+  const allShows = await getAllEntries<TypeShowFields>("show", 1000);
+  const allArticles = await getAllEntries<TypeArticleFields>("show", 100);
+  const allArtists = await getAllEntries<TypeArtistFields>("artist", 100);
 
   return {
-    shows: [
-      ...extractCollection<{ slug: string }>(data, "shows_1"),
-      ...extractCollection<{ slug: string }>(data, "shows_2"),
-      ...extractCollection<{ slug: string }>(data, "shows_3"),
-    ],
+    shows: allShows
+      .map((show) => ({ slug: show.fields.slug }))
+      .map(({ slug }) => createSlug(slug, "radio")),
 
-    artists: [
-      ...extractCollection<{ slug: string }>(data, "artists_1"),
-      ...extractCollection<{ slug: string }>(data, "artists_2"),
-      ...extractCollection<{ slug: string }>(data, "artists_3"),
-    ],
+    artists: allArtists
+      .map((artist) => ({ slug: artist.fields.slug }))
+      .map(({ slug }) => createSlug(slug, "artists")),
 
-    articles: extractCollection<{ slug: string }>(data, "articles"),
+    articles: allArticles
+      .map((article) => ({ slug: article.fields.slug }))
+      .map(({ slug }) => createSlug(slug, "news")),
   };
 }
