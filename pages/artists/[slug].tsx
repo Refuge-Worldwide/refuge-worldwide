@@ -41,6 +41,13 @@ export async function getStaticProps({ params, preview = false }) {
 }
 
 export async function getStaticPaths() {
+  if (process.env.SKIP_BUILD_STATIC_GENERATION) {
+    return {
+      paths: [],
+      fallback: "blocking",
+    };
+  }
+
   const paths = await getArtistPathsToPreRender();
 
   return { paths, fallback: "blocking" };
