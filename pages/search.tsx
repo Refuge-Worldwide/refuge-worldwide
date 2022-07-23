@@ -8,35 +8,19 @@ import Layout from "../components/layout";
 import Pill from "../components/pill";
 import PageMeta from "../components/seo/page";
 import { ShowPreviewWithoutPlayer } from "../components/showPreview";
-import { getSearchPage } from "../lib/contentful/pages/search";
 import {
-  ArticleInterface,
-  ArtistInterface,
-  ShowInterface,
-} from "../types/shared";
-
-interface SearchShowInterface extends ShowInterface {
-  type: "SHOW";
-}
-
-interface SearchArtistInterface extends ArtistInterface {
-  type: "ARTIST";
-  title: string;
-}
-
-interface SearchArticleInterface extends ArticleInterface {
-  type: "ARTICLE";
-}
+  getSearchPage,
+  SearchArticleInterface,
+  SearchArtistInterface,
+  SearchShowInterface,
+} from "../lib/contentful/pages/search";
 
 export async function getStaticProps({ preview = false }) {
   return {
     props: {
       preview,
-      data: (await getSearchPage()) as Array<
-        SearchShowInterface | SearchArtistInterface | SearchArticleInterface
-      >,
+      data: await getSearchPage(),
     },
-    revalidate: 60 * 60,
   };
 }
 

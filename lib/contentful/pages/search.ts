@@ -7,6 +7,19 @@ import {
 } from "../../../types/shared";
 import { extractCollection } from "../../../util";
 
+export interface SearchShowInterface extends ShowInterface {
+  type: "SHOW";
+}
+
+export interface SearchArtistInterface extends ArtistInterface {
+  type: "ARTIST";
+  title: string;
+}
+
+export interface SearchArticleInterface extends ArticleInterface {
+  type: "ARTICLE";
+}
+
 export async function getSearchPage() {
   const today = dayjs().format("YYYY-MM-DD");
 
@@ -97,12 +110,12 @@ export async function getSearchPage() {
   const articleCollection = extractCollection<ArticleInterface>(
     articleData,
     "articleCollection"
-  ).map((el) => ({ ...el, type: "ARTICLE" }));
+  ).map((el) => ({ ...el, type: "ARTICLE" })) as SearchArticleInterface[];
 
   const artistCollection = extractCollection<ArtistInterface>(
     artistData,
     "artistCollection"
-  ).map((el) => ({ ...el, type: "ARTIST" }));
+  ).map((el) => ({ ...el, type: "ARTIST" })) as SearchArtistInterface[];
 
   const showCollection = extractCollection<ShowInterface>(
     showData,
@@ -111,7 +124,7 @@ export async function getSearchPage() {
     ...el,
     artist: el.artistsCollection.items[0].name,
     type: "SHOW",
-  }));
+  })) as SearchShowInterface[];
 
   return [...showCollection, ...articleCollection, ...artistCollection];
 }
