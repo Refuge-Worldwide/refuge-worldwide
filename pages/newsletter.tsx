@@ -13,7 +13,6 @@ export async function getStaticProps({ preview = false }) {
       preview,
       ...(await getNewsletterPage(preview)),
     },
-    revalidate: 60 * 60 * 24,
   };
 }
 
