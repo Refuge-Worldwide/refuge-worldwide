@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { Dispatch, SetStateAction, useState } from "react";
-import { useMedia } from "react-use";
+import { useMediaQuery } from "@react-hookz/web";
 import Badge from "./badge";
 
 type GenreListProps = {
@@ -12,9 +12,9 @@ type GenreListProps = {
 export default function GenresList({ filter, genres }: GenreListProps) {
   const router = useRouter();
 
-  const isLarge = useMedia("(min-width: 1024px)", true);
+  const isLarge = useMediaQuery("(min-width: 1024px)");
 
-  const [showCount, showCountSet] = useState(isLarge ? 40 : 10);
+  const [showCount, showCountSet] = useState(isLarge ?? true ? 40 : 10);
 
   const updateGenreParam = (genre: string) => () => {
     router.push(`/radio?genre=${encodeURIComponent(genre)}`, undefined, {

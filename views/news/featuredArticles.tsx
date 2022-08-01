@@ -1,3 +1,4 @@
+import { useIntersectionObserver } from "@react-hookz/web";
 import useInterval from "@use-it/interval";
 import cn from "classnames";
 import {
@@ -10,28 +11,16 @@ import {
   useRef,
   useState,
 } from "react";
-import { useIntersection } from "use-intersection";
 import FeaturedArticlePreview from "../../components/featuredArticlePreview";
 import { ArticleInterface } from "../../types/shared";
 import { __SERVER__ } from "../../util";
 
-function useCarousel<T>(
-  ref: RefObject<HTMLUListElement>,
-  slides: T[],
-  {
-    threshold,
-    delay,
-  }: {
-    threshold: number;
-    delay: number;
-  } = {
-    threshold: 0.35,
-    delay: 5000,
-  }
-) {
+function useCarousel<T>(ref: RefObject<HTMLUListElement>, slides: T[]) {
   const [activeId, setActiveId] = useState(1);
 
-  const isIntersecting = useIntersection(ref, { threshold });
+  const intersection = useIntersectionObserver(ref, {
+    threshold: [0.35],
+  });
 
   const advanceCarousel = useCallback(() => {
     const isNotLastSlide = activeId < slides.length - 1;
@@ -50,10 +39,10 @@ function useCarousel<T>(
   }, [ref, activeId, slides]);
 
   useInterval(() => {
-    if (isIntersecting) {
+    if (intersection?.isIntersecting) {
       advanceCarousel();
     }
-  }, delay);
+  }, 5000);
 
   return {
     activeId,
@@ -74,14 +63,14 @@ function FeaturedArticleSlide({
 }) {
   const slide = useRef<HTMLLIElement>(null);
 
-  const isIntersecting = useIntersection(slide, {
-    threshold: 0.5,
+  const intersection = useIntersectionObserver(slide, {
+    threshold: [1],
     root,
   });
 
   useEffect(() => {
-    if (isIntersecting) setActiveId(index);
-  }, [isIntersecting, setActiveId, index]);
+    if (intersection?.isIntersecting) setActiveId(index);
+  }, [intersection?.isIntersecting, setActiveId, index]);
 
   return (
     <li ref={slide} id={String(index)}>
