@@ -1,86 +1,40 @@
-import dayjs from "dayjs";
-import fuzzysort from "fuzzysort";
+import { useDebouncedState } from "@react-hookz/web";
 import { InferGetStaticPropsType } from "next";
-import { ChangeEvent, useMemo, useState } from "react";
+import { isEmpty } from "ts-extras";
 import { ArticlePreviewForSearch } from "../components/articlePreview";
-import ArtistPreview from "../components/artistPreview";
+import { ArtistPreviewForSearch } from "../components/artistPreview";
 import Layout from "../components/layout";
 import Pill from "../components/pill";
 import PageMeta from "../components/seo/page";
 import { ShowPreviewWithoutPlayer } from "../components/showPreview";
-import {
-  getSearchPage,
-  SearchArticleInterface,
-  SearchArtistInterface,
-  SearchShowInterface,
-} from "../lib/contentful/pages/search";
+import useSearchData from "../hooks/useSearch";
+import { getSearchData } from "../lib/contentful/search";
 
-export async function getStaticProps({ preview = false }) {
+export async function getStaticProps() {
+  const { data } = await getSearchData("");
+
   return {
     props: {
-      preview,
-      data: await getSearchPage(),
+      fallbackData: data,
     },
   };
 }
 
 export default function SearchPage({
-  preview,
-  data,
+  fallbackData,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const [search, searchSet] = useState("");
-  const searchOnChange = (event: ChangeEvent<HTMLInputElement>) =>
-    searchSet(event.target.value?.toLowerCase());
+  const [query, querySet] = useDebouncedState("", 500);
 
-  const result = fuzzysort.go(search ? search.trim() : undefined, data, {
-    keys: ["title", "artist"],
-    threshold: -999,
-    limit: 20,
-  });
+  const { data, isValidating } = useSearchData(query, { fallbackData });
 
-  const showResults = useMemo(() => {
-    if (search) {
-      return result
-        .filter((el) => el.obj.type === "SHOW")
-        .map((el) => el.obj)
-        .sort((a: SearchShowInterface, b: SearchShowInterface) =>
-          dayjs(a.date).isAfter(b.date) ? -1 : 1
-        );
-    }
-
-    return data.filter((el) => el.type === "SHOW").slice(0, 5);
-  }, [result, search, data]);
-
-  const articleResults = useMemo(() => {
-    if (search) {
-      return result
-        .filter((el) => el.obj.type === "ARTICLE")
-        .map((el) => el.obj)
-        .sort((a: SearchArticleInterface, b: SearchArticleInterface) =>
-          dayjs(a.date).isAfter(b.date) ? -1 : 1
-        );
-    }
-
-    return data.filter((el) => el.type === "ARTICLE").slice(0, 5);
-  }, [result, search, data]);
-
-  const artistResults = useMemo(() => {
-    if (search) {
-      return result
-        .filter((el) => el.obj.type === "ARTIST")
-        .map((el) => el.obj);
-    }
-
-    return data.filter((el) => el.type === "ARTIST").slice(0, 5);
-  }, [result, search, data]);
-
-  const hasNoResults =
-    showResults.length === 0 &&
-    artistResults.length === 0 &&
-    articleResults.length === 0;
+  const isDataEmpty = isEmpty([
+    ...data.shows,
+    ...data.articles,
+    ...data.artists,
+  ]);
 
   return (
-    <Layout preview={preview}>
+    <Layout>
       <PageMeta title="Search | Refuge Worldwide" path="search/" />
 
       <section className="bg-black">
@@ -94,22 +48,33 @@ export default function SearchPage({
               className="pill-input-invert"
               id="search"
               name="search"
-              onChange={searchOnChange}
+              onChange={(ev) => querySet(ev.target.value)}
               placeholder="New Search"
-              type="search"
-              value={search}
             />
           </div>
         </div>
       </section>
 
-      {hasNoResults && (
+      {isValidating && (
+        <section className="border-b-2">
+          <div className="container-md p-4 pb-[calc(1rem-2px)] sm:p-8 sm:pb-[calc(2rem-2px)]">
+            <div className="pt-10 pb-10">
+              <p>
+                Loading results for{" "}
+                <span className="font-medium">{`"${query}"`}</span>
+              </p>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {isDataEmpty && (
         <section>
           <div className="container-md p-4 sm:p-8">
             <div className="pt-10">
               <p>
                 No results for{" "}
-                <span className="font-medium">{`"${search}"`}</span>
+                <span className="font-medium">{`"${query}"`}</span>
               </p>
             </div>
           </div>
@@ -117,7 +82,7 @@ export default function SearchPage({
       )}
 
       <div className="divide-y-2">
-        {showResults.length > 0 && (
+        {!isEmpty(data.shows) && (
           <section>
             <div className="p-4 sm:p-8">
               <Pill>
@@ -127,8 +92,8 @@ export default function SearchPage({
               <div className="h-5" />
 
               <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-y-10 sm:gap-8">
-                {showResults?.map((show: SearchShowInterface) => (
-                  <li key={show.slug}>
+                {data.shows.map((show) => (
+                  <li key={show.fields.slug}>
                     <ShowPreviewWithoutPlayer {...show} />
                   </li>
                 ))}
@@ -137,7 +102,7 @@ export default function SearchPage({
           </section>
         )}
 
-        {articleResults.length > 0 && (
+        {!isEmpty(data.articles) && (
           <section>
             <div className="p-4 sm:p-8">
               <Pill>
@@ -147,8 +112,8 @@ export default function SearchPage({
               <div className="h-5" />
 
               <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-y-10 sm:gap-8">
-                {articleResults?.map((article: SearchArticleInterface) => (
-                  <li key={article.slug}>
+                {data.articles.map((article) => (
+                  <li key={article.fields.slug}>
                     <ArticlePreviewForSearch {...article} />
                   </li>
                 ))}
@@ -157,7 +122,7 @@ export default function SearchPage({
           </section>
         )}
 
-        {artistResults.length > 0 && (
+        {!isEmpty(data.artists) && (
           <section>
             <div className="p-4 sm:p-8">
               <Pill>
@@ -167,15 +132,10 @@ export default function SearchPage({
               <div className="h-5" />
 
               <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-y-6 sm:gap-8">
-                {artistResults?.map((artist: SearchArtistInterface) => {
-                  const _artist = {
-                    ...artist,
-                    name: artist.title,
-                  };
-
+                {data.artists.map((artist) => {
                   return (
-                    <li key={artist.slug}>
-                      <ArtistPreview {..._artist} />
+                    <li key={artist.fields.slug}>
+                      <ArtistPreviewForSearch {...artist} />
                     </li>
                   );
                 })}

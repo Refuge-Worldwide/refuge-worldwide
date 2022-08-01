@@ -8,6 +8,7 @@ import Link from "next/link";
 import { Fragment } from "react";
 import { Arrow } from "../icons/arrow";
 import loaders from "../lib/loaders";
+import { TypeArticle } from "../types/contentful";
 import type { ArticleInterface } from "../types/shared";
 import Badge from "./badge";
 import Date from "./date";
@@ -104,12 +105,8 @@ export default function ArticlePreview({
 }
 
 export function ArticlePreviewForSearch({
-  slug,
-  title,
-  date,
-  articleType,
-  coverImage,
-}: ArticlePreview) {
+  fields: { slug, coverImage, title, date, articleType },
+}: TypeArticle) {
   return (
     <Link href={`/news/${slug}`}>
       <a aria-labelledby={`article-${slug}`}>
@@ -117,7 +114,7 @@ export function ArticlePreviewForSearch({
           <div className="flex">
             <Image
               key={coverImage.sys.id}
-              src={coverImage.url}
+              src={coverImage.fields.file.url}
               loader={loaders.contentful}
               width={590}
               height={345}

@@ -5,6 +5,7 @@ import PlayLarge from "../icons/playLarge";
 import { PastShowSchema } from "../lib/contentful/client";
 import loaders from "../lib/loaders";
 import { playerWidget, showKey } from "../lib/mixcloud";
+import { TypeShow } from "../types/contentful";
 import type { ShowPreviewEntry } from "../types/shared";
 import { getMixcloudKey, parseGenres } from "../util";
 import Badge from "./badge";
@@ -90,25 +91,23 @@ export default function ShowPreview({
 }
 
 export function ShowPreviewWithoutPlayer({
-  slug,
-  title,
-  coverImage,
-  genresCollection,
-  date,
-  className = "",
-}: ShowPreviewProps) {
-  const cachedClassNames = classNames("text-small", className);
-
-  const genres = parseGenres(genresCollection).slice(0, 3);
+  fields: { genres, coverImage, title, slug, date },
+}: TypeShow) {
+  const parsedGenres = parseGenres({
+    items: genres.map((genre) => ({
+      name: genre.fields.name,
+      sys: { id: genre.sys.id },
+    })),
+  }).slice(0, 3);
 
   return (
     <Link href={`/radio/${slug}`}>
       <a aria-labelledby={`show-${slug}`}>
-        <article className={cachedClassNames}>
+        <article className="text-small">
           <div className="flex">
             <Image
               key={coverImage.sys.id}
-              src={coverImage.url}
+              src={coverImage.fields.file.url}
               loader={loaders.contentful}
               width={590}
               height={345}
@@ -132,7 +131,7 @@ export function ShowPreviewWithoutPlayer({
           <div className="h-2" />
 
           <ul className="w-full flex flex-wrap -mr-2 -mb-2">
-            {genres.map((genre, i) => (
+            {parsedGenres.map((genre, i) => (
               <li key={i} className="pr-2 pb-2">
                 <Badge small text={genre} />
               </li>

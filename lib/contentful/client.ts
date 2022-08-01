@@ -1,10 +1,6 @@
 import { createClient, EntriesQueries, Entry } from "contentful";
 import dayjs from "dayjs";
-import {
-  TypePageBookingFields,
-  TypeShow,
-  TypeShowFields,
-} from "../../types/contentful";
+import type { TypeShow, TypeShowFields } from "../../types/contentful";
 import { sort } from "../../util";
 
 export const client = createClient({
