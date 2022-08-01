@@ -11,20 +11,22 @@ export default function ShareMenu({ url }: { url: string }) {
         <Share />
       </DropdownMenu.Trigger>
 
-      <DropdownMenu.Content className="mt-2 pt-4 pb-4 bg-black text-white focus:outline-none">
-        <DropdownMenu.Item className="group focus:outline-none">
-          <WhatsApp link={url} text={TEXT} />
-        </DropdownMenu.Item>
-        <DropdownMenu.Item className="group focus:outline-none">
-          <Facebook link={url} />
-        </DropdownMenu.Item>
-        <DropdownMenu.Item className="group focus:outline-none">
-          <Twitter link={url} text={TEXT} />
-        </DropdownMenu.Item>
-        <DropdownMenu.Item className="group focus:outline-none">
-          <Telegram link={url} text={TEXT} />
-        </DropdownMenu.Item>
-      </DropdownMenu.Content>
+      <DropdownMenu.Portal>
+        <DropdownMenu.Content className="mt-2 pt-4 pb-4 bg-black text-white focus:outline-none">
+          <DropdownMenu.Item className="group focus:outline-none">
+            <WhatsApp link={url} text={TEXT} />
+          </DropdownMenu.Item>
+          <DropdownMenu.Item className="group focus:outline-none">
+            <Facebook link={url} />
+          </DropdownMenu.Item>
+          <DropdownMenu.Item className="group focus:outline-none">
+            <Twitter link={url} text={TEXT} />
+          </DropdownMenu.Item>
+          <DropdownMenu.Item className="group focus:outline-none">
+            <Telegram link={url} text={TEXT} />
+          </DropdownMenu.Item>
+        </DropdownMenu.Content>
+      </DropdownMenu.Portal>
     </DropdownMenu.Root>
   );
 }
