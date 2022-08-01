@@ -28,7 +28,7 @@ export async function getSearchData(query: string, limit = 5) {
         "fields.mixcloudLink[exists]": true,
         "fields.date[lte]": dayjs().format("YYYY-MM-DD"),
 
-        "fields.title[match]": query,
+        query: query,
 
         select: [
           "fields.title",
