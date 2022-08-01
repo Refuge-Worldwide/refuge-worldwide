@@ -206,7 +206,7 @@ export async function getRelatedShows(
   `;
 
   const res = await graphql(RelatedShowsQuery, {
-    variables: { limit, genres, skip },
+    variables: { limit, skip, genres },
   });
 
   const linkedFromShows = extractLinkedFromCollection<RelatedShowsType>(

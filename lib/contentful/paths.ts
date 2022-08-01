@@ -100,7 +100,7 @@ const createSlug = (slug: string, base: "artists" | "radio" | "news") =>
 
 export async function getSitemapSlugs() {
   const allShows = await getAllEntries<TypeShowFields>("show", 1000);
-  const allArticles = await getAllEntries<TypeArticleFields>("show", 100);
+  const allArticles = await getAllEntries<TypeArticleFields>("article", 100);
   const allArtists = await getAllEntries<TypeArtistFields>("artist", 100);
 
   return {
