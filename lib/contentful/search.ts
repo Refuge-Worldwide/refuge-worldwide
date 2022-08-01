@@ -16,7 +16,7 @@ export interface SearchData {
 }
 
 export async function getSearchData(query: string, limit = 5) {
-  const start = performance.now();
+  const start = Date.now();
 
   const [showsCollection, articlesCollection, artistsCollection] =
     await Promise.all([
@@ -67,7 +67,7 @@ export async function getSearchData(query: string, limit = 5) {
       }),
     ]);
 
-  const end = performance.now();
+  const end = Date.now();
 
   const { items: shows } = showsCollection;
   const { items: articles } = articlesCollection;
