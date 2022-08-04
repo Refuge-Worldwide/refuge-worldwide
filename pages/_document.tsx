@@ -3,7 +3,7 @@ import Document, { Head, Html, Main, NextScript } from "next/document";
 class RefugeDocument extends Document {
   render() {
     return (
-      <Html lang="en" className="antialiased">
+      <Html lang="en" className="antialiased text-[calc(1rem*0.8)]">
         <Head>
           <link
             rel="preload"
