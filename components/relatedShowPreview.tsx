@@ -42,9 +42,9 @@ export default function RelatedShowPreview({
 
           <div className="h-2" />
 
-          <ul className="flex flex-wrap -mr-2 -mb-2">
+          <ul className="flex flex-wrap gap-2">
             {genres.map((genre, i) => (
-              <li key={i} className="pr-2 pb-2">
+              <li key={i}>
                 <Badge invert text={genre} />
               </li>
             ))}

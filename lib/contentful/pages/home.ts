@@ -3,7 +3,6 @@ import {
   ArticleInterface,
   HomePageData,
   NextUpSection,
-  ShowInterface,
 } from "../../../types/shared";
 import { extractCollection, extractPage } from "../../../util";
 import {

@@ -39,8 +39,8 @@ export default function RelatedArticlePreview({
 
           <div className="h-3" />
 
-          <ul className="flex flex-wrap -mr-2 -mb-2">
-            <li className="pr-2 pb-2">
+          <ul className="flex flex-wrap gap-2">
+            <li>
               <Badge invert text={articleType} />
             </li>
           </ul>

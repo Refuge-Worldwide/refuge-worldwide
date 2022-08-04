@@ -93,9 +93,9 @@ export default function ShowBody({
 
               <div className="h-6" />
 
-              <ul className="w-full flex flex-wrap justify-center -mr-2 -mb-2">
+              <ul className="w-full flex flex-wrap justify-center gap-2">
                 {genres.map((genre, i) => (
-                  <li key={i} className="pr-2 pb-2">
+                  <li key={i}>
                     <Badge
                       onClick={() =>
                         router.push(

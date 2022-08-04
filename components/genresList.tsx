@@ -29,8 +29,8 @@ export default function GenresList({ filter, genres }: GenreListProps) {
   }
 
   return (
-    <ul className="w-full flex flex-wrap leading-none -mr-2 -mb-2">
-      <li className="inline-flex pr-2 pb-2">
+    <ul className="w-full flex flex-wrap leading-none gap-2">
+      <li className="inline-flex">
         <button
           className="focus:outline-none focus:ring-4 rounded-full"
           onClick={updateGenreParam("All")}
