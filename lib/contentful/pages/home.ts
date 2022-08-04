@@ -36,7 +36,7 @@ export async function getHomePage() {
       latestArticles: articleCollection(
         order: date_DESC
         where: { isFeatured: false }
-        limit: 3
+        limit: 4
       ) {
         items {
           ...ArticlePreviewFragment
