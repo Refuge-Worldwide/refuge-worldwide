@@ -12,11 +12,11 @@ module.exports = {
       medium: 500,
     },
     fontSize: {
-      xxs: ["0.75rem", 1.1],
+      xxs: ["0.75rem", 1.1111111111],
       tiny: ["1rem", 1],
       small: ["1.25rem", 1.3],
       base: ["1.875rem", 1.2666666667],
-      large: ["2.8125rem", 1.1],
+      large: ["2.8125rem", 1.1111111111],
     },
     fontFamily: {
       sans: [
@@ -98,79 +98,79 @@ module.exports = {
             "--tw-prose-th-borders": theme("colors.black"),
             "--tw-prose-td-borders": theme("colors.black"),
 
-            fontSize: "20px",
-            lineHeight: "30px",
+            fontSize: "1.25rem",
+            lineHeight: "1.5",
             h1: {
               fontWeight: "normal",
-              fontSize: "30px",
-              lineHeight: "38px",
+              fontSize: "1.875rem",
+              lineHeight: "1.2666666667",
 
               textAlign: "center",
             },
             h2: {
               fontWeight: "normal",
-              fontSize: "30px",
-              lineHeight: "38px",
+              fontSize: "1.875rem",
+              lineHeight: "1.2666666667",
 
               textAlign: "center",
             },
             h3: {
               fontWeight: "normal",
-              fontSize: "30px",
-              lineHeight: "38px",
+              fontSize: "1.875rem",
+              lineHeight: "1.2666666667",
 
               textAlign: "center",
             },
             h4: {
               fontWeight: "normal",
-              fontSize: "20px",
-              lineHeight: "30px",
+              fontSize: "1.25rem",
+              lineHeight: "1.5",
             },
             h5: {
               fontWeight: "normal",
-              fontSize: "20px",
-              lineHeight: "30px",
+              fontSize: "1.25rem",
+              lineHeight: "1.5",
             },
             h6: {
               fontWeight: "normal",
-              fontSize: "20px",
-              lineHeight: "30px",
+              fontSize: "1.25rem",
+              lineHeight: "1.5",
             },
           },
         },
         lg: {
           css: {
-            fontSize: "30px",
-            lineHeight: "38px",
+            fontSize: "1.875rem",
+            lineHeight: "1.2666666667",
             h1: {
-              fontSize: "45px",
-              lineHeight: "50px",
+              fontSize: "2.8125rem",
+              lineHeight: "1.1111111111",
 
               textAlign: "center",
             },
             h2: {
-              fontSize: "45px",
-              lineHeight: "50px",
+              fontSize: "2.8125rem",
+              lineHeight: "1.1111111111",
 
               textAlign: "center",
             },
             h3: {
-              fontSize: "45px",
-              lineHeight: "50px",
+              fontSize: "2.8125rem",
+              lineHeight: "1.1111111111",
 
               textAlign: "center",
             },
             h4: {
-              fontSize: "30px",
-              lineHeight: "38px",
+              fontSize: "1.875rem",
+              lineHeight: "1.2666666667",
             },
             h5: {
-              fontSize: "30px",
-              lineHeight: "38px",
+              fontSize: "1.875rem",
+              lineHeight: "1.2666666667",
             },
             h6: {
-              fontSize: "30px",
-              lineHeight: "38px",
+              fontSize: "1.875rem",
+              lineHeight: "1.2666666667",
             },
           },
         },
