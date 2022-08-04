@@ -110,7 +110,7 @@ export async function getUpcomingShows(preview: boolean) {
           isFeatured: true
         }
         preview: $preview
-        limit: 3
+        limit: 4
       ) {
         items {
           title

@@ -22,14 +22,10 @@ export async function getAllEntries<Fields>(
   perPage: number,
   options: EntriesQueries<Fields> = {}
 ) {
-  console.log(`cntfl - running 'getEntries' for '${contentType}'`);
-
   const { total } = await client.getEntries<Fields>({
     content_type: contentType,
     limit: 1,
   });
-
-  console.log(`cntfl - '${contentType}' entries: ${total}`);
 
   const entries = await Promise.all(
     [...Array(Math.round(total / perPage + 1))].map(async (_, index) => {

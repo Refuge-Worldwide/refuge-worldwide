@@ -39,7 +39,7 @@
     "fathom-client": "^3.5.0",
     "feed": "^4.2.2",
     "fuzzysort": "^2.0.1",
-    "next": "^12.2.3",
+    "next": "^12.2.4-canary.11",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-ridge-state": "^4.1.7",

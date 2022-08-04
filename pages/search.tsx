@@ -2,7 +2,7 @@ import { useDebouncedState } from "@react-hookz/web";
 import { InferGetStaticPropsType } from "next";
 import { isEmpty } from "ts-extras";
 import { ArticlePreviewForSearch } from "../components/articlePreview";
-import { ArtistPreviewForSearch } from "../components/artistPreview";
+import ArtistPreview from "../components/artistPreview";
 import Layout from "../components/layout";
 import Pill from "../components/pill";
 import PageMeta from "../components/seo/page";
@@ -135,7 +135,11 @@ export default function SearchPage({
                 {data.artists.map((artist) => {
                   return (
                     <li key={artist.fields.slug}>
-                      <ArtistPreviewForSearch {...artist} />
+                      <ArtistPreview
+                        name={artist.fields.name}
+                        slug={artist.fields.slug}
+                        src={artist.fields.photo.fields.file.url}
+                      />
                     </li>
                   );
                 })}

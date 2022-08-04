@@ -19,7 +19,6 @@ class RefugeDocument extends Document {
             href="/fonts/visuelt-medium.woff2"
             crossOrigin="anonymous"
           />
-          <link rel="preload" as="image" href="/images/navigation-smile.svg" />
           <link
             rel="preload"
             as="image"

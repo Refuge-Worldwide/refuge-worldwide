@@ -3,7 +3,7 @@ import {
   Options,
 } from "@contentful/rich-text-react-renderer";
 import { Document, INLINES } from "@contentful/rich-text-types";
-import Image from "next/image";
+import Image from "next/future/image";
 import Link from "next/link";
 import { Fragment } from "react";
 import { Arrow } from "../icons/arrow";
@@ -52,11 +52,9 @@ export default function ArticlePreview({
               src={coverImage.url}
               loader={loaders.contentful}
               width={590}
-              height={345}
-              objectFit="cover"
-              objectPosition="center"
+              height={369}
               alt={title}
-              className="bg-black/10"
+              className="bg-black/10 object-cover object-center aspect-[16/10]"
             />
           </div>
 
@@ -74,11 +72,9 @@ export default function ArticlePreview({
             <Fragment>
               <div className="h-2" />
 
-              <ul className="flex flex-wrap">
-                <li>
-                  <Badge text={articleType} />
-                </li>
-              </ul>
+              <div className="flex">
+                <Badge text={articleType} />
+              </div>
 
               <div className="hidden sm:block h-2" />
             </Fragment>
@@ -93,7 +89,7 @@ export default function ArticlePreview({
 
             <div className="h-4" />
 
-            <p className="inline-flex items-center space-x-5">
+            <p className="inline-flex items-center gap-5">
               <span className="underline">Read more</span>
               <Arrow />
             </p>
@@ -117,15 +113,13 @@ export function ArticlePreviewForSearch({
               src={coverImage.fields.file.url}
               loader={loaders.contentful}
               width={590}
-              height={345}
-              objectFit="cover"
-              objectPosition="center"
+              height={335}
               alt={title}
-              className="bg-black/10"
+              className="bg-black/10 object-cover object-center aspect-video"
             />
           </div>
 
-          <div className="h-4" />
+          <div className="h-2" />
 
           <p>
             <Date dateString={date} formatString={"DD.MM.YYYY"} />

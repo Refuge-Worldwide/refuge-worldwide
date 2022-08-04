@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "next/future/image";
 import Link from "next/link";
 import { UpcomingShowType } from "../lib/contentful/pages/radio";
 import loaders from "../lib/loaders";
@@ -29,11 +29,9 @@ export default function UpcomingShowPreview({
               src={coverImage.url}
               loader={loaders.contentful}
               width={590}
-              height={345}
-              objectFit="cover"
-              objectPosition="center"
+              height={335}
               alt={title}
-              className="bg-black/10"
+              className="bg-black/10 object-cover object-center aspect-video"
             />
           </div>
 
@@ -59,9 +57,9 @@ export default function UpcomingShowPreview({
 
           <div className="h-3" />
 
-          <ul className="w-full flex flex-wrap -mr-2 -mb-2">
+          <ul className="w-full flex flex-wrap gap-2">
             {genres.map((genre, i) => (
-              <li key={i} className="pr-2 pb-2">
+              <li key={i}>
                 <Badge text={genre} />
               </li>
             ))}

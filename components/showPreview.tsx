@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import Image from "next/image";
+import Image from "next/future/image";
 import Link from "next/link";
 import PlayLarge from "../icons/playLarge";
 import { PastShowSchema } from "../lib/contentful/client";
@@ -11,19 +11,17 @@ import { getMixcloudKey, parseGenres } from "../util";
 import Badge from "./badge";
 import Date from "./date";
 
-type ShowPreviewProps = ShowPreviewEntry & { className?: string };
+type ShowImageWithPlayerProps = {
+  mixcloudLink: string;
+  src: string;
+  alt: string;
+};
 
-export default function ShowPreview({
-  slug,
-  title,
-  coverImage,
-  genres,
-  date,
+function ShowImageWithPlayer({
   mixcloudLink,
-  className = "",
-}: PastShowSchema & { className?: string }) {
-  const cachedClassNames = classNames("text-small", className);
-
+  src,
+  alt,
+}: ShowImageWithPlayerProps) {
   const [, setKey] = showKey.use();
 
   const player = playerWidget.useValue();
@@ -43,25 +41,45 @@ export default function ShowPreview({
   };
 
   return (
-    <article className={cachedClassNames}>
-      <button onClick={handlePlayShow} className="flex relative group">
-        <Image
-          key={slug}
-          src={coverImage}
-          loader={loaders.contentful}
-          width={590}
-          height={345}
-          objectFit="cover"
-          objectPosition="center"
-          alt={title}
-          className="bg-black/10"
-        />
-        <div className="inset-0 absolute bg-black/0 transition-colors duration-150 group-hover:bg-black/60 flex items-center justify-center text-white/10 group-hover:text-white/100">
-          <div className="-mr-4">
-            <PlayLarge />
-          </div>
+    <button onClick={handlePlayShow} className="flex relative group">
+      <Image
+        src={src}
+        loader={loaders.contentful}
+        width={590}
+        height={332}
+        alt={alt}
+        className="bg-black/10 object-cover object-center aspect-video"
+      />
+
+      <div className="inset-0 absolute bg-black/0 transition-colors duration-150 group-hover:bg-black/60 flex items-center justify-center text-white/0 group-hover:text-white/100">
+        <div className="-mr-4">
+          <PlayLarge />
         </div>
-      </button>
+      </div>
+    </button>
+  );
+}
+
+type ShowPreviewProps = ShowPreviewEntry & { className?: string };
+
+export default function ShowPreview({
+  slug,
+  title,
+  coverImage,
+  genres,
+  date,
+  mixcloudLink,
+  className = "",
+}: PastShowSchema & { className?: string }) {
+  const cachedClassNames = classNames("text-small", className);
+
+  return (
+    <article className={cachedClassNames}>
+      <ShowImageWithPlayer
+        src={coverImage}
+        alt={title}
+        mixcloudLink={mixcloudLink}
+      />
 
       <div className="h-2" />
 
@@ -77,9 +95,9 @@ export default function ShowPreview({
 
           <div className="h-2" />
 
-          <ul className="w-full flex flex-wrap -mr-2 -mb-2">
+          <ul className="w-full flex flex-wrap gap-2">
             {genres.map((genre, i) => (
-              <li key={i} className="pr-2 pb-2">
+              <li key={i}>
                 <Badge small text={genre} />
               </li>
             ))}
@@ -110,11 +128,9 @@ export function ShowPreviewWithoutPlayer({
               src={coverImage.fields.file.url}
               loader={loaders.contentful}
               width={590}
-              height={345}
-              objectFit="cover"
-              objectPosition="center"
+              height={332}
               alt={title}
-              className="bg-black/10"
+              className="bg-black/10 object-cover object-center aspect-video"
             />
           </div>
 
@@ -130,9 +146,9 @@ export function ShowPreviewWithoutPlayer({
 
           <div className="h-2" />
 
-          <ul className="w-full flex flex-wrap -mr-2 -mb-2">
+          <ul className="w-full flex flex-wrap gap-2">
             {parsedGenres.map((genre, i) => (
-              <li key={i} className="pr-2 pb-2">
+              <li key={i}>
                 <Badge small text={genre} />
               </li>
             ))}
@@ -156,44 +172,13 @@ export function FeaturedShowPreview({
 
   const genres = parseGenres(genresCollection);
 
-  const [, setKey] = showKey.use();
-
-  const player = playerWidget.useValue();
-
-  const handlePlayShow = async () => {
-    setKey(getMixcloudKey(mixcloudLink));
-
-    if (player?.play) {
-      console.log("[Mixcloud]", "Play");
-
-      try {
-        await player.togglePlay();
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  };
-
   return (
     <article className={cachedClassNames}>
-      <button onClick={handlePlayShow} className="flex relative group">
-        <Image
-          key={coverImage.sys.id}
-          src={coverImage.url}
-          loader={loaders.contentful}
-          width={590}
-          height={345}
-          objectFit="cover"
-          objectPosition="center"
-          alt={title}
-          className="bg-black/10"
-        />
-        <div className="inset-0 absolute bg-black/0 transition-colors duration-150 group-hover:bg-black/60 flex items-center justify-center text-white/0 group-hover:text-white/100">
-          <div className="-mr-4">
-            <PlayLarge />
-          </div>
-        </div>
-      </button>
+      <ShowImageWithPlayer
+        src={coverImage.url}
+        alt={title}
+        mixcloudLink={mixcloudLink}
+      />
 
       <div className="h-2" />
 
@@ -209,9 +194,9 @@ export function FeaturedShowPreview({
 
           <div className="h-2" />
 
-          <ul className="w-full flex flex-wrap -mr-2 -mb-2">
+          <ul className="w-full flex flex-wrap gap-2">
             {genres.map((genre, i) => (
-              <li key={i} className="pr-2 pb-2">
+              <li key={i}>
                 <Badge small text={genre} />
               </li>
             ))}

@@ -20,7 +20,11 @@ export default function ArtistRow({ alphabet, artists }: ArtistRowProps) {
         <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-y-6 sm:gap-8">
           {artists.map((artist, i) => (
             <li key={i}>
-              <ArtistPreview {...artist} />
+              <ArtistPreview
+                name={artist.name}
+                slug={artist.slug}
+                src={artist.photo.url}
+              />
             </li>
           ))}
         </ul>

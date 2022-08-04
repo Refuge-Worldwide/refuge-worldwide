@@ -1,8 +1,8 @@
-import Image from "next/image";
+import Image from "next/future/image";
 import { ReactNode } from "react";
+import BackButton from "../components/backButton";
 import loaders from "../lib/loaders";
 import { CoverImage, CoverImagePosition } from "../types/shared";
-import BackButton from "../components/backButton";
 
 export default function SinglePage({
   coverImage,
@@ -27,16 +27,14 @@ export default function SinglePage({
         <Image
           alt={""}
           aria-hidden
-          className="select-none "
+          className="select-none object-cover bg-black/10"
           draggable={false}
           key={coverImage.sys.id}
-          layout="fill"
           loader={loaders.contentful}
-          loading="eager"
-          objectFit="cover"
-          objectPosition={objectPosition}
           priority
           src={coverImage.url}
+          style={{ objectPosition: objectPosition }}
+          fill
         />
       </div>
 

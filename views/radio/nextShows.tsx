@@ -16,7 +16,7 @@ export default function NextShows({
 
         <div className="h-5 sm:h-8" />
 
-        <ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+        <ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
           {upcomingShows.map((show, i) => (
             <li key={i}>
               <UpcomingShowPreview {...show} />

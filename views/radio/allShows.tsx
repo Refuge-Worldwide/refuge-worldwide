@@ -4,6 +4,7 @@ import ShowPreview from "../../components/showPreview";
 import useGenreFilter from "../../hooks/useGenreFilter";
 import useRadioShows from "../../hooks/useRadioShows";
 import { PastShowSchema } from "../../lib/contentful/client";
+import Image from "next/future/image";
 
 export default function AllShows({
   genres,
@@ -49,7 +50,15 @@ export default function AllShows({
               className="inline-flex focus:outline-none rounded-full items-center justify-center group"
               aria-label="Load more shows"
             >
-              <img src="/images/load-more-button.svg" alt="" aria-hidden />
+              <Image
+                src="/images/load-more-button.svg"
+                unoptimized
+                aria-hidden
+                width={128}
+                height={128}
+                priority
+                alt=""
+              />
 
               <span
                 className="absolute rounded-full h-20 w-20 group-focus:ring-4"

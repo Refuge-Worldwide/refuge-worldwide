@@ -1,6 +1,7 @@
 import ArticlePreview from "../../components/articlePreview";
 import useNewsArticles from "../../hooks/useNewsArticles";
 import { ArticleInterface } from "../../types/shared";
+import Image from "next/future/image";
 
 export default function AllArticles({
   articles: fallbackData,
@@ -12,7 +13,7 @@ export default function AllArticles({
   return (
     <section>
       <div className="p-4 sm:p-8">
-        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
           {articles.map((article, i) => (
             <li key={i}>
               <ArticlePreview withType {...article} />
@@ -27,7 +28,15 @@ export default function AllArticles({
               className="inline-flex focus:outline-none rounded-full items-center justify-center group"
               aria-label="Load more shows"
             >
-              <img src="/images/load-more-button.svg" alt="" aria-hidden />
+              <Image
+                src="/images/load-more-button.svg"
+                unoptimized
+                aria-hidden
+                width={128}
+                height={128}
+                priority
+                alt=""
+              />
 
               <span
                 className="absolute rounded-full h-20 w-20 group-focus:ring-4"

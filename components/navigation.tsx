@@ -1,4 +1,5 @@
 import * as Dialog from "@radix-ui/react-dialog";
+import Image from "next/future/image";
 import Link from "next/link";
 import { useState } from "react";
 import { MobileMenu } from "../components/mobileMenu";
@@ -20,12 +21,14 @@ export default function Navigation() {
             <li>
               <Link href="/">
                 <a className="flex">
-                  <img
+                  <Image
                     src="/images/navigation-smile.svg"
                     width={66}
                     height={40}
                     alt="Refuge"
-                    loading="eager"
+                    priority
+                    unoptimized
+                    className="h-10 w-[4.125rem]"
                   />
                 </a>
               </Link>

@@ -1,6 +1,6 @@
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import { Block, BLOCKS, INLINES, Inline } from "@contentful/rich-text-types";
-import Image from "next/image";
+import Image from "next/future/image";
 import { Asset, Content } from "../types/shared";
 import Link from "next/link";
 
@@ -52,9 +52,9 @@ export function renderRichTextWithImages(content: Content) {
               <Image
                 src={asset.url}
                 alt={asset.title}
-                width={asset.width}
-                height={asset.height}
-                layout="responsive"
+                width={820}
+                height={520}
+                className="object-contain object-center"
               />
             );
           }

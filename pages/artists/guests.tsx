@@ -1,4 +1,5 @@
 import { InferGetStaticPropsType } from "next";
+import Image from "next/future/image";
 import Link from "next/link";
 import ArtistPreview from "../../components/artistPreview";
 import Badge from "../../components/badge";
@@ -57,7 +58,11 @@ export default function GuestsPage({
           <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-y-6 sm:gap-8">
             {guests.map((artist, i) => (
               <li key={i}>
-                <ArtistPreview {...artist} />
+                <ArtistPreview
+                  name={artist.name}
+                  slug={artist.slug}
+                  src={artist.photo.url}
+                />
               </li>
             ))}
           </ul>
@@ -69,7 +74,15 @@ export default function GuestsPage({
                 className="inline-flex focus:outline-none rounded-full items-center justify-center group"
                 aria-label="Load more shows"
               >
-                <img src="/images/load-more-button.svg" alt="" aria-hidden />
+                <Image
+                  src="/images/load-more-button.svg"
+                  unoptimized
+                  aria-hidden
+                  width={128}
+                  height={128}
+                  priority
+                  alt=""
+                />
 
                 <span
                   className="absolute rounded-full h-20 w-20 group-focus:ring-4"

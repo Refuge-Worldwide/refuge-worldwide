@@ -1,5 +1,6 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
+import Image from "next/future/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { forwardRef, useEffect } from "react";
@@ -27,12 +28,14 @@ function MobileMenuContent({ onDismiss }: { onDismiss: () => void }) {
           <li>
             <Link href="/">
               <a className="flex">
-                <img
+                <Image
                   src="/images/navigation-smile-white.svg"
                   width={66}
                   height={40}
                   alt="Refuge"
-                  loading="eager"
+                  priority
+                  unoptimized
+                  className="h-10 w-[4.125rem]"
                 />
               </a>
             </Link>
