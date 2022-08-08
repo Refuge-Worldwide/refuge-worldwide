@@ -19,15 +19,15 @@ export default function FeaturedShows({ shows }: FeaturedShowsProps) {
         <div className="h-5 sm:h-8" />
 
         <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-y-10 sm:gap-8">
-          {shows.map((show, i) => {
-            const isLast = shows.length === i + 1;
+          {shows.map((show, idx) => {
+            const isLast = shows.length === idx + 1;
 
             return (
-              <li key={i}>
-                <FeaturedShowPreview
-                  className={isLast ? "lg:hidden xl:block 2xl:hidden" : ""}
-                  {...show}
-                />
+              <li
+                className={isLast && "lg:hidden xl:block 2xl:hidden"}
+                key={idx}
+              >
+                <FeaturedShowPreview {...show} />
               </li>
             );
           })}

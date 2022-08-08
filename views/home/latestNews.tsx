@@ -19,11 +19,15 @@ export default function LatestNews({
         <div className="h-5 sm:h-8" />
 
         <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
-          {articles.map((article, i) => (
-            <li key={i}>
-              <ArticlePreview {...article} />
-            </li>
-          ))}
+          {articles.map((article, idx) => {
+            const greaterThanFour = idx >= 4;
+
+            return (
+              <li className={greaterThanFour && "xl:hidden"} key={idx}>
+                <ArticlePreview {...article} />
+              </li>
+            );
+          })}
         </ul>
 
         <div className="h-10 sm:h-16" />
