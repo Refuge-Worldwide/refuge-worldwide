@@ -1,4 +1,8 @@
-export interface PlayerWidget {
+export declare function PlayerWidget(
+  target: HTMLIFrameElement
+): PlayerWidgetReturnType;
+
+export interface PlayerWidgetReturnType {
   events: {
     buffering: {
       on: (e: any) => void;
@@ -25,6 +29,7 @@ export interface PlayerWidget {
       off: (e: any) => void;
     };
   };
+  load: (cloudcastKey: string, startPlaying: boolean) => Promise<unknown>;
   getCurrentKey: () => Promise<string>;
   getDuration: () => Promise<number>;
   getIsPaused: () => Promise<boolean>;

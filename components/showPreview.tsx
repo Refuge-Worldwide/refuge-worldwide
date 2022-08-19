@@ -1,10 +1,10 @@
 import classNames from "classnames";
 import Image from "next/future/image";
 import Link from "next/link";
+import { useGlobalStore } from "../hooks/useStore";
 import PlayLarge from "../icons/playLarge";
 import { PastShowSchema } from "../lib/contentful/client";
 import loaders from "../lib/loaders";
-import { playerWidget, showKey } from "../lib/mixcloud";
 import { TypeShow } from "../types/contentful";
 import type { ShowPreviewEntry } from "../types/shared";
 import { getMixcloudKey, parseGenres } from "../util";
@@ -22,26 +22,12 @@ function ShowImageWithPlayer({
   src,
   alt,
 }: ShowImageWithPlayerProps) {
-  const [, setKey] = showKey.use();
+  const showKeySet = useGlobalStore((state) => state.showKeySet);
 
-  const player = playerWidget.useValue();
-
-  const handlePlayShow = async () => {
-    setKey(getMixcloudKey(mixcloudLink));
-
-    if (player?.play) {
-      console.log("[Mixcloud]", "Play");
-
-      try {
-        await player.togglePlay();
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  };
+  const onClick = () => showKeySet(getMixcloudKey(mixcloudLink));
 
   return (
-    <button onClick={handlePlayShow} className="flex relative group">
+    <button onClick={onClick} className="flex relative group">
       <Image
         src={src}
         loader={loaders.contentful}

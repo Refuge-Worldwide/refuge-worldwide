@@ -1,9 +1,5 @@
-import { MutableRefObject, useCallback, useEffect } from "react";
-import { newRidgeState } from "react-ridge-state";
-import { showKey } from "../lib/mixcloud";
-
-export const livePlayerState = newRidgeState(undefined);
-export const shouldUnloadLivePlayerState = newRidgeState(false);
+import { MutableRefObject, useCallback, useEffect, useState } from "react";
+import { ActivePlayer, useGlobalStore } from "./useStore";
 
 export default function usePlayerState({
   audioRef,
@@ -14,9 +10,11 @@ export default function usePlayerState({
   sourceRef: MutableRefObject<HTMLSourceElement>;
   url: string;
 }) {
-  const [isPlaying, setIsPlaying] = livePlayerState.use();
-  const [shouldUnloadLivePlayer, shouldUnloadLivePlayerSet] =
-    shouldUnloadLivePlayerState.use();
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+
+  const activePlayer = useGlobalStore((state) => state.activePlayer);
+  const activePlayerSet = useGlobalStore((state) => state.activePlayerSet);
+
   useEffect(() => {
     const setStatePlaying = () => setIsPlaying(true);
     const setStatePaused = () => setIsPlaying(false);
@@ -30,16 +28,11 @@ export default function usePlayerState({
     };
   }, [audioRef]);
 
-  const [, setKey] = showKey.use();
-  const unmountMixcloudPlayer = () => setKey(null);
-
   const play = useCallback(async () => {
     try {
       setIsPlaying(true);
 
-      shouldUnloadLivePlayerSet(false);
-
-      unmountMixcloudPlayer();
+      activePlayerSet(ActivePlayer.RADIO_CO);
 
       if (!sourceRef?.current?.getAttribute("src")) {
         sourceRef?.current?.setAttribute("src", url);
@@ -68,10 +61,10 @@ export default function usePlayerState({
   }, [audioRef]);
 
   useEffect(() => {
-    if (shouldUnloadLivePlayer) {
+    if (activePlayer === ActivePlayer.MIXCLOUD) {
       pause();
     }
-  }, [shouldUnloadLivePlayer]);
+  }, [activePlayer]);
 
   return {
     isPlaying,

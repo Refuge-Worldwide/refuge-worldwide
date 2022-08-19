@@ -1,14 +1,13 @@
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { Fragment } from "react";
 import Badge from "../../components/badge";
 import Date from "../../components/date";
 import Pill from "../../components/pill";
 import Prose from "../../components/Prose";
 import ShareButton from "../../components/shareButton";
+import { useGlobalStore } from "../../hooks/useStore";
 import PlayCircle from "../../icons/playCircle";
-import { playerWidget, showKey } from "../../lib/mixcloud";
 import { ShowInterface } from "../../types/shared";
 import { getMixcloudKey, parseGenres } from "../../util";
 
@@ -21,8 +20,6 @@ export default function ShowBody({
   content,
   mixcloudLink,
 }: ShowInterface) {
-  const router = useRouter();
-
   const genres = parseGenres(genresCollection);
 
   const artists = artistsCollection.items;
@@ -47,22 +44,9 @@ export default function ShowBody({
     </Fragment>
   );
 
-  const [, setKey] = showKey.use();
-  const player = playerWidget.useValue();
+  const showKeySet = useGlobalStore((state) => state.showKeySet);
 
-  const handlePlayShow = async () => {
-    setKey(getMixcloudKey(mixcloudLink));
-
-    if (player?.play) {
-      console.log("[Mixcloud]", "Play");
-
-      try {
-        await player.togglePlay();
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  };
+  const onClick = () => showKeySet(getMixcloudKey(mixcloudLink));
 
   return (
     <Fragment>
@@ -73,7 +57,7 @@ export default function ShowBody({
               {mixcloudLink && (
                 <button
                   className="w-20 h-20 sm:w-28 sm:h-28 rounded-full focus:outline-none focus:ring-4"
-                  onClick={handlePlayShow}
+                  onClick={onClick}
                 >
                   <PlayCircle />
                 </button>
@@ -96,15 +80,11 @@ export default function ShowBody({
               <ul className="w-full flex flex-wrap justify-center gap-2">
                 {genres.map((genre, i) => (
                   <li key={i}>
-                    <Badge
-                      onClick={() =>
-                        router.push(
-                          `/radio?genre=${encodeURIComponent(genre)}#shows`
-                        )
-                      }
-                      as="button"
-                      text={genre}
-                    />
+                    <Link
+                      href={`/radio?genre=${encodeURIComponent(genre)}#shows`}
+                    >
+                      <Badge as="a" text={genre} />
+                    </Link>
                   </li>
                 ))}
               </ul>
