@@ -25,7 +25,7 @@ export default function Article({
       <SinglePage
         coverImage={article.coverImage}
         objectPosition={article.coverImagePosition}
-        withBackButton
+        backPath="/news"
       >
         <ArticleBody {...article} />
       </SinglePage>

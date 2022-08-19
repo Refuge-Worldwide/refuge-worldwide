@@ -21,7 +21,7 @@ export default function Artist({ artist, relatedShows, preview }: ArtistProps) {
       <SinglePage
         coverImage={artist.photo}
         objectPosition={artist.coverImagePosition}
-        withBackButton
+        backPath="/artists"
       >
         <ArtistBody {...artist} />
       </SinglePage>

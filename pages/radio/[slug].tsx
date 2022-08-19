@@ -19,7 +19,7 @@ export default function Show({
       <SinglePage
         coverImage={show.coverImage}
         objectPosition={show.coverImagePosition}
-        withBackButton
+        backPath="/radio"
       >
         <ShowBody {...show} />
       </SinglePage>

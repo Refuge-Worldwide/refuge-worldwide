@@ -7,19 +7,19 @@ import { CoverImage, CoverImagePosition } from "../types/shared";
 export default function SinglePage({
   coverImage,
   children,
-  withBackButton = false,
+  backPath,
   objectPosition = "center",
 }: {
   coverImage: CoverImage;
   children: ReactNode;
-  withBackButton?: boolean;
+  backPath?: string;
   objectPosition?: CoverImagePosition;
 }) {
   return (
     <div className="relative">
-      {withBackButton && (
+      {backPath && (
         <div className="absolute left-4 sm:left-8 top-3 sm:top-4 z-20">
-          <BackButton />
+          <BackButton backPath={backPath} />
         </div>
       )}
 
