@@ -24,7 +24,7 @@ export default function FeaturedShows({ shows }: FeaturedShowsProps) {
 
             return (
               <li
-                className={isLast && "lg:hidden xl:block 2xl:hidden"}
+                className={isLast ? "lg:hidden xl:block 2xl:hidden" : ""}
                 key={idx}
               >
                 <FeaturedShowPreview {...show} />

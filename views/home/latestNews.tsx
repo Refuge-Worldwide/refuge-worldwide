@@ -23,7 +23,7 @@ export default function LatestNews({
             const greaterThanFour = idx >= 4;
 
             return (
-              <li className={greaterThanFour && "xl:hidden"} key={idx}>
+              <li className={greaterThanFour ? "xl:hidden" : ""} key={idx}>
                 <ArticlePreview {...article} />
               </li>
             );
