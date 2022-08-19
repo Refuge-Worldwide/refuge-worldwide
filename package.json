@@ -46,7 +46,8 @@
     "sharp": "^0.30.7",
     "smoothscroll-polyfill": "^0.4.4",
     "swr": "^1.3.0",
-    "ts-extras": "^0.11.0"
+    "ts-extras": "^0.11.0",
+    "zustand": "^4.1.0"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^12.2.5",
