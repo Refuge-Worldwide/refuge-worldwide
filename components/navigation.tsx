@@ -1,17 +1,25 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import Image from "next/future/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { MobileMenu } from "../components/mobileMenu";
 import { INSTAGRAM_URL, SHOP_URL } from "../constants";
 import Instagram from "../icons/instagram";
 import { Menu } from "../icons/menu";
+import MessageSquare from "../icons/message-square";
 import Search from "../icons/search";
 import NavigationLink from "./navigationLink";
 
 export default function Navigation() {
   const [isOpen, isOpenSet] = useState(false);
   const onDismiss = () => isOpenSet(false);
+
+  const openChat = useCallback(() => {
+    const chatOptions =
+      "width=480,height=520,menubar=no,location=no,resizable=no,scrollbars=no,status=no";
+
+    window.open("/chat", "refugechatwindow", chatOptions);
+  }, []);
 
   return (
     <Dialog.Root open={isOpen} onOpenChange={(open) => isOpenSet(open)}>
@@ -119,6 +127,11 @@ export default function Navigation() {
                       >
                         <Search />
                       </NavigationLink>
+                    </li>
+                    <li className="h-6 leading-none">
+                      <button onClick={openChat}>
+                        <MessageSquare />
+                      </button>
                     </li>
                     <li>
                       <a
