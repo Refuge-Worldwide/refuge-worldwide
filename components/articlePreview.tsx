@@ -1,8 +1,3 @@
-import {
-  documentToReactComponents,
-  Options,
-} from "@contentful/rich-text-react-renderer";
-import { Document, INLINES } from "@contentful/rich-text-types";
 import Image from "next/future/image";
 import Link from "next/link";
 import { Fragment } from "react";
@@ -12,6 +7,7 @@ import { TypeArticle } from "../types/contentful";
 import type { ArticleInterface } from "../types/shared";
 import Badge from "./badge";
 import Date from "./date";
+import NewsExcerpt from "./newsExcerpt";
 
 interface ArticlePreview extends ArticleInterface {
   withType?: boolean;
@@ -26,22 +22,6 @@ export default function ArticlePreview({
   coverImage,
   content,
 }: ArticlePreview) {
-  /**
-   * Roundabout way to get the first line of text
-   */
-  const excerpt: Document = {
-    ...content.json,
-    content: content.json.content
-      .filter((el) => el.nodeType === "paragraph")
-      .slice(0, 1),
-  };
-
-  const richTextOptions: Options = {
-    renderNode: {
-      [INLINES.HYPERLINK]: (_, children) => children,
-    },
-  };
-
   return (
     <Link href={`/news/${slug}`}>
       <a aria-labelledby={`article-${slug}`}>
@@ -84,7 +64,7 @@ export default function ArticlePreview({
 
           <div className="hidden sm:block">
             <div className="font-light">
-              {documentToReactComponents(excerpt, richTextOptions)}
+              <NewsExcerpt content={content} />
             </div>
 
             <div className="h-4" />
