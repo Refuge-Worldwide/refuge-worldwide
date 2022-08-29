@@ -7,6 +7,7 @@ import { forwardRef, useEffect } from "react";
 import { INSTAGRAM_URL, SHOP_URL, TWITTER_URL } from "../constants";
 import Instagram from "../icons/instagram";
 import { Close } from "../icons/menu";
+import MessageSquare from "../icons/message-square";
 import Twitter from "../icons/twitter";
 import MobileMenuLink from "./mobileMenuLink";
 
@@ -45,7 +46,7 @@ function MobileMenuContent({ onDismiss }: { onDismiss: () => void }) {
             <Dialog.Close className="flex focus:outline-none focus:ring-4">
               <span className="sr-only">Close</span>
               <span aria-hidden>
-                <Close />
+                <Close size={32} />
               </span>
             </Dialog.Close>
           </li>
@@ -101,14 +102,34 @@ function MobileMenuContent({ onDismiss }: { onDismiss: () => void }) {
           </MobileMenuLink>
         </li>
         <li>
-          <ul className="flex space-x-8">
+          <ul className="flex gap-8">
             <li>
-              <a target="_blank" rel="noopener noreferrer" href={INSTAGRAM_URL}>
+              <a
+                className="flex"
+                target="_blank"
+                rel="noopener noreferrer"
+                href={INSTAGRAM_URL}
+              >
                 <Instagram size={40} />
               </a>
             </li>
             <li>
-              <a target="_blank" rel="noopener noreferrer" href={TWITTER_URL}>
+              <a
+                className="flex"
+                target="_blank"
+                rel="noopener noreferrer"
+                href="https://refugeworldwide.com/chat"
+              >
+                <MessageSquare size={40} />
+              </a>
+            </li>
+            <li>
+              <a
+                className="flex"
+                target="_blank"
+                rel="noopener noreferrer"
+                href={TWITTER_URL}
+              >
                 <Twitter size={40} />
               </a>
             </li>

@@ -2,6 +2,7 @@ export default function MessageSquare({
   size = 24,
   title = "Chat",
   titleId = "chat",
+  strokeWidth = 2,
 }) {
   return (
     <svg
@@ -11,7 +12,7 @@ export default function MessageSquare({
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth={2}
+      strokeWidth={strokeWidth}
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-labelledby={titleId}

@@ -42,11 +42,18 @@ export default function Navigation() {
               </Link>
             </li>
 
-            <li className="block lg:hidden ml-auto">
+            <li className="li flex lg:hidden gap-6 ml-auto">
+              <Dialog.Trigger className="flex focus:outline-none focus:ring-4">
+                <span className="sr-only">Open Chat</span>
+                <span aria-hidden>
+                  <MessageSquare size={32} strokeWidth={1.5} />
+                </span>
+              </Dialog.Trigger>
+
               <Dialog.Trigger className="flex focus:outline-none focus:ring-4">
                 <span className="sr-only">Open Menu</span>
                 <span aria-hidden>
-                  <Menu />
+                  <Menu size={32} />
                 </span>
               </Dialog.Trigger>
             </li>
