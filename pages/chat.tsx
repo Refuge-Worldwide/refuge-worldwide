@@ -29,6 +29,8 @@ export default function ChatPage() {
               q: "000000",
               r: 100,
               allowpm: 0,
+              showx: 0,
+              surl: 0,
             },
           }),
         }}
