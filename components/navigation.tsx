@@ -43,12 +43,17 @@ export default function Navigation() {
             </li>
 
             <li className="li flex lg:hidden gap-6 ml-auto">
-              <Dialog.Trigger className="flex focus:outline-none focus:ring-4">
+              <a
+                className="flex focus:outline-none focus:ring-4"
+                target="_blank"
+                rel="noopener noreferrer"
+                href="https://refugeworldwide.com/chat"
+              >
                 <span className="sr-only">Open Chat</span>
                 <span aria-hidden>
                   <MessageSquare size={32} strokeWidth={1.5} />
                 </span>
-              </Dialog.Trigger>
+              </a>
 
               <Dialog.Trigger className="flex focus:outline-none focus:ring-4">
                 <span className="sr-only">Open Menu</span>
