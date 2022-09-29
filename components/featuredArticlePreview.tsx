@@ -26,7 +26,8 @@ export default function FeaturedArticlePreview({
   slug,
   articleType,
   coverImage,
-}: ArticleInterface) {
+  priority,
+}: ArticleInterface & { priority?: boolean }) {
   const articleClassNames = cn(
     "flex flex-col-reverse md:grid grid-cols-10 h-full md:items-stretch md:justify-items-stretch",
     getArticleBackgroundColor(articleType)
@@ -80,8 +81,7 @@ export default function FeaturedArticlePreview({
               objectFit="cover"
               objectPosition="center"
               layout="fill"
-              loading="eager"
-              priority
+              priority={priority}
             />
           </div>
         </article>

@@ -21,7 +21,7 @@ export default function NewsPage({
     <Layout preview={preview}>
       <PageMeta title="News | Refuge Worldwide" path="news/" />
 
-      <FeaturedArticles articles={featuredArticles} />
+      <FeaturedArticles articles={featuredArticles} aboveTheFold />
 
       <section className="block sm:hidden px-4 pt-4">
         <Pill>
