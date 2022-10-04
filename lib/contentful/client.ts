@@ -68,17 +68,33 @@ export async function getPastShows(
   skip: number,
   filter: "All" | string
 ) {
+  const now = dayjs().format("YYYY-MM-DD");
+
+  if (filter === "All") {
+    const { items } = await client.getEntries<TypeShowFields>({
+      "fields.mixcloudLink[exists]": true,
+      "fields.date[lte]": now,
+      order: "-fields.date,fields.title",
+      content_type: "show",
+      limit: take,
+      skip: skip,
+    });
+
+    const processed = (items as Entry<TypeShowFields>[]).map(
+      createPastShowSchema
+    );
+
+    return processed;
+  }
+
   const allShows = await getAllEntries<TypeShowFields>("show", 1000, {
     "fields.mixcloudLink[exists]": true,
-    "fields.date[lte]": dayjs().format("YYYY-MM-DD"),
+    "fields.date[lte]": now,
   });
 
   const processed = allShows.map(createPastShowSchema);
 
-  const filtered = processed.filter((show) => {
-    if (filter === "All") return true;
-    return show.genres.includes(filter);
-  });
+  const filtered = processed.filter((show) => show.genres.includes(filter));
 
   const sorted = filtered.sort((a, b) => {
     if (dayjs(a.date).isAfter(b.date)) return -1;
