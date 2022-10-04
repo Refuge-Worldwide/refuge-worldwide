@@ -19,11 +19,6 @@ class RefugeDocument extends Document {
             href="/fonts/visuelt-medium.woff2"
             crossOrigin="anonymous"
           />
-          <link
-            rel="preload"
-            as="image"
-            href="/images/navigation-smile-white.svg"
-          />
           <link rel="stylesheet" href="https://use.typekit.net/rqu7mun.css" />
           <link rel="preconnect" href="https://images.ctfassets.net" />
           <link rel="dns-prefetch" href="https://images.ctfassets.net" />

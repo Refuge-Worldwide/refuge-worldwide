@@ -22,12 +22,14 @@ export default function FeaturedShows({ shows }: FeaturedShowsProps) {
           {shows.map((show, idx) => {
             const isLast = shows.length === idx + 1;
 
+            const isAboveTheFold = idx <= 5;
+
             return (
               <li
                 className={isLast ? "lg:hidden xl:block 2xl:hidden" : ""}
                 key={idx}
               >
-                <FeaturedShowPreview {...show} />
+                <FeaturedShowPreview {...show} priority={isAboveTheFold} />
               </li>
             );
           })}

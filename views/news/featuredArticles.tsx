@@ -55,11 +55,13 @@ function FeaturedArticleSlide({
   root,
   setActiveId,
   article,
+  priority,
 }: {
   article: ArticleInterface;
   setActiveId: Dispatch<SetStateAction<number>>;
   index: number;
   root: MutableRefObject<HTMLUListElement>;
+  priority?: boolean;
 }) {
   const slide = useRef<HTMLLIElement>(null);
 
@@ -74,15 +76,17 @@ function FeaturedArticleSlide({
 
   return (
     <li ref={slide} id={String(index)}>
-      <FeaturedArticlePreview {...article} />
+      <FeaturedArticlePreview {...article} priority={priority} />
     </li>
   );
 }
 
 export default function FeaturedArticles({
   articles,
+  aboveTheFold,
 }: {
   articles: ArticleInterface[];
+  aboveTheFold?: boolean;
 }) {
   const carousel = useRef<HTMLUListElement>(null);
 
@@ -99,6 +103,7 @@ export default function FeaturedArticles({
             index={index}
             root={carousel}
             setActiveId={setActiveId}
+            priority={aboveTheFold}
           />
         ))}
       </ul>

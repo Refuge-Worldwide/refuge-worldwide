@@ -15,12 +15,14 @@ type ShowImageWithPlayerProps = {
   mixcloudLink: string;
   src: string;
   alt: string;
+  priority?: boolean;
 };
 
 function ShowImageWithPlayer({
   mixcloudLink,
   src,
   alt,
+  priority,
 }: ShowImageWithPlayerProps) {
   const showKeySet = useGlobalStore((state) => state.showKeySet);
 
@@ -35,6 +37,7 @@ function ShowImageWithPlayer({
         height={332}
         alt={alt}
         className="bg-black/10 object-cover object-center aspect-video"
+        priority={priority}
       />
 
       <div className="inset-0 absolute bg-black/0 transition-colors duration-150 group-hover:bg-black/60 flex items-center justify-center text-white/0 group-hover:text-white/100">
@@ -153,7 +156,8 @@ export function FeaturedShowPreview({
   date,
   mixcloudLink,
   className = "",
-}: ShowPreviewProps & { className?: string }) {
+  priority,
+}: ShowPreviewProps & { className?: string; priority?: boolean }) {
   const cachedClassNames = classNames("text-small", className);
 
   const genres = parseGenres(genresCollection);
@@ -164,6 +168,7 @@ export function FeaturedShowPreview({
         src={coverImage.url}
         alt={title}
         mixcloudLink={mixcloudLink}
+        priority={priority}
       />
 
       <div className="h-2" />
