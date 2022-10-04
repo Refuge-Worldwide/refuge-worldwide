@@ -1,17 +1,25 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import Image from "next/future/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { MobileMenu } from "../components/mobileMenu";
 import { INSTAGRAM_URL, SHOP_URL } from "../constants";
 import Instagram from "../icons/instagram";
 import { Menu } from "../icons/menu";
+import MessageSquare from "../icons/message-square";
 import Search from "../icons/search";
 import NavigationLink from "./navigationLink";
 
 export default function Navigation() {
   const [isOpen, isOpenSet] = useState(false);
   const onDismiss = () => isOpenSet(false);
+
+  const openChat = useCallback(() => {
+    const chatOptions =
+      "width=480,height=520,menubar=no,location=no,resizable=no,scrollbars=no,status=no";
+
+    window.open("/chat", "refugechatwindow", chatOptions);
+  }, []);
 
   return (
     <Dialog.Root open={isOpen} onOpenChange={(open) => isOpenSet(open)}>
@@ -34,11 +42,23 @@ export default function Navigation() {
               </Link>
             </li>
 
-            <li className="block lg:hidden ml-auto">
+            <li className="li flex lg:hidden gap-6 ml-auto">
+              <a
+                className="flex focus:outline-none focus:ring-4"
+                target="_blank"
+                rel="noopener noreferrer"
+                href="https://refugeworldwide.com/chat"
+              >
+                <span className="sr-only">Open Chat</span>
+                <span aria-hidden>
+                  <MessageSquare size={32} strokeWidth={1.5} />
+                </span>
+              </a>
+
               <Dialog.Trigger className="flex focus:outline-none focus:ring-4">
                 <span className="sr-only">Open Menu</span>
                 <span aria-hidden>
-                  <Menu />
+                  <Menu size={32} />
                 </span>
               </Dialog.Trigger>
             </li>
@@ -119,6 +139,11 @@ export default function Navigation() {
                       >
                         <Search />
                       </NavigationLink>
+                    </li>
+                    <li className="h-6 leading-none">
+                      <button onClick={openChat}>
+                        <MessageSquare />
+                      </button>
                     </li>
                     <li>
                       <a

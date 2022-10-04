@@ -21,6 +21,8 @@ function RefugeApp({ Component, pageProps }: AppProps) {
   useSmoothscrollPolyfill();
   useFathom();
 
+  if ((Component as any).noLayout) return <Component {...pageProps} />;
+
   return (
     <Fragment>
       <header>
