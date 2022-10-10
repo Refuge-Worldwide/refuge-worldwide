@@ -2,6 +2,7 @@ import type { AppProps } from "next/app";
 import dynamic from "next/dynamic";
 import { Fragment } from "react";
 import Footer from "../components/footer";
+import JoinChat from "../components/join-chat";
 import { LivePlayerLoading } from "../components/livePlayer";
 import Navigation from "../components/navigation";
 import useFathom from "../hooks/useFathom";
@@ -36,6 +37,8 @@ function RefugeApp({ Component, pageProps }: AppProps) {
       <Footer />
 
       <MixcloudPlayer />
+
+      <JoinChat />
     </Fragment>
   );
 }

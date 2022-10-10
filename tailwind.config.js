@@ -67,6 +67,7 @@ module.exports = {
       boxShadow: {
         "pill-black": "0 2px 0 0 rgb(0, 0, 0)",
         "pill-white": "0 2px 0 0 rgb(255, 255, 255)",
+        "pill-orange": "0 2px 0 0 rgb(255, 147, 0)",
       },
       borderWidth: {
         1.5: "1.5px",

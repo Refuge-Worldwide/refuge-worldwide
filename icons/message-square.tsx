@@ -1,4 +1,5 @@
 export default function MessageSquare({
+  className = "",
   size = 24,
   title = "Chat",
   titleId = "chat",
@@ -6,6 +7,7 @@ export default function MessageSquare({
 }) {
   return (
     <svg
+      className={className}
       xmlns="http://www.w3.org/2000/svg"
       width={size}
       height={size}
