@@ -1,8 +1,6 @@
-import dynamic from "next/dynamic";
 import Share from "../icons/share";
 import { __SERVER__ } from "../util";
-
-const ShareMenu = dynamic(() => import("../components/shareMenu"));
+import ShareMenu from "./shareMenu";
 
 export default function ShareButton({
   details,

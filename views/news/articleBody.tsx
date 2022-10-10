@@ -1,10 +1,14 @@
+import dynamic from "next/dynamic";
 import { Fragment } from "react";
 import Date from "../../components/date";
 import Pill from "../../components/pill";
 import Prose from "../../components/Prose";
-import ShareButton from "../../components/shareButton";
 import { renderRichTextWithImages } from "../../lib/rich-text";
 import { ArticleInterface } from "../../types/shared";
+
+const ShareButton = dynamic(() => import("../../components/shareButton"), {
+  ssr: false,
+});
 
 export default function ArticleBody({
   title,

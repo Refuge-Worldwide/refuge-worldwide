@@ -1,15 +1,19 @@
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Fragment } from "react";
 import Badge from "../../components/badge";
 import Date from "../../components/date";
 import Pill from "../../components/pill";
 import Prose from "../../components/Prose";
-import ShareButton from "../../components/shareButton";
 import { useGlobalStore } from "../../hooks/useStore";
 import PlayCircle from "../../icons/playCircle";
 import { ShowInterface } from "../../types/shared";
 import { getMixcloudKey, parseGenres } from "../../util";
+
+const ShareButton = dynamic(() => import("../../components/shareButton"), {
+  ssr: false,
+});
 
 export default function ShowBody({
   title,
