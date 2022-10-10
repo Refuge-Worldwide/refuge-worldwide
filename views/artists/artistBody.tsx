@@ -5,9 +5,7 @@ import Prose from "../../components/Prose";
 import { renderRichTextWithImages } from "../../lib/rich-text";
 import { ArtistEntry } from "../../types/shared";
 
-const ShareButton = dynamic(() => import("../../components/shareButton"), {
-  ssr: false,
-});
+const ShareButton = dynamic(() => import("../../components/shareButton"));
 
 export default function ArtistBody({
   slug,

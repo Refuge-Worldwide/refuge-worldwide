@@ -11,9 +11,7 @@ import PlayCircle from "../../icons/playCircle";
 import { ShowInterface } from "../../types/shared";
 import { getMixcloudKey, parseGenres } from "../../util";
 
-const ShareButton = dynamic(() => import("../../components/shareButton"), {
-  ssr: false,
-});
+const ShareButton = dynamic(() => import("../../components/shareButton"));
 
 export default function ShowBody({
   title,
