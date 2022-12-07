@@ -1,5 +1,4 @@
 import * as Dialog from "@radix-ui/react-dialog";
-import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import Image from "next/future/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -146,9 +145,7 @@ export const MobileMenu = forwardRef<HTMLDivElement, { onDismiss: () => void }>(
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black focus:outline-none z-50 overflow-y-scroll">
           <Dialog.Content {...props} ref={forwardedRef}>
-            <VisuallyHidden.Root asChild>
-              <Dialog.Title>Mobile Navigation</Dialog.Title>
-            </VisuallyHidden.Root>
+            <Dialog.Title className="sr-only">Mobile Navigation</Dialog.Title>
 
             <MobileMenuContent onDismiss={onDismiss} />
           </Dialog.Content>
