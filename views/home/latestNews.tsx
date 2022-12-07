@@ -33,11 +33,12 @@ export default function LatestNews({
         <div className="h-10 sm:h-16" />
 
         <div className="text-center">
-          <Link href="/news">
-            <a className="inline-flex items-center space-x-4 text-base font-medium">
-              <span className="underline">All News</span>
-              <Arrow />
-            </a>
+          <Link
+            href="/news"
+            className="inline-flex items-center space-x-4 text-base font-medium"
+          >
+            <span className="underline">All News</span>
+            <Arrow />
           </Link>
         </div>
       </div>

@@ -14,38 +14,36 @@ export default function RelatedArticlePreview({
 }: ArticleInterface) {
   return (
     <Link href={`/news/${slug}`} prefetch={false}>
-      <a>
-        <article className="text-small text-white">
-          <div className="flex">
-            <Image
-              key={coverImage.sys.id}
-              src={coverImage.url}
-              loader={loaders.contentful}
-              width={590}
-              height={345}
-              objectFit="cover"
-              objectPosition="center"
-              alt={title}
-            />
-          </div>
+      <article className="text-small text-white">
+        <div className="flex">
+          <Image
+            key={coverImage.sys.id}
+            src={coverImage.url}
+            loader={loaders.contentful}
+            width={590}
+            height={345}
+            objectFit="cover"
+            objectPosition="center"
+            alt={title}
+          />
+        </div>
 
-          <div className="h-5" />
+        <div className="h-5" />
 
-          <p className="font-medium">
-            <Date dateString={date} formatString={"DD.MM.YYYY"} />
-          </p>
+        <p className="font-medium">
+          <Date dateString={date} formatString={"DD.MM.YYYY"} />
+        </p>
 
-          <h2 className="font-sans font-medium truncate">{title}</h2>
+        <h2 className="font-sans font-medium truncate">{title}</h2>
 
-          <div className="h-3" />
+        <div className="h-3" />
 
-          <ul className="flex flex-wrap gap-2">
-            <li>
-              <Badge invert text={articleType} />
-            </li>
-          </ul>
-        </article>
-      </a>
+        <ul className="flex flex-wrap gap-2">
+          <li>
+            <Badge invert text={articleType} />
+          </li>
+        </ul>
+      </article>
     </Link>
   );
 }

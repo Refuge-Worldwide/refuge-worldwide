@@ -27,8 +27,8 @@ export default function NavigationLink({
   );
 
   return (
-    <Link href={href} {...rest}>
-      <a className={classNames}>{children}</a>
+    <Link href={href} {...rest} className={classNames}>
+      {children}
     </Link>
   );
 }

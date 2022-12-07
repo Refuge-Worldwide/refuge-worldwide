@@ -17,40 +17,38 @@ export default function RelatedShowPreview({
 
   return (
     <Link href={`/radio/${slug}`} prefetch={false}>
-      <a>
-        <article className="text-small text-white">
-          <div className="flex">
-            <Image
-              key={coverImage.sys.id}
-              src={coverImage.url}
-              loader={loaders.contentful}
-              width={590}
-              height={345}
-              objectFit="cover"
-              objectPosition="center"
-              alt={title}
-            />
-          </div>
+      <article className="text-small text-white">
+        <div className="flex">
+          <Image
+            key={coverImage.sys.id}
+            src={coverImage.url}
+            loader={loaders.contentful}
+            width={590}
+            height={345}
+            objectFit="cover"
+            objectPosition="center"
+            alt={title}
+          />
+        </div>
 
-          <div className="h-6" />
+        <div className="h-6" />
 
-          <h2 className="font-sans font-medium truncate">{title}</h2>
+        <h2 className="font-sans font-medium truncate">{title}</h2>
 
-          <p>
-            <Date dateString={date} />
-          </p>
+        <p>
+          <Date dateString={date} />
+        </p>
 
-          <div className="h-2" />
+        <div className="h-2" />
 
-          <ul className="flex flex-wrap gap-2">
-            {genres.map((genre, i) => (
-              <li key={i}>
-                <Badge invert text={genre} />
-              </li>
-            ))}
-          </ul>
-        </article>
-      </a>
+        <ul className="flex flex-wrap gap-2">
+          {genres.map((genre, i) => (
+            <li key={i}>
+              <Badge invert text={genre} />
+            </li>
+          ))}
+        </ul>
+      </article>
     </Link>
   );
 }

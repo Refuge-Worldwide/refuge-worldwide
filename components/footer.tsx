@@ -54,8 +54,8 @@ export default function Footer() {
                 .
               </p>
               <p>
-                <Link href="/about">
-                  <a className="underline">Read more about us</a>
+                <Link href="/about" className="underline">
+                  Read more about us
                 </Link>
               </p>
             </div>
@@ -87,8 +87,8 @@ export default function Footer() {
               </a>
             </li>
             <li>
-              <Link href="/bookings">
-                <a className="font-medium">Bookings</a>
+              <Link href="/bookings" className="font-medium">
+                Bookings
               </Link>
             </li>
             <li>

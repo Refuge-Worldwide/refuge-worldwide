@@ -1,6 +1,5 @@
 import { useRouter } from "next/router";
 import { Dispatch, SetStateAction, useState } from "react";
-import { useMediaQuery } from "@react-hookz/web";
 import Badge from "./badge";
 
 type GenreListProps = {
@@ -9,12 +8,12 @@ type GenreListProps = {
   filterSet: Dispatch<SetStateAction<string>>;
 };
 
+const INITIAL_SHOW_COUNT = 40;
+
 export default function GenresList({ filter, genres }: GenreListProps) {
   const router = useRouter();
 
-  const isLarge = useMediaQuery("(min-width: 1024px)");
-
-  const [showCount, showCountSet] = useState(isLarge ?? true ? 40 : 10);
+  const [showCount, showCountSet] = useState(INITIAL_SHOW_COUNT);
 
   const updateGenreParam = (genre: string) => () => {
     router.push(`/radio?genre=${encodeURIComponent(genre)}`, undefined, {
@@ -43,7 +42,7 @@ export default function GenresList({ filter, genres }: GenreListProps) {
         .sort(sortActiveFilterAndAlpha)
         .slice(0, showCount)
         .map((genre, i) => (
-          <li className="inline-flex pr-2 pb-2" key={i}>
+          <li className="inline-flex" key={i}>
             <button
               className="focus:outline-none focus:ring-4 rounded-full"
               onClick={updateGenreParam(genre)}
@@ -54,9 +53,9 @@ export default function GenresList({ filter, genres }: GenreListProps) {
         ))}
 
       {showCount < genres.length && (
-        <li className="inline-flex pr-2 pb-2">
+        <li className="inline-flex">
           <button
-            onClick={() => showCountSet((count) => count + 40)}
+            onClick={() => showCountSet((count) => count + INITIAL_SHOW_COUNT)}
             className="focus:outline-none focus:ring-4 rounded-full"
           >
             <Badge invert text={"Show More"} />

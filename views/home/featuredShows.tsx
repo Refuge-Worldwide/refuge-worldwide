@@ -38,11 +38,12 @@ export default function FeaturedShows({ shows }: FeaturedShowsProps) {
         <div className="h-10 sm:h-16" />
 
         <div className="text-center">
-          <Link href="/radio">
-            <a className="inline-flex items-center space-x-4 text-base font-medium">
-              <span className="underline">All Shows</span>
-              <Arrow />
-            </a>
+          <Link
+            href="/radio"
+            className="inline-flex items-center space-x-4 text-base font-medium"
+          >
+            <span className="underline">All Shows</span>
+            <Arrow />
           </Link>
         </div>
 

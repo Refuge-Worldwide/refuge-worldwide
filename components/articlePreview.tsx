@@ -23,59 +23,57 @@ export default function ArticlePreview({
   content,
 }: ArticlePreview) {
   return (
-    <Link href={`/news/${slug}`}>
-      <a aria-labelledby={`article-${slug}`}>
-        <article className="text-small font-medium leading-snug">
-          <div className="flex">
-            <Image
-              key={coverImage.sys.id}
-              src={coverImage.url}
-              loader={loaders.contentful}
-              width={590}
-              height={369}
-              alt={title}
-              className="bg-black/10 object-cover object-center aspect-[16/10]"
-            />
+    <Link href={`/news/${slug}`} aria-labelledby={`article-${slug}`}>
+      <article className="text-small font-medium leading-snug">
+        <div className="flex">
+          <Image
+            key={coverImage.sys.id}
+            src={coverImage.url}
+            loader={loaders.contentful}
+            width={590}
+            height={369}
+            alt={title}
+            className="bg-black/10 object-cover object-center aspect-[16/10]"
+          />
+        </div>
+
+        <div className="h-4" />
+
+        <p>
+          <Date dateString={date} formatString={"DD.MM.YYYY"} />
+        </p>
+
+        <h2 id={`article-${slug}`} className="font-sans">
+          {title}
+        </h2>
+
+        {withType ? (
+          <Fragment>
+            <div className="h-2" />
+
+            <div className="flex">
+              <Badge text={articleType} />
+            </div>
+
+            <div className="hidden sm:block h-2" />
+          </Fragment>
+        ) : (
+          <div className="hidden sm:block h-4" />
+        )}
+
+        <div className="hidden sm:block">
+          <div className="font-light">
+            <NewsExcerpt content={content} />
           </div>
 
           <div className="h-4" />
 
-          <p>
-            <Date dateString={date} formatString={"DD.MM.YYYY"} />
+          <p className="inline-flex items-center gap-5">
+            <span className="underline">Read more</span>
+            <Arrow />
           </p>
-
-          <h2 id={`article-${slug}`} className="font-sans">
-            {title}
-          </h2>
-
-          {withType ? (
-            <Fragment>
-              <div className="h-2" />
-
-              <div className="flex">
-                <Badge text={articleType} />
-              </div>
-
-              <div className="hidden sm:block h-2" />
-            </Fragment>
-          ) : (
-            <div className="hidden sm:block h-4" />
-          )}
-
-          <div className="hidden sm:block">
-            <div className="font-light">
-              <NewsExcerpt content={content} />
-            </div>
-
-            <div className="h-4" />
-
-            <p className="inline-flex items-center gap-5">
-              <span className="underline">Read more</span>
-              <Arrow />
-            </p>
-          </div>
-        </article>
-      </a>
+        </div>
+      </article>
     </Link>
   );
 }
@@ -84,40 +82,38 @@ export function ArticlePreviewForSearch({
   fields: { slug, coverImage, title, date, articleType },
 }: TypeArticle) {
   return (
-    <Link href={`/news/${slug}`}>
-      <a aria-labelledby={`article-${slug}`}>
-        <article className="text-small font-medium leading-snug">
-          <div className="flex">
-            <Image
-              key={coverImage.sys.id}
-              src={coverImage.fields.file.url}
-              loader={loaders.contentful}
-              width={590}
-              height={335}
-              alt={title}
-              className="bg-black/10 object-cover object-center aspect-video"
-            />
-          </div>
+    <Link href={`/news/${slug}`} aria-labelledby={`article-${slug}`}>
+      <article className="text-small font-medium leading-snug">
+        <div className="flex">
+          <Image
+            key={coverImage.sys.id}
+            src={coverImage.fields.file.url}
+            loader={loaders.contentful}
+            width={590}
+            height={335}
+            alt={title}
+            className="bg-black/10 object-cover object-center aspect-video"
+          />
+        </div>
 
-          <div className="h-2" />
+        <div className="h-2" />
 
-          <p>
-            <Date dateString={date} formatString={"DD.MM.YYYY"} />
-          </p>
+        <p>
+          <Date dateString={date} formatString={"DD.MM.YYYY"} />
+        </p>
 
-          <h2 id={`article-${slug}`} className="font-sans leading-none">
-            {title}
-          </h2>
+        <h2 id={`article-${slug}`} className="font-sans leading-none">
+          {title}
+        </h2>
 
-          <div className="h-2" />
+        <div className="h-2" />
 
-          <ul className="flex flex-wrap">
-            <li>
-              <Badge text={articleType} />
-            </li>
-          </ul>
-        </article>
-      </a>
+        <ul className="flex flex-wrap">
+          <li>
+            <Badge text={articleType} />
+          </li>
+        </ul>
+      </article>
     </Link>
   );
 }

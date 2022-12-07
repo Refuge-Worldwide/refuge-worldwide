@@ -33,7 +33,7 @@ export function renderRichTextWithImages(content: Content) {
           if (uri.includes("refugeworldwide.com")) {
             return (
               <Link href={uri.replace("https://refugeworldwide.com", "")}>
-                <a>{children}</a>
+                {children}
               </Link>
             );
           }

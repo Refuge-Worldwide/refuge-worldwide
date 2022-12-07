@@ -32,8 +32,8 @@ export default function ShowBody({
         const isLast = artists.length === i + 1;
 
         const a = (
-          <Link key={i} href={`/artists/${artist.slug}`}>
-            <a className="underline">{artist.name}</a>
+          <Link key={i} href={`/artists/${artist.slug}`} className="underline">
+            {artist.name}
           </Link>
         );
 
@@ -84,6 +84,7 @@ export default function ShowBody({
                   <li key={i}>
                     <Link
                       href={`/radio?genre=${encodeURIComponent(genre)}#shows`}
+                      legacyBehavior
                     >
                       <Badge as="a" text={genre} />
                     </Link>
