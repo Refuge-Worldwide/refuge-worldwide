@@ -4,7 +4,7 @@ import ShowPreview from "../../components/showPreview";
 import useGenreFilter from "../../hooks/useGenreFilter";
 import useRadioShows from "../../hooks/useRadioShows";
 import { PastShowSchema } from "../../lib/contentful/client";
-import Image from "next/future/image";
+import Image from "next/image";
 
 export default function AllShows({
   genres,

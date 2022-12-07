@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "next/legacy/image";
 import Link from "next/link";
 import { RelatedShowsType } from "../lib/contentful/pages/radio";
 import loaders from "../lib/loaders";

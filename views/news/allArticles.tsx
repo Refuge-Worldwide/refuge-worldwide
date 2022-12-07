@@ -1,7 +1,7 @@
 import ArticlePreview from "../../components/articlePreview";
 import useNewsArticles from "../../hooks/useNewsArticles";
 import { ArticleInterface } from "../../types/shared";
-import Image from "next/future/image";
+import Image from "next/image";
 
 export default function AllArticles({
   articles: fallbackData,

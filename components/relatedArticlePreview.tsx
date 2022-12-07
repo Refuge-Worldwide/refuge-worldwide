@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "next/legacy/image";
 import Link from "next/link";
 import loaders from "../lib/loaders";
 import { ArticleInterface } from "../types/shared";

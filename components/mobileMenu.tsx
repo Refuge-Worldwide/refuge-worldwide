@@ -1,5 +1,5 @@
 import * as Dialog from "@radix-ui/react-dialog";
-import Image from "next/future/image";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { forwardRef, useEffect } from "react";
