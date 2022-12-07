@@ -1,4 +1,4 @@
-import Image from "next/legacy/image";
+import Image from "next/image";
 import Link from "next/link";
 import loaders from "../lib/loaders";
 import { ArticleInterface } from "../types/shared";
@@ -17,13 +17,11 @@ export default function RelatedArticlePreview({
       <article className="text-small text-white">
         <div className="flex">
           <Image
-            key={coverImage.sys.id}
             src={coverImage.url}
             loader={loaders.contentful}
+            className="object-cover object-center"
             width={590}
             height={345}
-            objectFit="cover"
-            objectPosition="center"
             alt={title}
           />
         </div>

@@ -1,4 +1,4 @@
-import Image from "next/legacy/image";
+import Image from "next/image";
 import Link from "next/link";
 import { RelatedShowsType } from "../lib/contentful/pages/radio";
 import loaders from "../lib/loaders";
@@ -20,14 +20,12 @@ export default function RelatedShowPreview({
       <article className="text-small text-white">
         <div className="flex">
           <Image
-            key={coverImage.sys.id}
-            src={coverImage.url}
-            loader={loaders.contentful}
-            width={590}
-            height={345}
-            objectFit="cover"
-            objectPosition="center"
             alt={title}
+            className="object-cover object-center"
+            height={345}
+            loader={loaders.contentful}
+            src={coverImage.url}
+            width={590}
           />
         </div>
 
