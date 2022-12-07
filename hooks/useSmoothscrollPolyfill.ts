@@ -1,6 +1,6 @@
-import { useEffect } from "react";
 import smoothscroll from "smoothscroll-polyfill";
 
 export default function useSmoothscrollPolyfill() {
-  useEffect(() => smoothscroll.polyfill(), []);
+  if (typeof window === "undefined") return;
+  smoothscroll.polyfill();
 }

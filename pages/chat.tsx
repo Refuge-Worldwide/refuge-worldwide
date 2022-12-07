@@ -1,5 +1,5 @@
 import Script from "next/script";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import PageMeta from "../components/seo/page";
 
 export default function ChatPage() {
