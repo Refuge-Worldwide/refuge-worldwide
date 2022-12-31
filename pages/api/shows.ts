@@ -16,7 +16,7 @@ export default async function handler(
     const shows = await getPastShows(Number(take), Number(skip), filter);
 
     res
-      .setHeader("Cache-Control", "s-maxage=1, stale-while-revalidate")
+      .setHeader("Cache-Control", "s-maxage=1, stale-while-revalidate=59")
       .json(shows);
   } catch (error) {
     assertError(error);
