@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Select, { AriaOnFocus } from "react-select";
+import Select, { AriaOnFocus, OnChangeValue } from "react-select";
 
 export default function MultiSelectField({
   label,
@@ -16,7 +16,7 @@ export default function MultiSelectField({
 }) {
   const [ariaFocusMessage, setAriaFocusMessage] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [selectedOptions, setSelectedOptions] = useState([]);
+  const [selectedOptions, setSelectedOptions] = useState<any>([]);
 
   const onFocus = ({ focused, isDisabled }) => {
     const msg = `You are currently focused on option ${focused.label}${
