@@ -7,7 +7,6 @@ export default function TextareaField({
   label: string;
   name: string;
   required?: boolean;
-  type: string;
   rows: number;
 }) {
   return (

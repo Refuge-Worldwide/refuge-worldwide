@@ -8,11 +8,11 @@ import MultiSelectField from "./form/multiSelectField";
 // import ImageUploadField from "./form/imageUploadField";
 
 export default function ShowSubmissionForm({ genres, residents }) {
-  const [selectedShowType, setSelectedShowType] = useState();
-  const [additionalEq, setAdditionalEq] = useState();
-  const [mp3, setMp3] = useState(false);
-  const [oneHr, setOneHr] = useState(false);
-  const [micLevel, setMicLevel] = useState(false);
+  const [selectedShowType, setSelectedShowType] = useState<string>();
+  const [additionalEq, setAdditionalEq] = useState<string>();
+  const [mp3, setMp3] = useState<boolean>(false);
+  const [oneHr, setOneHr] = useState<boolean>(false);
+  const [micLevel, setMicLevel] = useState<boolean>(false);
   const showTypeChoices = [
     {
       value: "live",
@@ -99,20 +99,20 @@ export default function ShowSubmissionForm({ genres, residents }) {
           name="genres"
           required={true}
           options={genres}
-          limit="3"
+          limit={3}
         />
         <TextareaField
           label="Description"
           name="showDescription"
           required={true}
-          rows="4"
+          rows={4}
         />
         <MultiSelectField
           label="Artist(s)"
           name="artists"
           required={true}
           options={residents}
-          limit="5"
+          limit={5}
         />
         {/* <SingleLineField label="Instagram @ handle(s)" name="instagram" required={true} type="text" /> */}
         <label htmlFor="image">Show / Host image</label>
@@ -163,7 +163,7 @@ export default function ShowSubmissionForm({ genres, residents }) {
                 type="checkbox"
                 id="mp3"
                 name="mp3"
-                onChange={(e) => setMp3(e.target.value)}
+                onChange={(e) => setMp3(e.target.checked)}
                 className="h-6 w-6 rounded-full border-2 border-black text-black focus:ring-black"
               />
               <label htmlFor="live" className="sm:mt-0.5 sm:leading-none">
@@ -175,7 +175,7 @@ export default function ShowSubmissionForm({ genres, residents }) {
                 type="checkbox"
                 id="oneHr"
                 name="oneHr"
-                onChange={(e) => setOneHr(e.target.value)}
+                onChange={(e) => setOneHr(e.target.checked)}
                 className="h-6 w-6 rounded-full border-2 border-black text-black focus:ring-black"
               />
               <label htmlFor="live" className="sm:mt-0.5 sm:leading-none">
@@ -188,7 +188,7 @@ export default function ShowSubmissionForm({ genres, residents }) {
                 type="checkbox"
                 id="micLevel"
                 name="micLevel"
-                onChange={(e) => setMicLevel(e.target.value)}
+                onChange={(e) => setMicLevel(e.target.checked)}
                 className="h-6 w-6 rounded-full border-2 border-black text-black focus:ring-black"
               />
               <label htmlFor="live" className="sm:mt-0.5 sm:leading-none">
