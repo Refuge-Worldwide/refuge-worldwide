@@ -13,6 +13,7 @@ export default function ShowSubmissionForm({ genres, residents }) {
   const [mp3, setMp3] = useState<boolean>(false);
   const [oneHr, setOneHr] = useState<boolean>(false);
   const [micLevel, setMicLevel] = useState<boolean>(false);
+  const [artistExists, setArtistExists] = useState<boolean>(true);
   const showTypeChoices = [
     {
       value: "live",
@@ -71,22 +72,23 @@ export default function ShowSubmissionForm({ genres, residents }) {
     // We pass the event to the handleSubmit() function on submit.
     <form onSubmit={handleSubmit}>
       <fieldset>
-        <Pill>
-          <legend>Personal info</legend>
-        </Pill>
+        <legend>
+          <h2 className="font-serif text-base sm:text-large">Personal info</h2>
+        </legend>
         <SingleLineField
           label="Email address"
           name="email"
           required={true}
           type="email"
         />
+        <SingleLineField label="Contact number" name="number" type="number" />
         {/* <SingleLineField label="Contact phone number" name="number" type="number" /> */}
       </fieldset>
 
       <fieldset>
-        <Pill>
-          <legend>Show info</legend>
-        </Pill>
+        <legend>
+          <h2 className="font-serif text-base sm:text-large">Show info</h2>
+        </legend>
         <SingleLineField
           label="Name"
           name="showName"
@@ -107,21 +109,7 @@ export default function ShowSubmissionForm({ genres, residents }) {
           required={true}
           rows={4}
         />
-        <MultiSelectField
-          label="Artist(s)"
-          name="artists"
-          required={true}
-          options={residents}
-          limit={5}
-        />
-        {/* <SingleLineField label="Instagram @ handle(s)" name="instagram" required={true} type="text" /> */}
         <label htmlFor="image">Show / Host image</label>
-        <input
-          type="file"
-          id="image"
-          name="image"
-          accept="image/png, image/jpeg"
-        ></input>
 
         <fieldset className="mt-6">
           <legend>Is your show...*</legend>
@@ -212,28 +200,34 @@ export default function ShowSubmissionForm({ genres, residents }) {
               <div>
                 <input
                   type="radio"
-                  id="yes"
+                  id="additionalEqYes"
                   name="showAdditional"
                   value="yes"
                   checked={additionalEq === "yes"}
                   onChange={() => setAdditionalEq("yes")}
                   className="h-6 w-6 rounded-full border-2 border-black text-black focus:ring-black"
                 />
-                <label htmlFor="live" className="sm:mt-0.5 sm:leading-none">
+                <label
+                  htmlFor="additionalEqYes"
+                  className="sm:mt-0.5 sm:leading-none"
+                >
                   Yes
                 </label>
               </div>
               <div>
                 <input
                   type="radio"
-                  id="no"
+                  id="additionalEqNo"
                   name="showAdditional"
                   value="no"
                   checked={additionalEq === "no"}
                   onChange={() => setAdditionalEq("no")}
                   className="h-6 w-6 rounded-full border-2 border-black text-black focus:ring-black"
                 />
-                <label htmlFor="live" className="sm:mt-0.5 sm:leading-none">
+                <label
+                  htmlFor="additionalEqNo"
+                  className="sm:mt-0.5 sm:leading-none"
+                >
                   No
                 </label>
               </div>
@@ -248,6 +242,71 @@ export default function ShowSubmissionForm({ genres, residents }) {
             type="text"
           />
         )}
+      </fieldset>
+
+      <fieldset>
+        <legend>
+          <h2 className="font-serif text-base sm:text-large">
+            Artist/guest info
+          </h2>
+        </legend>
+        <MultiSelectField
+          label="Artist(s)"
+          name="artists"
+          required={true}
+          options={residents}
+          limit={5}
+        />
+        <SingleLineField
+          label="Instagram @ handle(s)"
+          name="instagram"
+          required={true}
+          type="text"
+        />
+
+        <div>
+          <input
+            type="checkbox"
+            id="artistExists"
+            name="artistExists"
+            onChange={(e) => setArtistExists(!e.target.checked)}
+            className="h-6 w-6 rounded-full border-2 border-black text-black focus:ring-black"
+          />
+          <label htmlFor="artistExists" className="sm:mt-0.5 sm:leading-none">
+            Can&apos;t find artist/guest in the dropdown
+          </label>
+        </div>
+
+        {!artistExists && (
+          <fieldset>
+            <legend>Artist/guest info</legend>
+            <SingleLineField
+              label="Name"
+              name="artistName"
+              required={true}
+              type="text"
+            />
+            <TextareaField
+              label="Bio"
+              name="artistBio"
+              required={true}
+              rows={4}
+            />
+            <SingleLineField
+              label="Instagram @ handle(s)"
+              name="instagram"
+              required={true}
+              type="text"
+            />
+          </fieldset>
+        )}
+
+        <input
+          type="file"
+          id="image"
+          name="image"
+          accept="image/png, image/jpeg"
+        ></input>
       </fieldset>
 
       <button
