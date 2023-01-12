@@ -147,6 +147,11 @@ export interface SupportPageData {
   content: Content;
 }
 
+export interface SubmissionPageData {
+  coverImage: CoverImage;
+  content: Content;
+}
+
 export type ErrorPayloadMessage = {
   message: string;
   extensions: {
