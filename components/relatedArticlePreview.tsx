@@ -19,7 +19,7 @@ export default function RelatedArticlePreview({
           <Image
             src={coverImage.url}
             loader={loaders.contentful}
-            className="object-cover object-center"
+            className="object-cover object-center aspect-video"
             width={590}
             height={345}
             alt={title}
