@@ -21,7 +21,7 @@ export default function RelatedShowPreview({
         <div className="flex">
           <Image
             alt={title}
-            className="object-cover object-center"
+            className="object-cover object-center aspect-video"
             height={345}
             loader={loaders.contentful}
             src={coverImage.url}
