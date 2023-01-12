@@ -107,6 +107,10 @@
   .pill-input-invert {
     @apply px-8 pt-4 pb-4 w-full rounded-full border-2 border-white bg-black shadow-pill-white text-small sm:text-base text-white font-serif focus:outline-none outline-none focus:border-white focus:ring-0 placeholder-white;
   }
+
+  textarea.pill-input {
+    border-radius: 28px;
+  }
 }
 
 @layer utilities {

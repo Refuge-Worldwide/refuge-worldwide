@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Arrow } from "../icons/arrow";
-import Pill from "./pill";
 import SingleLineField from "./form/singleLineField";
 import DateField from "./form/dateField";
 import TextareaField from "./form/textareaField";
 import MultiSelectField from "./form/multiSelectField";
 // import ImageUploadField from "./form/imageUploadField";
+import ExtraArtists from "./form/extraArtists";
 
 export default function ShowSubmissionForm({ genres, residents }) {
   const [selectedShowType, setSelectedShowType] = useState<string>();
@@ -13,7 +13,7 @@ export default function ShowSubmissionForm({ genres, residents }) {
   const [mp3, setMp3] = useState<boolean>(false);
   const [oneHr, setOneHr] = useState<boolean>(false);
   const [micLevel, setMicLevel] = useState<boolean>(false);
-  const [artistExists, setArtistExists] = useState<boolean>(true);
+
   const showTypeChoices = [
     {
       value: "live",
@@ -257,49 +257,13 @@ export default function ShowSubmissionForm({ genres, residents }) {
           options={residents}
           limit={5}
         />
-        <SingleLineField
+        <ExtraArtists />
+        {/* <SingleLineField
           label="Instagram @ handle(s)"
           name="instagram"
           required={true}
           type="text"
-        />
-
-        <div>
-          <input
-            type="checkbox"
-            id="artistExists"
-            name="artistExists"
-            onChange={(e) => setArtistExists(!e.target.checked)}
-            className="h-6 w-6 rounded-full border-2 border-black text-black focus:ring-black"
-          />
-          <label htmlFor="artistExists" className="sm:mt-0.5 sm:leading-none">
-            Can&apos;t find artist/guest in the dropdown
-          </label>
-        </div>
-
-        {!artistExists && (
-          <fieldset>
-            <legend>Artist/guest info</legend>
-            <SingleLineField
-              label="Name"
-              name="artistName"
-              required={true}
-              type="text"
-            />
-            <TextareaField
-              label="Bio"
-              name="artistBio"
-              required={true}
-              rows={4}
-            />
-            <SingleLineField
-              label="Instagram @ handle(s)"
-              name="instagram"
-              required={true}
-              type="text"
-            />
-          </fieldset>
-        )}
+        /> */}
 
         <input
           type="file"
