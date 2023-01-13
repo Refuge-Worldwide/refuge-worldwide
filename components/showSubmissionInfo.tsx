@@ -6,7 +6,7 @@ export default function ShowSubmissionInfo({
   onReadInfo,
   equipment,
   liveShows,
-  preRecord,
+  preRecords,
 }) {
   const [readInfo, setReadInfo] = useState<boolean>(false);
   const [infoOpen, setInfoOpen] = useState<boolean>(false);
@@ -23,7 +23,7 @@ export default function ShowSubmissionInfo({
         <h2>Important info</h2>
         <Prose>{documentToReactComponents(equipment?.json)}</Prose>
         <Prose>{documentToReactComponents(liveShows?.json)}</Prose>
-        <Prose>{documentToReactComponents(preRecord?.json)}</Prose>
+        <Prose>{documentToReactComponents(preRecords?.json)}</Prose>
       </div>
 
       <div className="space-x-3 text-small mt-8">
