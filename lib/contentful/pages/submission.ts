@@ -5,7 +5,7 @@ import { extractPage } from "../../../util";
 export async function getSubmissionPage(preview: boolean) {
   const SubmissionPageQuery = /* GraphQL */ `
     query SubmissionPageQuery($preview: Boolean) {
-      pageSubmission(id: "7t2jOQoBCZ6sGK4HgBZZ42", preview: $preview) {
+      pageSubmission(id: "1eohijLMd2Q38BVq0D713p", preview: $preview) {
         coverImage {
           sys {
             id
@@ -16,7 +16,43 @@ export async function getSubmissionPage(preview: boolean) {
           width
           height
         }
-        content {
+        equipment {
+          json
+          links {
+            assets {
+              block {
+                sys {
+                  id
+                }
+                contentType
+                title
+                description
+                url
+                width
+                height
+              }
+            }
+          }
+        }
+        liveShows {
+          json
+          links {
+            assets {
+              block {
+                sys {
+                  id
+                }
+                contentType
+                title
+                description
+                url
+                width
+                height
+              }
+            }
+          }
+        }
+        preRecords {
           json
           links {
             assets {

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import SingleLineField from "./singleLineField";
-import TextareaField from "./textareaField";
+// import SingleLineField from "./singleLineField";
+// import TextareaField from "./textareaField";
 
 export default function ExtraArtists() {
   const [artistExists, setArtistExists] = useState<boolean>(true);

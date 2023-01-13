@@ -149,7 +149,9 @@ export interface SupportPageData {
 
 export interface SubmissionPageData {
   coverImage: CoverImage;
-  content: Content;
+  equipment: Content;
+  liveShows: Content;
+  preRecords: Content;
 }
 
 export type ErrorPayloadMessage = {

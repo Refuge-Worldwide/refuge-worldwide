@@ -13,6 +13,7 @@ export default function ShowSubmissionForm({ genres, residents }) {
   const [mp3, setMp3] = useState<boolean>(false);
   const [oneHr, setOneHr] = useState<boolean>(false);
   const [micLevel, setMicLevel] = useState<boolean>(false);
+  // const [extraArtists, setExtraArtists] = useState<Array<{ name: string, bio: string }>>();
 
   const showTypeChoices = [
     {
@@ -24,6 +25,10 @@ export default function ShowSubmissionForm({ genres, residents }) {
       label: "Pre-record",
     },
   ];
+
+  // const setExtraArtistsFromChild = (childData) => {
+  //   setExtraArtists(childData);
+  // }
 
   const handleSubmit = async (event) => {
     // Stop the form from submitting and refreshing the page.

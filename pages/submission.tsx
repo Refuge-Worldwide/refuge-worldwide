@@ -1,8 +1,9 @@
 import { useCallback, useState } from "react";
 import { InferGetStaticPropsType } from "next";
-import { getAboutPage } from "../lib/contentful/pages/about";
+import { getSubmissionPage } from "../lib/contentful/pages/submission";
 import BookingPasswordForm from "../components/bookingForm";
 import ShowSubmissionForm from "../components/showSubmissionForm";
+import ShowSubmissionInfo from "../components/showSubmissionInfo";
 import Layout from "../components/layout";
 import PageMeta from "../components/seo/page";
 import SinglePage from "../views/singlePage";
@@ -25,7 +26,7 @@ export async function getStaticProps({ preview = false }) {
         label: resident.name,
       })),
       preview,
-      ...(await getAboutPage(preview)),
+      ...(await getSubmissionPage(preview)),
     },
   };
 }
@@ -34,8 +35,12 @@ export default function NewSubmissionPage({
   genres,
   residents,
   coverImage,
+  equipment,
+  liveShows,
+  preRecords,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const [passwordCorrect, passwordCorrectSet] = useState(false);
+  const [readInfo, setReadInfo] = useState<boolean>(false);
 
   const onPasswordCorrect = useCallback(() => {
     passwordCorrectSet(true);
@@ -49,7 +54,15 @@ export default function NewSubmissionPage({
           <div className="prose max-w-none sm:prose-lg">
             <h1>Show Submission Form</h1>
             {/* {passwordCorrect ? ( */}
-            <ShowSubmissionForm genres={genres} residents={residents} />
+            <ShowSubmissionInfo
+              onReadInfo={setReadInfo}
+              equipment={equipment}
+              liveShows={liveShows}
+              preRecords={preRecords}
+            />
+            {readInfo && (
+              <ShowSubmissionForm genres={genres} residents={residents} />
+            )}
             {/* ) : ( */}
             {/* <section className="py-48 md:py-72">
                 <div className="container-md p-4 sm:p-8">
