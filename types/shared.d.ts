@@ -149,8 +149,8 @@ export interface SupportPageData {
 
 export interface SubmissionPageData {
   coverImage: CoverImage;
-  equipment: Content;
   liveShows: Content;
+  liveShows2: Content;
   preRecords: Content;
 }
 

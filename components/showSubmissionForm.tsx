@@ -78,7 +78,7 @@ export default function ShowSubmissionForm({ genres, residents }) {
     <form onSubmit={handleSubmit}>
       <fieldset>
         <legend>
-          <h2 className="font-serif text-base sm:text-large">Personal info</h2>
+          <h2 className="font-sans text-base sm:text-large">Personal info</h2>
         </legend>
         <SingleLineField
           label="Email address"
@@ -92,7 +92,7 @@ export default function ShowSubmissionForm({ genres, residents }) {
 
       <fieldset>
         <legend>
-          <h2 className="font-serif text-base sm:text-large">Show info</h2>
+          <h2 className="font-sans text-base sm:text-large">Show info</h2>
         </legend>
         <SingleLineField
           label="Name"
@@ -251,7 +251,7 @@ export default function ShowSubmissionForm({ genres, residents }) {
 
       <fieldset>
         <legend>
-          <h2 className="font-serif text-base sm:text-large">
+          <h2 className="font-sans text-base sm:text-large">
             Artist/guest info
           </h2>
         </legend>

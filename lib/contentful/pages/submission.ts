@@ -16,7 +16,7 @@ export async function getSubmissionPage(preview: boolean) {
           width
           height
         }
-        equipment {
+        liveShows {
           json
           links {
             assets {
@@ -34,7 +34,7 @@ export async function getSubmissionPage(preview: boolean) {
             }
           }
         }
-        liveShows {
+        liveShows2 {
           json
           links {
             assets {
