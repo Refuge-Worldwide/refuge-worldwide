@@ -3,12 +3,14 @@ import Select, { AriaOnFocus, OnChangeValue } from "react-select";
 
 export default function MultiSelectField({
   label,
+  description,
   name,
   required,
   options,
   limit,
 }: {
   label: string;
+  description?: string;
   name: string;
   required?: boolean;
   options: Array<{ value: string; label: string }>;
@@ -30,10 +32,11 @@ export default function MultiSelectField({
   const onMenuClose = () => setIsMenuOpen(false);
 
   return (
-    <div className="mb-6">
+    <div className="mb-10">
       <label htmlFor={name} id="aria-label">
         {label}
         {required && "*"}
+        <span className="label-description">{description}</span>
       </label>
       <Select
         aria-labelledby="aria-label"

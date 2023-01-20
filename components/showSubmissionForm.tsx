@@ -103,6 +103,7 @@ export default function ShowSubmissionForm({ genres, residents }) {
         <DateField label="Date" name="showDate" required={true} />
         <MultiSelectField
           label="Genres"
+          description="Up to 3"
           name="genres"
           required={true}
           options={genres}
@@ -116,7 +117,7 @@ export default function ShowSubmissionForm({ genres, residents }) {
         />
         <label htmlFor="image">Show / Host image</label>
 
-        <fieldset className="mt-6">
+        <fieldset className="mt-8 mb-8">
           <legend>Is your show...*</legend>
           <div>
             <input
@@ -128,7 +129,7 @@ export default function ShowSubmissionForm({ genres, residents }) {
               onChange={() => setSelectedShowType("live")}
               className="h-6 w-6 rounded-full border-2 border-black text-black focus:ring-black"
             />
-            <label htmlFor="live" className="sm:mt-0.5 sm:leading-none">
+            <label htmlFor="live" className="checkbox-label">
               Live
             </label>
           </div>
@@ -142,7 +143,7 @@ export default function ShowSubmissionForm({ genres, residents }) {
               onChange={() => setSelectedShowType("preRecord")}
               className="h-6 w-6 rounded-full border-2 border-black text-black focus:ring-black"
             />
-            <label htmlFor="live" className="sm:mt-0.5 sm:leading-none">
+            <label htmlFor="live" className="checkbox-label">
               Pre-record
             </label>
           </div>
@@ -150,7 +151,12 @@ export default function ShowSubmissionForm({ genres, residents }) {
 
         {selectedShowType === "preRecord" && (
           <fieldset>
-            <legend>Please check before sending</legend>
+            <legend>
+              Pre-recorded shows
+              <span className="label-description">
+                Please check your all the options below before uploading
+              </span>
+            </legend>
             <div>
               <input
                 type="checkbox"
@@ -159,7 +165,7 @@ export default function ShowSubmissionForm({ genres, residents }) {
                 onChange={(e) => setMp3(e.target.checked)}
                 className="h-6 w-6 rounded-full border-2 border-black text-black focus:ring-black"
               />
-              <label htmlFor="live" className="sm:mt-0.5 sm:leading-none">
+              <label htmlFor="live" className="checkbox-label">
                 File is in mp3 format
               </label>
             </div>
@@ -171,7 +177,7 @@ export default function ShowSubmissionForm({ genres, residents }) {
                 onChange={(e) => setOneHr(e.target.checked)}
                 className="h-6 w-6 rounded-full border-2 border-black text-black focus:ring-black"
               />
-              <label htmlFor="live" className="sm:mt-0.5 sm:leading-none">
+              <label htmlFor="live" className="checkbox-label">
                 Show length is not shorter than 1hr / 60mins (or 120mins for 2hr
                 slots)
               </label>
@@ -184,7 +190,7 @@ export default function ShowSubmissionForm({ genres, residents }) {
                 onChange={(e) => setMicLevel(e.target.checked)}
                 className="h-6 w-6 rounded-full border-2 border-black text-black focus:ring-black"
               />
-              <label htmlFor="live" className="sm:mt-0.5 sm:leading-none">
+              <label htmlFor="live" className="checkbox-label">
                 Mic levels checked
               </label>
             </div>
@@ -212,10 +218,7 @@ export default function ShowSubmissionForm({ genres, residents }) {
                   onChange={() => setAdditionalEq("yes")}
                   className="h-6 w-6 rounded-full border-2 border-black text-black focus:ring-black"
                 />
-                <label
-                  htmlFor="additionalEqYes"
-                  className="sm:mt-0.5 sm:leading-none"
-                >
+                <label htmlFor="additionalEqYes" className="checkbox-label">
                   Yes
                 </label>
               </div>
@@ -229,10 +232,7 @@ export default function ShowSubmissionForm({ genres, residents }) {
                   onChange={() => setAdditionalEq("no")}
                   className="h-6 w-6 rounded-full border-2 border-black text-black focus:ring-black"
                 />
-                <label
-                  htmlFor="additionalEqNo"
-                  className="sm:mt-0.5 sm:leading-none"
-                >
+                <label htmlFor="additionalEqNo" className="checkbox-label">
                   No
                 </label>
               </div>

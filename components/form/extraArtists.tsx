@@ -37,7 +37,7 @@ export default function ExtraArtists() {
           onChange={(e) => setArtistExists(!e.target.checked)}
           className="h-6 w-6 rounded-full border-2 border-black text-black focus:ring-black"
         />
-        <label htmlFor="artistExists" className="sm:mt-0.5 sm:leading-none">
+        <label htmlFor="artistExists" className="checkbox-label">
           Can&apos;t find artist/guest in the dropdown
         </label>
       </div>

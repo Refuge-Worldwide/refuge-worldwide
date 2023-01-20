@@ -10,7 +10,7 @@ export default function TextareaField({
   rows: number;
 }) {
   return (
-    <div className="mb-6">
+    <div className="mb-10">
       <label htmlFor={name}>
         {label}
         {required && "*"}

@@ -101,7 +101,7 @@
   }
 
   .pill-input {
-    @apply px-6 pt-4 pb-3 w-full rounded-full border-2 border-black bg-white shadow-pill-black text-small sm:text-base text-black font-light focus:outline-none outline-none focus:border-b-blue focus:ring-0 focus:shadow-blue;
+    @apply px-6 pt-4 pb-3 w-full rounded-full border-2 border-black bg-white shadow-pill-black text-small sm:text-base text-black font-light focus:outline-none outline-none focus:border-blue focus:ring-0 focus:shadow-blue hover:border-brown hover:shadow-brown;
   }
 
   .pill-input-invert {
@@ -110,6 +110,19 @@
 
   textarea.pill-input {
     border-radius: 28px;
+  }
+
+  label,
+  legend {
+    @apply mb-2 inline-block;
+  }
+
+  .label-description {
+    @apply mt-1 block text-small;
+  }
+
+  .checkbox-label {
+    @apply sm:mt-0.5 sm:leading-none text-small ml-2;
   }
 }
 

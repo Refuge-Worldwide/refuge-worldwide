@@ -8,7 +8,7 @@ export default function DateField({
   required?: boolean;
 }) {
   return (
-    <div className="mb-6">
+    <div className="mb-10">
       <label htmlFor={name}>
         {label}
         {required && "*"}
