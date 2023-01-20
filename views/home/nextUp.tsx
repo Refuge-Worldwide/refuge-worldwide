@@ -1,5 +1,5 @@
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 
 import Pill from "../../components/pill";
 import useMarquee from "../../hooks/useMarquee";
@@ -7,13 +7,16 @@ import { NextUpSection } from "../../types/shared";
 
 export default function NextUp({ content }: NextUpSection) {
   const shouldShowBanner = content && content.json;
+  const [bgColour, setBgColour] = useState("bg-orange");
 
   const ref = useRef<HTMLDivElement>();
   useMarquee(ref, { speed: 0.75 });
 
   const bgOptions = ["bg-orange", "bg-purple", "bg-pink", "bg-green", "bg-red"];
 
-  const bgColour = bgOptions[Math.floor(Math.random() * bgOptions.length)];
+  useEffect(() => {
+    setBgColour(bgOptions[Math.floor(Math.random() * bgOptions.length)]);
+  });
 
   if (shouldShowBanner)
     return (
