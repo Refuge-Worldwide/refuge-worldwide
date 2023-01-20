@@ -36,7 +36,6 @@ export default function InfoPage({
           <div className="prose max-w-none sm:prose-lg">
             <h1>Important Info</h1>
             <ShowSubmissionInfo
-              onReadInfo={setReadInfo}
               liveShows={liveShows}
               liveShows2={liveShows2}
               preRecords={preRecords}

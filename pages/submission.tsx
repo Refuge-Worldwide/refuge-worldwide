@@ -3,7 +3,7 @@ import { InferGetStaticPropsType } from "next";
 import { getSubmissionPage } from "../lib/contentful/pages/submission";
 import BookingPasswordForm from "../components/bookingForm";
 import ShowSubmissionForm from "../components/showSubmissionForm";
-import ShowSubmissionInfo from "../components/showSubmissionInfo";
+import ShowSubmissionInfo from "../components/showSubmissionInfoToggle";
 import Layout from "../components/layout";
 import PageMeta from "../components/seo/page";
 import SinglePage from "../views/singlePage";

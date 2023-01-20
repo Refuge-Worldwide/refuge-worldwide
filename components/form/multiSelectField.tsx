@@ -42,7 +42,7 @@ export default function MultiSelectField({
         }}
         options={options}
         isMulti
-        className="basic-multi-select pill-input mb-6"
+        className="basic-multi-select pill-input mb-6 p-2"
         value={selectedOptions}
         onChange={(o) => setSelectedOptions(o)}
         isOptionDisabled={() => selectedOptions.length >= limit}
@@ -51,6 +51,14 @@ export default function MultiSelectField({
         classNamePrefix="select"
         onMenuOpen={onMenuOpen}
         onMenuClose={onMenuClose}
+        styles={{
+          control: (baseStyles, state) => ({
+            ...baseStyles,
+            borderColor: "transparent",
+            backgroundColor: "transparent",
+            indicatorSeparator: "transparent",
+          }),
+        }}
       />
     </div>
   );
