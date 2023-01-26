@@ -10,6 +10,7 @@ import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
 import FilePondPluginImageValidateSize from "filepond-plugin-image-validate-size";
 import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
+// import FilePondPluginFileEncode from 'filepond-plugin-file-encode';
 
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 
@@ -18,6 +19,22 @@ registerPlugin(FilePondPluginImagePreview);
 registerPlugin(FilePondPluginFileValidateType);
 registerPlugin(FilePondPluginImageValidateSize);
 registerPlugin(FilePondPluginFileValidateSize);
+// registerPlugin(FilePondPluginFileEncode);
+
+// FilePond.setOptions({
+//   server: {
+//   url: '/api/image-upload',
+//   process: {
+//     headers: {
+//       'Content-Type': 'application/octet-stream'
+//     }
+//   }
+//   }
+// })
+
+const serverOptions = {
+  url: "/api/image-upload",
+};
 
 // Our app
 export default function ImageUploadField({
@@ -41,16 +58,15 @@ export default function ImageUploadField({
         </span>
       </label>
       <FilePond
-        className="h-36"
+        className="min-h-36"
         files={files}
         onupdatefiles={setFiles}
         allowMultiple={false}
-        maxFiles={1}
-        server="/api/image-upload"
         id={name}
         name={name}
         required={required}
         credits={false}
+        server="/api/image-upload"
         labelIdle='Drag & Drop your image or <span class="filepond--label-action">Browse</span>'
         acceptedFileTypes={["image/png", "image/jpeg"]}
         labelFileTypeNotAllowed="Invalid file type. Please only upload images of JPEG and PNG format"

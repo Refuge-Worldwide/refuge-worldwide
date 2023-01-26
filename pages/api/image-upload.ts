@@ -9,11 +9,11 @@ const environment = "submission-sandbox";
 
 export default function handler(req, res) {
   // Get data submitted in request's body.
-  const body = req.body;
 
   // Optional logging to see the responses
   // in the command line where next.js app is running.
-  console.log("body: ", body);
+
+  console.log(req);
 
   client
     .getSpace(space)
@@ -22,16 +22,16 @@ export default function handler(req, res) {
       environment.createAssetFromFiles({
         fields: {
           title: {
-            "en-US": req.name,
+            "en-US": "Asset title",
           },
           description: {
-            "en-US": req.alt,
+            // 'en-US': 'Asset description'
           },
           file: {
             "en-US": {
-              contentType: "image/jpg",
-              fileName: req.name + ".jpg",
-              file: req.image,
+              contentType: "image/jpeg",
+              fileName: "example.jpeg",
+              file: req.files,
             },
           },
         },
@@ -39,6 +39,6 @@ export default function handler(req, res) {
     )
     .then((asset) => asset.processForAllLocales())
     .then((asset) => asset.publish())
-
+    .then(() => res.status(200).json({ data: "1234" }))
     .catch(console.error);
 }
