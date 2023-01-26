@@ -28,10 +28,10 @@ export default function ShowSubmissionInfoToggle({
         />
       </div>
 
-      <div className="space-x-3 text-small mt-8">
+      <div className="space-x-3 mt-8">
         {readInfo && !infoOpen && (
           <button
-            className="border-black border p-4 w-full mb-6"
+            className="underline p-4 w-full mb-6"
             onClick={() => setInfoOpen(!infoOpen)}
           >
             Open info
@@ -39,7 +39,7 @@ export default function ShowSubmissionInfoToggle({
         )}
         {readInfo && infoOpen && (
           <button
-            className="border-black border p-4 w-full mb-6"
+            className="underline p-4 w-full mb-6"
             onClick={() => setInfoOpen(!infoOpen)}
           >
             Close info

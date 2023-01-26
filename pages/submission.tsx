@@ -38,6 +38,7 @@ export default function NewSubmissionPage({
   liveShows,
   liveShows2,
   preRecords,
+  uploadLink,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const [passwordCorrect, passwordCorrectSet] = useState(false);
   const [readInfo, setReadInfo] = useState<boolean>(false);
@@ -46,22 +47,32 @@ export default function NewSubmissionPage({
     passwordCorrectSet(true);
   }, []);
 
+  const handleReadInfo = () => {
+    setReadInfo(true);
+    const form = document.getElementById("submission-form");
+    form.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <Layout>
       <PageMeta title="Show Submission | Refuge Worldwide" path="submission/" />
       <SinglePage coverImage={coverImage}>
         <section className="container-md p-4 sm:p-8 bg-white">
-          <div className="prose max-w-none sm:prose-lg">
+          <div id="submission-form" className="prose max-w-none sm:prose-lg">
             <h1>Show Submission Form</h1>
             {/* {passwordCorrect ? ( */}
             <ShowSubmissionInfo
-              onReadInfo={setReadInfo}
+              onReadInfo={handleReadInfo}
               liveShows={liveShows}
               liveShows2={liveShows2}
               preRecords={preRecords}
             />
             {readInfo && (
-              <ShowSubmissionForm genres={genres} residents={residents} />
+              <ShowSubmissionForm
+                genres={genres}
+                residents={residents}
+                uploadLink={uploadLink}
+              />
             )}
             {/* ) : ( */}
             {/* <section className="py-48 md:py-72">

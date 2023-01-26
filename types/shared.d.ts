@@ -152,6 +152,7 @@ export interface SubmissionPageData {
   liveShows: Content;
   liveShows2: Content;
   preRecords: Content;
+  uploadLink: string;
 }
 
 export type ErrorPayloadMessage = {

@@ -1,4 +1,6 @@
 import { useState } from "react";
+import ImageUploadField from "./imageUploadField";
+import { Close } from "../../icons/menu";
 // import SingleLineField from "./singleLineField";
 // import TextareaField from "./textareaField";
 
@@ -16,6 +18,7 @@ export default function ExtraArtists() {
     let object = {
       name: "",
       bio: "",
+      image: "",
     };
 
     setExtraArtists([...extraArtists, object]);
@@ -43,12 +46,21 @@ export default function ExtraArtists() {
       </div>
 
       {!artistExists && (
-        <fieldset>
-          <legend>Artist/guest info</legend>
+        <fieldset className="mt-8 mb-8">
+          <legend className="mb-6">Artist/guest info</legend>
           {extraArtists.map((form, index) => {
             return (
-              <div key={index}>
-                <div className="mb-6">
+              <div
+                className="mb-8 border border-black p-8 relative"
+                key={index}
+              >
+                <button
+                  className="float-right"
+                  onClick={() => removeArtistFields(index)}
+                >
+                  <Close size={24} />
+                </button>
+                <div className="mb-6 mt-6">
                   <label htmlFor="name">Name</label>
                   <input
                     type="text"
@@ -62,7 +74,7 @@ export default function ExtraArtists() {
                 <div className="mb-6">
                   <label htmlFor="bio">Bio</label>
                   <textarea
-                    rows={2}
+                    rows={4}
                     name="bio"
                     className="pill-input"
                     onChange={(event) => handleFormChange(event, index)}
@@ -70,13 +82,17 @@ export default function ExtraArtists() {
                     required
                   />
                 </div>
-                <button onClick={() => removeArtistFields(index)}>
-                  Remove
-                </button>
+                <ImageUploadField
+                  label="Guest image"
+                  name="guestImage"
+                  required={true}
+                />
               </div>
             );
           })}
-          <button onClick={addArtistFields}>Add More..</button>
+          <button className="underline" onClick={addArtistFields}>
+            Add another artist/guest
+          </button>
 
           {/* <SingleLineField
             label="Instagram @ handle(s)"

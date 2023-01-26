@@ -70,6 +70,7 @@ export async function getSubmissionPage(preview: boolean) {
             }
           }
         }
+        uploadLink
       }
     }
   `;

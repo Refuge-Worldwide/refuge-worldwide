@@ -4,10 +4,10 @@ import SingleLineField from "./form/singleLineField";
 import DateField from "./form/dateField";
 import TextareaField from "./form/textareaField";
 import MultiSelectField from "./form/multiSelectField";
-// import ImageUploadField from "./form/imageUploadField";
+import ImageUploadField from "./form/imageUploadField";
 import ExtraArtists from "./form/extraArtists";
 
-export default function ShowSubmissionForm({ genres, residents }) {
+export default function ShowSubmissionForm({ genres, residents, uploadLink }) {
   const [selectedShowType, setSelectedShowType] = useState<string>();
   const [additionalEq, setAdditionalEq] = useState<string>();
   const [mp3, setMp3] = useState<boolean>(false);
@@ -115,7 +115,7 @@ export default function ShowSubmissionForm({ genres, residents }) {
           required={true}
           rows={4}
         />
-        <label htmlFor="image">Show / Host image</label>
+        <ImageUploadField label="Show image" name="showImage" required={true} />
 
         <fieldset className="mt-8 mb-8">
           <legend>Is your show...*</legend>
@@ -198,12 +198,17 @@ export default function ShowSubmissionForm({ genres, residents }) {
         )}
 
         {selectedShowType === "preRecord" && mp3 && oneHr && micLevel && (
-          <p>Please upload your show to the drive here</p>
+          <p>
+            Please upload your show to the drive{" "}
+            <a href={uploadLink} rel="noreferrer" target="_blank">
+              here
+            </a>
+          </p>
         )}
 
         {selectedShowType === "live" && (
           <div>
-            <fieldset className="mt-6">
+            <fieldset className="mt-8 mb-8">
               <legend>
                 Are you bringing additional DJ or live-performance equipment
                 (including laptop or controllers)?
@@ -269,13 +274,6 @@ export default function ShowSubmissionForm({ genres, residents }) {
           required={true}
           type="text"
         /> */}
-
-        <input
-          type="file"
-          id="image"
-          name="image"
-          accept="image/png, image/jpeg"
-        ></input>
       </fieldset>
 
       <button
