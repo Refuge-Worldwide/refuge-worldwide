@@ -22,16 +22,16 @@ export default function handler(req, res) {
       environment.createAssetFromFiles({
         fields: {
           title: {
-            "en-US": name,
+            "en-US": req.name,
           },
           description: {
-            "en-US": alt,
+            "en-US": req.alt,
           },
           file: {
             "en-US": {
               contentType: "image/jpg",
-              fileName: name + ".jpg",
-              file: image,
+              fileName: req.name + ".jpg",
+              file: req.image,
             },
           },
         },
