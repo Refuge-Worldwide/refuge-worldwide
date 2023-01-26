@@ -21,7 +21,7 @@ export default function ChatPage() {
               b: 100,
               c: "FFFFFF",
               d: "FFFFFF",
-              k: "000000",
+              k: "FFFFFF",
               l: "000000",
               m: "000000",
               n: "FFFFFF",
