@@ -44,7 +44,7 @@ export default function Navigation() {
                   alt="Refuge"
                   priority
                   unoptimized
-                  className="h-16 z-[60] w-[4.125rem] absolute balloon-float -left-2 top-10"
+                  className="h-16 z-[60] w-[4.125rem] absolute balloon-float -left-6 md:-left-2 top-10"
                 />
                 <Image
                   src="/images/balloon.svg"
