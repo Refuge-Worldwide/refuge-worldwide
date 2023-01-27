@@ -7,7 +7,7 @@ import { Close } from "../../icons/menu";
 export default function ExtraArtists({
   setExtraArtistsParent,
 }: {
-  setExtraArtistsParent: (arg: Array<{ value: string; label: string }>) => void;
+  setExtraArtistsParent: (arg: Array<{ name: string; bio: string }>) => void;
 }) {
   const [artistExists, setArtistExists] = useState<boolean>(true);
   const [extraArtists, setExtraArtists] = useState([{ name: "", bio: "" }]);
