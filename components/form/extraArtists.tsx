@@ -4,7 +4,11 @@ import { Close } from "../../icons/menu";
 // import SingleLineField from "./singleLineField";
 // import TextareaField from "./textareaField";
 
-export default function ExtraArtists() {
+export default function ExtraArtists({
+  setExtraArtistsParent,
+}: {
+  setExtraArtistsParent: (arg: Array<{ value: string; label: string }>) => void;
+}) {
   const [artistExists, setArtistExists] = useState<boolean>(true);
   const [extraArtists, setExtraArtists] = useState([{ name: "", bio: "" }]);
 
@@ -12,13 +16,13 @@ export default function ExtraArtists() {
     let data = [...extraArtists];
     data[index][event.target.name] = event.target.value;
     setExtraArtists(data);
+    setExtraArtistsParent(data);
   };
 
   const addArtistFields = () => {
     let object = {
       name: "",
       bio: "",
-      image: "",
     };
 
     setExtraArtists([...extraArtists, object]);
@@ -85,7 +89,7 @@ export default function ExtraArtists() {
                 <ImageUploadField
                   label="Guest image"
                   name="guestImage"
-                  required={true}
+                  // required={true}
                 />
               </div>
             );

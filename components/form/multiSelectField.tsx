@@ -8,6 +8,7 @@ export default function MultiSelectField({
   required,
   options,
   limit,
+  setOptions,
 }: {
   label: string;
   description?: string;
@@ -15,6 +16,7 @@ export default function MultiSelectField({
   required?: boolean;
   options: Array<{ value: string; label: string }>;
   limit?: number;
+  setOptions: (arg: Array<{ value: string; label: string }>) => void;
 }) {
   const [ariaFocusMessage, setAriaFocusMessage] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -26,6 +28,11 @@ export default function MultiSelectField({
     }.`;
     setAriaFocusMessage(msg);
     return msg;
+  };
+
+  const onSetSelectedOptions = (options) => {
+    setSelectedOptions(options);
+    setOptions(options);
   };
 
   const onMenuOpen = () => setIsMenuOpen(true);
@@ -47,7 +54,7 @@ export default function MultiSelectField({
         isMulti
         className="basic-multi-select pill-input mb-6 p-2"
         value={selectedOptions}
-        onChange={(o) => setSelectedOptions(o)}
+        onChange={(o) => onSetSelectedOptions(o)}
         isOptionDisabled={() => selectedOptions.length >= limit}
         name={name}
         id={name}

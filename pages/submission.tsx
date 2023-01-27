@@ -9,11 +9,11 @@ import PageMeta from "../components/seo/page";
 import SinglePage from "../views/singlePage";
 
 import { getAllGenres } from "../lib/contentful/pages/radio";
-import { getArtistsPage } from "../lib/contentful/pages/artists";
+import { getAllArtists } from "../lib/contentful/pages/submission";
 
 export async function getStaticProps({ preview = false }) {
   const genres = await getAllGenres();
-  const residents = await getArtistsPage(true, 1000, 0);
+  const artists = await getAllArtists(1000, 0);
 
   return {
     props: {
@@ -21,9 +21,9 @@ export async function getStaticProps({ preview = false }) {
         value: genre.sys.id,
         label: genre.name,
       })),
-      residents: residents.map((resident) => ({
-        value: resident.slug,
-        label: resident.name,
+      artists: artists.map((artists) => ({
+        value: artists.sys.id,
+        label: artists.name,
       })),
       preview,
       ...(await getSubmissionPage(preview)),
@@ -33,7 +33,7 @@ export async function getStaticProps({ preview = false }) {
 
 export default function NewSubmissionPage({
   genres,
-  residents,
+  artists,
   coverImage,
   liveShows,
   liveShows2,
@@ -70,7 +70,7 @@ export default function NewSubmissionPage({
             {readInfo && (
               <ShowSubmissionForm
                 genres={genres}
-                residents={residents}
+                artists={artists}
                 uploadLink={uploadLink}
               />
             )}

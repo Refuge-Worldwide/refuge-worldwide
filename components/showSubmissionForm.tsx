@@ -7,13 +7,17 @@ import MultiSelectField from "./form/multiSelectField";
 import ImageUploadField from "./form/imageUploadField";
 import ExtraArtists from "./form/extraArtists";
 
-export default function ShowSubmissionForm({ genres, residents, uploadLink }) {
+export default function ShowSubmissionForm({ genres, artists, uploadLink }) {
   const [selectedShowType, setSelectedShowType] = useState<string>();
   const [additionalEq, setAdditionalEq] = useState<string>();
   const [mp3, setMp3] = useState<boolean>(false);
   const [oneHr, setOneHr] = useState<boolean>(false);
   const [micLevel, setMicLevel] = useState<boolean>(false);
-  // const [extraArtists, setExtraArtists] = useState<Array<{ name: string, bio: string }>>();
+  const [extraArtists, setExtraArtists] =
+    useState<Array<{ name: string; bio: string }>>();
+  const [selectedGenres, setSelectedGenres] = useState<any>([]);
+  const [selectedArtists, setSelectedArtists] = useState<any>([]);
+  const [formStatus, setFormStatus] = useState<String>("inProgress");
 
   const showTypeChoices = [
     {
@@ -26,22 +30,32 @@ export default function ShowSubmissionForm({ genres, residents, uploadLink }) {
     },
   ];
 
-  // const setExtraArtistsFromChild = (childData) => {
-  //   setExtraArtists(childData);
-  // }
+  const setExtraArtistsFromChild = (childData) => {
+    setExtraArtists(childData);
+  };
+
+  const setGenresFromChild = (childData) => {
+    setSelectedGenres(childData);
+    console.log(childData);
+  };
+
+  const setArtistsFromChild = (childData) => {
+    setSelectedArtists(childData);
+  };
 
   const handleSubmit = async (event) => {
     // Stop the form from submitting and refreshing the page.
     event.preventDefault();
-
+    // setFormStatus('submitting')
     // Get data from the form.
     const data = {
       showName: event.target.showName.value,
       showDate: event.target.showDate.value,
       showDescription: event.target.showDescription.value,
-      genres: event.target.genres.value,
-      artists: event.target.artists.value,
-      coverImage: event.target.image.value,
+      genres: selectedGenres,
+      artists: selectedArtists,
+      extraArtists: extraArtists,
+      // coverImage: event.target.image.value,
     };
 
     console.log(data);
@@ -70,7 +84,12 @@ export default function ShowSubmissionForm({ genres, residents, uploadLink }) {
     // Get the response data from server as JSON.
     // If server returns the name submitted, that means the form works.
     const result = await response.json();
-    alert(`: ${result.data}`);
+
+    if (result.status === 200) {
+      setFormStatus("submitted");
+    } else {
+      alert(`error`);
+    }
   };
 
   return (
@@ -107,6 +126,7 @@ export default function ShowSubmissionForm({ genres, residents, uploadLink }) {
           name="genres"
           required={true}
           options={genres}
+          setOptions={setGenresFromChild}
           limit={3}
         />
         <TextareaField
@@ -115,7 +135,14 @@ export default function ShowSubmissionForm({ genres, residents, uploadLink }) {
           required={true}
           rows={4}
         />
-        <ImageUploadField label="Show image" name="showImage" required={true} />
+        <SingleLineField
+          label="Instagram @ handle(s)"
+          description="For you and your guest(s)"
+          name="instagram"
+          required={true}
+          type="text"
+        />
+        <ImageUploadField label="Show image" name="showImage" />
 
         <fieldset className="mt-8 mb-8">
           <legend>Is your show...*</legend>
@@ -199,7 +226,7 @@ export default function ShowSubmissionForm({ genres, residents, uploadLink }) {
 
         {selectedShowType === "preRecord" && mp3 && oneHr && micLevel && (
           <p>
-            Please upload your show to the drive{" "}
+            Please upload your show{" "}
             <a href={uploadLink} rel="noreferrer" target="_blank">
               here
             </a>
@@ -264,18 +291,14 @@ export default function ShowSubmissionForm({ genres, residents, uploadLink }) {
           label="Artist(s)"
           name="artists"
           required={true}
-          options={residents}
+          options={artists}
           limit={5}
+          setOptions={setArtistsFromChild}
         />
-        <ExtraArtists />
-        {/* <SingleLineField
-          label="Instagram @ handle(s)"
-          name="instagram"
-          required={true}
-          type="text"
-        /> */}
+        <ExtraArtists setExtraArtistsParent={setExtraArtistsFromChild} />
       </fieldset>
 
+      {/* {formStatus === "inProgress" && ( */}
       <button
         type="submit"
         className="inline-flex items-center space-x-4 text-base font-medium mt-6"
@@ -283,6 +306,24 @@ export default function ShowSubmissionForm({ genres, residents, uploadLink }) {
         <span className="underline">Submit</span>
         <Arrow />
       </button>
+      {/* )} */}
+
+      {/* {formStatus === "submitting" && (
+        <button disabled
+          type="submit"
+          className="inline-flex items-center space-x-4 text-base font-medium mt-6"
+        >
+          <span className="underline">Submitting</span>
+        </button>
+      )} */}
+
+      {formStatus === "submitted" && (
+        <p className="inline-flex items-center space-x-4 text-base font-medium mt-6">
+          <span className="underline">
+            Thanks for submitting your show. We will be in touch soon.
+          </span>
+        </p>
+      )}
     </form>
   );
 }

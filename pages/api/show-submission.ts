@@ -13,8 +13,6 @@ const showContentTypeId = "show";
 // convert string into rich text for description
 const toRichText = async (text) => {
   const content = await richTextFromMarkdown(text);
-  console.log("rich text function");
-  console.log(content);
   return content;
 };
 
@@ -30,7 +28,7 @@ const createReferencesArray = (array) => {
       sys: {
         type: "Link",
         linkType: "Entry",
-        id: element,
+        id: element.value,
       },
     });
   });
@@ -63,6 +61,38 @@ const createReferencesArray = (array) => {
 //   .catch(console.error)
 // }
 
+// async function addExtraArtist(artist){
+
+//   // convert the bio to rich text
+//   const content = toRichText(artist.bio);
+
+//   client
+//   .getSpace(space)
+//   .then((space) => space.getEnvironment(environment))
+//   .then((environment) =>
+//     environment.createEntry(showContentTypeId, {
+//       fields: {
+//         name: {
+//           "en-US": artist.name,
+//         },
+//         internal: {
+//           "en-US": artist.name,
+//         },
+//         content: {
+//           "en-US": content
+//         }
+//       },
+//     })
+//   )
+//   .then(() => {
+//     res.status(200).json({ data: "successfully created show :)" })
+//   })
+//   .catch(() => {
+//     console.error
+//     res.status(400).json({ data: "issue submitting form" })
+//   });
+// }
+
 export default function handler(req, res) {
   // Get data submitted in request's body.
   const body = req.body;
@@ -81,7 +111,7 @@ export default function handler(req, res) {
     .then((environment) =>
       environment.createEntry(showContentTypeId, {
         fields: {
-          title: {
+          name: {
             "en-US": req.body.showName,
           },
           internal: {
@@ -90,23 +120,28 @@ export default function handler(req, res) {
           date: {
             "en-US": req.body.showDate,
           },
-          content: content,
+          // content: {
+          //   "en-US": content
+          // },
           coverImagePosition: {
             "en-US": "center",
           },
           artists: {
-            "en-US": [createReferencesArray(req.body.artists)],
+            "en-US": createReferencesArray(req.body.artists),
           },
           genres: {
-            "en-US": [createReferencesArray(req.body.genres)],
+            "en-US": createReferencesArray(req.body.genres),
           },
         },
       })
     )
-    .then((entry) =>
-      res.status(200).json({ data: "successfully created show :)" })
-    )
-    .catch(console.error);
+    .then(() => {
+      res.status(200).json({ data: "successfully created show :)" });
+    })
+    .catch(() => {
+      console.error;
+      res.status(400).json({ data: "issue submitting form" });
+    });
 }
 
 // internal?: Contentful.EntryFields.Symbol;

@@ -21,17 +21,6 @@ registerPlugin(FilePondPluginImageValidateSize);
 registerPlugin(FilePondPluginFileValidateSize);
 // registerPlugin(FilePondPluginFileEncode);
 
-// FilePond.setOptions({
-//   server: {
-//   url: '/api/image-upload',
-//   process: {
-//     headers: {
-//       'Content-Type': 'application/octet-stream'
-//     }
-//   }
-//   }
-// })
-
 const serverOptions = {
   url: "/api/image-upload",
 };
@@ -74,7 +63,8 @@ export default function ImageUploadField({
         imageValidateSizeMinHeight={1450}
         maxFileSize="5MB"
       />
-      <label className="label-description" htmlFor="altText">
+      {/* remove alt text for now and implement when we move over to sanity */}
+      {/* <label className="label-description" htmlFor="altText">
         Description of image for accessibility*
       </label>
       <input
@@ -83,7 +73,7 @@ export default function ImageUploadField({
         name="altText"
         className="pill-input"
         required
-      />
+      /> */}
     </div>
   );
 }

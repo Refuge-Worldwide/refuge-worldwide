@@ -3,17 +3,20 @@ export default function SingleLineField({
   name,
   required,
   type,
+  description,
 }: {
   label: string;
   name: string;
   required?: boolean;
   type: string;
+  description?: string;
 }) {
   return (
     <div className="mb-10">
       <label htmlFor={name}>
         {label}
         {required && "*"}
+        <span className="label-description">{description}</span>
       </label>
       <input
         type={type}

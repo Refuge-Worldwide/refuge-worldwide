@@ -60,6 +60,13 @@ export type AllArtistEntry = {
   photo: CoverImage;
 };
 
+export type DropdownArtistEntry = {
+  sys: {
+    id: string;
+  };
+  name: string;
+};
+
 export type ArtistFilterType = "All" | "Residents" | "Guests";
 
 export interface GenreInterface {
