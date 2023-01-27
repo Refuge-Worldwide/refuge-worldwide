@@ -38,13 +38,22 @@ export default function Navigation() {
                   className="h-10 w-[4.125rem]"
                 />
                 <Image
+                  src="/images/balloon-red.svg"
+                  width={66}
+                  height={40}
+                  alt="Refuge"
+                  priority
+                  unoptimized
+                  className="h-16 z-[60] w-[4.125rem] absolute balloon-float -left-2 top-10"
+                />
+                <Image
                   src="/images/balloon.svg"
                   width={66}
                   height={40}
                   alt="Refuge"
                   priority
                   unoptimized
-                  className="h-16 z-[60] w-[4.125rem] absolute balloon-float left-[4.5rem] top-[2.4rem]"
+                  className="h-16 z-[60] w-[4.125rem] absolute blue-balloon left-14 md:left-[4.5rem] top-[2.4rem]"
                 />
               </Link>
             </li>
