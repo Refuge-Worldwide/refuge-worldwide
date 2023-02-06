@@ -30,7 +30,7 @@ export default function InfoPage({
 
   return (
     <Layout>
-      <PageMeta title="Show Submission | Refuge Worldwide" path="submission/" />
+      <PageMeta title="Important info | Refuge Worldwide" path="info/" />
       <SinglePage coverImage={coverImage}>
         <section className="container-md p-4 sm:p-8 bg-white">
           <div className="prose max-w-none sm:prose-lg">

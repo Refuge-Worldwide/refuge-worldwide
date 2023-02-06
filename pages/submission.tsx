@@ -62,15 +62,13 @@ export default function NewSubmissionPage({
               liveShows={liveShows}
               liveShows2={liveShows2}
               preRecords={preRecords}
-            />
-            {readInfo && ( */}
+            />*/}
             <ShowSubmissionForm
               genres={genres}
               artists={artists}
               uploadLink={uploadLink}
               importantInfo={importantInfo}
             />
-            {/* )} */}
             {/* ) : ( */}
             {/* <section className="py-48 md:py-72">
                 <div className="container-md p-4 sm:p-8">
