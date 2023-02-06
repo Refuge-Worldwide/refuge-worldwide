@@ -3,7 +3,6 @@ import { InferGetStaticPropsType } from "next";
 import { getSubmissionPage } from "../lib/contentful/pages/submission";
 import BookingPasswordForm from "../components/bookingForm";
 import ShowSubmissionForm from "../components/showSubmissionForm";
-import ShowSubmissionInfo from "../components/showSubmissionInfoToggle";
 import Layout from "../components/layout";
 import PageMeta from "../components/seo/page";
 import SinglePage from "../views/singlePage";
@@ -41,17 +40,14 @@ export default function NewSubmissionPage({
   uploadLink,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const [passwordCorrect, passwordCorrectSet] = useState(false);
-  const [readInfo, setReadInfo] = useState<boolean>(false);
-
+  const importantInfo = {
+    liveShows: liveShows,
+    liveShows2: liveShows2,
+    preRecords: preRecords,
+  };
   const onPasswordCorrect = useCallback(() => {
     passwordCorrectSet(true);
   }, []);
-
-  const handleReadInfo = () => {
-    setReadInfo(true);
-    const form = document.getElementById("submission-form");
-    form.scrollIntoView({ behavior: "smooth" });
-  };
 
   return (
     <Layout>
@@ -61,19 +57,20 @@ export default function NewSubmissionPage({
           <div id="submission-form" className="prose max-w-none sm:prose-lg">
             <h1>Show Submission Form</h1>
             {/* {passwordCorrect ? ( */}
-            <ShowSubmissionInfo
+            {/* <ShowSubmissionInfo
               onReadInfo={handleReadInfo}
               liveShows={liveShows}
               liveShows2={liveShows2}
               preRecords={preRecords}
             />
-            {readInfo && (
-              <ShowSubmissionForm
-                genres={genres}
-                artists={artists}
-                uploadLink={uploadLink}
-              />
-            )}
+            {readInfo && ( */}
+            <ShowSubmissionForm
+              genres={genres}
+              artists={artists}
+              uploadLink={uploadLink}
+              importantInfo={importantInfo}
+            />
+            {/* )} */}
             {/* ) : ( */}
             {/* <section className="py-48 md:py-72">
                 <div className="container-md p-4 sm:p-8">
