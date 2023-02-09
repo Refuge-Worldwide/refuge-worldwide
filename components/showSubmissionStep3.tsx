@@ -290,34 +290,48 @@ export default function ShowSubmissionStep3({
                         className="mb-8 border border-black p-8 relative"
                         key={index}
                       >
-                        <button
-                          className="float-right"
-                          onClick={() => arrayHelpers.remove(index)}
-                          type="button"
-                        >
-                          <Close size={24} />
-                        </button>
+                        {index > 0 && (
+                          <button
+                            className="float-right"
+                            onClick={() => arrayHelpers.remove(index)}
+                            type="button"
+                          >
+                            <Close size={24} />
+                          </button>
+                        )}
+
                         <div className="mb-6 mt-6">
                           <label htmlFor="name">Name</label>
                           <Field
                             type="text"
-                            name={`extraArtist.${index}.name`}
+                            name={`extraArtists[${index}].name`}
                             className="pill-input"
                             required
+                          />
+                          <ErrorMessage
+                            className="text-red mt-2"
+                            component="span"
+                            name={`extraArtists[${index}].name`}
                           />
                         </div>
                         <div className="mb-6">
                           <label htmlFor="bio">Bio</label>
                           <Field
+                            component="textarea"
                             rows={4}
-                            name={`extraArtist.${index}.bio`}
+                            name={`extraArtists[${index}].bio`}
                             className="pill-input"
                             required
+                          />
+                          <ErrorMessage
+                            className="text-red mt-2"
+                            component="span"
+                            name={`extraArtists[${index}].bio`}
                           />
                         </div>
                         <ImageUploadField
                           label="Guest image"
-                          name={`extraArtist.${index}.guestImage`}
+                          name={`extraArtists[${index}].guestImage`}
                         />
                       </div>
                     ))}

@@ -55,12 +55,15 @@ const validationSchema = [
         label: Yup.string(),
       })
     ),
-    extraArtists: Yup.array().of(
-      Yup.object().shape({
-        value: Yup.string(),
-        label: Yup.string(),
-      })
-    ),
+    extraArtists: Yup.array()
+      .of(
+        Yup.object().shape({
+          name: Yup.string().required("Please add an artist name"),
+          bio: Yup.string().required("Please add an artist bio"),
+          guestImage: Yup.string().required("Please add a image"),
+        })
+      )
+      .min(1, "You must add info for at least one extra artist"),
   }),
 ];
 
@@ -101,8 +104,6 @@ export default function ShowSubmissionForm({
       const form = document.getElementById("submission-form");
       form.scrollIntoView({ behavior: "smooth" });
       setCurrentStep(currentStep + 1);
-      // actions.setTouched({});
-      // actions.setSubmitting(false);
     }
   };
 
@@ -112,7 +113,7 @@ export default function ShowSubmissionForm({
     setCurrentStep(currentStep - 1);
   };
 
-  const submitForm = async (event) => {};
+  const submitForm = async (values) => {};
 
   const step = (values) => {
     switch (currentStep) {
@@ -168,7 +169,7 @@ export default function ShowSubmissionForm({
         validationSchema={currentValidationSchema}
         onSubmit={handleSubmit}
       >
-        {({ values }) => (
+        {({ values, isSubmitting }) => (
           <Form id="showSubmissionForm">
             {step(values)}
             <div className="flex space-x-6">
@@ -186,6 +187,7 @@ export default function ShowSubmissionForm({
                 <button
                   type="submit"
                   className="inline-flex items-center space-x-4 text-base font-medium mt-6"
+                  disabled={isSubmitting}
                 >
                   <span className="underline">
                     {isLastStep ? "Submit" : "Next"}
@@ -193,6 +195,7 @@ export default function ShowSubmissionForm({
                   <Arrow />
                 </button>
               </div>
+              {isSubmitting && <p>Submitting your form...</p>}
             </div>
           </Form>
         )}
