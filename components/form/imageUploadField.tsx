@@ -8,7 +8,6 @@ import "filepond/dist/filepond.min.css";
 // import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation'
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
-import FilePondPluginImageValidateSize from "filepond-plugin-image-validate-size";
 import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
 // import FilePondPluginFileEncode from 'filepond-plugin-file-encode';
 
@@ -17,7 +16,6 @@ import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 // Register the plugins
 registerPlugin(FilePondPluginImagePreview);
 registerPlugin(FilePondPluginFileValidateType);
-registerPlugin(FilePondPluginImageValidateSize);
 registerPlugin(FilePondPluginFileValidateSize);
 // registerPlugin(FilePondPluginFileEncode);
 
@@ -59,8 +57,6 @@ export default function ImageUploadField({
         labelIdle='Drag & Drop your image or <span class="filepond--label-action">Browse</span>'
         acceptedFileTypes={["image/png", "image/jpeg"]}
         labelFileTypeNotAllowed="Invalid file type. Please only upload images of JPEG and PNG format"
-        imageValidateSizeMinWidth={1800}
-        imageValidateSizeMinHeight={1450}
         maxFileSize="5MB"
       />
       {/* remove alt text for now and implement when we move over to sanity */}
