@@ -9,9 +9,7 @@ export default function ShowSubmissionInfo({
   return (
     // We pass the event to the handleSubmit() function on submit.
     <div>
-      <h2 className="font-sans">Important info</h2>
-      <span className="block text-center">Please read</span>
-      <h3 className="font-sans w-fit">Live Shows</h3>
+      <h2 className="font-sans w-fit">Live Shows</h2>
       <div className="border-black border p-8 bg-orange mb-6">
         <Prose>{documentToReactComponents(liveShows?.json)}</Prose>
       </div>
@@ -19,7 +17,7 @@ export default function ShowSubmissionInfo({
         <Prose>{documentToReactComponents(liveShows2?.json)}</Prose>
       </div>
 
-      <h3 className="font-sans w-fit">Pre-Recorded Shows</h3>
+      <h2 className="font-sans w-fit">Pre-Recorded Shows</h2>
       <div className="border-black border p-8 bg-blue">
         <Prose>{documentToReactComponents(preRecords?.json)}</Prose>
       </div>
