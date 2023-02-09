@@ -17,7 +17,7 @@ export default function ShowSubmissionStep1() {
             />
             <label
               htmlFor="live"
-              className="block cursor-pointer select-none pill-input rounded-tr-none rounded-br-none py-3 text-center peer-checked:bg-blue peer-checked:font-bold"
+              className="block cursor-pointer select-none pill-input rounded-tr-none rounded-br-none py-3 text-center peer-checked:bg-orange peer-checked:font-bold"
             >
               Live
             </label>
