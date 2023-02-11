@@ -3,13 +3,9 @@ import ReactDOM from "react-dom";
 import { FilePond, registerPlugin } from "react-filepond";
 import "filepond/dist/filepond.min.css";
 
-// import SingleLineField from './singleLineField'
-
-// import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation'
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
 import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
-// import FilePondPluginFileEncode from 'filepond-plugin-file-encode';
 
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 
@@ -17,7 +13,6 @@ import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 registerPlugin(FilePondPluginImagePreview);
 registerPlugin(FilePondPluginFileValidateType);
 registerPlugin(FilePondPluginFileValidateSize);
-// registerPlugin(FilePondPluginFileEncode);
 
 const serverOptions = {
   url: "/api/image-upload",
@@ -53,6 +48,7 @@ export default function ImageUploadField({
         name={name}
         required={required}
         credits={false}
+        // onupdatefiles={file => setFieldValue('file', file)}
         server="/api/image-upload"
         labelIdle='Drag & Drop your image or <span class="filepond--label-action">Browse</span>'
         acceptedFileTypes={["image/png", "image/jpeg"]}

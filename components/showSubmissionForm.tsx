@@ -48,22 +48,20 @@ const validationSchema = [
       )
       .required("Please choose some genres for your show (max 3)"),
     description: Yup.string().required("Please add a show description"),
-    showImage: Yup.string().required("Please upload an image for your show"),
+    // showImage: Yup.string().required("Please upload an image for your show"),
     artists: Yup.array().of(
       Yup.object().shape({
         value: Yup.string(),
         label: Yup.string(),
       })
     ),
-    extraArtists: Yup.array()
-      .of(
-        Yup.object().shape({
-          name: Yup.string().required("Please add an artist name"),
-          bio: Yup.string().required("Please add an artist bio"),
-          guestImage: Yup.string().required("Please add a image"),
-        })
-      )
-      .min(1, "You must add info for at least one extra artist"),
+    // extraArtists: Yup.array().of(
+    //   Yup.object().shape({
+    //     name: Yup.string().required('Please add an artist name'),
+    //     bio: Yup.string().required('Please add an artist bio'),
+    //     guestImage: Yup.string().required('Please add a image')
+    //   })
+    // )
   }),
 ];
 
@@ -97,9 +95,10 @@ export default function ShowSubmissionForm({
   const isLastStep = currentStep === 2;
   const currentValidationSchema = validationSchema[currentStep];
 
-  const handleSubmit = (values) => {
+  const _handleSubmit = (values, actions) => {
     if (isLastStep) {
-      submitForm(values);
+      console.log("its the last step");
+      _submitForm(values, actions);
     } else {
       const form = document.getElementById("submission-form");
       form.scrollIntoView({ behavior: "smooth" });
@@ -107,13 +106,38 @@ export default function ShowSubmissionForm({
     }
   };
 
-  const handleBack = () => {
+  const _handleBack = () => {
     const form = document.getElementById("submission-form");
     form.scrollIntoView({ behavior: "smooth" });
     setCurrentStep(currentStep - 1);
   };
 
-  const submitForm = async (values) => {};
+  const _submitForm = async (values, actions) => {
+    console.log("submitting the form");
+    console.log(values);
+    const JSONData = JSON.stringify(values);
+    const endpoint = "/api/show-submission";
+    const options = {
+      // The method is POST because we are sending data.
+      method: "POST",
+      // Tell the server we're sending JSON.
+      headers: {
+        "Content-Type": "application/json",
+      },
+      // Body of the request is the JSON data we created above.
+      body: JSONData,
+    };
+    const response = await fetch(endpoint, options);
+    if (response.status === 400) {
+      // Validation error
+    } else if (response.ok) {
+      // successful
+      console.log("form submitted successfully");
+      actions.setSubmitting(false);
+    } else {
+      // unknown error
+    }
+  };
 
   const step = (values) => {
     switch (currentStep) {
@@ -129,10 +153,10 @@ export default function ShowSubmissionForm({
       case 2:
         return (
           <ShowSubmissionStep3
-            values={values}
             showType={values.showType}
             genres={genres}
             artists={artists}
+            values={values}
             uploadLink={uploadLink}
           />
         );
@@ -167,15 +191,15 @@ export default function ShowSubmissionForm({
       <Formik
         initialValues={initialValues}
         validationSchema={currentValidationSchema}
-        onSubmit={handleSubmit}
+        onSubmit={_handleSubmit}
       >
-        {({ values, isSubmitting }) => (
+        {({ values }) => (
           <Form id="showSubmissionForm">
             {step(values)}
             <div className="flex space-x-6">
               {currentStep !== 0 && (
                 <button
-                  onClick={handleBack}
+                  onClick={_handleBack}
                   type="button"
                   className="inline-flex items-center space-x-4 text-base font-medium mt-6 opacity-50"
                 >
@@ -187,7 +211,6 @@ export default function ShowSubmissionForm({
                 <button
                   type="submit"
                   className="inline-flex items-center space-x-4 text-base font-medium mt-6"
-                  disabled={isSubmitting}
                 >
                   <span className="underline">
                     {isLastStep ? "Submit" : "Next"}
@@ -195,7 +218,7 @@ export default function ShowSubmissionForm({
                   <Arrow />
                 </button>
               </div>
-              {isSubmitting && <p>Submitting your form...</p>}
+              {/* {isSubmitting && <p>Submitting your form...</p>} */}
             </div>
           </Form>
         )}

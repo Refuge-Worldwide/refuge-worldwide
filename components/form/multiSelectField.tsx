@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Select, { AriaOnFocus, OnChangeValue } from "react-select";
+import { useField } from "formik";
 
 export default function MultiSelectField({
   label,
@@ -39,7 +40,7 @@ export default function MultiSelectField({
   const onMenuClose = () => setIsMenuOpen(false);
 
   return (
-    <div className="mb-10">
+    <div>
       <label htmlFor={name} id="aria-label">
         {label}
         {required && "*"}
@@ -52,7 +53,7 @@ export default function MultiSelectField({
         }}
         options={options}
         isMulti
-        className="basic-multi-select pill-input mb-6 p-2"
+        className="basic-multi-select pill-input mb-2 p-2"
         value={selectedOptions}
         onChange={(o) => onSetSelectedOptions(o)}
         isOptionDisabled={() => selectedOptions.length >= limit}

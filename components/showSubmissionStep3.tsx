@@ -14,24 +14,11 @@ export default function ShowSubmissionStep3({
   const [mp3, setMp3] = useState<boolean>(false);
   const [oneHr, setOneHr] = useState<boolean>(false);
   const [micLevel, setMicLevel] = useState<boolean>(false);
-  const [extraArtists, setExtraArtists] =
-    useState<Array<{ name: string; bio: string }>>();
   const [showExtraArtists, setShowExtraArtists] = useState<boolean>(false);
 
-  const [selectedGenres, setSelectedGenres] = useState<any>([]);
-  const [selectedArtists, setSelectedArtists] = useState<any>([]);
-
-  const setExtraArtistsFromChild = (childData) => {
-    setExtraArtists(childData);
-  };
-
-  const setGenresFromChild = (childData) => {
-    setSelectedGenres(childData);
-    console.log(childData);
-  };
-
-  const setArtistsFromChild = (childData) => {
-    setSelectedArtists(childData);
+  const setFieldValue = (field, value) => {
+    values[field] = value;
+    console.log(values[field]);
   };
 
   return (
@@ -108,9 +95,13 @@ export default function ShowSubmissionStep3({
           name="genres"
           required={true}
           options={genres}
-          setOptions={setGenresFromChild}
+          setOptions={(childData) => setFieldValue("genres", childData)}
           limit={3}
         />
+        <div className="mb-10">
+          <ErrorMessage className="text-red" component="span" name="genres" />
+        </div>
+
         <div className="mb-10">
           <label htmlFor="description">Description*</label>
           <Field
@@ -260,8 +251,11 @@ export default function ShowSubmissionStep3({
           required={true}
           options={artists}
           limit={5}
-          setOptions={setArtistsFromChild}
+          setOptions={(childData) => setFieldValue("artists", childData)}
         />
+        <div className="mb-10">
+          <ErrorMessage className="text-red" component="span" name="artists" />
+        </div>
 
         <div>
           <input
