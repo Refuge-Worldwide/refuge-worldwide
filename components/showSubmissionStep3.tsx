@@ -5,24 +5,7 @@ import { useFormikContext, Field, FieldArray, ErrorMessage } from "formik";
 import { Close } from "../icons/menu";
 import InputField from "./formFields/inputField";
 import TextareaField from "./formFields/textareaField";
-
-interface SubmissionFormValues {
-  showType: string;
-  readInfo: Boolean;
-  email: string;
-  number: number;
-  name: string;
-  date: string;
-  genres: Array<{ value: string; label: string }>;
-  description: string;
-  instagram: string;
-  image: object;
-  additionalEq?: boolean;
-  additionalEqDesc?: string;
-  artists?: Array<{ value: string; label: string }>;
-  hasExtraArtists: boolean;
-  extraArtists?: Array<{ name: string; bio: string }>;
-}
+import { SubmissionFormValues } from "../types/shared";
 
 export default function ShowSubmissionStep3({
   genres,

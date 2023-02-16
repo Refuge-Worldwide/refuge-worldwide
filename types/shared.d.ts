@@ -183,3 +183,21 @@ export type ErrorPayload = {
 export type BookingsPageData = {
   bookingPassword: string;
 };
+
+export type SubmissionFormValues = {
+  showType: string;
+  readInfo: Boolean;
+  email: string;
+  number: number;
+  name: string;
+  date: string;
+  genres: Array<{ value: string; label: string }>;
+  description: string;
+  instagram: string;
+  image: object;
+  additionalEq?: boolean;
+  additionalEqDesc?: string;
+  artists?: Array<{ value: string; label: string }>;
+  hasExtraArtists: boolean;
+  extraArtists?: Array<{ name: string; bio: string }>;
+};

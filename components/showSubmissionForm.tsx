@@ -2,27 +2,11 @@ import ShowSubmissionStep1 from "./showSubmissionStep1";
 import ShowSubmissionStep2 from "./showSubmissionStep2";
 import ShowSubmissionStep3 from "./showSubmissionStep3";
 import ShowSubmissionStep4 from "./showSubmissionStep4";
+import { SubmissionFormValues } from "../types/shared";
 import { Arrow } from "../icons/arrow";
 import { useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-interface SubmissionFormValues {
-  showType: string;
-  readInfo: Boolean;
-  email: string;
-  number: number;
-  name: string;
-  date: string;
-  genres: Array<{ value: string; label: string }>;
-  description: string;
-  instagram: string;
-  image: object;
-  additionalEq?: boolean;
-  additionalEqDesc?: string;
-  artists?: Array<{ value: string; label: string }>;
-  hasExtraArtists: boolean;
-  extraArtists?: Array<{ name: string; bio: string }>;
-}
 
 const validationSchema = [
   Yup.object().shape({

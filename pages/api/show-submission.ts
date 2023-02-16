@@ -199,7 +199,7 @@ export default async function handler(
   const values = req.body;
   console.log(values);
   try {
-    values.imageId = await uploadImage(values.title, values.image);
+    values.imageId = await uploadImage(values.name, values.image);
     if (values.hasExtraArtists) {
       for (const extraArtist of values.extraArtists) {
         const contentfulExtraArtist = await addArtist(extraArtist);
