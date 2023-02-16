@@ -3,11 +3,11 @@ import { createClient } from "contentful-management";
 import { richTextFromMarkdown } from "@contentful/rich-text-from-markdown";
 import { GoogleSpreadsheet } from "google-spreadsheet";
 
-const accessToken = process.env.NEXT_PUBLIC_CONTENTFUL_MANAGEMENT_ACCESS_TOKEN;
-const client = createClient({
-  accessToken: accessToken,
-});
+const accesstoken = process.env.NEXT_PUBLIC_CONTENTFUL_MANAGEMENT_ACCESS_TOKEN;
 const spaceId = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID;
+const client = createClient({
+  accessToken: accesstoken,
+});
 const environmentId = "submission-sandbox";
 // const artistContentTypeId = 'artist'
 const showContentTypeId = "show";

@@ -37,7 +37,7 @@
     "@use-it/interval": "^1.0.0",
     "classnames": "^2.3.2",
     "contentful": "^10.0.0-beta-v10.8",
-    "contentful-management": "^10.21.5",
+    "contentful-management": "^10.29.3",
     "dayjs": "^1.11.5",
     "fathom-client": "^3.5.0",
     "feed": "^4.2.2",
