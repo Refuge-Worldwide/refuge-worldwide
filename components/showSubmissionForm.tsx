@@ -43,20 +43,22 @@ const validationSchema = [
     ),
     hasExtraArtists: Yup.boolean(),
     extraArtists: Yup.array().of(
-      Yup.object().shape({
-        name: Yup.string().when("hasExtraArtists", {
-          is: true,
-          then: Yup.string().required("Please add an artist name"),
-        }),
-        bio: Yup.string().when("hasExtraArtists", {
-          is: true,
-          then: Yup.string().required("Please add an artist bio"),
-        }),
-        guestImage: Yup.object().when("hasExtraArtists", {
-          is: true,
-          then: Yup.string().required("Please add an artist image"),
-        }),
-      })
+      Yup.object()
+        .default({})
+        .shape({
+          name: Yup.string().when("hasExtraArtists", {
+            is: true,
+            then: Yup.string().required("Please add an artist name"),
+          }),
+          bio: Yup.string().when("hasExtraArtists", {
+            is: true,
+            then: Yup.string().required("Please add an artist bio"),
+          }),
+          guestImage: Yup.object().when("hasExtraArtists", {
+            is: true,
+            then: Yup.object().required("Please add an artist image"),
+          }),
+        })
     ),
   }),
 ];
@@ -90,6 +92,7 @@ export default function ShowSubmissionForm({
   const [currentStep, setCurrentStep] = useState<number>(0);
   const isLastStep = currentStep === 2;
   const currentValidationSchema = validationSchema[currentStep];
+  const [submissionError, setSubmissionError] = useState<boolean>(false);
 
   const _handleSubmit = (values, actions) => {
     if (isLastStep) {
@@ -127,6 +130,8 @@ export default function ShowSubmissionForm({
     const response = await fetch(endpoint, options);
     if (response.status === 400) {
       // Validation error
+      actions.setSubmitting(false);
+      setSubmissionError(true);
     } else if (response.ok) {
       // successful
       console.log("form submitted successfully");
@@ -136,6 +141,8 @@ export default function ShowSubmissionForm({
       setCurrentStep(currentStep + 1);
     } else {
       // unknown error
+      actions.setSubmitting(false);
+      setSubmissionError(true);
     }
   };
 
@@ -228,6 +235,12 @@ export default function ShowSubmissionForm({
                 </div>
                 {isSubmitting && (
                   <p className="animate-pulse">Submitting form...</p>
+                )}
+                {submissionError && !isSubmitting && (
+                  <p className="text-red">
+                    Sorry there has been an error submitting this form, please
+                    try again and this problem persists get in touch.
+                  </p>
                 )}
               </div>
             )}

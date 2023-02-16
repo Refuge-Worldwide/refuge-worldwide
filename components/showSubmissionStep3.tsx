@@ -18,11 +18,6 @@ export default function ShowSubmissionStep3({
   const [micLevel, setMicLevel] = useState<boolean>(false);
   const { values } = useFormikContext<SubmissionFormValues>();
 
-  const setFieldValue = (field, value) => {
-    values[field] = value;
-    console.log(values[field]);
-  };
-
   return (
     // We pass the event to the handleSubmit() function on submit.
     <div>
@@ -195,11 +190,10 @@ export default function ShowSubmissionStep3({
               render={(arrayHelpers) => (
                 <div>
                   {values.extraArtists &&
-                    values.extraArtists.length > 0 &&
                     values.extraArtists.map((extraArtist, index) => (
                       <div
                         className="mb-8 border border-black p-8 relative"
-                        key={index}
+                        key={"extraArtist" + index}
                       >
                         {index > 0 && (
                           <button
