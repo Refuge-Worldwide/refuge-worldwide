@@ -1,20 +1,39 @@
 import { useState } from "react";
-import MultiSelectField from "./form/multiSelectField";
-import ImageUploadField from "./form/imageUploadField";
-import { Field, FieldArray, ErrorMessage } from "formik";
+import MultiSelectField from "./formFields/multiSelectField";
+import ImageUploadField from "./formFields/imageUploadField";
+import { useFormikContext, Field, FieldArray, ErrorMessage } from "formik";
 import { Close } from "../icons/menu";
+import InputField from "./formFields/inputField";
+import TextareaField from "./formFields/textareaField";
+
+interface SubmissionFormValues {
+  showType: string;
+  readInfo: Boolean;
+  email: string;
+  number: number;
+  name: string;
+  date: string;
+  genres: Array<{ value: string; label: string }>;
+  description: string;
+  instagram: string;
+  image: object;
+  additionalEq?: boolean;
+  additionalEqDesc?: string;
+  artists?: Array<{ value: string; label: string }>;
+  hasExtraArtists: boolean;
+  extraArtists?: Array<{ name: string; bio: string }>;
+}
 
 export default function ShowSubmissionStep3({
   genres,
   artists,
   uploadLink,
-  values,
   showType,
 }) {
   const [mp3, setMp3] = useState<boolean>(false);
   const [oneHr, setOneHr] = useState<boolean>(false);
   const [micLevel, setMicLevel] = useState<boolean>(false);
-  const [showExtraArtists, setShowExtraArtists] = useState<boolean>(false);
+  const { values } = useFormikContext<SubmissionFormValues>();
 
   const setFieldValue = (field, value) => {
     values[field] = value;
@@ -24,27 +43,20 @@ export default function ShowSubmissionStep3({
   return (
     // We pass the event to the handleSubmit() function on submit.
     <div>
+      <pre className="text-white">{JSON.stringify(values, null, 2)}</pre>
       <fieldset>
         <legend>
           <h2 className="font-sans text-base sm:text-large">Personal info</h2>
         </legend>
-        <div className="mb-10">
-          <label htmlFor="email">Email address*</label>
-          <Field
-            type="email"
-            id="email"
-            name="email"
-            className="pill-input"
-            required
-          />
-          <ErrorMessage
-            className="text-red mt-2"
-            component="span"
-            name="email"
-          />
-        </div>
+        <InputField
+          name="email"
+          type="email"
+          label="Email address"
+          required={true}
+        />
+        <InputField name="number" type="number" label="Contact numnber" />
 
-        <div className="mb-10">
+        {/* <div className="mb-10">
           <label htmlFor="number">Contact number</label>
           <Field
             type="number"
@@ -52,85 +64,37 @@ export default function ShowSubmissionStep3({
             name="contact"
             className="pill-input"
           />
-        </div>
+        </div> */}
       </fieldset>
 
       <fieldset>
         <legend>
           <h2 className="font-sans text-base sm:text-large">Show info</h2>
         </legend>
-        <div className="mb-10">
-          <label htmlFor="name">Name*</label>
-          <Field
-            type="text"
-            id="name"
-            name="name"
-            className="pill-input"
-            required
-          />
-          <ErrorMessage
-            className="text-red mt-2"
-            component="span"
-            name="name"
-          />
-        </div>
-        <div className="mb-10">
-          <label htmlFor="date">Date*</label>
-          <Field
-            type="date"
-            id="date"
-            name="date"
-            className="pill-input"
-            required
-          />
-          <ErrorMessage
-            className="text-red mt-2"
-            component="span"
-            name="date"
-          />
-        </div>
+        <InputField name="name" type="text" label="Name" required={true} />
+        <InputField name="date" type="date" label="Date" required={true} />
         <MultiSelectField
           label="Genres"
-          description="Up to 3"
+          description="Up to 3. If you can't find a genre on this list please get in touch."
           name="genres"
           required={true}
           options={genres}
-          setOptions={(childData) => setFieldValue("genres", childData)}
           limit={3}
         />
-        <div className="mb-10">
-          <ErrorMessage className="text-red" component="span" name="genres" />
-        </div>
 
-        <div className="mb-10">
-          <label htmlFor="description">Description*</label>
-          <Field
-            component="textarea"
-            rows={4}
-            id="description"
-            name="description"
-            className="pill-input"
-            required
-          />
-          <ErrorMessage
-            className="text-red mt-2"
-            component="span"
-            name="description"
-          />
-        </div>
-        <div className="mb-10">
-          <label htmlFor="date">
-            Instagram @ handle(s)
-            <span className="label-description">For you and your guest(s)</span>
-          </label>
-          <Field
-            type="text"
-            id="instagram"
-            name="instagram"
-            className="pill-input"
-          />
-        </div>
-        <ImageUploadField label="Show image" name="showImage" />
+        <TextareaField
+          name="description"
+          rows={4}
+          label="Description"
+          required={true}
+        />
+        <InputField
+          name="instagram"
+          type="text"
+          label="Instagram @ handle(s)"
+          description="For you and your guest(s)"
+        />
+        <ImageUploadField label="Show image" name="image" required={true} />
 
         {showType === "preRecord" && (
           <fieldset>
@@ -190,52 +154,27 @@ export default function ShowSubmissionStep3({
         )}
 
         {showType === "live" && (
-          <div>
-            <fieldset className="mt-8 mb-8">
-              <legend>
-                Are you bringing additional DJ or live-performance equipment
-                (including laptop or controllers)?
-              </legend>
-              <div>
-                <Field
-                  type="radio"
-                  id="additionalEqYes"
-                  name="additionalEq"
-                  value="yes"
-                  className="h-6 w-6 rounded-full border-2 border-black text-black focus:ring-black"
-                />
-                <label htmlFor="additionalEqYes" className="checkbox-label">
-                  Yes
-                </label>
-              </div>
-              <div>
-                <Field
-                  type="radio"
-                  id="additionalEqNo"
-                  name="additionalEq"
-                  value="no"
-                  className="h-6 w-6 rounded-full border-2 border-black text-black focus:ring-black"
-                />
-                <label htmlFor="additionalEqNo" className="checkbox-label">
-                  No
-                </label>
-              </div>
-            </fieldset>
+          <div className="flex space-x-3 text-base mt-12 mb-6">
+            <Field
+              type="checkbox"
+              id="additionalEq"
+              name="additionalEq"
+              className="h-6 w-6 rounded-full border-2 border-black text-black focus:ring-black self-center"
+            />
+            <label htmlFor="additionalEq" className="sm:mt-0.5 sm:leading-none">
+              Are you bringing additional DJ or live-performance equipment
+              (including laptop or controllers)?
+            </label>
           </div>
         )}
 
-        {showType === "live" && values.additionalEq === "yes" && (
-          <div className="mb-10">
-            <label htmlFor="additionalEqDesc">
-              Please state what equipment you&apos;ll be bringing
-            </label>
-            <Field
-              type="text"
-              id="additionalEqDesc"
-              name="additionalEqDesc"
-              className="pill-input"
-            />
-          </div>
+        {showType === "live" && values.additionalEq && (
+          <InputField
+            name="additionalEqDesc"
+            type="text"
+            label="Please state what equipment you'll be bringing"
+            required={true}
+          />
         )}
       </fieldset>
 
@@ -251,26 +190,21 @@ export default function ShowSubmissionStep3({
           required={true}
           options={artists}
           limit={5}
-          setOptions={(childData) => setFieldValue("artists", childData)}
         />
-        <div className="mb-10">
-          <ErrorMessage className="text-red" component="span" name="artists" />
-        </div>
 
         <div>
-          <input
+          <Field
             type="checkbox"
-            id="artistExists"
-            name="artistExists"
-            onChange={(e) => setShowExtraArtists(e.target.checked)}
+            id="hasExtraArtists"
+            name="hasExtraArtists"
             className="h-6 w-6 rounded-full border-2 border-black text-black focus:ring-black"
           />
-          <label htmlFor="artistExists" className="checkbox-label">
+          <label htmlFor="hasExtraArtists" className="checkbox-label">
             Can&apos;t find artist/guest in the dropdown
           </label>
         </div>
 
-        {showExtraArtists && (
+        {values.hasExtraArtists && (
           <fieldset className="mt-8 mb-8">
             <legend className="mb-6">Artist/guest info</legend>
             <FieldArray

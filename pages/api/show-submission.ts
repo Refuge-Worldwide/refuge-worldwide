@@ -1,5 +1,8 @@
+import type { NextApiRequest, NextApiResponse } from "next";
 import { createClient } from "contentful-management";
 import { richTextFromMarkdown } from "@contentful/rich-text-from-markdown";
+import { GoogleSpreadsheet } from "google-spreadsheet";
+
 const accessToken = process.env.NEXT_PUBLIC_CONTENTFUL_MANAGEMENT_ACCESS_TOKEN;
 const client = createClient({
   accessToken: accessToken,
@@ -9,6 +12,46 @@ const environmentId = "submission-sandbox";
 // const artistContentTypeId = 'artist'
 const showContentTypeId = "show";
 const artistContentTypeId = "artist";
+
+const SPREADSHEET_ID = process.env.NEXT_PUBLIC_SPREADSHEET_ID;
+const SHEET_ID = process.env.NEXT_PUBLIC_SHEET_ID;
+const GOOGLE_CLIENT_EMAIL = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_EMAIL;
+const GOOGLE_SERVICE_PRIVATE_KEY =
+  process.env.NEXT_PUBLIC_GOOGLE_SERVICE_PRIVATE_KEY;
+
+const doc = new GoogleSpreadsheet(SPREADSHEET_ID);
+const sheetImages = [];
+
+// Append Function
+const appendToSpreadsheet = async (values) => {
+  const newRow = {
+    Type: values.showType,
+    Name: values.name,
+    Date: values.date,
+    Description: values.description,
+    Artists: values.artists.map((x) => x.label).toString(),
+    Genres: values.genres.map((x) => x.label).toString(),
+    Instagram: values.instagram,
+    Images: sheetImages.join(", "),
+    Email: values.email,
+  };
+
+  console.log(sheetImages);
+
+  try {
+    await doc.useServiceAccountAuth({
+      client_email: GOOGLE_CLIENT_EMAIL,
+      private_key: GOOGLE_SERVICE_PRIVATE_KEY.replace(/\\n/g, "\n"),
+    });
+    // loads document properties and worksheets
+    await doc.loadInfo();
+
+    const sheet = doc.sheetsById[SHEET_ID];
+    await sheet.addRow(newRow);
+  } catch (e) {
+    console.error("Error: ", e);
+  }
+};
 
 //transform array to array of references for contentful
 const createReferencesArray = (array) => {
@@ -27,6 +70,7 @@ const createReferencesArray = (array) => {
 
 const addArtist = async (extraArtist) => {
   try {
+    const image = await uploadImage(extraArtist.name, extraArtist.guestImage);
     const content = await richTextFromMarkdown(extraArtist.bio);
     const space = await client.getSpace(spaceId);
     const environment = await space.getEnvironment(environmentId);
@@ -40,6 +84,15 @@ const addArtist = async (extraArtist) => {
         },
         role: {
           "en-US": false,
+        },
+        photo: {
+          "en-US": {
+            sys: {
+              type: "Link",
+              linkType: "Asset",
+              id: image,
+            },
+          },
         },
         coverImagePosition: {
           "en-US": "center",
@@ -81,6 +134,15 @@ const addShow = async (values) => {
         content: {
           "en-US": content,
         },
+        coverImage: {
+          "en-US": {
+            sys: {
+              type: "Link",
+              linkType: "Asset",
+              id: values.imageId,
+            },
+          },
+        },
         coverImagePosition: {
           "en-US": "center",
         },
@@ -99,38 +161,46 @@ const addShow = async (values) => {
   }
 };
 
-// upload main image as asset and recieve id back
-// async function uploadImage(image, name, alt space, environment){
-//   client.getSpace(space)
-//   .then((space) => space.getEnvironment(environment))
-//   .then((environment) => environment.createAssetFromFiles({
-//     fields: {
-//       title: {
-//         'en-US': name
-//       },
-//       description: {
-//         'en-US': alt
-//       },
-//       file: {
-//         'en-US': {
-//           contentType: 'image/jpg',
-//           fileName: name + '.jpg',
-//           file: image
-//         }
-//       }
-//     }
-//   }))
-//   .then((asset) => asset.processForAllLocales())
-//   .then((asset) => asset.publish())
-//   .catch(console.error)
-// }
+const uploadImage = async (name, image) => {
+  try {
+    const space = await client.getSpace(spaceId);
+    const environment = await space.getEnvironment(environmentId);
+    let asset = await environment.createAsset({
+      fields: {
+        title: {
+          "en-US": name,
+        },
+        file: {
+          "en-US": {
+            contentType: image.type,
+            fileName: image.filename,
+            upload: image.url,
+          },
+        },
+      },
+    });
+    const processedAsset = await asset.processForAllLocales();
+    await processedAsset.publish();
+    const imageURL = "https:" + processedAsset.fields.file["en-US"].url;
+    console.log(imageURL);
+    sheetImages.push(imageURL);
+    return processedAsset.sys.id;
+  } catch (err) {
+    console.log(err);
+    throw 400;
+  }
+};
 
-export default async function handler(req, res) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   // Get data submitted in request's body.
   const values = req.body;
   console.log(values);
   try {
-    if (values.extraArtists) {
+    values.imageId = await uploadImage(values.title, values.image);
+    if (values.hasExtraArtists) {
       for (const extraArtist of values.extraArtists) {
         const contentfulExtraArtist = await addArtist(extraArtist);
         console.log(contentfulExtraArtist);
@@ -138,6 +208,7 @@ export default async function handler(req, res) {
       }
     }
     await addShow(values);
+    await appendToSpreadsheet(values);
     console.log("form submitted successfully");
     res.status(200).json({ data: "successfully created show :)" });
   } catch (err) {

@@ -1,15 +1,13 @@
 import { useState } from "react";
 import Select, { AriaOnFocus, OnChangeValue } from "react-select";
-import { useField } from "formik";
+import { useField, useFormikContext } from "formik";
 
 export default function MultiSelectField({
   label,
   description,
-  name,
-  required,
   options,
   limit,
-  setOptions,
+  ...props
 }: {
   label: string;
   description?: string;
@@ -17,11 +15,12 @@ export default function MultiSelectField({
   required?: boolean;
   options: Array<{ value: string; label: string }>;
   limit?: number;
-  setOptions: (arg: Array<{ value: string; label: string }>) => void;
 }) {
   const [ariaFocusMessage, setAriaFocusMessage] = useState("");
+  const [selectedOptions, SetSelectedOptions] = useState([]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [selectedOptions, setSelectedOptions] = useState<any>([]);
+  const [field, meta, helpers] = useField(props);
+  const { setFieldValue } = useFormikContext();
 
   const onFocus = ({ focused, isDisabled }) => {
     const msg = `You are currently focused on option ${focused.label}${
@@ -32,18 +31,18 @@ export default function MultiSelectField({
   };
 
   const onSetSelectedOptions = (options) => {
-    setSelectedOptions(options);
-    setOptions(options);
+    setFieldValue(props.name, options);
+    SetSelectedOptions(options);
   };
 
   const onMenuOpen = () => setIsMenuOpen(true);
   const onMenuClose = () => setIsMenuOpen(false);
 
   return (
-    <div>
-      <label htmlFor={name} id="aria-label">
+    <div className="mb-10">
+      <label htmlFor={props.name} id="aria-label">
         {label}
-        {required && "*"}
+        {props.required && "*"}
         <span className="label-description">{description}</span>
       </label>
       <Select
@@ -57,8 +56,8 @@ export default function MultiSelectField({
         value={selectedOptions}
         onChange={(o) => onSetSelectedOptions(o)}
         isOptionDisabled={() => selectedOptions.length >= limit}
-        name={name}
-        id={name}
+        name={props.name}
+        id={props.name}
         classNamePrefix="select"
         onMenuOpen={onMenuOpen}
         onMenuClose={onMenuClose}
