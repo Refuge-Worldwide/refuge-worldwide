@@ -21,7 +21,6 @@ const GOOGLE_SERVICE_PRIVATE_KEY =
 
 const doc = new GoogleSpreadsheet(SPREADSHEET_ID);
 const sheetImages = [];
-
 // Append Function
 const appendToSpreadsheet = async (values) => {
   const newRow = {
@@ -29,7 +28,10 @@ const appendToSpreadsheet = async (values) => {
     Name: values.name,
     Date: values.date,
     Description: values.description,
-    Artists: values.artists.map((x) => x.label).toString(),
+    Artists:
+      values.artists.map((x) => x.label).toString() +
+      ", " +
+      values.extraArtists.map((x) => x.name).toString(),
     Genres: values.genres.map((x) => x.label).toString(),
     Instagram: values.instagram,
     Images: sheetImages.join(", "),
