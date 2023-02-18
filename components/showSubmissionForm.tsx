@@ -23,7 +23,8 @@ const validationSchema = [
       .email("Invalid email")
       .required("Please provide your email address"),
     name: Yup.string().required("Please provide a show name"),
-    date: Yup.string().required("Please choose a date for your show"),
+    datetime: Yup.date().required("Please choose a date for your show"),
+    length: Yup.number().required("Please choose a length for your show"),
     genres: Yup.array()
       .of(
         Yup.object().shape({
@@ -67,7 +68,8 @@ const initialValues = {
   showType: "",
   readInfo: false,
   name: "",
-  date: "",
+  datetime: "",
+  length: "1",
   genres: [],
   description: "",
   instagram: "",

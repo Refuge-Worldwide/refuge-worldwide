@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { createClient } from "contentful-management";
 import { richTextFromMarkdown } from "@contentful/rich-text-from-markdown";
 import { GoogleSpreadsheet } from "google-spreadsheet";
+import dayjs from "dayjs";
 
 const accesstoken = process.env.NEXT_PUBLIC_CONTENTFUL_MANAGEMENT_ACCESS_TOKEN;
 const spaceId = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID;
@@ -26,7 +27,7 @@ const appendToSpreadsheet = async (values) => {
   const newRow = {
     Type: values.showType,
     Name: values.name,
-    Date: values.date,
+    Date: values.datetime,
     Description: values.description,
     Artists:
       values.artists.map((x) => x.label).toString() +
@@ -122,6 +123,10 @@ const addShow = async (values) => {
     const genres = createReferencesArray(values.genres);
     const space = await client.getSpace(spaceId);
     const environment = await space.getEnvironment(environmentId);
+    const endDateTime = dayjs(values.datetime + "Z")
+      .add(parseInt(values.length), "hour")
+      .toISOString();
+    console.log(endDateTime);
     const entry = await environment.createEntry(showContentTypeId, {
       fields: {
         title: {
@@ -131,7 +136,10 @@ const addShow = async (values) => {
           "en-US": values.name,
         },
         date: {
-          "en-US": values.date,
+          "en-US": values.datetime,
+        },
+        dateEnd: {
+          "en-US": endDateTime,
         },
         content: {
           "en-US": content,

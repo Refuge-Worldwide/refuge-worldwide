@@ -32,7 +32,7 @@ export default function ShowSubmissionStep3({
           label="Email address"
           required={true}
         />
-        <InputField name="number" type="number" label="Contact numnber" />
+        <InputField name="number" type="number" label="Contact number" />
 
         {/* <div className="mb-10">
           <label htmlFor="number">Contact number</label>
@@ -49,8 +49,49 @@ export default function ShowSubmissionStep3({
         <legend>
           <h2 className="font-sans text-base sm:text-large">Show info</h2>
         </legend>
-        <InputField name="name" type="text" label="Name" required={true} />
-        <InputField name="date" type="date" label="Date" required={true} />
+        <InputField name="name" type="text" label="Show name" required={true} />
+        <InputField
+          name="datetime"
+          type="datetime-local"
+          label="Show date / time"
+          required={true}
+        />
+        <fieldset className="mb-10">
+          <legend>Show length</legend>
+          <div className="flex">
+            <div className="w-1/2">
+              <Field
+                type="radio"
+                id="1hr"
+                name="length"
+                value="1"
+                className="peer hidden"
+              />
+              <label
+                htmlFor="1hr"
+                className="block cursor-pointer select-none pill-input rounded-tr-none rounded-br-none py-3 text-center peer-checked:bg-black peer-checked:text-white peer-checked:font-bold"
+              >
+                1hr
+              </label>
+            </div>
+            <div className="w-1/2">
+              <Field
+                type="radio"
+                id="2hr"
+                name="length"
+                value="2"
+                className="peer hidden"
+              />
+              <label
+                htmlFor="2hr"
+                className="block cursor-pointer select-none pill-input rounded-tl-none rounded-bl-none py-3 text-center peer-checked:bg-black peer-checked:text-white peer-checked:font-bold"
+              >
+                2hrs
+              </label>
+            </div>
+          </div>
+          <ErrorMessage className="text-red" component="span" name="length" />
+        </fieldset>
         <MultiSelectField
           label="Genres"
           description="Up to 3. If you can't find a genre on this list please get in touch."
@@ -63,7 +104,7 @@ export default function ShowSubmissionStep3({
         <TextareaField
           name="description"
           rows={4}
-          label="Description"
+          label="Show description"
           required={true}
         />
         <InputField
