@@ -40,7 +40,7 @@ export default function ArticlePreview({
         <div className="h-4" />
 
         <p>
-          <Date dateString={date} formatString={"DD.MM.YYYY"} />
+          <Date dateString={date} />
         </p>
 
         <h2 id={`article-${slug}`} className="font-sans">

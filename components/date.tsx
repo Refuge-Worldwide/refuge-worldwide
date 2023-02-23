@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 
 export default function Date({
   dateString,
-  formatString = "MMMM DD, YYYY",
+  formatString = "DD MMM, YYYY",
 }: {
   dateString: string;
   formatString?: string;
