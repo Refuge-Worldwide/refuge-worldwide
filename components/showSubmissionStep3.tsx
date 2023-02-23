@@ -53,11 +53,11 @@ export default function ShowSubmissionStep3({
         <InputField
           name="datetime"
           type="datetime-local"
-          label="Show date / time"
+          label="Date / time"
           required={true}
         />
         <fieldset className="mb-10">
-          <legend>Show length</legend>
+          <legend>Length</legend>
           <div className="flex">
             <div className="w-1/2">
               <Field
@@ -180,7 +180,10 @@ export default function ShowSubmissionStep3({
               name="additionalEq"
               className="h-6 w-6 rounded-full border-2 border-black text-black focus:ring-black self-center"
             />
-            <label htmlFor="additionalEq" className="sm:mt-0.5 sm:leading-none">
+            <label
+              htmlFor="additionalEq"
+              className="sm:mt-0.5 text-small sm:text-base sm:leading-none"
+            >
               Are you bringing additional DJ or live-performance equipment
               (including laptop or controllers)?
             </label>

@@ -25,18 +25,28 @@ const sheetImages = [];
 // Append Function
 const appendToSpreadsheet = async (values) => {
   const newRow = {
-    Type: values.showType,
-    Name: values.name,
-    Date: values.datetime,
-    Description: values.description,
-    Artists:
-      values.artists.map((x) => x.label).toString() +
-      ", " +
-      values.extraArtists.map((x) => x.name).toString(),
-    Genres: values.genres.map((x) => x.label).toString(),
-    Instagram: values.instagram,
-    Images: sheetImages.join(", "),
-    Email: values.email,
+    Timestamp: dayjs().format("DD/MM/YYYY HH:mm:ss"),
+    "Show name": values.name,
+    "Show date": dayjs(values.datetime).format("DD/MM/YYYY HH:mm"),
+    "Show description": values.description,
+    "Artist name(s) + pronouns": values.artists.map((x) => x.label).join(", "),
+    "Guest name(s) + pronouns": values.extraArtists
+      .map((x) => x.name)
+      .join(", "),
+    "Show genres (up to 3)": values.genres.map((x) => x.label).join(", "),
+    "Instagram @ handle(s)": values.instagram
+      .split(", ")
+      .map((s) => "@" + s)
+      .join(" "),
+    "Show / Host image - landscape format, ideally 1800x1450px or larger, 10MB max, no HEIC files. Please include show and host names in filename.":
+      sheetImages.join(" , "),
+    "Email address": values.email,
+    "Is your show...": values.showType,
+    "Contact phone number": values.number,
+    "Live shows - are you bringing additional DJ or live-performance equipment (including laptop or controllers)?":
+      values.additionalEq,
+    "If yes, please state what equipment you'll be bringing":
+      values.additionalEqDesc,
   };
 
   console.log(sheetImages);

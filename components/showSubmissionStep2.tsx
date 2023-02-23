@@ -46,7 +46,10 @@ export default function ShowSubmissionStep2({ importantInfo, showType }) {
           name="readInfo"
           className="h-6 w-6 rounded-full border-2 border-black text-black focus:ring-black"
         />
-        <label htmlFor="readInfo" className="sm:mt-0.5 sm:leading-none">
+        <label
+          htmlFor="readInfo"
+          className="sm:mt-0.5 text-small sm:text-base sm:leading-none"
+        >
           I confirm I have read the information above
         </label>
       </div>

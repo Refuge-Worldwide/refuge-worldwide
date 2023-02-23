@@ -8,6 +8,9 @@ import { useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+
 const validationSchema = [
   Yup.object().shape({
     showType: Yup.string().required("Please choose your show type"),
@@ -23,7 +26,9 @@ const validationSchema = [
       .email("Invalid email")
       .required("Please provide your email address"),
     name: Yup.string().required("Please provide a show name"),
-    datetime: Yup.date().required("Please choose a date for your show"),
+    datetime: Yup.date()
+      .min(today, "Date cannot be in the past")
+      .required("Please choose a date for your show"),
     length: Yup.number().required("Please choose a length for your show"),
     genres: Yup.array()
       .of(
@@ -34,6 +39,10 @@ const validationSchema = [
       )
       .required("Please choose some genres for your show (max 3)"),
     description: Yup.string().required("Please add a show description"),
+    instagram: Yup.string().matches(
+      /^\w+(?:, *\w+)*$/,
+      "Is not in correct format"
+    ),
     image: Yup.object().required("Please add a show image"),
     // showImage: Yup.string().required("Please upload an image for your show"),
     artists: Yup.array().of(
@@ -67,6 +76,8 @@ const validationSchema = [
 const initialValues = {
   showType: "",
   readInfo: false,
+  email: "",
+  number: "",
   name: "",
   datetime: "",
   length: "1",
@@ -178,7 +189,7 @@ export default function ShowSubmissionForm({
   return (
     <div id="submission-form" className="min-h-1/2">
       {currentStep != 3 && (
-        <div className="flex items-center justify-center space-x-4 text-small">
+        <div className="flex flex-col md:flex-row text-center items-center justify-center space-y sm:space-y-2 md:space-y-0 md:space-x-4">
           <button
             onClick={() => setCurrentStep(0)}
             disabled={currentStep == 0}
@@ -186,7 +197,7 @@ export default function ShowSubmissionForm({
           >
             1. Live / Pre-record
           </button>
-          <Arrow />
+          <Arrow className="hidden md:block" />
           <button
             onClick={() => setCurrentStep(1)}
             disabled={currentStep <= 1}
@@ -194,7 +205,7 @@ export default function ShowSubmissionForm({
           >
             2. Important info
           </button>
-          <Arrow />
+          <Arrow className="hidden md:block" />
           <span className={currentStep == 2 ? "font-medium" : ""}>
             3. Submission
           </span>
