@@ -70,7 +70,7 @@ export default function FeaturedArticlePreview({
           <div className="hidden sm:block h-6" />
         </header>
 
-        <div className="md:col-span-5 2xl:col-span-7 h-64 md:h-auto relative border-l-2 border-t-2 border-b-2 border-black">
+        <div className="md:col-span-5 2xl:col-span-7 h-64 md:h-auto relative md:border-l-2 border-t-2 border-b-2 border-black">
           <Image
             className="object-cover object-center"
             key={coverImage.sys.id}
