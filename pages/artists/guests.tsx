@@ -30,7 +30,6 @@ export default function GuestsPage({
   guests,
   guestsTwo,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  // const { guests } = useArtistsGuests(fallbackData);
   const allGuests = guests.concat(guestsTwo);
   const sections = sortAndGroup(allGuests);
 
