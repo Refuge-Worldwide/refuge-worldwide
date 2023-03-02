@@ -1,17 +1,11 @@
 import { InferGetStaticPropsType } from "next";
-// import Image from "next/image";
 import Link from "next/link";
-// import ArtistPreview from "../../components/artistPreview";
 import GuestRow from "../../components/guestRow";
 import Badge from "../../components/badge";
 import Layout from "../../components/layout";
 import Pill from "../../components/pill";
 import PageMeta from "../../components/seo/page";
-import useArtistsGuests from "../../hooks/useArtistsGuests";
-import {
-  ARTISTS_GUESTS_PAGE_SIZE,
-  getArtistsPage,
-} from "../../lib/contentful/pages/artists";
+import { getArtistsPage } from "../../lib/contentful/pages/artists";
 import { ALPHABET } from "../../constants";
 import { sortAndGroup } from "../../util";
 
