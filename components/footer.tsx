@@ -17,7 +17,7 @@ export default function Footer() {
 
   return (
     <footer className="bg-black text-white">
-      <div className="px-4 md:px-8 pt-10 md:pt-20 pb-8 md:pb-20">
+      <div className="px-4 md:px-8 py-10 md:py-20">
         <div className="container md:grid items-center grid-cols-2">
           <div className="mb-6 md:mb-0">
             <img
@@ -27,10 +27,6 @@ export default function Footer() {
             />
           </div>
           <div>
-            <p className="font-serif text-base leading-none">About Refuge</p>
-
-            <div className="h-3 md:h-7" />
-
             <div className="space-y-7 max-w-xl text-small font-medium leading-tight">
               <p>
                 Refuge began in 2015 as a fundraising platform working in
@@ -63,7 +59,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="px-4 md:px-8 border-t border-white pt-10 md:pt-16 pb-10 md:pb-16">
+      <div className="px-4 md:px-8 border-t border-white py-4 md:py-6">
         <div className="grid lg:grid-cols-3 gap-8 lg:gap-12 text-small font-medium">
           {/* Spacer */}
           <div className="hidden lg:block" />
