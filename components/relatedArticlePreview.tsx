@@ -29,7 +29,7 @@ export default function RelatedArticlePreview({
         <div className="h-5" />
 
         <p className="font-medium">
-          <Date dateString={date} formatString={"DD.MM.YYYY"} />
+          <Date dateString={date} />
         </p>
 
         <h2 className="font-sans font-medium truncate">{title}</h2>
