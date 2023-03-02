@@ -22,6 +22,7 @@ const GOOGLE_SERVICE_PRIVATE_KEY =
 
 const doc = new GoogleSpreadsheet(SPREADSHEET_ID);
 const sheetImages = [];
+
 // Append Function
 const appendToSpreadsheet = async (values) => {
   const newRow = {
@@ -39,7 +40,7 @@ const appendToSpreadsheet = async (values) => {
       .map((s) => "@" + s)
       .join(" "),
     "Show / Host image - landscape format, ideally 1800x1450px or larger, 10MB max, no HEIC files. Please include show and host names in filename.":
-      sheetImages.join(" , "),
+      sheetImages.join(" + "),
     "Email address": values.email,
     "Is your show...": values.showType,
     "Contact phone number": values.number,
@@ -117,7 +118,7 @@ const addArtist = async (extraArtist) => {
     });
     const addedArtist = {
       value: entry.sys.id,
-      label: "",
+      label: extraArtist.name,
     };
     return addedArtist;
   } catch (err) {
@@ -126,24 +127,39 @@ const addArtist = async (extraArtist) => {
   }
 };
 
+const formatArtistsForContenful = (artists) => {
+  if (artists.length > 1) {
+    const artistSimpleArray = artists.map((artist) => artist.label);
+    const formattedArtists = [
+      artistSimpleArray.slice(0, -1).join(", "),
+      artistSimpleArray.slice(-1)[0],
+    ].join(artistSimpleArray.length < 2 ? "" : " & ");
+    return formattedArtists;
+  } else {
+    return artists[0].label.toString();
+  }
+};
+
 const addShow = async (values) => {
   try {
     const content = await richTextFromMarkdown(values.description);
     const artists = createReferencesArray(values.artists);
+    const artistsForContentful = formatArtistsForContenful(values.artists);
+    const dateFormatted = dayjs(values.datetime).format("DD MMM YYYY");
     const genres = createReferencesArray(values.genres);
     const space = await client.getSpace(spaceId);
     const environment = await space.getEnvironment(environmentId);
     const endDateTime = dayjs(values.datetime + "Z")
       .add(parseInt(values.length), "hour")
       .toISOString();
-    console.log(endDateTime);
     const entry = await environment.createEntry(showContentTypeId, {
       fields: {
         title: {
-          "en-US": values.name,
+          "en-US": values.name + " | " + artistsForContentful,
         },
         internal: {
-          "en-US": values.name,
+          "en-US":
+            values.name + " - " + artistsForContentful + " - " + dateFormatted,
         },
         date: {
           "en-US": values.datetime,
@@ -174,6 +190,7 @@ const addShow = async (values) => {
         },
       },
     });
+    console.log(entry);
     return entry;
   } catch (err) {
     console.log(err);
