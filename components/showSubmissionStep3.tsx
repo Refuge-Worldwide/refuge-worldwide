@@ -249,7 +249,7 @@ export default function ShowSubmissionStep3({
                         )}
 
                         <div className="mb-6 mt-6">
-                          <label htmlFor="name">Name</label>
+                          <label htmlFor="name">Name*</label>
                           <Field
                             type="text"
                             name={`extraArtists.${index}.name`}
@@ -263,7 +263,7 @@ export default function ShowSubmissionStep3({
                           />
                         </div>
                         <div className="mb-6">
-                          <label htmlFor="bio">Bio</label>
+                          <label htmlFor="bio">Bio*</label>
                           <Field
                             component="textarea"
                             rows={4}
@@ -279,6 +279,7 @@ export default function ShowSubmissionStep3({
                         </div>
                         <ImageUploadField
                           label="Guest image"
+                          required
                           name={`extraArtists.${index}.guestImage`}
                         />
                       </div>
