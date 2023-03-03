@@ -26,7 +26,7 @@ export default function InputField({
       <input {...field} {...props} className="pill-input" />
 
       {meta.touched && meta.error ? (
-        <span className="text-red mt-2">{meta.error}</span>
+        <span className="text-red mt-2 text-small">{meta.error}</span>
       ) : null}
     </div>
   );

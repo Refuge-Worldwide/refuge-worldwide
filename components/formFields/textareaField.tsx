@@ -25,7 +25,7 @@ export default function TextareaField({
       </label>
       <textarea {...field} {...props} rows={rows} className="pill-input" />
       {meta.touched && meta.error ? (
-        <span className="text-red mt-2">{meta.error}</span>
+        <span className="text-red mt-2 text-small">{meta.error}</span>
       ) : null}
     </div>
   );

@@ -70,6 +70,9 @@ export default function MultiSelectField({
           }),
         }}
       />
+      {meta.touched && meta.error ? (
+        <span className="text-red mt-2 text-small">{meta.error}</span>
+      ) : null}
     </div>
   );
 }

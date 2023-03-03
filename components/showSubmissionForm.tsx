@@ -11,7 +11,7 @@ import * as Yup from "yup";
 const today = new Date();
 const phoneReg =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
-const instaReg = /^(([\w.](,[ ]?)?)*)+$/;
+const instaReg = /^(([\w.](,)?)*)+$/;
 today.setHours(0, 0, 0, 0);
 
 const validationSchema = [
@@ -41,6 +41,8 @@ const validationSchema = [
           label: Yup.string(),
         })
       )
+      .min(1, "Please choose some genres for your show (max 3)")
+      .max(3, "You can choose a max of 3 genres, please remove some")
       .required("Please choose some genres for your show (max 3)"),
     description: Yup.string().required("Please add a show description"),
     instagram: Yup.string().matches(
@@ -49,31 +51,35 @@ const validationSchema = [
     ),
     image: Yup.object().required("Please add a show image"),
     // showImage: Yup.string().required("Please upload an image for your show"),
-    artists: Yup.array().of(
-      Yup.object().shape({
-        value: Yup.string(),
-        label: Yup.string(),
-      })
-    ),
     hasExtraArtists: Yup.boolean(),
-    extraArtists: Yup.array().of(
-      Yup.object()
-        .default({})
-        .shape({
-          name: Yup.string().when("hasExtraArtists", {
-            is: true,
-            then: Yup.string().required("Please add an artist name"),
-          }),
-          bio: Yup.string().when("hasExtraArtists", {
-            is: true,
-            then: Yup.string().required("Please add an artist bio"),
-          }),
-          guestImage: Yup.object().when("hasExtraArtists", {
-            is: true,
-            then: Yup.object().required("Please add an artist image"),
-          }),
-        })
-    ),
+    artists: Yup.array().when("hasExtraArtists", {
+      is: false,
+      then: (schema) =>
+        schema.min(
+          1,
+          "Please select an artist from dropdown or add extra artists by clicking checkbox below"
+        ),
+      otherwise: (schema) =>
+        schema.of(
+          Yup.object().shape({
+            value: Yup.string(),
+            label: Yup.string(),
+          })
+        ),
+    }),
+    extraArtists: Yup.array().when("hasExtraArtists", {
+      is: true,
+      then: (schema) =>
+        schema.of(
+          Yup.object()
+            .default({})
+            .shape({
+              name: Yup.string().required("Please add an artist name"),
+              bio: Yup.string().required("Please add an artist bio"),
+              guestImage: Yup.object().required("Please add an artist image"),
+            })
+        ),
+    }),
   }),
 ];
 

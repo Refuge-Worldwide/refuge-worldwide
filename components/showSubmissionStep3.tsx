@@ -252,14 +252,14 @@ export default function ShowSubmissionStep3({
                           <label htmlFor="name">Name</label>
                           <Field
                             type="text"
-                            name={`extraArtists[${index}].name`}
+                            name={`extraArtists.${index}.name`}
                             className="pill-input"
                             required
                           />
                           <ErrorMessage
-                            className="text-red mt-2"
+                            className="text-red mt-2 text-small"
                             component="span"
-                            name={`extraArtists[${index}].name`}
+                            name={`extraArtists.${index}.name`}
                           />
                         </div>
                         <div className="mb-6">
@@ -267,19 +267,19 @@ export default function ShowSubmissionStep3({
                           <Field
                             component="textarea"
                             rows={4}
-                            name={`extraArtists[${index}].bio`}
+                            name={`extraArtists.${index}.bio`}
                             className="pill-input"
                             required
                           />
                           <ErrorMessage
-                            className="text-red mt-2"
+                            className="text-red mt-2 text-small"
                             component="span"
-                            name={`extraArtists[${index}].bio`}
+                            name={`extraArtists.${index}.bio`}
                           />
                         </div>
                         <ImageUploadField
                           label="Guest image"
-                          name={`extraArtists[${index}].guestImage`}
+                          name={`extraArtists.${index}.guestImage`}
                         />
                       </div>
                     ))}
