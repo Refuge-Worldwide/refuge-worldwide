@@ -36,7 +36,7 @@ const appendToSpreadsheet = async (values) => {
       .join(", "),
     "Show genres (up to 3)": values.genres.map((x) => x.label).join(", "),
     "Instagram @ handle(s)": values.instagram
-      .split(", ")
+      .split(",")
       .map((s) => "@" + s)
       .join(" "),
     "Show / Host image - landscape format, ideally 1800x1450px or larger, 10MB max, no HEIC files. Please include show and host names in filename.":
