@@ -111,7 +111,7 @@ export default function ShowSubmissionStep3({
           name="instagram"
           type="text"
           label="Instagram @ handle(s)"
-          description="For you and your guest(s)"
+          description="For you and your guest(s). A comma seperated list NOT including the @ symbol."
         />
         <ImageUploadField label="Show image" name="image" required={true} />
 

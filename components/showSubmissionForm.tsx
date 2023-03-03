@@ -9,6 +9,9 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 
 const today = new Date();
+const phoneReg =
+  /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+const instaReg = /^(([\w.](,[ ]?)?)*)+$/;
 today.setHours(0, 0, 0, 0);
 
 const validationSchema = [
@@ -25,6 +28,7 @@ const validationSchema = [
     email: Yup.string()
       .email("Invalid email")
       .required("Please provide your email address"),
+    number: Yup.string().matches(phoneReg, "Invalid number."),
     name: Yup.string().required("Please provide a show name"),
     datetime: Yup.date()
       .min(today, "Date cannot be in the past")
@@ -40,8 +44,8 @@ const validationSchema = [
       .required("Please choose some genres for your show (max 3)"),
     description: Yup.string().required("Please add a show description"),
     instagram: Yup.string().matches(
-      /^\w+(?:, *\w+)*$/,
-      "Is not in correct format"
+      instaReg,
+      "Incorrect format. Should be a comma seperated list NOT including the @ symbol."
     ),
     image: Yup.object().required("Please add a show image"),
     // showImage: Yup.string().required("Please upload an image for your show"),
