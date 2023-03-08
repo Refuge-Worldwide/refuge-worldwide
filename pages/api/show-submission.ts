@@ -9,7 +9,7 @@ const spaceId = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID;
 const client = createClient({
   accessToken: accesstoken,
 });
-const environmentId = "submission-sandbox";
+const environmentId = "master";
 // const artistContentTypeId = 'artist'
 const showContentTypeId = "show";
 const artistContentTypeId = "artist";
