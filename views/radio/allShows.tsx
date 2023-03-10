@@ -27,7 +27,7 @@ export default function AllShows({
       <div className="p-4 sm:p-8">
         <div className="md:flex justify-between">
           <Pill>
-            <h2>{filter} Shows</h2>
+            <h2>{filter.length > 0 ? filter : "All"} Shows</h2>
           </Pill>
           <div className="h-4 md:hidden" />
           <GenresList genres={genres} filter={filter} filterSet={filterSet} />
