@@ -5,14 +5,14 @@ export default function useGenreFilter() {
   const router = useRouter();
 
   const params = router.query as typeof router.query & {
-    genre?: string;
+    genre?: string[];
   };
 
-  const [filter, filterSet] = useState<string>("All");
+  const [filter, filterSet] = useState<string[]>([]);
 
   useEffect(() => {
     if (typeof params?.genre === "string") {
-      filterSet(params.genre);
+      filterSet([params.genre]);
     }
   }, [params]);
 

@@ -25,13 +25,15 @@ export default function AllShows({
       <div className="pt-16 -mt-16" id="shows" aria-hidden />
 
       <div className="p-4 sm:p-8">
-        <Pill>
-          <h2>{filter} Shows</h2>
-        </Pill>
+        <div className="md:flex justify-between">
+          <Pill>
+            <h2>{filter} Shows</h2>
+          </Pill>
+          <div className="h-4 md:hidden" />
+          <GenresList genres={genres} filter={filter} filterSet={filterSet} />
+        </div>
 
         <div className="h-5 sm:h-8" />
-
-        <GenresList genres={genres} filter={filter} filterSet={filterSet} />
 
         <div className="h-4" />
 

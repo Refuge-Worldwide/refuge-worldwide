@@ -104,6 +104,10 @@
     @apply px-6 pt-4 pb-3 w-full rounded-full border-2 border-black bg-white shadow-pill-black text-small sm:text-base text-black font-light focus:outline-none outline-none focus:border-black focus:ring-0;
   }
 
+  .pill-input-transparent {
+    @apply px-6 pt-4 pb-3 w-full rounded-full border-2 border-black bg-transparent shadow-pill-black text-small sm:text-base text-black font-light focus:outline-none outline-none focus:border-black focus:ring-0 placeholder-black;
+  }
+
   .pill-input-invert {
     @apply px-8 pt-4 pb-4 w-full rounded-full border-2 border-white bg-black shadow-pill-white text-small sm:text-base text-white font-serif focus:outline-none outline-none focus:border-white focus:ring-0 placeholder-white;
   }
@@ -119,20 +123,29 @@
   }
 }
 
-/* birthday special balloon */
+/* genre sidebar */
 
-.balloon-float {
-  animation: float 6s ease-in-out infinite;
+.border-wicked-dashed {
+  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='21' ry='21' stroke='%23333' stroke-width='2' stroke-dasharray='8%2c8' stroke-dashoffset='12' stroke-linecap='square'/%3e%3c/svg%3e");
+  border-radius: 21px;
 }
 
-@keyframes float {
-  0% {
-    transform: translatey(0px);
-  }
-  50% {
-    transform: translatey(-6px);
-  }
-  100% {
-    transform: translatey(0px);
-  }
+/* width */
+.genre-sidebar::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+.genre-sidebar::-webkit-scrollbar-track {
+  @apply bg-orange;
+}
+
+/* Handle */
+.genre-sidebar::-webkit-scrollbar-thumb {
+  @apply bg-black;
+}
+
+/* Handle on hover */
+.genre-sidebar::-webkit-scrollbar-thumb:hover {
+  @apply bg-black;
 }
