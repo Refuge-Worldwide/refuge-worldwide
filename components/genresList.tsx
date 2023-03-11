@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useState, useRef } from "react";
 import Badge from "./badge";
 import { Cross } from "../icons/cross";
 
@@ -21,10 +21,20 @@ export default function GenresList({ filter, genres }: GenreListProps) {
     setFilteredGenres(filteredGenres);
   };
 
+  const inputRef = useRef(null);
+
   const updateGenreParam = (genre: string) => () => {
     router.push(`/radio?genre=${encodeURIComponent(genre)}`, undefined, {
       shallow: true,
     });
+  };
+
+  const openFilterHandler = () => {
+    if (!filterOpen) {
+      // set focus to input
+      inputRef.current.focus();
+    }
+    setFilterOpen(!filterOpen);
   };
 
   // function sortActiveFilterAndAlpha(a: string, b: string) {
@@ -38,7 +48,7 @@ export default function GenresList({ filter, genres }: GenreListProps) {
       <div className="py-2 px-4 border-wicked-dashed rounded-full w-fit flex space-x-2">
         <button
           className="text-tiny py-3 px-2 font-medium"
-          onClick={() => setFilterOpen(true)}
+          onClick={openFilterHandler}
         >
           FILTER
         </button>
@@ -66,8 +76,9 @@ export default function GenresList({ filter, genres }: GenreListProps) {
             name="search"
             onChange={(ev) => filterGenres(ev.target.value)}
             placeholder="Search genres"
+            ref={inputRef}
           />
-          <button onClick={() => setFilterOpen(false)}>
+          <button onClick={openFilterHandler}>
             <Cross size={30} />
           </button>
         </div>
@@ -90,7 +101,7 @@ export default function GenresList({ filter, genres }: GenreListProps) {
         className={`fixed top-0 left-0 z-40 h-full w-full bg-black motion-reduce:transition-none transition duration-150 ease-out ${
           filterOpen ? "opacity-50 visible" : "opacity-0 invisible"
         }`}
-        onClick={() => setFilterOpen(false)}
+        onClick={openFilterHandler}
       ></button>
     </div>
   );
