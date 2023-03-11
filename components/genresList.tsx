@@ -52,48 +52,46 @@ export default function GenresList({ filter, genres }: GenreListProps) {
         ))}
       </div>
       <div
-        className={`fixed top-0 left-0 flex h-screen w-screen z-50 ${
-          filterOpen ? "block" : "hidden"
+        className={`fixed z-50 left-0 top-0 w-[300px] md:w-[376px] h-screen bg-orange overflow-y-auto genre-sidebar motion-reduce:transition-none transition duration-150 ease-out ${
+          filterOpen ? "translate-x-0" : "translate-x-[-100%]"
         }`}
       >
-        <div
-          className={`left-0 w-[300px] md:w-[376px] bg-orange overflow-y-auto genre-sidebar`}
-        >
-          <div className="p-4 md:p-8 sticky top-0  bg-orange flex justify-between">
-            <input
-              autoCapitalize="off"
-              autoComplete="off"
-              autoCorrect="off"
-              className="pill-input-transparent w-[85%]"
-              id="genresSearch"
-              name="search"
-              onChange={(ev) => filterGenres(ev.target.value)}
-              placeholder="Search genres"
-            />
-            <button onClick={() => setFilterOpen(false)}>
-              <Cross size={30} />
-            </button>
-          </div>
-          <ul className="p-4 md:p-8 pt-0 md:pt-0 w-full leading-none gap-2 mt-1">
-            {filteredGenres
-              // .sort(sortActiveFilterAndAlpha)
-              .map((genre, i) => (
-                <li key={i} className="mb-2">
-                  <button
-                    className="focus:outline-none focus:ring-4 rounded-full"
-                    onClick={updateGenreParam(genre)}
-                  >
-                    <Badge invert={filter.indexOf(genre) > -1} text={genre} />
-                  </button>
-                </li>
-              ))}
-          </ul>
+        <div className="p-4 md:p-8 sticky top-0  bg-orange flex justify-between">
+          <input
+            autoCapitalize="off"
+            autoComplete="off"
+            autoCorrect="off"
+            className="pill-input-transparent w-[85%]"
+            id="genresSearch"
+            name="search"
+            onChange={(ev) => filterGenres(ev.target.value)}
+            placeholder="Search genres"
+          />
+          <button onClick={() => setFilterOpen(false)}>
+            <Cross size={30} />
+          </button>
         </div>
-        <button
-          className="h-full bg-black opacity-50 flex grow"
-          onClick={() => setFilterOpen(false)}
-        ></button>
+        <ul className="p-4 md:p-8 pt-0 md:pt-0 w-full leading-none gap-2 mt-1">
+          {filteredGenres
+            // .sort(sortActiveFilterAndAlpha)
+            .map((genre, i) => (
+              <li key={i} className="mb-2">
+                <button
+                  className="focus:outline-none focus:ring-4 rounded-full"
+                  onClick={updateGenreParam(genre)}
+                >
+                  <Badge invert={filter.indexOf(genre) > -1} text={genre} />
+                </button>
+              </li>
+            ))}
+        </ul>
       </div>
+      <button
+        className={`fixed top-0 left-0 z-40 h-full w-full bg-black motion-reduce:transition-none transition duration-150 ease-out ${
+          filterOpen ? "opacity-50 visible" : "opacity-0 invisible"
+        }`}
+        onClick={() => setFilterOpen(false)}
+      ></button>
     </div>
   );
 }
