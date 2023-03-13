@@ -32,22 +32,8 @@ export default function Footer() {
                 Refuge began in 2015 as a fundraising platform working in
                 solidarity with grassroots and non-profit organizations across
                 Berlin. Refuge Worldwide radio was launched in 2021 to amplify
-                the music and issues that we care about, broadcasting remotely
-                out of Neukölln.
-              </p>
-              <p>
-                We are a non-commercial independent platform, amplifying voices
-                and creating unity in the community. If you are able to, please
-                consider{" "}
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href={PATREON_URL}
-                  className="underline"
-                >
-                  supporting us via Patreon
-                </a>
-                .
+                the music and issues that we care about, broadcasting live out
+                of Neukölln.
               </p>
               <p>
                 <Link href="/about" className="underline">
