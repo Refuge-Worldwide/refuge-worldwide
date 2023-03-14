@@ -9,8 +9,7 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 
 const today = new Date();
-const phoneReg =
-  /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+const phoneReg = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/;
 const instaReg = /^(([\w.](,)?)*)+$/;
 today.setHours(0, 0, 0, 0);
 

@@ -13,14 +13,17 @@ import { getAllArtists } from "../lib/contentful/pages/submission";
 export async function getStaticProps({ preview = false }) {
   const genres = await getAllGenres();
   const artists = await getAllArtists(1000, 0);
+  const artistsTwo = await getAllArtists(1000, 1000);
+  const artistsThree = await getAllArtists(1000, 2000);
 
+  const AllArtists = artists.concat(artistsTwo.concat(artistsThree));
   return {
     props: {
       genres: genres.map((genre) => ({
         value: genre.sys.id,
         label: genre.name,
       })),
-      artists: artists.map((artists) => ({
+      artists: AllArtists.map((artists) => ({
         value: artists.sys.id,
         label: artists.name,
       })),

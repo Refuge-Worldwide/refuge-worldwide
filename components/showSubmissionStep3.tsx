@@ -31,7 +31,7 @@ export default function ShowSubmissionStep3({
           label="Email address"
           required={true}
         />
-        <InputField name="number" type="number" label="Contact number" />
+        <InputField name="number" type="tel" label="Contact number" />
 
         {/* <div className="mb-10">
           <label htmlFor="number">Contact number</label>
