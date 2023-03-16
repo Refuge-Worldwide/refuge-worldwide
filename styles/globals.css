@@ -123,11 +123,71 @@
   }
 }
 
-/* genre sidebar */
+/* GENRE SIDEBAR */
 
 .border-wicked-dashed {
   background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='21' ry='21' stroke='%23333' stroke-width='2' stroke-dasharray='8%2c8' stroke-dashoffset='12' stroke-linecap='square'/%3e%3c/svg%3e");
   border-radius: 21px;
+}
+
+.genreSidebar {
+  @apply fixed z-50 left-0 top-0 w-[300px] md:w-[376px] h-screen bg-orange overflow-y-auto genre-sidebar motion-reduce:transition-none;
+}
+
+.genreSidebar[data-state="open"] {
+  animation: genreSidebarShow 150ms ease-out;
+}
+
+.genreSidebar[data-state="closed"] {
+  animation: genreSidebarHide 150ms ease-out;
+}
+
+.genreSidebarOverlay {
+  @apply fixed top-0 left-0 z-40 h-full w-full bg-black opacity-50 motion-reduce:transition-none;
+}
+
+.genreSidebarOverlay[data-state="open"] {
+  animation: fadeIn 150ms ease-out;
+}
+
+.genreSidebarOverlay[data-state="closed"] {
+  animation: fadeOut 150ms ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.5;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 0.5;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes genreSidebarShow {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0%);
+  }
+}
+
+@keyframes genreSidebarHide {
+  from {
+    transform: translateX(0%);
+  }
+  to {
+    transform: translateX(-100%);
+  }
 }
 
 /* width */

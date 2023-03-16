@@ -1,3 +1,4 @@
+import * as Dialog from "@radix-ui/react-dialog";
 import { useRouter } from "next/router";
 import { Dispatch, SetStateAction, useState, useRef } from "react";
 import Badge from "./badge";
@@ -11,9 +12,9 @@ type GenreListProps = {
 
 export default function GenresList({ filter, genres }: GenreListProps) {
   const router = useRouter();
-  const [filterOpen, setFilterOpen] = useState<Boolean>(false);
+  const [filterOpen, setFilterOpen] = useState<boolean>(false);
   const [filteredGenres, setFilteredGenres] = useState(genres);
-  const [selectedGenres, setSelectedGenres] = useState<string[]>(filter);
+  // const [selectedGenres, setSelectedGenres] = useState<string[]>(filter);
   const filterGenres = (query) => {
     const filteredGenres = genres.filter((genre) =>
       genre.toLowerCase().includes(query.toLowerCase())
@@ -44,14 +45,19 @@ export default function GenresList({ filter, genres }: GenreListProps) {
   // }
 
   return (
-    <div>
+    <Dialog.Root
+      open={filterOpen}
+      onOpenChange={(filterOpen) => setFilterOpen(filterOpen)}
+    >
       <div className="py-2 px-4 border-wicked-dashed rounded-full w-fit flex space-x-2">
-        <button
-          className="text-tiny py-3 px-2 font-medium"
-          onClick={openFilterHandler}
-        >
-          FILTER
-        </button>
+        <Dialog.Trigger asChild>
+          <button
+            className="text-tiny py-3 px-2 font-medium"
+            aria-label="Open filter sidebar"
+          >
+            FILTER
+          </button>
+        </Dialog.Trigger>
         {filter.map((genre, i) => (
           <button
             key={i}
@@ -61,48 +67,48 @@ export default function GenresList({ filter, genres }: GenreListProps) {
           </button>
         ))}
       </div>
-      <div
-        className={`fixed z-50 left-0 top-0 w-[300px] md:w-[376px] h-screen bg-orange overflow-y-auto genre-sidebar motion-reduce:transition-none transition duration-150 ease-out ${
-          filterOpen ? "translate-x-0" : "translate-x-[-100%]"
-        }`}
-      >
-        <div className="p-4 md:p-8 sticky top-0  bg-orange flex justify-between">
-          <input
-            autoCapitalize="off"
-            autoComplete="off"
-            autoCorrect="off"
-            className="pill-input-transparent w-[85%]"
-            id="genresSearch"
-            name="search"
-            onChange={(ev) => filterGenres(ev.target.value)}
-            placeholder="Search genres"
-            ref={inputRef}
-          />
-          <button onClick={openFilterHandler}>
-            <Cross size={30} />
-          </button>
-        </div>
-        <ul className="p-4 md:p-8 pt-0 md:pt-0 w-full leading-none gap-2 mt-1">
-          {filteredGenres
-            // .sort(sortActiveFilterAndAlpha)
-            .map((genre, i) => (
-              <li key={i} className="mb-2">
-                <button
-                  className="focus:outline-none focus:ring-4 rounded-full"
-                  onClick={updateGenreParam(genre)}
-                >
-                  <Badge invert={filter.indexOf(genre) > -1} text={genre} />
-                </button>
-              </li>
-            ))}
-        </ul>
-      </div>
-      <button
-        className={`fixed top-0 left-0 z-40 h-full w-full bg-black motion-reduce:transition-none transition duration-150 ease-out ${
-          filterOpen ? "opacity-50 visible" : "opacity-0 invisible"
-        }`}
-        onClick={openFilterHandler}
-      ></button>
-    </div>
+
+      <Dialog.Portal>
+        <Dialog.Content className={`genreSidebar`}>
+          <Dialog.Title className="sr-only">Genre filter sidebar</Dialog.Title>
+          <Dialog.Description className="sr-only">
+            Filter shows by searching for genres or selecting from the list.
+          </Dialog.Description>
+          <div className="p-4 md:p-8 sticky top-0  bg-orange flex justify-between">
+            <input
+              autoCapitalize="off"
+              autoComplete="off"
+              autoCorrect="off"
+              className="pill-input-transparent w-[85%]"
+              id="genresSearch"
+              name="search"
+              onChange={(ev) => filterGenres(ev.target.value)}
+              placeholder="Search genres"
+              ref={inputRef}
+            />
+            <Dialog.Close asChild>
+              <button aria-label="Close">
+                <Cross size={30} />
+              </button>
+            </Dialog.Close>
+          </div>
+          <ul className="p-4 md:p-8 pt-0 md:pt-0 w-full leading-none gap-2 mt-1">
+            {filteredGenres
+              // .sort(sortActiveFilterAndAlpha)
+              .map((genre, i) => (
+                <li key={i} className="mb-2">
+                  <button
+                    className="focus:outline-none focus:ring-4 rounded-full"
+                    onClick={updateGenreParam(genre)}
+                  >
+                    <Badge invert={filter.indexOf(genre) > -1} text={genre} />
+                  </button>
+                </li>
+              ))}
+          </ul>
+        </Dialog.Content>
+        <Dialog.Overlay className={`genreSidebarOverlay`} />
+      </Dialog.Portal>
+    </Dialog.Root>
   );
 }
