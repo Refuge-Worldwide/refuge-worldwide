@@ -39,7 +39,7 @@ export default function AllShows({
         <div className="h-4" />
 
         {isRefreshing && (
-          <span className="block mx-auto h-96 mt-24 text-center animate-pulse">
+          <span className="block mx-auto h-96 mt-24 text-center animate-pulse font-medium text-base">
             Loading...
           </span>
         )}
