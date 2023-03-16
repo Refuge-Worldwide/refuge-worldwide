@@ -37,6 +37,7 @@ export default function GenresList({ filter, genres }: GenreListProps) {
         shallow: true,
       });
       setSelectedGenres(genre);
+      setFilterOpen(false);
     }
   };
 
@@ -66,6 +67,7 @@ export default function GenresList({ filter, genres }: GenreListProps) {
             aria-label="Open filter sidebar"
           >
             FILTER
+            {selectedGenres.length == 0 && <span> BY GENRE</span>}
           </button>
         </Dialog.Trigger>
         {filter.map((genre, i) => (
