@@ -14,7 +14,7 @@ export default function useGenreFilter() {
     if (typeof params?.genre === "string") {
       filterSet([params.genre]);
     } else {
-      filterSet([]);
+      filterSet(params.genre);
     }
   }, [params]);
 

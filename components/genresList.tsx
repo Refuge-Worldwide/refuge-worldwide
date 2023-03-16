@@ -15,7 +15,6 @@ export default function GenresList({ filter, genres }: GenreListProps) {
   const [filterOpen, setFilterOpen] = useState<boolean>(false);
   const [filteredGenres, setFilteredGenres] = useState(genres);
   const [genreFilterQuery, SetGenreFilterQuery] = useState<string>("");
-  const [selectedGenres, setSelectedGenres] = useState<string>(filter[0]);
   const filterGenres = (query) => {
     SetGenreFilterQuery(query);
     const filteredGenres = genres.filter((genre) =>
@@ -27,26 +26,29 @@ export default function GenresList({ filter, genres }: GenreListProps) {
   const inputRef = useRef(null);
 
   const updateGenreParam = (genre: string) => () => {
-    if (genre == selectedGenres) {
-      router.push(`/radio`, undefined, {
-        shallow: true,
-      });
-      setSelectedGenres("");
+    if (filter && filter.includes(genre)) {
+      const newFilters = filter.filter((g) => g !== genre);
+      if (newFilters.length == 0) {
+        router.push(`/radio`, undefined, {
+          shallow: true,
+        });
+      } else {
+        const genreURLQuery = newFilters.join("&genre=");
+        console.log(genreURLQuery);
+        router.push(`/radio?genre=${genreURLQuery}`, undefined, {
+          shallow: true,
+        });
+      }
     } else {
-      router.push(`/radio?genre=${encodeURIComponent(genre)}`, undefined, {
+      const newFilters = [...(filter ? filter : []), genre];
+      const genreURLQuery = newFilters.join("&genre=");
+      console.log(genreURLQuery);
+      router.push(`/radio?genre=${genreURLQuery}`, undefined, {
         shallow: true,
       });
-      setSelectedGenres(genre);
+
       setFilterOpen(false);
     }
-  };
-
-  const openFilterHandler = () => {
-    if (!filterOpen) {
-      // set focus to input
-      inputRef.current.focus();
-    }
-    setFilterOpen(!filterOpen);
   };
 
   // function sortActiveFilterAndAlpha(a: string, b: string) {
@@ -67,18 +69,19 @@ export default function GenresList({ filter, genres }: GenreListProps) {
             aria-label="Open filter sidebar"
           >
             FILTER
-            {!selectedGenres && <span className="bl"> BY GENRE</span>}
+            {!filter && <span className="bl"> BY GENRE</span>}
           </button>
         </Dialog.Trigger>
-        {filter.map((genre, i) => (
-          <button
-            key={i}
-            className="focus:outline-none focus:ring-4 rounded-full"
-            onClick={updateGenreParam(genre)}
-          >
-            <Badge invert={true} cross text={genre} />
-          </button>
-        ))}
+        {filter &&
+          filter.map((genre, i) => (
+            <button
+              key={i}
+              className="focus:outline-none focus:ring-4 rounded-full"
+              onClick={updateGenreParam(genre)}
+            >
+              <Badge invert={true} cross text={genre} />
+            </button>
+          ))}
       </div>
 
       <Dialog.Portal>
@@ -116,8 +119,8 @@ export default function GenresList({ filter, genres }: GenreListProps) {
                     onClick={updateGenreParam(genre)}
                   >
                     <Badge
-                      invert={filter.indexOf(genre) > -1}
-                      cross
+                      invert={filter?.includes(genre)}
+                      cross={filter?.includes(genre)}
                       text={genre}
                     />
                   </button>

@@ -18,7 +18,7 @@ export default function useRadioShows(
       return await r.json();
     },
     {
-      fallbackData: filter.length == 0 ? [fallbackData] : [],
+      fallbackData: !filter ? [fallbackData] : [],
       revalidateFirstPage: false,
     }
   );
