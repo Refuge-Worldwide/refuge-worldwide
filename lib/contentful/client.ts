@@ -66,11 +66,11 @@ export const createPastShowSchema = (show: TypeShow): PastShowSchema => ({
 export async function getPastShows(
   take: number,
   skip: number,
-  filter: "All" | string
+  filter: string[]
 ) {
   const now = dayjs().format("YYYY-MM-DD");
 
-  if (filter === "All") {
+  if (filter.length == 0) {
     const { items } = await client.getEntries<TypeShowFields>({
       "fields.mixcloudLink[exists]": true,
       "fields.date[lte]": now,
@@ -94,7 +94,10 @@ export async function getPastShows(
 
   const processed = allShows.map(createPastShowSchema);
 
-  const filtered = processed.filter((show) => show.genres.includes(filter));
+  const filtered = processed.filter((show) =>
+    show.genres.includes(filter.toString())
+  );
+  // const filtered = processed.filter((show) => show.genres.some(g => filter.includes(g)));
 
   const sorted = filtered.sort((a, b) => {
     if (dayjs(a.date).isAfter(b.date)) return -1;

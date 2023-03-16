@@ -10,7 +10,7 @@ export default async function handler(
     const { take, skip, filter } = req.query as typeof req.query & {
       take: string;
       skip: string;
-      filter: string;
+      filter: string[];
     };
 
     const shows = await getPastShows(Number(take), Number(skip), filter);
