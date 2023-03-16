@@ -1,4 +1,9 @@
-export const Cross = ({ size = 20, className = "" }) => (
+export const Cross = ({
+  size = 20,
+  className = "",
+  colour = "black",
+  strokeWidth = "1.5",
+}) => (
   <svg
     width={size}
     height={size}
@@ -12,16 +17,16 @@ export const Cross = ({ size = 20, className = "" }) => (
       x2="41.2536"
       y2="-0.75"
       transform="matrix(0.699721 0.714416 -0.699721 0.714416 0 2.52783)"
-      stroke="black"
-      stroke-width="1.5"
+      stroke={colour}
+      stroke-width={strokeWidth}
     />
     <line
       y1="-0.75"
       x2="41.2536"
       y2="-0.75"
       transform="matrix(0.699721 -0.714416 0.699721 0.714416 1.13403 31.4722)"
-      stroke="black"
-      stroke-width="1.5"
+      stroke={colour}
+      stroke-width={strokeWidth}
     />
   </svg>
 );
