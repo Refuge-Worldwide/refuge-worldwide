@@ -74,7 +74,7 @@ export default function GenresList({ filter, genres }: GenreListProps) {
             className="focus:outline-none focus:ring-4 rounded-full"
             onClick={updateGenreParam(genre)}
           >
-            <Badge invert={true} text={genre} />
+            <Badge invert={true} cross text={genre} />
           </button>
         ))}
       </div>
@@ -113,7 +113,11 @@ export default function GenresList({ filter, genres }: GenreListProps) {
                     className="focus:outline-none focus:ring-4 rounded-full"
                     onClick={updateGenreParam(genre)}
                   >
-                    <Badge invert={filter.indexOf(genre) > -1} text={genre} />
+                    <Badge
+                      invert={filter.indexOf(genre) > -1}
+                      cross
+                      text={genre}
+                    />
                   </button>
                 </li>
               ))}

@@ -4,11 +4,13 @@ export default function Badge({
   text,
   invert,
   small,
+  cross,
   as: As = "div",
   onClick,
 }: {
   text: string;
   invert?: boolean;
+  cross?: boolean;
   small?: boolean;
   as?: any;
   onClick?: () => void;
@@ -27,7 +29,7 @@ export default function Badge({
       {...(typeof onClick === "function" && { onClick })}
     >
       <span>{text}</span>
-      {invert && (
+      {invert && cross && (
         <Cross
           size={10}
           className="inline opacity-90"
