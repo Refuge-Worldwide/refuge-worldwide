@@ -13,6 +13,8 @@ export default async function handler(
       filter: string[];
     };
 
+    console.log(filter);
+
     const shows = await getPastShows(Number(take), Number(skip), filter);
 
     res

@@ -9,10 +9,9 @@ export default function useRadioShows(
   const { data, size, isValidating, setSize } = useSWRInfinite(
     (pageIndex) => ["RadioShows", pageIndex * RADIO_SHOWS_PAGE_SIZE, filter],
     async (_, skip) => {
+      const filters = filter.join("&filter=");
       const r = await fetch(
-        `/api/shows?take=${RADIO_SHOWS_PAGE_SIZE}&skip=${skip}&filter=${encodeURIComponent(
-          filter.join(",")
-        )}`
+        `/api/shows?take=${RADIO_SHOWS_PAGE_SIZE}&skip=${skip}&filter=${filters}`
       );
 
       return await r.json();

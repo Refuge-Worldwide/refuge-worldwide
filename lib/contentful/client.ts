@@ -95,9 +95,8 @@ export async function getPastShows(
   const processed = allShows.map(createPastShowSchema);
 
   const filtered = processed.filter((show) =>
-    show.genres.includes(filter.toString())
+    show.genres.some((genre) => filter.includes(genre))
   );
-  // const filtered = processed.filter((show) => show.genres.some(g => filter.includes(g)));
 
   const sorted = filtered.sort((a, b) => {
     if (dayjs(a.date).isAfter(b.date)) return -1;
