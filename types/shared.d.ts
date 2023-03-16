@@ -215,7 +215,11 @@ export type SubmissionFormValues = {
   image: object;
   additionalEq?: boolean;
   additionalEqDesc?: string;
-  artists?: Array<{ value: string; label: string }>;
-  hasExtraArtists: boolean;
-  extraArtists?: Array<{ name: string; bio: string }>;
+  hosts?: Array<{ value: string; label: string }>;
+  isNewHost: boolean;
+  newHost?: Object<{ name: string; bio: string }>;
+  hasGuests: boolean;
+  guests?: Array<{ value: string; label: string }>;
+  hasNewGuests: boolean;
+  newGuests?: Array<{ name: string; bio: string }>;
 };

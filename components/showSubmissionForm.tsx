@@ -50,13 +50,13 @@ const validationSchema = [
     ),
     image: Yup.object().required("Please add a show image"),
     // showImage: Yup.string().required("Please upload an image for your show"),
-    hasExtraArtists: Yup.boolean(),
-    artists: Yup.array().when("hasExtraArtists", {
+    isNewHost: Yup.boolean(),
+    hosts: Yup.array().when("isNewHost", {
       is: false,
       then: (schema) =>
         schema.min(
           1,
-          "Please select an artist from dropdown or add extra artists by clicking checkbox below"
+          "Please select an artist from dropdown or add a new artists by clicking checkbox below"
         ),
       otherwise: (schema) =>
         schema.of(
@@ -66,7 +66,33 @@ const validationSchema = [
           })
         ),
     }),
-    extraArtists: Yup.array().when("hasExtraArtists", {
+    newHost: Yup.object().when("isNewHost", {
+      is: true,
+      then: (schema) =>
+        schema.shape({
+          name: Yup.string().required("Please add an artist name"),
+          bio: Yup.string().required("Please add an artist bio"),
+          guestImage: Yup.object().required("Please add an artist image"),
+        }),
+    }),
+    hasGuests: Yup.boolean(),
+    hasNewGuests: Yup.boolean(),
+    guests: Yup.array().when("isNewHost", {
+      is: false,
+      then: (schema) =>
+        schema.min(
+          1,
+          "Please select an artist from dropdown or add a new artists by clicking checkbox below"
+        ),
+      otherwise: (schema) =>
+        schema.of(
+          Yup.object().shape({
+            value: Yup.string(),
+            label: Yup.string(),
+          })
+        ),
+    }),
+    newGuests: Yup.array().when("hasExtraArtists", {
       is: true,
       then: (schema) =>
         schema.of(
@@ -74,8 +100,7 @@ const validationSchema = [
             .default({})
             .shape({
               name: Yup.string().required("Please add an artist name"),
-              bio: Yup.string().required("Please add an artist bio"),
-              guestImage: Yup.object().required("Please add an artist image"),
+              guestImage: Yup.object(),
             })
         ),
     }),
@@ -94,9 +119,17 @@ const initialValues = {
   description: "",
   instagram: "",
   image: {},
-  artists: [],
-  hasExtraArtists: false,
-  extraArtists: [
+  hosts: [],
+  isNewHost: false,
+  newHost: {
+    name: "",
+    bio: "",
+    image: "",
+  },
+  hasGuests: false,
+  guests: [],
+  hasNewGuests: false,
+  newGuests: [
     {
       name: "",
       bio: "",

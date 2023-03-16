@@ -201,13 +201,11 @@ export default function ShowSubmissionStep3({
 
       <fieldset>
         <legend>
-          <h2 className="font-sans text-base sm:text-large">
-            Artist/guest info
-          </h2>
+          <h2 className="font-sans text-base sm:text-large">Host/guest info</h2>
         </legend>
         <MultiSelectField
-          label="Artist(s)"
-          name="artists"
+          label="Host(s)"
+          name="hosts"
           required={true}
           options={artists}
           limit={5}
@@ -216,85 +214,131 @@ export default function ShowSubmissionStep3({
         <div>
           <Field
             type="checkbox"
-            id="hasExtraArtists"
-            name="hasExtraArtists"
+            id="isNewHost"
+            name="isNewHost"
             className="h-6 w-6 rounded-full border-2 border-black text-black focus:ring-black"
           />
-          <label htmlFor="hasExtraArtists" className="checkbox-label">
-            Can&apos;t find artist/guest in the dropdown
+          <label htmlFor="isNewHost" className="checkbox-label">
+            New host / Can&apos;t find your artist name in the dropdown?
           </label>
         </div>
 
-        {values.hasExtraArtists && (
-          <fieldset className="mt-8 mb-8">
-            <legend className="mb-6">Artist/guest info</legend>
-            <FieldArray
-              name="extraArtists"
-              render={(arrayHelpers) => (
-                <div>
-                  {values.extraArtists &&
-                    values.extraArtists.map((extraArtist, index) => (
-                      <div
-                        className="mb-8 border border-black p-8 relative"
-                        key={"extraArtist" + index}
-                      >
-                        {index > 0 && (
-                          <button
-                            className="float-right"
-                            onClick={() => arrayHelpers.remove(index)}
-                            type="button"
-                          >
-                            <Close size={24} />
-                          </button>
-                        )}
-
-                        <div className="mb-6 mt-6">
-                          <label htmlFor="name">Name*</label>
-                          <Field
-                            type="text"
-                            name={`extraArtists.${index}.name`}
-                            className="pill-input"
-                            required
-                          />
-                          <ErrorMessage
-                            className="text-red mt-2 text-small"
-                            component="span"
-                            name={`extraArtists.${index}.name`}
-                          />
-                        </div>
-                        <div className="mb-6">
-                          <label htmlFor="bio">Bio*</label>
-                          <Field
-                            component="textarea"
-                            rows={4}
-                            name={`extraArtists.${index}.bio`}
-                            className="pill-input"
-                            required
-                          />
-                          <ErrorMessage
-                            className="text-red mt-2 text-small"
-                            component="span"
-                            name={`extraArtists.${index}.bio`}
-                          />
-                        </div>
-                        <ImageUploadField
-                          label="Guest image"
-                          required
-                          name={`extraArtists.${index}.guestImage`}
-                        />
-                      </div>
-                    ))}
-                  <button
-                    className="underline"
-                    onClick={() => arrayHelpers.push("")}
-                    type="button"
-                  >
-                    Add another artist/guest
-                  </button>
-                </div>
-              )}
+        {values.isNewHost && (
+          <div>
+            <InputField
+              name="newHost.name"
+              type="text"
+              label="Name"
+              required={true}
             />
-          </fieldset>
+            <TextareaField
+              name="newHost.bio"
+              rows={4}
+              label="Bio"
+              required={true}
+            />
+            <ImageUploadField
+              label="Artist image"
+              name="image"
+              required={true}
+            />
+          </div>
+        )}
+
+        <div>
+          <Field
+            type="checkbox"
+            id="hasGuests"
+            name="hasGuests"
+            className="h-6 w-6 rounded-full border-2 border-black text-black focus:ring-black"
+          />
+          <label
+            htmlFor="isNewHost"
+            className="sm:mt-0.5 text-small sm:text-base sm:leading-none"
+          >
+            Have guests on your show?
+          </label>
+        </div>
+
+        {values.hasGuests && (
+          <div>
+            <MultiSelectField
+              label="Guest(s)"
+              name="guests"
+              required={true}
+              options={artists}
+              limit={5}
+            />
+
+            <div>
+              <Field
+                type="checkbox"
+                id="hasNewGuest"
+                name="hasNewGuests"
+                className="h-6 w-6 rounded-full border-2 border-black text-black focus:ring-black"
+              />
+              <label htmlFor="isNewHost" className="checkbox-label">
+                Can&apos;t find your guests names in the dropdown?
+              </label>
+            </div>
+
+            {values.hasNewGuests && (
+              <fieldset className="mt-8 mb-8">
+                <legend className="mb-6">Guest info</legend>
+                <FieldArray
+                  name="extraArtists"
+                  render={(arrayHelpers) => (
+                    <div>
+                      {values.newGuests &&
+                        values.newGuests.map((extraArtist, index) => (
+                          <div
+                            className="mb-8 border border-black p-8 relative"
+                            key={"extraArtist" + index}
+                          >
+                            {index > 0 && (
+                              <button
+                                className="float-right"
+                                onClick={() => arrayHelpers.remove(index)}
+                                type="button"
+                              >
+                                <Close size={24} />
+                              </button>
+                            )}
+
+                            <div className="mb-6 mt-6">
+                              <label htmlFor="name">Name*</label>
+                              <Field
+                                type="text"
+                                name={`newGuests.${index}.name`}
+                                className="pill-input"
+                                required
+                              />
+                              <ErrorMessage
+                                className="text-red mt-2 text-small"
+                                component="span"
+                                name={`newGuests.${index}.name`}
+                              />
+                            </div>
+                            <ImageUploadField
+                              label="Guest image"
+                              required
+                              name={`newGuests.${index}.guestImage`}
+                            />
+                          </div>
+                        ))}
+                      <button
+                        className="underline"
+                        onClick={() => arrayHelpers.push("")}
+                        type="button"
+                      >
+                        Add another guest
+                      </button>
+                    </div>
+                  )}
+                />
+              </fieldset>
+            )}
+          </div>
         )}
       </fieldset>
     </div>
