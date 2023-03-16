@@ -5,8 +5,8 @@ import useGenreFilter from "../../hooks/useGenreFilter";
 import useRadioShows from "../../hooks/useRadioShows";
 import { PastShowSchema } from "../../lib/contentful/client";
 import Image from "next/image";
-import { useState } from "react";
-
+import Badge from "../../components/badge";
+import Link from "next/link";
 export default function AllShows({
   genres,
   pastShows: fallbackData,
@@ -25,19 +25,35 @@ export default function AllShows({
     <section>
       <div className="pt-16 -mt-16" id="shows" aria-hidden />
 
-      <div className="p-4 sm:p-8">
-        <div className="md:flex justify-between">
-          <Pill>
-            <h2> {filter.length > 0 ? filter : "All"} Shows</h2>
-          </Pill>
-          <div className="h-10 md:hidden" />
-          <GenresList genres={genres} filter={filter} filterSet={filterSet} />
-        </div>
-
-        <div className="h-5 sm:h-8" />
+      <div className="p-4 pb-2 sm:p-8 sm:pb-6">
+        <Pill>
+          <h2>Explore</h2>
+        </Pill>
 
         <div className="h-4" />
 
+        <div className="md:flex justify-between items-end">
+          <ul className="w-full flex flex-wrap leading-none gap-2">
+            <Link href="/radio">
+              <Badge invert text={"Shows"} />
+            </Link>
+            <Link href="/radio">
+              <Badge text={"Residents"} />
+            </Link>
+            <Link href="/radio">
+              <Badge text={"Guests"} />
+            </Link>
+            <Link href="/radio">
+              <Badge text={"Collections"} />
+            </Link>
+          </ul>
+
+          <GenresList genres={genres} filter={filter} filterSet={filterSet} />
+        </div>
+      </div>
+
+      <div className="h-8  border-t-2 border-black" />
+      <div className="p-4 pt-0 sm:p-8 sm:pt-0">
         {isRefreshing && (
           <span className="block mx-auto h-96 mt-24 text-center animate-pulse font-medium text-base">
             Loading...

@@ -60,14 +60,14 @@ export default function GenresList({ filter, genres }: GenreListProps) {
       open={filterOpen}
       onOpenChange={(filterOpen) => setFilterOpen(filterOpen)}
     >
-      <div className="py-2 px-4 border-wicked-dashed rounded-full w-fit flex space-x-2">
+      <div className="py-2 px-4 border-wicked-dashed rounded-full w-fit flex space-x-2 grow-1">
         <Dialog.Trigger asChild>
           <button
-            className="text-tiny py-3 px-2 font-medium"
+            className="text-tiny py-3 px-2 font-medium w-max"
             aria-label="Open filter sidebar"
           >
             FILTER
-            {!selectedGenres && <span> BY GENRE</span>}
+            {!selectedGenres && <span className="bl"> BY GENRE</span>}
           </button>
         </Dialog.Trigger>
         {filter.map((genre, i) => (
