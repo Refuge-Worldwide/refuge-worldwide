@@ -200,6 +200,11 @@
   @apply bg-orange;
 }
 
+.genre-sidebar {
+  scrollbar-color: black #ff9300;
+  scrollbar-width: thin;
+}
+
 /* Handle */
 .genre-sidebar::-webkit-scrollbar-thumb {
   @apply bg-black;

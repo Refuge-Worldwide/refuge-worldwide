@@ -85,7 +85,7 @@ export default function GenresList({ filter, genres }: GenreListProps) {
           <Dialog.Description className="sr-only">
             Filter shows by searching for genres or selecting from the list.
           </Dialog.Description>
-          <div className="p-4 md:p-8 sticky top-0  bg-orange flex justify-between z-50">
+          <div className="p-4 py-6 md:p-8 sticky top-0  bg-orange flex justify-between z-50 border-black border-b-2">
             <input
               autoCapitalize="off"
               autoComplete="off"
@@ -104,7 +104,7 @@ export default function GenresList({ filter, genres }: GenreListProps) {
               </button>
             </Dialog.Close>
           </div>
-          <ul className="p-4 md:p-8 pt-0 md:pt-0 w-full leading-none gap-2 mt-1">
+          <ul className="p-4 md:p-8 pt-0 md:pt-0 w-full leading-none gap-2 mt-5 md:mt-6">
             {filteredGenres
               // .sort(sortActiveFilterAndAlpha)
               .map((genre, i) => (
