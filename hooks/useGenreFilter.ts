@@ -13,6 +13,8 @@ export default function useGenreFilter() {
   useEffect(() => {
     if (typeof params?.genre === "string") {
       filterSet([params.genre]);
+    } else {
+      filterSet([]);
     }
   }, [params]);
 

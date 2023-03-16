@@ -14,8 +14,10 @@ export default function GenresList({ filter, genres }: GenreListProps) {
   const router = useRouter();
   const [filterOpen, setFilterOpen] = useState<boolean>(false);
   const [filteredGenres, setFilteredGenres] = useState(genres);
-  // const [selectedGenres, setSelectedGenres] = useState<string[]>(filter);
+  const [genreFilterQuery, SetGenreFilterQuery] = useState<string>("");
+  const [selectedGenres, setSelectedGenres] = useState<string>(filter[0]);
   const filterGenres = (query) => {
+    SetGenreFilterQuery(query);
     const filteredGenres = genres.filter((genre) =>
       genre.toLowerCase().includes(query.toLowerCase())
     );
@@ -25,9 +27,17 @@ export default function GenresList({ filter, genres }: GenreListProps) {
   const inputRef = useRef(null);
 
   const updateGenreParam = (genre: string) => () => {
-    router.push(`/radio?genre=${encodeURIComponent(genre)}`, undefined, {
-      shallow: true,
-    });
+    if (genre == selectedGenres) {
+      router.push(`/radio`, undefined, {
+        shallow: true,
+      });
+      setSelectedGenres("");
+    } else {
+      router.push(`/radio?genre=${encodeURIComponent(genre)}`, undefined, {
+        shallow: true,
+      });
+      setSelectedGenres(genre);
+    }
   };
 
   const openFilterHandler = () => {
@@ -62,6 +72,7 @@ export default function GenresList({ filter, genres }: GenreListProps) {
           <button
             key={i}
             className="focus:outline-none focus:ring-4 rounded-full"
+            onClick={updateGenreParam(genre)}
           >
             <Badge invert={true} text={genre} />
           </button>
@@ -82,6 +93,7 @@ export default function GenresList({ filter, genres }: GenreListProps) {
               className="pill-input-transparent w-[85%]"
               id="genresSearch"
               name="search"
+              value={genreFilterQuery}
               onChange={(ev) => filterGenres(ev.target.value)}
               placeholder="Search genres"
               ref={inputRef}
