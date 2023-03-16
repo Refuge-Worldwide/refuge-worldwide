@@ -5,6 +5,7 @@ import useGenreFilter from "../../hooks/useGenreFilter";
 import useRadioShows from "../../hooks/useRadioShows";
 import { PastShowSchema } from "../../lib/contentful/client";
 import Image from "next/image";
+import { useState } from "react";
 
 export default function AllShows({
   genres,
@@ -15,7 +16,7 @@ export default function AllShows({
 }) {
   const { filter, filterSet } = useGenreFilter();
 
-  const { shows, loadMore, isReachingEnd } = useRadioShows(
+  const { shows, loadMore, isRefreshing, isReachingEnd } = useRadioShows(
     fallbackData,
     filter
   );
@@ -37,6 +38,12 @@ export default function AllShows({
 
         <div className="h-4" />
 
+        {isRefreshing && (
+          <span className="block mx-auto h-96 mt-24 text-center animate-pulse">
+            Loading...
+          </span>
+        )}
+
         <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-y-10 sm:gap-8">
           {shows.map((show, i) => (
             <li key={i}>
@@ -45,7 +52,7 @@ export default function AllShows({
           ))}
         </ul>
 
-        {!isReachingEnd && (
+        {!isReachingEnd && !isRefreshing && (
           <div className="flex justify-center mt-10 sm:mt-8">
             <button
               onClick={loadMore}

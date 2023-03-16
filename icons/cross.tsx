@@ -18,7 +18,7 @@ export const Cross = ({
       y2="-0.75"
       transform="matrix(0.699721 0.714416 -0.699721 0.714416 0 2.52783)"
       stroke={colour}
-      stroke-width={strokeWidth}
+      strokeWidth={strokeWidth}
     />
     <line
       y1="-0.75"
@@ -26,7 +26,7 @@ export const Cross = ({
       y2="-0.75"
       transform="matrix(0.699721 -0.714416 0.699721 0.714416 1.13403 31.4722)"
       stroke={colour}
-      stroke-width={strokeWidth}
+      strokeWidth={strokeWidth}
     />
   </svg>
 );

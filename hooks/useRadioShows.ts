@@ -6,7 +6,7 @@ export default function useRadioShows(
   fallbackData: PastShowSchema[],
   filter: string[]
 ) {
-  const { data, setSize } = useSWRInfinite(
+  const { data, size, isValidating, setSize } = useSWRInfinite(
     (pageIndex) => ["RadioShows", pageIndex * RADIO_SHOWS_PAGE_SIZE, filter],
     async (_, skip) => {
       const r = await fetch(
@@ -31,9 +31,12 @@ export default function useRadioShows(
     data?.[0]?.length === 0 ||
     data[data.length - 1]?.length < RADIO_SHOWS_PAGE_SIZE;
 
+  const isRefreshing = isValidating && data;
+
   return {
     shows,
     loadMore,
+    isRefreshing,
     isReachingEnd,
   };
 }
