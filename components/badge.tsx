@@ -32,7 +32,7 @@ export default function Badge({
       {invert && cross && (
         <Cross
           size={10}
-          className="inline opacity-90"
+          className="opacity-90"
           colour="white"
           strokeWidth="4"
         />

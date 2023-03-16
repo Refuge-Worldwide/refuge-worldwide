@@ -85,7 +85,7 @@ export default function GenresList({ filter, genres }: GenreListProps) {
           <Dialog.Description className="sr-only">
             Filter shows by searching for genres or selecting from the list.
           </Dialog.Description>
-          <div className="p-4 md:p-8 sticky top-0  bg-orange flex justify-between">
+          <div className="p-4 md:p-8 sticky top-0  bg-orange flex justify-between z-50">
             <input
               autoCapitalize="off"
               autoComplete="off"
