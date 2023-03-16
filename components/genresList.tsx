@@ -97,7 +97,7 @@ export default function GenresList({ filter, genres }: GenreListProps) {
               name="search"
               value={genreFilterQuery}
               onChange={(ev) => filterGenres(ev.target.value)}
-              placeholder="Filter genres"
+              placeholder="Search genres"
               ref={inputRef}
             />
             <Dialog.Close asChild>
