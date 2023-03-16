@@ -131,7 +131,8 @@
 }
 
 .genreSidebar {
-  @apply fixed z-50 left-0 top-0 w-[300px] md:w-[376px] h-screen bg-orange overflow-y-auto genre-sidebar motion-reduce:transition-none;
+  @apply fixed left-0 top-0 w-[300px] md:w-[376px] h-screen bg-orange overflow-y-auto genre-sidebar motion-reduce:transition-none;
+  z-index: 70;
 }
 
 .genreSidebar[data-state="open"] {
@@ -143,7 +144,8 @@
 }
 
 .genreSidebarOverlay {
-  @apply fixed top-0 left-0 z-40 h-full w-full bg-black opacity-50 motion-reduce:transition-none;
+  @apply fixed top-0 left-0 h-full w-full bg-black opacity-50 motion-reduce:transition-none;
+  z-index: 60;
 }
 
 .genreSidebarOverlay[data-state="open"] {
