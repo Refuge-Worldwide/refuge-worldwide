@@ -55,9 +55,15 @@ export default function AllShows({
       <div className="h-8  border-t-2 border-black" />
       <div className="p-4 pt-0 sm:p-8 sm:pt-0">
         {isRefreshing && (
-          <span className="block mx-auto h-96 mt-24 text-center animate-pulse font-medium text-base">
-            Loading...
-          </span>
+          <div className="block h-96 mt-24 text-center font-medium text-base">
+            <Image
+              className="mx-auto"
+              src="/images/loading.gif"
+              width={150}
+              height={150}
+              alt="Loading"
+            />
+          </div>
         )}
 
         <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-y-10 sm:gap-8">
