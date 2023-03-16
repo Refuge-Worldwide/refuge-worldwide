@@ -62,10 +62,12 @@ export default function GenresList({ filter, genres }: GenreListProps) {
       open={filterOpen}
       onOpenChange={(filterOpen) => setFilterOpen(filterOpen)}
     >
-      <div className="py-2 px-4 border-wicked-dashed rounded-full w-fit flex space-x-2 grow-1">
+      <div className="rounded-full w-fit flex space-x-2 grow-1">
         <Dialog.Trigger asChild>
           <button
-            className="text-tiny py-3 px-2 font-medium w-max"
+            className={`text-tiny px-2 font-medium w-max ${
+              filter ? "text-tiny" : "text-small"
+            }`}
             aria-label="Open filter sidebar"
           >
             FILTER

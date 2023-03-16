@@ -25,35 +25,35 @@ export default function AllShows({
     <section>
       <div className="pt-16 -mt-16" id="shows" aria-hidden />
 
-      <div className="p-4 pb-2 sm:p-8 sm:pb-6">
+      <div className="p-4 pb-1 sm:p-8 sm:pb-6 sm:pb-1">
         <Pill>
           <h2>Explore</h2>
         </Pill>
 
-        <div className="h-4" />
-
-        <div className="md:flex justify-between items-end">
-          <ul className="w-full flex flex-wrap leading-none gap-2">
-            <Link href="/radio">
-              <Badge invert text={"Shows"} />
-            </Link>
-            <Link href="/radio">
-              <Badge text={"Residents"} />
-            </Link>
-            <Link href="/radio">
-              <Badge text={"Guests"} />
-            </Link>
-            <Link href="/radio">
-              <Badge text={"Collections"} />
-            </Link>
-          </ul>
-
-          <GenresList genres={genres} filter={filter} filterSet={filterSet} />
-        </div>
+        {/* <div className="h-6" /> */}
       </div>
 
-      <div className="h-8  border-t-2 border-black" />
-      <div className="p-4 pt-0 sm:p-8 sm:pt-0">
+      <div className="p-4 pb-2 sm:p-8 sm:pb-6 md:flex md:sticky md:top-14 z-10 bg-white border-b-2 border-black justify-between items-center">
+        <ul className="w-full flex flex-wrap leading-none gap-2">
+          <Link href="/radio">
+            <Badge invert text={"Shows"} />
+          </Link>
+          <Link href="/radio">
+            <Badge text={"Residents"} />
+          </Link>
+          <Link href="/radio">
+            <Badge text={"Guests"} />
+          </Link>
+          <Link href="/radio">
+            <Badge text={"Collections"} />
+          </Link>
+        </ul>
+
+        <GenresList genres={genres} filter={filter} filterSet={filterSet} />
+      </div>
+
+      <div className="" />
+      <div className="p-4 sm:p-8">
         {isRefreshing && (
           <div className="block h-96 mt-24 text-center font-medium text-base">
             <Image
