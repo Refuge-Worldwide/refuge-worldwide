@@ -67,7 +67,7 @@ export default function GenresList({ filter, genres }: GenreListProps) {
       open={filterOpen}
       onOpenChange={(filterOpen) => setFilterOpen(filterOpen)}
     >
-      <div className="py-2 px-4 border-wicked-dashed w-fit flex space-x-2 grow-1 relative">
+      <div className="py-2 px-4 border-2 border-black rounded-full w-fit flex space-x-2 grow-1 relative">
         <Dialog.Trigger asChild>
           <button
             className={`text-tiny py-3 px-2 font-medium w-max ${
