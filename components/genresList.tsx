@@ -40,7 +40,12 @@ export default function GenresList({ filter, genres }: GenreListProps) {
         });
       }
     } else {
-      const newFilters = [...(filter ? filter : []), genre];
+      let newFilters = [];
+      if (filter && filter.length >= 3) {
+        newFilters = [...filter.slice(1), genre];
+      } else {
+        newFilters = [...(filter ? filter : []), genre];
+      }
       const genreURLQuery = newFilters.join("&genre=");
       console.log(genreURLQuery);
       router.push(`/radio?genre=${genreURLQuery}`, undefined, {
