@@ -62,7 +62,7 @@ export default function GenresList({ filter, genres }: GenreListProps) {
       open={filterOpen}
       onOpenChange={(filterOpen) => setFilterOpen(filterOpen)}
     >
-      <div className="rounded-full w-fit flex space-x-2 grow-1">
+      <div className="rounded-full w-fit flex space-x-2 grow-1 relative">
         <Dialog.Trigger asChild>
           <button
             className={`text-tiny px-2 font-medium w-max ${
@@ -70,8 +70,11 @@ export default function GenresList({ filter, genres }: GenreListProps) {
             }`}
             aria-label="Open filter sidebar"
           >
+            {!filter && (
+              <span className="animate-pulse inline-flex h-3 w-3 mr-2 rounded-full bg-orange"></span>
+            )}
             FILTER
-            {!filter && <span className="bl"> BY GENRE</span>}
+            {!filter && <span className="bl"> BY GENRE </span>}
           </button>
         </Dialog.Trigger>
         {filter &&
