@@ -70,7 +70,7 @@ export async function getPastShows(
 ) {
   const now = dayjs().format("YYYY-MM-DD");
 
-  if (filter.length == 0) {
+  if (filter.length == 0 || !filter) {
     const { items } = await client.getEntries<TypeShowFields>({
       "fields.mixcloudLink[exists]": true,
       "fields.date[lte]": now,
