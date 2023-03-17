@@ -25,7 +25,7 @@ export default function AllShows({
     <section>
       <div className="pt-16 -mt-16" id="shows" aria-hidden />
 
-      <div className="p-4 pb-1 sm:p-8 sm:pb-6 sm:pb-1">
+      <div className="p-4 pb-[2px] sm:p-8 sm:pb-[2px]">
         <Pill>
           <h2>Explore</h2>
         </Pill>
@@ -59,8 +59,8 @@ export default function AllShows({
             <Image
               className="mx-auto"
               src="/images/loading.gif"
-              width={150}
-              height={150}
+              width={100}
+              height={100}
               alt="Loading"
             />
           </div>
