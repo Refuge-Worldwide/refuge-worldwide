@@ -60,25 +60,31 @@ export default function GenresList({ filter, genres }: GenreListProps) {
       open={filterOpen}
       onOpenChange={(filterOpen) => setFilterOpen(filterOpen)}
     >
-      <div className="py-2 px-4 border-wicked-dashed rounded-full w-fit flex space-x-2">
+      <div className="py-2 px-4 border-2 border-black rounded-full w-fit flex space-x-2 grow-1 relative">
         <Dialog.Trigger asChild>
           <button
-            className="text-tiny py-3 px-2 font-medium"
+            className={`text-tiny py-3 px-2 font-medium w-max ${
+              filter ? "text-tiny" : "text-small"
+            }`}
             aria-label="Open filter sidebar"
           >
+            {!selectedGenres && (
+              <span className="animate-pulse inline-flex h-3 w-3 mr-2 rounded-full bg-orange"></span>
+            )}
             FILTER
-            {!selectedGenres && <span> BY GENRE</span>}
+            {!selectedGenres && <span className="bl"> BY GENRE </span>}
           </button>
         </Dialog.Trigger>
-        {filter.map((genre, i) => (
-          <button
-            key={i}
-            className="focus:outline-none focus:ring-4 rounded-full"
-            onClick={updateGenreParam(genre)}
-          >
-            <Badge invert={true} cross text={genre} />
-          </button>
-        ))}
+        {filter &&
+          filter.map((genre, i) => (
+            <button
+              key={i}
+              className="focus:outline-none focus:ring-4 rounded-full"
+              onClick={updateGenreParam(genre)}
+            >
+              <Badge invert={true} cross text={genre} />
+            </button>
+          ))}
       </div>
 
       <Dialog.Portal>
