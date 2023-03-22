@@ -30,13 +30,11 @@ export default function AllShows({
           <Pill>
             <h2> {filter.length > 0 ? filter : "All"} Shows</h2>
           </Pill>
-          <div className="h-10 md:hidden" />
+          <div className="h-5 md:hidden" />
           <GenresList genres={genres} filter={filter} filterSet={filterSet} />
         </div>
 
         <div className="h-5 sm:h-8" />
-
-        <div className="h-4" />
 
         {isRefreshing && (
           <span className="block mx-auto h-96 mt-24 text-center animate-pulse font-medium text-base">
