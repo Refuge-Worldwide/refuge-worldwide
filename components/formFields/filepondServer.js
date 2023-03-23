@@ -1,7 +1,7 @@
 export const serverOptions = {
   process: (fieldName, file, metadata, load, error, progress, abort) => {
-    const cloudName = "dvckadoiv";
-    const unsignedUploadPreset = "hmrootwn";
+    const cloudName = "dqjn26pey";
+    const unsignedUploadPreset = "initgtvl";
 
     // `fieldName` and `meta` are not used for now
 

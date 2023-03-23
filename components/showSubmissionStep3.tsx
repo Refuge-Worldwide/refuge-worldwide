@@ -303,7 +303,7 @@ export default function ShowSubmissionStep3({
                           </div>
                           <ImageUploadField
                             label="Guest image"
-                            name={`guests.${index}.guestImage`}
+                            name={`guests.${index}.image`}
                           />
                         </div>
                       ))}

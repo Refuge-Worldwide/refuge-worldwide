@@ -29,7 +29,7 @@ const appendToSpreadsheet = async (values) => {
   let guestImages = "";
   if (values.hasGuests) {
     values.guests.forEach((guest, index) => {
-      if (guest.image?.url) {
+      if (guest.image) {
         if (index > 0) {
           guestImages += " + ";
         }
@@ -301,21 +301,3 @@ export default async function handler(
     res.status(400).json({ data: "issue submitting form" });
   }
 }
-
-// internal?: Contentful.EntryFields.Symbol;
-// mixcloudLink?: Contentful.EntryFields.Symbol;
-// coverImage: Contentful.Asset;
-// coverImagePosition: "top" | "center" | "bottom";
-// title: Contentful.EntryFields.Symbol;
-// slug: Contentful.EntryFields.Symbol;
-// isFeatured?: Contentful.EntryFields.Boolean;
-// date: Contentful.EntryFields.Date;
-// artists: Contentful.Entry<TypeArtistFields>[];
-// genres: Contentful.Entry<TypeGenreFields>[];
-// content?: CFRichTextTypes.Block | CFRichTextTypes.Inline;
-
-// to do
-
-// transform slug
-// transform rich text
-// link artists and genres
