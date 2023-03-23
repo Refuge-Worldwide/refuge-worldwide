@@ -256,7 +256,7 @@ export default function ShowSubmissionStep3({
           </legend>
 
           <div>
-            <MultiSelectField
+            {/* <MultiSelectField
               label="Guest(s)"
               name="guests"
               options={artists}
@@ -267,69 +267,67 @@ export default function ShowSubmissionStep3({
               name="hasNewGuests"
               label="Can't find your guests names in the dropdown?"
               size="small"
-            />
+            /> */}
 
-            {values.hasNewGuests && (
-              <fieldset className="mt-8 mb-8">
-                <legend className="mb-6">
-                  Guest(s) info
-                  <span className="label-description">
-                    Please put guest bios in the show description
-                  </span>
-                </legend>
-                <FieldArray
-                  name="newGuests"
-                  render={(arrayHelpers) => (
-                    <div>
-                      {values.newGuests &&
-                        values.newGuests.map((newGuest, index) => (
-                          <div
-                            className="mb-8 border border-black p-8 relative"
-                            key={"newGuest" + index}
-                          >
-                            {index > 0 && (
-                              <button
-                                className="float-right"
-                                onClick={() => arrayHelpers.remove(index)}
-                                type="button"
-                              >
-                                <Close size={24} />
-                              </button>
-                            )}
+            <fieldset className=" mb-8">
+              <legend className="mb-6">
+                Guest(s) info
+                <span className="label-description">
+                  Please put guest bios in the show description
+                </span>
+              </legend>
+              <FieldArray
+                name="newGuests"
+                render={(arrayHelpers) => (
+                  <div>
+                    {values.newGuests &&
+                      values.newGuests.map((newGuest, index) => (
+                        <div
+                          className="mb-8 border border-black p-8 relative"
+                          key={"newGuest" + index}
+                        >
+                          {index > 0 && (
+                            <button
+                              className="float-right"
+                              onClick={() => arrayHelpers.remove(index)}
+                              type="button"
+                            >
+                              <Close size={24} />
+                            </button>
+                          )}
 
-                            <div className="mb-6 mt-6">
-                              <label htmlFor="name">Name*</label>
-                              <Field
-                                type="text"
-                                name={`newGuests.${index}.name`}
-                                className="pill-input"
-                                required
-                              />
-                              <ErrorMessage
-                                className="text-red mt-2 text-small"
-                                component="span"
-                                name={`newGuests.${index}.name`}
-                              />
-                            </div>
-                            <ImageUploadField
-                              label="Guest image"
+                          <div className="mb-6 mt-6">
+                            <label htmlFor="name">Name*</label>
+                            <Field
+                              type="text"
+                              name={`newGuests.${index}.name`}
+                              className="pill-input"
                               required
-                              name={`newGuests.${index}.guestImage`}
+                            />
+                            <ErrorMessage
+                              className="text-red mt-2 text-small"
+                              component="span"
+                              name={`newGuests.${index}.name`}
                             />
                           </div>
-                        ))}
-                      <button
-                        className="underline"
-                        onClick={() => arrayHelpers.push("")}
-                        type="button"
-                      >
-                        Add another guest
-                      </button>
-                    </div>
-                  )}
-                />
-              </fieldset>
-            )}
+                          <ImageUploadField
+                            label="Guest image"
+                            required
+                            name={`newGuests.${index}.guestImage`}
+                          />
+                        </div>
+                      ))}
+                    <button
+                      className="underline"
+                      onClick={() => arrayHelpers.push("")}
+                      type="button"
+                    >
+                      Add another guest
+                    </button>
+                  </div>
+                )}
+              />
+            </fieldset>
           </div>
         </fieldset>
       )}
