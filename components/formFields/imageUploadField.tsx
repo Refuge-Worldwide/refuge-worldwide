@@ -48,8 +48,8 @@ export default function ImageUploadField({
         {label}
         {props.required && "*"}
         <span className="label-description">
-          Landscape format, 1800x1450px or larger, 5MB max, no HEIC. Please
-          include show and host names in filename.
+          Landscape format, 1800x1450px or larger, 3MB max. Please include show
+          and host names in filename.
         </span>
       </label>
       <FilePond
@@ -67,7 +67,8 @@ export default function ImageUploadField({
         labelIdle='Drag & Drop your image or <span class="filepond--label-action">Browse</span>'
         acceptedFileTypes={["image/png", "image/jpeg"]}
         labelFileTypeNotAllowed="Invalid file type. Please only upload images of JPEG and PNG format"
-        maxFileSize="5MB"
+        maxFileSize="3MB"
+        labelMaxFileSizeExceeded="Image is too large. 3MB is the maximum file size."
       />
       {meta.touched && meta.error ? (
         <span className="text-red mt-2">{meta.error}</span>
