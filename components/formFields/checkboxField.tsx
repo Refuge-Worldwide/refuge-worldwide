@@ -29,7 +29,7 @@ export default function CheckboxField({
       <label
         htmlFor={props.name}
         className={`${
-          size == "smallll" ? "text-small" : "text-small sm:text-base"
+          size == "small" ? "text-small" : "text-small sm:text-base"
         } sm:leading-none checkbox-label`}
       >
         {label}

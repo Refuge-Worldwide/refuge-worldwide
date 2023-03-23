@@ -32,7 +32,7 @@ const appendToSpreadsheet = async (values) => {
     "Show date": dayjs(values.datetime).format("DD/MM/YYYY HH:mm"),
     "Show description": values.description,
     "Host name(s)": values.artists.map((x) => x.label).join(", "),
-    "Guest name(s)": values.extraArtists.map((x) => x.name).join(", "),
+    "Guest name(s)": values.newGuests.map((x) => x.name).join(", "),
     "Show genres (up to 3)": values.genres.map((x) => x.label).join(", "),
     "Instagram @ handle(s)": values.instagram
       .split(",")
