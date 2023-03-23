@@ -22,7 +22,7 @@ export default function ShowSubmissionStep3({
   return (
     // We pass the event to the handleSubmit() function on submit.
     <div>
-      <pre className="text-white">{JSON.stringify(values, null, 2)}</pre>
+      {/* <pre className="text-white">{JSON.stringify(values, null, 2)}</pre> */}
       <fieldset>
         <legend>
           <h2 className="font-sans text-base sm:text-large">Personal info</h2>
@@ -34,16 +34,6 @@ export default function ShowSubmissionStep3({
           required={true}
         />
         <InputField name="number" type="tel" label="Contact number" />
-
-        {/* <div className="mb-10">
-          <label htmlFor="number">Contact number</label>
-          <Field
-            type="number"
-            id="contact"
-            name="contact"
-            className="pill-input"
-          />
-        </div> */}
       </fieldset>
 
       <fieldset>

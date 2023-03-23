@@ -51,14 +51,14 @@ const validationSchema = [
         schema
           .matches(
             listReg,
-            "Incorrect format. Should be a comma seperated list."
+            "Incorrect format. Should be a comma seperated list with space."
           )
           .required("Please add additional genres"),
     }),
     description: Yup.string().required("Please add a show description"),
     instagram: Yup.string().matches(
       instaReg,
-      "Incorrect format. Should be a comma seperated list NOT including the @ symbol."
+      "Incorrect format. Should be a comma seperated list with space and NOT including the @ symbol."
     ),
     image: Yup.object().required("Please add a show image"),
     // showImage: Yup.string().required("Please upload an image for your show"),
@@ -152,6 +152,7 @@ export default function ShowSubmissionForm({
       const form = document.getElementById("submission-form");
       form.scrollIntoView({ behavior: "smooth" });
       setCurrentStep(currentStep + 1);
+      actions.setTouched({});
       actions.setSubmitting(false);
     }
   };
