@@ -26,6 +26,17 @@ const showImages = [];
 
 // Append Function
 const appendToSpreadsheet = async (values) => {
+  let guestImages = "";
+  if (values.hasGuests) {
+    values.guests.forEach((guest, index) => {
+      if (guest.image?.url) {
+        if (index > 0) {
+          guestImages += " + ";
+        }
+        guestImages += guest.image.url;
+      }
+    });
+  }
   const newRow = {
     Timestamp: dayjs().format("DD/MM/YYYY HH:mm:ss"),
     "Show name": values.name,
@@ -39,7 +50,9 @@ const appendToSpreadsheet = async (values) => {
       .map((s) => "@" + s)
       .join(" "),
     "Show / Host image - landscape format, ideally 1800x1450px or larger, 10MB max, no HEIC files. Please include show and host names in filename.":
-      showImages.join(" + "),
+      values.image.url,
+    "Guest image  - landscape format, ideally 1800x1450px or larger, 10MB max, no HEIC files. Please include show and host names in filename.":
+      guestImages,
     "Email address": values.email,
     "Is your show...": values.showType,
     "Contact phone number": values.number,
@@ -127,13 +140,11 @@ const addArtist = async (artist) => {
 };
 
 const formatArtistsForContenful = (hosts, hasGuests, guests) => {
-  let artists = hosts;
+  let artists = [...hosts];
   if (hasGuests) {
-    console.log(guests);
     guests.forEach((guest) => {
       artists.push({ label: guest.name });
     });
-    console.log(artists);
   }
   if (artists.length > 1) {
     const artistSimpleArray = artists.map((artist) => artist.label);
@@ -141,7 +152,6 @@ const formatArtistsForContenful = (hosts, hasGuests, guests) => {
       artistSimpleArray.slice(0, -1).join(", "),
       artistSimpleArray.slice(-1)[0],
     ].join(artistSimpleArray.length < 2 ? "" : " & ");
-    console.log("formatted artists as:" + formattedArtists);
     return formattedArtists;
   } else {
     return artists[0].label.toString();
