@@ -9,7 +9,7 @@ const spaceId = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID;
 const client = createClient({
   accessToken: accesstoken,
 });
-const environmentId = "master";
+const environmentId = "submission-sandbox";
 // const artistContentTypeId = 'artist'
 const showContentTypeId = "show";
 const artistContentTypeId = "artist";
@@ -22,7 +22,7 @@ const GOOGLE_SERVICE_PRIVATE_KEY =
   process.env.NEXT_PUBLIC_GOOGLE_SERVICE_PRIVATE_KEY;
 
 const doc = new GoogleSpreadsheet(SPREADSHEET_ID);
-const sheetImages = [];
+const showImages = [];
 
 // Append Function
 const appendToSpreadsheet = async (values) => {
@@ -31,15 +31,15 @@ const appendToSpreadsheet = async (values) => {
     "Show name": values.name,
     "Show date": dayjs(values.datetime).format("DD/MM/YYYY HH:mm"),
     "Show description": values.description,
-    "Host name(s)": values.artists.map((x) => x.label).join(", "),
-    "Guest name(s)": values.newGuests.map((x) => x.name).join(", "),
+    "Host name(s)": values.hosts.map((x) => x.label).join(", "),
+    "Guest name(s)": values.guests.map((x) => x.name).join(", "),
     "Show genres (up to 3)": values.genres.map((x) => x.label).join(", "),
     "Instagram @ handle(s)": values.instagram
-      .split(",")
+      .split(", ")
       .map((s) => "@" + s)
       .join(" "),
     "Show / Host image - landscape format, ideally 1800x1450px or larger, 10MB max, no HEIC files. Please include show and host names in filename.":
-      sheetImages.join(" + "),
+      showImages.join(" + "),
     "Email address": values.email,
     "Is your show...": values.showType,
     "Contact phone number": values.number,
@@ -49,7 +49,7 @@ const appendToSpreadsheet = async (values) => {
       values.additionalEqDesc,
   };
 
-  console.log(sheetImages);
+  console.log(showImages);
 
   try {
     await doc.useServiceAccountAuth({
@@ -81,19 +81,19 @@ const createReferencesArray = (array) => {
   return referencesArray;
 };
 
-const addArtist = async (extraArtist) => {
+const addArtist = async (artist) => {
   try {
-    const image = await uploadImage(extraArtist.name, extraArtist.guestImage);
-    const content = await richTextFromMarkdown(extraArtist.bio);
+    const image = await uploadImage(artist.name, artist.image);
+    const content = await richTextFromMarkdown(artist.bio);
     const space = await client.getSpace(spaceId);
     const environment = await space.getEnvironment(environmentId);
     const entry = await environment.createEntry(artistContentTypeId, {
       fields: {
         internal: {
-          "en-US": extraArtist.name,
+          "en-US": artist.name,
         },
         name: {
-          "en-US": extraArtist.name,
+          "en-US": artist.name,
         },
         role: {
           "en-US": false,
@@ -117,7 +117,7 @@ const addArtist = async (extraArtist) => {
     });
     const addedArtist = {
       value: entry.sys.id,
-      label: extraArtist.name,
+      label: artist.name,
     };
     return addedArtist;
   } catch (err) {
@@ -126,13 +126,22 @@ const addArtist = async (extraArtist) => {
   }
 };
 
-const formatArtistsForContenful = (artists) => {
+const formatArtistsForContenful = (hosts, hasGuests, guests) => {
+  let artists = hosts;
+  if (hasGuests) {
+    console.log(guests);
+    guests.forEach((guest) => {
+      artists.push({ label: guest.name });
+    });
+    console.log(artists);
+  }
   if (artists.length > 1) {
     const artistSimpleArray = artists.map((artist) => artist.label);
     const formattedArtists = [
       artistSimpleArray.slice(0, -1).join(", "),
       artistSimpleArray.slice(-1)[0],
     ].join(artistSimpleArray.length < 2 ? "" : " & ");
+    console.log("formatted artists as:" + formattedArtists);
     return formattedArtists;
   } else {
     return artists[0].label.toString();
@@ -164,8 +173,12 @@ const addGenre = async (genre) => {
 const addShow = async (values) => {
   try {
     const content = await richTextFromMarkdown(values.description);
-    const artists = createReferencesArray(values.artists);
-    const artistsForContentful = formatArtistsForContenful(values.artists);
+    const artists = createReferencesArray(values.hosts);
+    const artistsForContentful = formatArtistsForContenful(
+      values.hosts,
+      values.hasGuests,
+      values.guests
+    );
     const dateFormatted = dayjs(values.datetime).format("DD MMM YYYY");
     const genres = createReferencesArray(values.genres);
     const space = await client.getSpace(spaceId);
@@ -241,7 +254,7 @@ const uploadImage = async (name, image) => {
     await processedAsset.publish();
     const imageURL = "https:" + processedAsset.fields.file["en-US"].url;
     console.log(imageURL);
-    sheetImages.push(imageURL);
+    showImages.push(imageURL);
     return processedAsset.sys.id;
   } catch (err) {
     console.log(err);
@@ -261,13 +274,13 @@ export default async function handler(
     if (values.isNewHost) {
       const contentfulNewHost = await addArtist(values.newHost);
       console.log(contentfulNewHost);
-      values.artists.push(contentfulNewHost);
+      values.hosts.push(contentfulNewHost);
     }
-    if (values.hasNewGenre) {
+    if (values.hasNewGenres) {
       const genres = values.newGenres.split(", ");
       for (const genre of genres) {
-        const contentNewGenre = await addGenre(genre);
-        values.genres.push(contentNewGenre);
+        const contentfulNewGenre = await addGenre(genre);
+        values.genres.push(contentfulNewGenre);
       }
     }
     await addShow(values);

@@ -206,11 +206,12 @@ export type SubmissionFormValues = {
   showType: string;
   readInfo: Boolean;
   email: string;
-  number: number;
+  number: string;
   name: string;
-  date: string;
+  datetime: string;
+  length: string;
   genres: Array<{ value: string; label: string }>;
-  hasNewGenre: Boolean;
+  hasNewGenres: Boolean;
   newGenres: string;
   description: string;
   instagram: string;
@@ -221,7 +222,5 @@ export type SubmissionFormValues = {
   isNewHost: boolean;
   newHost?: Object<{ name: string; bio: string }>;
   hasGuests: boolean;
-  guests?: Array<{ value: string; label: string }>;
-  hasNewGuests: boolean;
-  newGuests?: Array<{ name: string; bio: string }>;
+  guests?: Array<{ name: string; image: string }>;
 };

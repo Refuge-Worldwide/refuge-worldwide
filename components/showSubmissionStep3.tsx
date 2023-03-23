@@ -22,6 +22,7 @@ export default function ShowSubmissionStep3({
   return (
     // We pass the event to the handleSubmit() function on submit.
     <div>
+      <pre className="text-white">{JSON.stringify(values, null, 2)}</pre>
       <fieldset>
         <legend>
           <h2 className="font-sans text-base sm:text-large">Personal info</h2>
@@ -101,11 +102,11 @@ export default function ShowSubmissionStep3({
           limit={3}
         />
         <CheckboxField
-          name="hasNewGenre"
+          name="hasNewGenres"
           label="Genre not listed?"
           size="small"
         />
-        {values.hasNewGenre && (
+        {values.hasNewGenres && (
           <InputField
             name="newGenres"
             type="text"
@@ -236,7 +237,7 @@ export default function ShowSubmissionStep3({
               />
               <ImageUploadField
                 label="Host image"
-                name="image"
+                name="newHost.image"
                 required={true}
               />
             </div>
@@ -277,14 +278,14 @@ export default function ShowSubmissionStep3({
                 </span>
               </legend>
               <FieldArray
-                name="newGuests"
+                name="guests"
                 render={(arrayHelpers) => (
                   <div>
-                    {values.newGuests &&
-                      values.newGuests.map((newGuest, index) => (
+                    {values.guests &&
+                      values.guests.map((guest, index) => (
                         <div
                           className="mb-8 border border-black p-8 relative"
-                          key={"newGuest" + index}
+                          key={"guest" + index}
                         >
                           {index > 0 && (
                             <button
@@ -300,20 +301,19 @@ export default function ShowSubmissionStep3({
                             <label htmlFor="name">Name*</label>
                             <Field
                               type="text"
-                              name={`newGuests.${index}.name`}
+                              name={`guests.${index}.name`}
                               className="pill-input"
                               required
                             />
                             <ErrorMessage
                               className="text-red mt-2 text-small"
                               component="span"
-                              name={`newGuests.${index}.name`}
+                              name={`guests.${index}.name`}
                             />
                           </div>
                           <ImageUploadField
                             label="Guest image"
-                            required
-                            name={`newGuests.${index}.guestImage`}
+                            name={`guests.${index}.guestImage`}
                           />
                         </div>
                       ))}

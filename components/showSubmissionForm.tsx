@@ -9,9 +9,9 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 
 const today = new Date();
-const phoneReg = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/;
-const instaReg = /^(([\w.](,)?)*)+$/;
-const listREG = /(\d+)(,\s*\d+)*/;
+const phoneReg = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,7}$/;
+const instaReg = /^(([\w.](, )?)*)+$/;
+const listReg = /^(([\w\ ](, )?)*)+$/;
 today.setHours(0, 0, 0, 0);
 
 const validationSchema = [
@@ -28,7 +28,7 @@ const validationSchema = [
     email: Yup.string()
       .email("Invalid email")
       .required("Please provide your email address"),
-    number: Yup.string().matches(phoneReg, "Invalid number."),
+    number: Yup.string(),
     name: Yup.string().required("Please provide a show name"),
     datetime: Yup.date()
       .min(today, "Date cannot be in the past")
@@ -47,7 +47,13 @@ const validationSchema = [
     hasNewGenres: Yup.boolean(),
     newGenres: Yup.string().when("hasNewGenres", {
       is: true,
-      then: (schema) => schema.required("Please add additional genres"),
+      then: (schema) =>
+        schema
+          .matches(
+            listReg,
+            "Incorrect format. Should be a comma seperated list."
+          )
+          .required("Please add additional genres"),
     }),
     description: Yup.string().required("Please add a show description"),
     instagram: Yup.string().matches(
@@ -78,42 +84,26 @@ const validationSchema = [
         schema.shape({
           name: Yup.string().required("Please add an artist name"),
           bio: Yup.string().required("Please add an artist bio"),
-          guestImage: Yup.object().required("Please add an artist image"),
+          image: Yup.object().required("Please add an artist image"),
         }),
     }),
     hasGuests: Yup.boolean(),
-    hasNewGuests: Yup.boolean(),
-    guests: Yup.array().when("isNewHost", {
-      is: false,
-      then: (schema) =>
-        schema.min(
-          1,
-          "Please select an artist from dropdown or add a new artists by clicking checkbox below"
-        ),
-      otherwise: (schema) =>
-        schema.of(
-          Yup.object().shape({
-            value: Yup.string(),
-            label: Yup.string(),
-          })
-        ),
-    }),
-    newGuests: Yup.array().when("hasExtraArtists", {
+    guests: Yup.array().when("hasGuests", {
       is: true,
       then: (schema) =>
         schema.of(
           Yup.object()
             .default({})
             .shape({
-              name: Yup.string().required("Please add an artist name"),
-              guestImage: Yup.object(),
+              name: Yup.string().required("Please add a guest name"),
+              image: Yup.object(),
             })
         ),
     }),
   }),
 ];
 
-const initialValues = {
+const initialValues: SubmissionFormValues = {
   showType: "",
   readInfo: false,
   email: "",
@@ -135,12 +125,9 @@ const initialValues = {
     image: "",
   },
   hasGuests: false,
-  guests: [],
-  hasNewGuests: false,
-  newGuests: [
+  guests: [
     {
       name: "",
-      bio: "",
       image: "",
     },
   ],
