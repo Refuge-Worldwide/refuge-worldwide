@@ -13,6 +13,7 @@ const environmentId = "master";
 // const artistContentTypeId = 'artist'
 const showContentTypeId = "show";
 const artistContentTypeId = "artist";
+const genreContentTypeId = "genre";
 
 const SPREADSHEET_ID = process.env.NEXT_PUBLIC_SPREADSHEET_ID;
 const SHEET_ID = process.env.NEXT_PUBLIC_SHEET_ID;
@@ -138,6 +139,28 @@ const formatArtistsForContenful = (artists) => {
   }
 };
 
+const addGenre = async (genre) => {
+  try {
+    const space = await client.getSpace(spaceId);
+    const environment = await space.getEnvironment(environmentId);
+    const entry = await environment.createEntry(genreContentTypeId, {
+      fields: {
+        name: {
+          "en-US": genre,
+        },
+      },
+    });
+    const addedGenre = {
+      value: entry.sys.id,
+      label: genre,
+    };
+    return addedGenre;
+  } catch (err) {
+    console.log(err);
+    throw 400;
+  }
+};
+
 const addShow = async (values) => {
   try {
     const content = await richTextFromMarkdown(values.description);
@@ -235,11 +258,16 @@ export default async function handler(
   console.log(values);
   try {
     values.imageId = await uploadImage(values.name, values.image);
-    if (values.hasExtraArtists) {
-      for (const extraArtist of values.extraArtists) {
-        const contentfulExtraArtist = await addArtist(extraArtist);
-        console.log(contentfulExtraArtist);
-        values.artists.push(contentfulExtraArtist);
+    if (values.isNewHost) {
+      const contentfulNewHost = await addArtist(values.newHost);
+      console.log(contentfulNewHost);
+      values.artists.push(contentfulNewHost);
+    }
+    if (values.hasNewGenre) {
+      const genres = values.newGenres.split(", ");
+      for (const genre of genres) {
+        const contentNewGenre = await addGenre(genre);
+        values.genres.push(contentNewGenre);
       }
     }
     await addShow(values);

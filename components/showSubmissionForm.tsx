@@ -11,6 +11,7 @@ import * as Yup from "yup";
 const today = new Date();
 const phoneReg = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/;
 const instaReg = /^(([\w.](,)?)*)+$/;
+const listREG = /(\d+)(,\s*\d+)*/;
 today.setHours(0, 0, 0, 0);
 
 const validationSchema = [
@@ -43,6 +44,11 @@ const validationSchema = [
       .min(1, "Please choose some genres for your show (max 3)")
       .max(3, "You can choose a max of 3 genres, please remove some")
       .required("Please choose some genres for your show (max 3)"),
+    hasNewGenres: Yup.boolean(),
+    newGenres: Yup.string().when("hasNewGenres", {
+      is: true,
+      then: (schema) => schema.required("Please add additional genres"),
+    }),
     description: Yup.string().required("Please add a show description"),
     instagram: Yup.string().matches(
       instaReg,
@@ -116,6 +122,8 @@ const initialValues = {
   datetime: "",
   length: "1",
   genres: [],
+  hasNewGenres: false,
+  newGenres: "",
   description: "",
   instagram: "",
   image: {},

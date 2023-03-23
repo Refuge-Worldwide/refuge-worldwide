@@ -210,6 +210,8 @@ export type SubmissionFormValues = {
   name: string;
   date: string;
   genres: Array<{ value: string; label: string }>;
+  hasNewGenre: Boolean;
+  newGenres: string;
   description: string;
   instagram: string;
   image: object;

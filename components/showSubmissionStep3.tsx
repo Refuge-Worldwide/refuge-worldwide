@@ -5,6 +5,7 @@ import { useFormikContext, Field, FieldArray, ErrorMessage } from "formik";
 import { Close } from "../icons/menu";
 import InputField from "./formFields/inputField";
 import TextareaField from "./formFields/textareaField";
+import CheckboxField from "./formFields/checkboxField";
 import { SubmissionFormValues } from "../types/shared";
 
 export default function ShowSubmissionStep3({
@@ -99,7 +100,18 @@ export default function ShowSubmissionStep3({
           options={genres}
           limit={3}
         />
-
+        <CheckboxField
+          name="hasNewGenre"
+          label="Genre not listed?"
+          size="small"
+        />
+        {values.hasNewGenre && (
+          <InputField
+            name="newGenres"
+            type="text"
+            label="Please add additional genres here"
+          />
+        )}
         <TextareaField
           name="description"
           rows={4}
@@ -172,21 +184,10 @@ export default function ShowSubmissionStep3({
         )}
 
         {showType === "live" && (
-          <div className="flex space-x-3 text-base mt-12 mb-6">
-            <Field
-              type="checkbox"
-              id="additionalEq"
-              name="additionalEq"
-              className="h-6 w-6 rounded-full border-2 border-black text-black focus:ring-black self-center"
-            />
-            <label
-              htmlFor="additionalEq"
-              className="sm:mt-0.5 text-small sm:text-base sm:leading-none"
-            >
-              Are you bringing additional DJ or live-performance equipment
-              (including laptop or controllers)?
-            </label>
-          </div>
+          <CheckboxField
+            name="additionalEq"
+            label="Are you bringing additional DJ or live-performance equipment (including laptop or controllers)?"
+          />
         )}
 
         {showType === "live" && values.additionalEq && (
@@ -211,89 +212,80 @@ export default function ShowSubmissionStep3({
           limit={5}
         />
 
-        <div>
-          <Field
-            type="checkbox"
-            id="isNewHost"
-            name="isNewHost"
-            className="h-6 w-6 rounded-full border-2 border-black text-black focus:ring-black"
-          />
-          <label htmlFor="isNewHost" className="checkbox-label">
-            New host / Can&apos;t find your artist name in the dropdown?
-          </label>
-        </div>
+        <CheckboxField
+          name="isNewHost"
+          label="Are you a new host / Can't find your artist name in the dropdown?"
+          size="small"
+        />
 
         {values.isNewHost && (
-          <div>
-            <InputField
-              name="newHost.name"
-              type="text"
-              label="Name"
-              required={true}
-            />
-            <TextareaField
-              name="newHost.bio"
-              rows={4}
-              label="Bio"
-              required={true}
-            />
-            <ImageUploadField
-              label="Artist image"
-              name="image"
-              required={true}
-            />
-          </div>
+          <fieldset>
+            <legend className="mb-6">New host info</legend>
+            <div className="border border-black p-8 mb-10">
+              <InputField
+                name="newHost.name"
+                type="text"
+                label="Name"
+                required={true}
+              />
+              <TextareaField
+                name="newHost.bio"
+                rows={4}
+                label="Bio"
+                required={true}
+              />
+              <ImageUploadField
+                label="Host image"
+                name="image"
+                required={true}
+              />
+            </div>
+          </fieldset>
         )}
 
-        <div>
-          <Field
-            type="checkbox"
-            id="hasGuests"
-            name="hasGuests"
-            className="h-6 w-6 rounded-full border-2 border-black text-black focus:ring-black"
-          />
-          <label
-            htmlFor="isNewHost"
-            className="sm:mt-0.5 text-small sm:text-base sm:leading-none"
-          >
-            Have guests on your show?
-          </label>
-        </div>
+        <CheckboxField
+          name="hasGuests"
+          label="Do you have guests on your show?"
+        />
+      </fieldset>
 
-        {values.hasGuests && (
+      {values.hasGuests && (
+        <fieldset>
+          <legend>
+            <h2 className="sr-only">Guest info</h2>
+          </legend>
+
           <div>
             <MultiSelectField
               label="Guest(s)"
               name="guests"
-              required={true}
               options={artists}
               limit={5}
             />
 
-            <div>
-              <Field
-                type="checkbox"
-                id="hasNewGuest"
-                name="hasNewGuests"
-                className="h-6 w-6 rounded-full border-2 border-black text-black focus:ring-black"
-              />
-              <label htmlFor="isNewHost" className="checkbox-label">
-                Can&apos;t find your guests names in the dropdown?
-              </label>
-            </div>
+            <CheckboxField
+              name="hasNewGuests"
+              label="Can't find your guests names in the dropdown?"
+              size="small"
+            />
 
             {values.hasNewGuests && (
               <fieldset className="mt-8 mb-8">
-                <legend className="mb-6">Guest info</legend>
+                <legend className="mb-6">
+                  Guest(s) info
+                  <span className="label-description">
+                    Please put guest bios in the show description
+                  </span>
+                </legend>
                 <FieldArray
-                  name="extraArtists"
+                  name="newGuests"
                   render={(arrayHelpers) => (
                     <div>
                       {values.newGuests &&
-                        values.newGuests.map((extraArtist, index) => (
+                        values.newGuests.map((newGuest, index) => (
                           <div
                             className="mb-8 border border-black p-8 relative"
-                            key={"extraArtist" + index}
+                            key={"newGuest" + index}
                           >
                             {index > 0 && (
                               <button
@@ -339,8 +331,8 @@ export default function ShowSubmissionStep3({
               </fieldset>
             )}
           </div>
-        )}
-      </fieldset>
+        </fieldset>
+      )}
     </div>
   );
 }
