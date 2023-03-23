@@ -4,6 +4,8 @@ import { useRef, useState, useEffect } from "react";
 import Pill from "../../components/pill";
 import useMarquee from "../../hooks/useMarquee";
 import { NextUpSection } from "../../types/shared";
+import { Arrow } from "../../icons/arrow";
+import Link from "next/link";
 
 export default function NextUp({ content }: NextUpSection) {
   const shouldShowBanner = content && content.json;
@@ -22,13 +24,17 @@ export default function NextUp({ content }: NextUpSection) {
     return (
       <section className={`${bgColour} border-t-2 border-b-2`}>
         <div className="flex items-center">
-          <div className="pt-2 pb-2 sm:pt-4 sm:pb-4 px-4 md:px-8 border-r-2">
-            <Pill outline={true} size="medium">
-              <h2 className="whitespace-nowrap">
+          <Link
+            href="/radio/schedule"
+            className="pt-2 pb-2 sm:pt-4 sm:pb-4 px-4 md:px-8 border-r-2"
+          >
+            <h2 className=" pt-1 pb-1 whitespace-nowrap flex gap-3 items-center">
+              <span className=" font-sans font-medium underline">
                 Next <span className="hidden md:inline">Up</span>
-              </h2>
-            </Pill>
-          </div>
+              </span>
+              <Arrow />
+            </h2>
+          </Link>
           <div className="pt-2 pb-2 sm:pt-4 sm:pb-4 overflow-hidden">
             <div ref={ref}>
               <div>
