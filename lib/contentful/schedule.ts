@@ -1,21 +1,28 @@
 import dayjs from "dayjs";
-// import utc from "dayjs/plugin/utc";
+import utc from "dayjs/plugin/utc";
 import { graphql } from ".";
 import { ScheduleShowInterface } from "../../types/shared";
 import { extractCollection } from "../../util";
-// dayjs.extend(utc);
+dayjs.extend(utc);
 
 export async function getScheduleData() {
   const start = Date.now();
   const startDate = dayjs();
-  const startOfDay = startDate.format();
-  const endOfDay = startDate.add(1, "day").format();
+  const startSchedule = startDate.toISOString();
+  const endSchedule = startDate.add(2, "day").toISOString();
+
+  console.log(startSchedule);
+  console.log(endSchedule);
 
   const scheduleQuery = /* GraphQL */ `
-    query scheduleQuery($start: DateTime, $end: DateTime) {
+    query scheduleQuery($startSchedule: DateTime, $endSchedule: DateTime) {
       showCollection(
         order: date_ASC
-        where: { date_gt: $start, dateEnd_lt: $end }
+        where: {
+          date_gte: $startSchedule
+          dateEnd_lte: $endSchedule
+          dateEnd_exists: true
+        }
       ) {
         items {
           title
@@ -40,7 +47,7 @@ export async function getScheduleData() {
   `;
 
   const res = await graphql(scheduleQuery, {
-    variables: { startOfDay, endOfDay },
+    variables: { startSchedule, endSchedule },
   });
 
   const schedule = extractCollection<ScheduleShowInterface>(
