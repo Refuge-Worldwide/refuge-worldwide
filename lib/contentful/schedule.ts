@@ -19,7 +19,7 @@ export async function getScheduleData() {
       showCollection(
         order: date_ASC
         where: {
-          date_gte: $startSchedule
+          dateEnd_gt: $startSchedule
           dateEnd_lte: $endSchedule
           dateEnd_exists: true
         }
@@ -58,7 +58,10 @@ export async function getScheduleData() {
   const end = Date.now();
 
   return {
-    data: schedule,
+    data: {
+      liveNow: schedule[0],
+      schedule: schedule,
+    },
     duration: end - start,
   };
 }
