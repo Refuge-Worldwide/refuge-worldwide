@@ -89,11 +89,12 @@ export interface ShowInterface {
   content: Content;
 }
 
-export interface ScheduleShowInterface {
+export type ScheduleShow = {
   sys: {
     id: string;
   };
   title: string;
+  localStartTime?: string;
   date: string;
   dateEnd: string;
   slug: string;
@@ -102,10 +103,7 @@ export interface ScheduleShowInterface {
   artistsCollection: {
     items: ArtistInterface[];
   };
-  genresCollection: {
-    items: GenreInterface[];
-  };
-}
+};
 
 export enum ArticleType {
   Project = "Project",

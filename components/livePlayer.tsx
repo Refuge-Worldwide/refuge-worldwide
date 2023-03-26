@@ -2,6 +2,7 @@ import cn from "classnames";
 import { useEffect, useRef } from "react";
 import usePlayerState from "../hooks/usePlayerState";
 import useRadioCoStatus from "../hooks/useRadioCoStatus";
+import useSchedule from "../hooks/useSchedule";
 import Pause from "../icons/pause";
 import Play from "../icons/play";
 import Marquee from "./marquee";
@@ -32,6 +33,7 @@ export default function LivePlayer() {
 
   const AUDIO_SRC = `https://streaming.radio.co/${REFUGE_WORLDWIDE}/listen`;
 
+  const { scheduleData, isLoading } = useSchedule();
   const { data } = useRadioCoStatus(REFUGE_WORLDWIDE);
   const isOnline = data?.status === "online";
 
@@ -71,10 +73,10 @@ export default function LivePlayer() {
     <section className={playerWrapperClassNames}>
       <BroadcastingIndicator status={data?.status} />
 
-      {isOnline ? (
+      {!isLoading ? (
         <Marquee
-          key={data?.current_track?.title}
-          text={data?.current_track?.title}
+          key={scheduleData.liveNow?.title}
+          text={scheduleData.liveNow?.title}
         />
       ) : null}
 

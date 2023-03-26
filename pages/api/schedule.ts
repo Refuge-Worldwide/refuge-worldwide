@@ -7,11 +7,9 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    const { query } = req.query as typeof req.query & {
-      query: string;
-    };
-
     const { data, duration } = await getScheduleData();
+
+    console.log(data);
 
     res
       .setHeader("Server-Timing", `search;dur=${duration}`)

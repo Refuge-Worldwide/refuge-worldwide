@@ -1,9 +1,7 @@
 import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
 import { graphql } from ".";
-import { ScheduleShowInterface } from "../../types/shared";
+import { ScheduleShow } from "../../types/shared";
 import { extractCollection } from "../../util";
-dayjs.extend(utc);
 
 export async function getScheduleData() {
   const start = Date.now();
@@ -50,16 +48,29 @@ export async function getScheduleData() {
     variables: { startSchedule, endSchedule },
   });
 
-  const schedule = extractCollection<ScheduleShowInterface>(
-    res,
-    "showCollection"
-  );
+  const schedule = extractCollection<ScheduleShow>(res, "showCollection");
+
+  schedule.forEach((show) => {
+    show.title = show.title.replace("| Residency", "");
+    show.title = show.title.replace("|", "with");
+  });
+
+  let liveNow;
+  let nextUp;
+
+  if (dayjs(schedule[0].date).isBefore(startDate)) {
+    liveNow = schedule[0];
+    nextUp = schedule.slice(1, 5);
+  } else {
+    nextUp = schedule.slice(0, 4);
+  }
 
   const end = Date.now();
 
   return {
     data: {
-      liveNow: schedule[0],
+      liveNow: liveNow,
+      nextUp: nextUp,
       schedule: schedule,
     },
     duration: end - start,

@@ -1,24 +1,23 @@
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import { useRef, useState, useEffect } from "react";
-
+import useSchedule from "../../hooks/useSchedule";
 import Pill from "../../components/pill";
 import useMarquee from "../../hooks/useMarquee";
 import { NextUpSection } from "../../types/shared";
 import { Arrow } from "../../icons/arrow";
 import Link from "next/link";
+import LocalTime from "../../components/localTime";
 
 export default function NextUp({ content }: NextUpSection) {
+  const { scheduleData, isLoading } = useSchedule();
   const shouldShowBanner = content && content.json;
-  const [bgColour, setBgColour] = useState("bg-orange");
 
   const ref = useRef<HTMLDivElement>();
   useMarquee(ref, { speed: 0.75 });
 
   const bgOptions = ["bg-orange", "bg-purple", "bg-pink", "bg-green", "bg-red"];
 
-  useEffect(() => {
-    setBgColour(bgOptions[Math.floor(Math.random() * bgOptions.length)]);
-  });
+  const bgColour = bgOptions[Math.floor(Math.random() * bgOptions.length)];
 
   if (shouldShowBanner)
     return (
@@ -38,9 +37,16 @@ export default function NextUp({ content }: NextUpSection) {
           <div className="pt-2 pb-2 sm:pt-4 sm:pb-4 overflow-hidden">
             <div ref={ref}>
               <div>
-                <span className="h-10 flex items-center space-x-2 whitespace-nowrap px-2">
-                  {documentToReactComponents(content?.json)}
-                </span>
+                {!isLoading && (
+                  <span className="h-10 flex items-center space-x-2 whitespace-nowrap px-2">
+                    {scheduleData.nextUp.map((show) => (
+                      <p className="font-medium" key={show.title}>
+                        <LocalTime dateTime={show.date} /> {show.title}{" "}
+                        &#47;&#47;{" "}
+                      </p>
+                    ))}
+                  </span>
+                )}
               </div>
             </div>
           </div>
