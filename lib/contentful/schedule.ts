@@ -1,16 +1,15 @@
 import dayjs from "dayjs";
+import next from "next";
 import { graphql } from ".";
 import { ScheduleShow } from "../../types/shared";
 import { extractCollection } from "../../util";
 
 export async function getScheduleData() {
   const start = Date.now();
-  const startDate = dayjs();
-  const startSchedule = startDate.toISOString();
-  const endSchedule = startDate.add(2, "day").toISOString();
-
-  console.log(startSchedule);
-  console.log(endSchedule);
+  const now = dayjs();
+  const startOfDay = now.startOf("day");
+  const startSchedule = startOfDay.toISOString();
+  const endSchedule = startOfDay.add(2, "day").toISOString();
 
   const scheduleQuery = /* GraphQL */ `
     query scheduleQuery($startSchedule: DateTime, $endSchedule: DateTime) {
@@ -50,20 +49,21 @@ export async function getScheduleData() {
 
   const schedule = extractCollection<ScheduleShow>(res, "showCollection");
 
-  schedule.forEach((show) => {
+  let liveNow: ScheduleShow;
+  let nextUp: Array<ScheduleShow>;
+
+  schedule.forEach((show, index) => {
     show.title = show.title.replace("| Residency", "");
     show.title = show.title.replace("|", "with");
+    if (!nextUp && now.isBefore(dayjs(show.dateEnd))) {
+      if (now.isAfter(dayjs(show.date))) {
+        liveNow = show;
+        nextUp = schedule.slice(index + 1, index + 5);
+      } else {
+        nextUp = schedule.slice(index, index + 4);
+      }
+    }
   });
-
-  let liveNow;
-  let nextUp;
-
-  if (dayjs(schedule[0].date).isBefore(startDate)) {
-    liveNow = schedule[0];
-    nextUp = schedule.slice(1, 5);
-  } else {
-    nextUp = schedule.slice(0, 4);
-  }
 
   const end = Date.now();
 

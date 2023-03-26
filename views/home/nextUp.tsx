@@ -1,4 +1,3 @@
-import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import { useRef, useState, useEffect } from "react";
 import useSchedule from "../../hooks/useSchedule";
 import Pill from "../../components/pill";
