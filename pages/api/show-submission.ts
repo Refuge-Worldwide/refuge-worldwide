@@ -192,7 +192,7 @@ const addShow = async (values) => {
     const genres = createReferencesArray(values.genres);
     const space = await client.getSpace(spaceId);
     const environment = await space.getEnvironment(environmentId);
-    const startDateTime = values.datetime + "+02:00";
+    const startDateTime = values.datetime + ":00+02:00";
     const endDateTime = dayjs(startDateTime)
       .add(parseInt(values.length), "hour")
       .format();
