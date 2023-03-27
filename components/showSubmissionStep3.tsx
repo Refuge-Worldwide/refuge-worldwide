@@ -44,7 +44,7 @@ export default function ShowSubmissionStep3({
         <InputField
           name="datetime"
           type="datetime-local"
-          label="Date / time"
+          label="Date / time (CET)"
           required={true}
         />
         <fieldset className="mb-10">
