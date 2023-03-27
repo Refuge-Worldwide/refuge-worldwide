@@ -33,7 +33,9 @@ export default function ShowSubmissionStep3({
           label="Email address"
           required={true}
         />
-        <InputField name="number" type="tel" label="Contact number" />
+        {showType === "live" && (
+          <InputField name="number" type="tel" label="Contact number" />
+        )}
       </fieldset>
 
       <fieldset>
