@@ -1,5 +1,5 @@
 import cn from "classnames";
-import Image from "next/future/image";
+import Image from "next/image";
 import Link from "next/link";
 import { Arrow } from "../icons/arrow";
 import loaders from "../lib/loaders";
@@ -34,57 +34,55 @@ export default function FeaturedArticlePreview({
   );
 
   return (
-    <Link href={`/news/${slug}`}>
-      <a aria-labelledby={`featured-article-${slug}`}>
-        <article className={articleClassNames}>
-          <header className="flex-1 md:col-span-5 2xl:col-span-3 p-4 lg:p-8 border-l-2 border-t-0 md:border-t-2 border-b-2 border-black">
-            <Pill>
-              <span className="font-serif">{articleType}</span>
-            </Pill>
+    <Link href={`/news/${slug}`} aria-labelledby={`featured-article-${slug}`}>
+      <article className={articleClassNames}>
+        <header className="flex-1 md:col-span-5 2xl:col-span-3 p-4 lg:p-8 border-l-0 border-t-0 md:border-t-2 border-b-2 border-black">
+          <Pill>
+            <span className="font-serif">{articleType}</span>
+          </Pill>
 
-            <div className="h-3 sm:h-6" />
+          <div className="h-3 sm:h-6" />
 
-            <p className="font-medium">
-              <Date dateString={date} />
-            </p>
+          <p className="font-medium">
+            <Date dateString={date} />
+          </p>
 
-            <div className="h-2" />
+          <div className="h-2" />
 
-            <h1
-              id={`featured-article-${slug}`}
-              className="text-base sm:text-large"
-            >
-              {title}
-            </h1>
+          <h1
+            id={`featured-article-${slug}`}
+            className="text-base sm:text-large"
+          >
+            {title}
+          </h1>
 
-            <div className="h-4" />
+          <div className="h-4" />
 
-            <p className="font-medium">{subtitle}</p>
+          <p className="font-medium">{subtitle}</p>
 
-            <div className="h-6" />
+          <div className="h-6" />
 
-            <div className="inline-flex items-center space-x-5 font-medium leading-none ">
-              <span className="underline">Read more</span>
-              <Arrow />
-            </div>
-
-            <div className="hidden sm:block h-6" />
-          </header>
-
-          <div className="md:col-span-5 2xl:col-span-7 h-64 md:h-auto relative border-l-2 border-t-2 border-b-2 border-black">
-            <Image
-              className="object-cover object-center"
-              key={coverImage.sys.id}
-              draggable="false"
-              alt={coverImage.title}
-              src={coverImage.url}
-              loader={loaders.contentful}
-              priority={priority}
-              fill
-            />
+          <div className="inline-flex items-center space-x-5 font-medium leading-none ">
+            <span className="underline">Read more</span>
+            <Arrow />
           </div>
-        </article>
-      </a>
+
+          <div className="hidden sm:block h-6" />
+        </header>
+
+        <div className="md:col-span-5 2xl:col-span-7 h-64 md:h-auto relative md:border-l-2 border-t-2 border-b-2 border-black">
+          <Image
+            className="object-cover object-center"
+            key={coverImage.sys.id}
+            draggable="false"
+            alt={coverImage.title}
+            src={coverImage.url}
+            loader={loaders.contentful}
+            priority={priority}
+            fill
+          />
+        </div>
+      </article>
     </Link>
   );
 }

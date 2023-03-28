@@ -1,6 +1,6 @@
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import { Block, BLOCKS, INLINES, Inline } from "@contentful/rich-text-types";
-import Image from "next/future/image";
+import Image from "next/image";
 import { Asset, Content } from "../types/shared";
 import Link from "next/link";
 
@@ -33,7 +33,7 @@ export function renderRichTextWithImages(content: Content) {
           if (uri.includes("refugeworldwide.com")) {
             return (
               <Link href={uri.replace("https://refugeworldwide.com", "")}>
-                <a>{children}</a>
+                {children}
               </Link>
             );
           }

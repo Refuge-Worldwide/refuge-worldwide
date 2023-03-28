@@ -1,4 +1,4 @@
-import Image from "next/future/image";
+import Image from "next/image";
 import { ReactNode } from "react";
 import BackButton from "../components/backButton";
 import loaders from "../lib/loaders";

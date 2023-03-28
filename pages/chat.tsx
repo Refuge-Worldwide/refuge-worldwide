@@ -1,5 +1,5 @@
 import Script from "next/script";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import PageMeta from "../components/seo/page";
 
 export default function ChatPage() {
@@ -21,7 +21,7 @@ export default function ChatPage() {
               b: 100,
               c: "FFFFFF",
               d: "FFFFFF",
-              k: "000000",
+              k: "FFFFFF",
               l: "000000",
               m: "000000",
               n: "FFFFFF",

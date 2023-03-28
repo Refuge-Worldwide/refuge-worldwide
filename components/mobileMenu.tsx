@@ -1,6 +1,5 @@
 import * as Dialog from "@radix-ui/react-dialog";
-import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
-import Image from "next/future/image";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { forwardRef, useEffect } from "react";
@@ -27,18 +26,16 @@ function MobileMenuContent({ onDismiss }: { onDismiss: () => void }) {
       <nav className="py-2.5">
         <ul className="flex items-center justify-between">
           <li>
-            <Link href="/">
-              <a className="flex">
-                <Image
-                  src="/images/navigation-smile-white.svg"
-                  width={66}
-                  height={40}
-                  alt="Refuge"
-                  priority
-                  unoptimized
-                  className="h-10 w-[4.125rem]"
-                />
-              </a>
+            <Link href="/" className="flex">
+              <Image
+                src="/images/navigation-smile-white.svg"
+                width={66}
+                height={40}
+                alt="Refuge"
+                priority
+                unoptimized
+                className="h-10 w-[4.125rem]"
+              />
             </Link>
           </li>
 
@@ -146,9 +143,7 @@ export const MobileMenu = forwardRef<HTMLDivElement, { onDismiss: () => void }>(
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black focus:outline-none z-50 overflow-y-scroll">
           <Dialog.Content {...props} ref={forwardedRef}>
-            <VisuallyHidden.Root asChild>
-              <Dialog.Title>Mobile Navigation</Dialog.Title>
-            </VisuallyHidden.Root>
+            <Dialog.Title className="sr-only">Mobile Navigation</Dialog.Title>
 
             <MobileMenuContent onDismiss={onDismiss} />
           </Dialog.Content>

@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import Image from "next/future/image";
+import Image from "next/image";
 import Link from "next/link";
 import { useGlobalStore } from "../hooks/useStore";
 import PlayLarge from "../icons/playLarge";
@@ -72,26 +72,28 @@ export default function ShowPreview({
 
       <div className="h-2" />
 
-      <Link href={`/radio/${slug}`} prefetch={false}>
-        <a aria-labelledby={`show-${slug}`}>
-          <h2 id={`show-${slug}`} className="font-sans font-medium truncate">
-            {title}
-          </h2>
+      <Link
+        href={`/radio/${slug}`}
+        prefetch={false}
+        aria-labelledby={`show-${slug}`}
+      >
+        <h2 id={`show-${slug}`} className="font-sans font-medium truncate">
+          {title}
+        </h2>
 
-          <p>
-            <Date dateString={date} />
-          </p>
+        <p>
+          <Date dateString={date} />
+        </p>
 
-          <div className="h-2" />
+        <div className="h-2" />
 
-          <ul className="w-full flex flex-wrap gap-2">
-            {genres.map((genre, i) => (
-              <li key={i}>
-                <Badge small text={genre} />
-              </li>
-            ))}
-          </ul>
-        </a>
+        <ul className="w-full flex flex-wrap gap-2">
+          {genres.map((genre, i) => (
+            <li key={i}>
+              <Badge small text={genre} />
+            </li>
+          ))}
+        </ul>
       </Link>
     </article>
   );
@@ -108,42 +110,40 @@ export function ShowPreviewWithoutPlayer({
   }).slice(0, 3);
 
   return (
-    <Link href={`/radio/${slug}`}>
-      <a aria-labelledby={`show-${slug}`}>
-        <article className="text-small">
-          <div className="flex">
-            <Image
-              key={coverImage.sys.id}
-              src={coverImage.fields.file.url}
-              loader={loaders.contentful}
-              width={590}
-              height={332}
-              alt={title}
-              className="bg-black/10 object-cover object-center aspect-video"
-            />
-          </div>
+    <Link href={`/radio/${slug}`} aria-labelledby={`show-${slug}`}>
+      <article className="text-small">
+        <div className="flex">
+          <Image
+            key={coverImage.sys.id}
+            src={coverImage.fields.file.url}
+            loader={loaders.contentful}
+            width={590}
+            height={332}
+            alt={title}
+            className="bg-black/10 object-cover object-center aspect-video"
+          />
+        </div>
 
-          <div className="h-2" />
+        <div className="h-2" />
 
-          <h2 id={`show-${slug}`} className="font-sans font-medium truncate">
-            {title}
-          </h2>
+        <h2 id={`show-${slug}`} className="font-sans font-medium truncate">
+          {title}
+        </h2>
 
-          <p>
-            <Date dateString={date} />
-          </p>
+        <p>
+          <Date dateString={date} />
+        </p>
 
-          <div className="h-2" />
+        <div className="h-2" />
 
-          <ul className="w-full flex flex-wrap gap-2">
-            {parsedGenres.map((genre, i) => (
-              <li key={i}>
-                <Badge small text={genre} />
-              </li>
-            ))}
-          </ul>
-        </article>
-      </a>
+        <ul className="w-full flex flex-wrap gap-2">
+          {parsedGenres.map((genre, i) => (
+            <li key={i}>
+              <Badge small text={genre} />
+            </li>
+          ))}
+        </ul>
+      </article>
     </Link>
   );
 }
@@ -173,26 +173,25 @@ export function FeaturedShowPreview({
 
       <div className="h-2" />
 
-      <Link href={`/radio/${slug}`} prefetch={false}>
-        <a aria-labelledby={`show-${slug}`}>
-          <h2 id={`show-${slug}`} className="font-sans font-medium truncate">
-            {title}
-          </h2>
-
-          <p>
-            <Date dateString={date} />
-          </p>
-
-          <div className="h-2" />
-
-          <ul className="w-full flex flex-wrap gap-2">
-            {genres.map((genre, i) => (
-              <li key={i}>
-                <Badge small text={genre} />
-              </li>
-            ))}
-          </ul>
-        </a>
+      <Link
+        href={`/radio/${slug}`}
+        prefetch={false}
+        aria-labelledby={`show-${slug}`}
+      >
+        <h2 id={`show-${slug}`} className="font-sans font-medium truncate">
+          {title}
+        </h2>
+        <p>
+          <Date dateString={date} />
+        </p>
+        <div className="h-2" />
+        <ul className="w-full flex flex-wrap gap-2">
+          {genres.map((genre, i) => (
+            <li key={i}>
+              <Badge small text={genre} />
+            </li>
+          ))}
+        </ul>
       </Link>
     </article>
   );

@@ -216,7 +216,11 @@ export async function getRelatedShows(
   );
 
   const filteredShows = linkedFromShows
-    .filter((show) => show.slug !== slug)
+    .filter(
+      (show, index) =>
+        show.slug !== slug &&
+        index === linkedFromShows.findIndex((t) => t.slug === show.slug)
+    )
     .filter((show) => dayjs(show.date).isBefore(dayjs()))
     .sort(sort.date_DESC);
 

@@ -1,5 +1,5 @@
 import * as Dialog from "@radix-ui/react-dialog";
-import Image from "next/future/image";
+import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useState } from "react";
 import { MobileMenu } from "../components/mobileMenu";
@@ -27,18 +27,16 @@ export default function Navigation() {
         <div className="px-4 md:px-8 py-2.5">
           <ul className="flex items-center">
             <li>
-              <Link href="/">
-                <a className="flex">
-                  <Image
-                    src="/images/navigation-smile.svg"
-                    width={66}
-                    height={40}
-                    alt="Refuge"
-                    priority
-                    unoptimized
-                    className="h-10 w-[4.125rem]"
-                  />
-                </a>
+              <Link href="/" className="flex">
+                <Image
+                  src="/images/navigation-smile.svg"
+                  width={66}
+                  height={40}
+                  alt="Refuge"
+                  priority
+                  unoptimized
+                  className="h-10 w-[4.125rem]"
+                />
               </Link>
             </li>
 

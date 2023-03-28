@@ -37,16 +37,18 @@ export default function ArtistsPage({
           <div className="h-8" />
 
           <ul className="w-full flex flex-wrap leading-none gap-2">
-            <Link href="/artists">
-              <a className="focus:outline-none focus:ring-4 rounded-full">
-                <Badge invert text={"Residents"} />
-              </a>
+            <Link
+              href="/artists"
+              className="focus:outline-none focus:ring-4 rounded-full"
+            >
+              <Badge invert text={"Residents"} />
             </Link>
 
-            <Link href="/artists/guests">
-              <a className="focus:outline-none focus:ring-4 rounded-full">
-                <Badge text={"Guests"} />
-              </a>
+            <Link
+              href="/artists/guests"
+              className="focus:outline-none focus:ring-4 rounded-full"
+            >
+              <Badge text={"Guests"} />
             </Link>
           </ul>
         </section>

@@ -24,8 +24,8 @@ export default function MobileMenuLink({
   );
 
   return (
-    <Link href={href} {...rest}>
-      <a className={classNames}>{children}</a>
+    <Link href={href} {...rest} className={classNames}>
+      {children}
     </Link>
   );
 }

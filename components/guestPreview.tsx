@@ -8,21 +8,21 @@ type ArtistPreviewProps = {
   slug: string;
 };
 
-export default function ArtistPreview({ name, src, slug }: ArtistPreviewProps) {
+export default function GuestPreview({ name, src, slug }: ArtistPreviewProps) {
   return (
     <Link
       href={`/artists/${slug}`}
       prefetch={false}
       className="flex flex-col gap-2"
     >
-      <Image
+      {/* <Image
         src={src}
         loader={loaders.contentful}
         width={590}
         height={335}
         className="bg-black/10 object-cover object-center aspect-video"
         alt={name}
-      />
+      /> */}
       <p>{name}</p>
     </Link>
   );
