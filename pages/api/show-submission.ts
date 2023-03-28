@@ -207,7 +207,7 @@ const addShow = async (values) => {
             values.name + " - " + artistsForContentful + " - " + dateFormatted,
         },
         date: {
-          "en-US": values.datetime,
+          "en-US": startDateTime,
         },
         dateEnd: {
           "en-US": endDateTime,
