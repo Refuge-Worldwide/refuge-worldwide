@@ -45,8 +45,8 @@ export default function ShowSubmissionStep3({
         <InputField name="name" type="text" label="Show name" required={true} />
         <InputField
           name="datetime"
-          type="datetime-local"
-          label="Date / time (CET)"
+          type={showType == "live" ? "datetime-local" : "date"}
+          label={showType == "live" ? "Date / time (CET)" : "Date"}
           required={true}
         />
         <fieldset className="mb-10">
