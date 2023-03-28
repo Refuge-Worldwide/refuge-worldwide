@@ -192,10 +192,10 @@ const addShow = async (values) => {
     const genres = createReferencesArray(values.genres);
     const space = await client.getSpace(spaceId);
     const environment = await space.getEnvironment(environmentId);
-    const startDateTime = values.datetime + ":00+02:00";
-    const endDateTime = dayjs(startDateTime)
+    const startDateTime = dayjs(values.datetime + "Z").toISOString();
+    const endDateTime = dayjs(values.datetime + "Z")
       .add(parseInt(values.length), "hour")
-      .format();
+      .toISOString();
     console.log("start: " + startDateTime);
     console.log("end: " + endDateTime);
     const entry = await environment.createEntry(showContentTypeId, {
@@ -208,7 +208,7 @@ const addShow = async (values) => {
             values.name + " - " + artistsForContentful + " - " + dateFormatted,
         },
         date: {
-          "en-US": startDateTime,
+          "en-US": values.datetime,
         },
         dateEnd: {
           "en-US": endDateTime,
