@@ -60,6 +60,13 @@ export type AllArtistEntry = {
   photo: CoverImage;
 };
 
+export type DropdownArtistEntry = {
+  sys: {
+    id: string;
+  };
+  name: string;
+};
+
 export type ArtistFilterType = "All" | "Residents" | "Guests";
 
 export interface GenreInterface {
@@ -147,6 +154,14 @@ export interface SupportPageData {
   content: Content;
 }
 
+export interface SubmissionPageData {
+  coverImage: CoverImage;
+  liveShows: Content;
+  liveShows2: Content;
+  preRecords: Content;
+  uploadLink: string;
+}
+
 export type ErrorPayloadMessage = {
   message: string;
   extensions: {
@@ -167,4 +182,27 @@ export type ErrorPayload = {
 
 export type BookingsPageData = {
   bookingPassword: string;
+};
+
+export type SubmissionFormValues = {
+  showType: string;
+  readInfo: Boolean;
+  email: string;
+  number: string;
+  name: string;
+  datetime: string;
+  length: string;
+  genres: Array<{ value: string; label: string }>;
+  hasNewGenres: Boolean;
+  newGenres: string;
+  description: string;
+  instagram: string;
+  image: object;
+  additionalEq?: boolean;
+  additionalEqDesc?: string;
+  hosts?: Array<{ value: string; label: string }>;
+  isNewHost: boolean;
+  newHost?: Object<{ name: string; bio: string }>;
+  hasGuests: boolean;
+  guests?: Array<{ name: string; image: string }>;
 };
