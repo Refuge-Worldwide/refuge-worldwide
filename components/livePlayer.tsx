@@ -1,7 +1,6 @@
 import cn from "classnames";
 import { useEffect, useRef, useState } from "react";
 import usePlayerState from "../hooks/usePlayerState";
-import useRadioCoStatus from "../hooks/useRadioCoStatus";
 import useSchedule from "../hooks/useSchedule";
 import Pause from "../icons/pause";
 import Play from "../icons/play";
