@@ -33,18 +33,9 @@ export default function LivePlayer() {
 
   const AUDIO_SRC = `https://streaming.radio.co/${REFUGE_WORLDWIDE}/listen`;
 
-  const { data } = useRadioCoStatus(REFUGE_WORLDWIDE);
   const { scheduleData, isLoading } = useSchedule();
 
   const isOnline = scheduleData?.status === "online";
-
-  // const [liveNow, setliveNow] = useState("");
-
-  // = () => {
-
-  // };
-
-  // const liveNow = data?.current_track?.title;
 
   const player = useRef<HTMLAudioElement>(null);
   const source = useRef<HTMLSourceElement>(null);
@@ -80,7 +71,7 @@ export default function LivePlayer() {
 
   return (
     <section className={playerWrapperClassNames}>
-      <BroadcastingIndicator status={data?.status} />
+      <BroadcastingIndicator status={scheduleData?.status} />
 
       {!isLoading ? (
         <Marquee
