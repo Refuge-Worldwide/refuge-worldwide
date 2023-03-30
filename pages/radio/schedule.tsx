@@ -11,10 +11,10 @@ dayjs.extend(utc);
 
 export default function SchedulePage() {
   return (
-    <Layout>
+    <Layout className="bg-orange">
       <PageMeta title="Schedule | Refuge Worldwide" path="radio/schedule" />
-      <section>
-        <h1>Schedule</h1>
+      <section className="max-w-[700px] mx-auto py-16">
+        <h1 className="text-center mb-16 text-large">Schedule</h1>
         <Schedule />
       </section>
     </Layout>
@@ -55,25 +55,40 @@ function ScheduleByDay({
   });
 
   return (
-    <section>
-      {Object.keys(scheduleByDate).map((day) => (
-        <div key={day} className="mb-6">
-          <Pill>
+    <div className="min-h-[60vh]">
+      {Object.keys(scheduleByDate).map((day, index) => (
+        <div
+          key={day}
+          className={`${
+            index > 0 ? "border-t-2 border-black pt-16" : ""
+          } mb-16`}
+        >
+          <Pill outline>
             <h2>{day}</h2>
           </Pill>
-          {scheduleByDate[day].map((show, index) => (
-            <div key={show.title} className="flex gap-3">
-              <div className="min-w-[60px]">
+          <div className="h-5 sm:h-8" />
+          {scheduleByDate[day].map((show) => (
+            <div
+              key={show.title}
+              className={`
+                ${
+                  show.title == liveNow?.title
+                    ? "bg-black border-white text-white py-3"
+                    : ""
+                } flex gap-3 px-3 my-2
+              `}
+            >
+              <div className="min-w-[60px] font-medium">
                 <LocalTime dateTime={show.date} />
               </div>
               <p>{show.title}</p>
               {show.title == liveNow?.title && (
-                <div className="h-4 w-4 bg-red animate-pulse rounded-full" />
+                <div className="h-4 w-4 bg-red animate-pulse rounded-full self-center" />
               )}
             </div>
           ))}
         </div>
       ))}
-    </section>
+    </div>
   );
 }
