@@ -38,7 +38,7 @@ function ScheduleByDay({
   liveNow,
   schedule,
 }: {
-  liveNow?: ScheduleShow;
+  liveNow?: String;
   schedule: Array<ScheduleShow>;
 }) {
   const scheduleByDate: any = {};
@@ -72,7 +72,7 @@ function ScheduleByDay({
               key={show.title}
               className={`
                 ${
-                  show.title == liveNow?.title
+                  show.title == liveNow
                     ? "bg-black border-white text-white py-3"
                     : ""
                 } flex gap-3 px-3 my-2
@@ -82,7 +82,7 @@ function ScheduleByDay({
                 <LocalTime dateTime={show.date} />
               </div>
               <p>{show.title}</p>
-              {show.title == liveNow?.title && (
+              {show.title == liveNow && (
                 <div className="h-4 w-4 bg-red animate-pulse rounded-full self-center" />
               )}
             </div>

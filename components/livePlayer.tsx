@@ -1,5 +1,5 @@
 import cn from "classnames";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import usePlayerState from "../hooks/usePlayerState";
 import useRadioCoStatus from "../hooks/useRadioCoStatus";
 import useSchedule from "../hooks/useSchedule";
@@ -33,9 +33,18 @@ export default function LivePlayer() {
 
   const AUDIO_SRC = `https://streaming.radio.co/${REFUGE_WORLDWIDE}/listen`;
 
-  const { scheduleData, isLoading } = useSchedule();
   const { data } = useRadioCoStatus(REFUGE_WORLDWIDE);
-  const isOnline = data?.status === "online";
+  const { scheduleData, isLoading } = useSchedule();
+
+  const isOnline = scheduleData?.status === "online";
+
+  // const [liveNow, setliveNow] = useState("");
+
+  // = () => {
+
+  // };
+
+  // const liveNow = data?.current_track?.title;
 
   const player = useRef<HTMLAudioElement>(null);
   const source = useRef<HTMLSourceElement>(null);
@@ -54,9 +63,9 @@ export default function LivePlayer() {
   );
 
   useEffect(() => {
-    if ("mediaSession" in navigator && data?.current_track) {
+    if ("mediaSession" in navigator && scheduleData?.liveNow) {
       navigator.mediaSession.metadata = new MediaMetadata({
-        title: data.current_track.title,
+        title: scheduleData.liveNow,
         artist: "Refuge Worldwide",
         artwork: [
           {
@@ -69,14 +78,22 @@ export default function LivePlayer() {
     }
   }, [data]);
 
+  // useEffect(() => {
+  //   if (!isLoading) {
+  //     if (data?.current_track?.title != "")
+  //       setliveNow(data.current_track.title);
+  //     else setliveNow(scheduleData.liveNow.title);
+  //   }
+  // }, [scheduleData, data]);
+
   return (
     <section className={playerWrapperClassNames}>
       <BroadcastingIndicator status={data?.status} />
 
       {!isLoading ? (
         <Marquee
-          key={scheduleData.liveNow?.title}
-          text={<span className="pr-8">{scheduleData.liveNow?.title}</span>}
+          key={scheduleData.liveNow}
+          text={<span className="pr-8">{scheduleData.liveNow}</span>}
         />
       ) : null}
 

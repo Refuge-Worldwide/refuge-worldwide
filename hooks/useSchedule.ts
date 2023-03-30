@@ -2,12 +2,13 @@ import useSWR from "swr";
 import { ScheduleShow } from "../types/shared";
 
 type Schedule = {
-  liveNow?: ScheduleShow;
+  status: "online" | "offline";
+  liveNow?: string;
   nextUp: Array<ScheduleShow>;
   schedule: Array<ScheduleShow>;
 };
 
-async function getSchedule(url) {
+async function getSchedule(url: URL) {
   const res = await fetch(url);
 
   return res.json();
