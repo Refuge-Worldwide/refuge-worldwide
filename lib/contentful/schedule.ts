@@ -5,9 +5,11 @@ import { ScheduleShow } from "../../types/shared";
 import { extractCollection } from "../../util";
 
 export async function getScheduleData() {
+  const cetAdjustment = 2;
   const start = Date.now();
-  const now = dayjs();
-  const startOfDay = now.startOf("day");
+  const nowUTC = dayjs();
+  const nowCET = nowUTC.add(cetAdjustment, "hours");
+  const startOfDay = nowCET.startOf("day");
   const startSchedule = startOfDay.toISOString();
   const endSchedule = startOfDay.add(2, "day").toISOString();
 
@@ -53,10 +55,14 @@ export async function getScheduleData() {
   let nextUp: Array<ScheduleShow>;
 
   schedule.forEach((show, index) => {
+    show.date = dayjs(show.date).subtract(cetAdjustment, "hours").toISOString();
+    show.dateEnd = dayjs(show.dateEnd)
+      .subtract(cetAdjustment, "hours")
+      .toISOString();
     show.title = show.title.replace("| Residency", "");
     show.title = show.title.replace("|", "with");
-    if (!nextUp && now.isBefore(dayjs(show.dateEnd))) {
-      if (now.isAfter(dayjs(show.date))) {
+    if (!nextUp && nowUTC.isBefore(dayjs(show.dateEnd))) {
+      if (nowUTC.isAfter(dayjs(show.date))) {
         liveNow = show;
         nextUp = schedule.slice(index + 1, index + 5);
       } else {
