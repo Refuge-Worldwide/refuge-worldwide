@@ -5,6 +5,8 @@ import { ScheduleShow } from "../../types/shared";
 import LocalTime from "../../components/localTime";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
+import Pill from "../../components/pill";
+
 dayjs.extend(utc);
 
 export default function SchedulePage() {
@@ -21,7 +23,7 @@ export default function SchedulePage() {
 
 function Schedule() {
   const { scheduleData, isLoading, error } = useSchedule();
-
+  console.log(scheduleData);
   if (isLoading) return <div>loading...</div>;
   if (error) return <div>Fail to Load Data</div>;
   return (
@@ -56,14 +58,18 @@ function ScheduleByDay({
     <section>
       {Object.keys(scheduleByDate).map((day) => (
         <div key={day} className="mb-6">
-          <h2>{day}</h2>
+          <Pill>
+            <h2>{day}</h2>
+          </Pill>
           {scheduleByDate[day].map((show, index) => (
             <div key={show.title} className="flex gap-3">
-              <LocalTime dateTime={show.date} />
-              {index == 0 && show.title == liveNow?.title && (
+              <div className="min-w-[60px]">
+                <LocalTime dateTime={show.date} />
+              </div>
+              <p>{show.title}</p>
+              {show.title == liveNow?.title && (
                 <div className="h-4 w-4 bg-red animate-pulse rounded-full" />
               )}
-              <p>{show.title}</p>
             </div>
           ))}
         </div>

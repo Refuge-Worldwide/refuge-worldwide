@@ -6,13 +6,11 @@ import { NextUpSection } from "../../types/shared";
 import { Arrow } from "../../icons/arrow";
 import Link from "next/link";
 import LocalTime from "../../components/localTime";
+import Marquee from "../../components/marquee";
 
 export default function NextUp({ content }: NextUpSection) {
   const { scheduleData, isLoading } = useSchedule();
   const shouldShowBanner = content && content.json;
-
-  const ref = useRef<HTMLDivElement>();
-  useMarquee(ref, { speed: 0.75 });
 
   const bgOptions = ["bg-orange", "bg-purple", "bg-pink", "bg-green", "bg-red"];
 
@@ -34,9 +32,10 @@ export default function NextUp({ content }: NextUpSection) {
             </h2>
           </Link>
           <div className="pt-2 pb-2 sm:pt-4 sm:pb-4 overflow-hidden">
-            <div ref={ref}>
-              <div>
-                {!isLoading && (
+            {!isLoading && (
+              <Marquee
+                speed={0.75}
+                text={
                   <span className="h-10 flex items-center space-x-2 whitespace-nowrap px-2">
                     {scheduleData.nextUp.map((show) => (
                       <p className="font-medium" key={show.title}>
@@ -45,9 +44,9 @@ export default function NextUp({ content }: NextUpSection) {
                       </p>
                     ))}
                   </span>
-                )}
-              </div>
-            </div>
+                }
+              ></Marquee>
+            )}
           </div>
         </div>
       </section>

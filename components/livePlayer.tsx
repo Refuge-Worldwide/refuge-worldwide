@@ -76,7 +76,7 @@ export default function LivePlayer() {
       {!isLoading ? (
         <Marquee
           key={scheduleData.liveNow?.title}
-          text={scheduleData.liveNow?.title}
+          text={<span className="pr-8">{scheduleData.liveNow?.title}</span>}
         />
       ) : null}
 
