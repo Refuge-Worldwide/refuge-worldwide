@@ -65,26 +65,18 @@ export default function LivePlayer() {
   useEffect(() => {
     if ("mediaSession" in navigator && scheduleData?.liveNow) {
       navigator.mediaSession.metadata = new MediaMetadata({
-        title: scheduleData.liveNow,
+        title: scheduleData.liveNow.title,
         artist: "Refuge Worldwide",
         artwork: [
           {
-            src: data.current_track.artwork_url,
+            src: scheduleData.liveNow.artwork,
             sizes: "1024x1024",
             type: "image/png",
           },
         ],
       });
     }
-  }, [data]);
-
-  // useEffect(() => {
-  //   if (!isLoading) {
-  //     if (data?.current_track?.title != "")
-  //       setliveNow(data.current_track.title);
-  //     else setliveNow(scheduleData.liveNow.title);
-  //   }
-  // }, [scheduleData, data]);
+  }, [scheduleData]);
 
   return (
     <section className={playerWrapperClassNames}>
@@ -92,8 +84,8 @@ export default function LivePlayer() {
 
       {!isLoading ? (
         <Marquee
-          key={scheduleData.liveNow}
-          text={<span className="pr-8">{scheduleData.liveNow}</span>}
+          key={scheduleData.liveNow.title}
+          text={<span className="pr-8">{scheduleData.liveNow.title}</span>}
         />
       ) : null}
 

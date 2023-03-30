@@ -36,11 +36,17 @@ export default async function handler(
     const r = await fetch("https://public.radio.co/stations/s3699c5e49/status");
     const radioCoData: RadioCo = await r.json();
 
-    let liveNow = "";
+    let liveNow = {};
     if (radioCoData.current_track.title != "") {
-      liveNow = radioCoData.current_track.title;
+      liveNow = {
+        title: radioCoData.current_track.title,
+        artwork: radioCoData.current_track.artwork_url,
+      };
     } else {
-      liveNow = data.liveNow.title;
+      liveNow = {
+        title: data.liveNow.title,
+        artwork: data.liveNow.coverImage,
+      };
     }
 
     const scheduleData = {

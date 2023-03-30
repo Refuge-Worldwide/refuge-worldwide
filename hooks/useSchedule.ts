@@ -3,7 +3,10 @@ import { ScheduleShow } from "../types/shared";
 
 type Schedule = {
   status: "online" | "offline";
-  liveNow?: string;
+  liveNow: {
+    title: string;
+    artwork: string;
+  };
   nextUp: Array<ScheduleShow>;
   schedule: Array<ScheduleShow>;
 };
