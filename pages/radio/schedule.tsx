@@ -29,7 +29,7 @@ function Schedule() {
   return (
     <ScheduleByDay
       schedule={scheduleData.schedule}
-      liveNow={scheduleData.liveNow}
+      liveNow={scheduleData.liveNow.title}
     />
   );
 }
