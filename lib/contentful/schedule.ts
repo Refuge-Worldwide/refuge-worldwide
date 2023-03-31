@@ -7,7 +7,7 @@ import { extractCollection } from "../../util";
 export async function getScheduleData() {
   const cetAdjustment = 2;
   const start = Date.now();
-  const nowUTC = dayjs();
+  const nowUTC = dayjs.utc();
   const nowCET = nowUTC.add(cetAdjustment, "hours");
   const startOfDay = nowCET.startOf("day");
   const startSchedule = startOfDay.toISOString();

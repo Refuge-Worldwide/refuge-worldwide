@@ -37,7 +37,7 @@ export default async function handler(
     const radioCoData: RadioCo = await r.json();
 
     let liveNow = {};
-    if (radioCoData.current_track.title != "") {
+    if (radioCoData.current_track.title == "") {
       liveNow = {
         title: radioCoData.current_track.title,
         artwork: radioCoData.current_track.artwork_url,
