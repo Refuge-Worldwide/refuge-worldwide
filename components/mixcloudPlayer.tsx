@@ -4,7 +4,7 @@ import { ActivePlayer, useGlobalStore } from "../hooks/useStore";
 
 export default function MixcloudPlayer() {
   const showKey = useGlobalStore((state) => state.showKey);
-
+  const showKeySet = useGlobalStore((state) => state.showKeySet);
   const activePlayer = useGlobalStore((state) => state.activePlayer);
   const activePlayerSet = useGlobalStore((state) => state.activePlayerSet);
 
@@ -19,6 +19,11 @@ export default function MixcloudPlayer() {
       await widget.ready;
 
       await widget.play();
+
+      widget.events.ended.on(() => {
+        console.log("ended show playback");
+        showKeySet("/refugeworldwide/in-depth-nat-wendell-28-mar-2023/");
+      });
     } catch (error) {
       console.error(error);
     }
