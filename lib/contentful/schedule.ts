@@ -1,10 +1,10 @@
 import dayjs from "dayjs";
-import dayjsPluginUTC from "dayjs-plugin-utc";
+import utc from "dayjs/plugin/utc";
 import next from "next";
 import { graphql } from ".";
 import { ScheduleShow } from "../../types/shared";
 import { extractCollection } from "../../util";
-dayjs.extend(dayjsPluginUTC);
+dayjs.extend(utc);
 
 export async function getScheduleData() {
   const cetAdjustment = 2;
@@ -71,8 +71,7 @@ export async function getScheduleData() {
     show.dateEnd = dayjs(show.dateEnd)
       .subtract(cetAdjustment, "hours")
       .toISOString();
-    show.title = show.title.replace("| Residency", "");
-    show.title = show.title.replace("|", "with");
+    show.title = show.title.replace("|", "-");
     if (!nextUp && nowUTC.isBefore(dayjs(show.dateEnd))) {
       if (nowUTC.isAfter(dayjs(show.date))) {
         liveNow = show;

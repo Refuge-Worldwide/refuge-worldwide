@@ -7,6 +7,7 @@ import { Arrow } from "../../icons/arrow";
 import Link from "next/link";
 import LocalTime from "../../components/localTime";
 import Marquee from "../../components/marquee";
+import { Cross } from "../../icons/cross";
 
 export default function NextUp({ content }: NextUpSection) {
   const { scheduleData, isLoading } = useSchedule();
@@ -21,21 +22,16 @@ export default function NextUp({ content }: NextUpSection) {
       <section className={`${bgColour} border-t-2 border-b-2`}>
         <div className="flex items-center">
           <div className="pt-2 pb-2 sm:pt-4 sm:pb-4 px-4 md:px-8 border-r-2">
-            <Link href="/radio/schedule">
-              <Pill outline size="medium">
-                <h2 className="whitespace-nowrap flex gap-3 items-center -mr-1">
-                  <span>
-                    Next <span className="hidden md:inline">Up</span>
-                  </span>
-                  <Arrow />
-                </h2>
-              </Pill>
-            </Link>
+            <Pill outline={true} size="medium">
+              <h2 className="whitespace-nowrap">
+                Next <span className="hidden md:inline">Up</span>
+              </h2>
+            </Pill>
           </div>
           <div className="pt-2 pb-2 sm:pt-4 sm:pb-4 overflow-hidden">
             {!isLoading && (
               <Marquee
-                speed={0.75}
+                speed={0.5}
                 text={
                   <span className="h-10 flex items-center space-x-2 whitespace-nowrap px-2">
                     {scheduleData.nextUp.map((show) => (
@@ -48,6 +44,19 @@ export default function NextUp({ content }: NextUpSection) {
                 }
               ></Marquee>
             )}
+          </div>
+          <div className="pt-2 pb-2 sm:pt-4 sm:pb-4 px-4 md:px-8 border-l-2 self-stretch items-center flex">
+            <Link href="/schedule">
+              <h2 className="hidden lg:block whitespace-nowrap underline font-sans font-medium py-1.5">
+                Schedule
+              </h2>
+              <span className="sr-only lg:hidden">Schedule</span>
+              <Cross
+                className="rotate-45 lg:hidden"
+                strokeWidth="3"
+                size={15}
+              />
+            </Link>
           </div>
         </div>
       </section>

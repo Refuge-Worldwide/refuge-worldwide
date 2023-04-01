@@ -13,7 +13,11 @@ export default async function handler(
       filter: string[];
     };
 
-    const shows = await getPastShows(Number(take), Number(skip), filter);
+    const shows = await getPastShows(
+      Number(take),
+      Number(parseInt(skip)),
+      filter
+    );
 
     res
       .setHeader("Cache-Control", "s-maxage=1, stale-while-revalidate=59")

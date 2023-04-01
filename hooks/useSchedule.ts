@@ -6,6 +6,7 @@ type Schedule = {
   liveNow: {
     title: string;
     artwork: string;
+    slug?: string;
   };
   nextUp: Array<ScheduleShow>;
   schedule: Array<ScheduleShow>;

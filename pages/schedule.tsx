@@ -1,12 +1,13 @@
-import Layout from "../../components/layout";
-import PageMeta from "../../components/seo/page";
-import useSchedule from "../../hooks/useSchedule";
-import { ScheduleShow } from "../../types/shared";
-import LocalTime from "../../components/localTime";
+import Layout from "../components/layout";
+import PageMeta from "../components/seo/page";
+import useSchedule from "../hooks/useSchedule";
+import { ScheduleShow } from "../types/shared";
+import LocalTime from "../components/localTime";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-import Pill from "../../components/pill";
-
+import Pill from "../components/pill";
+import Link from "next/link";
+import Loading from "../components/loading";
 dayjs.extend(utc);
 
 export default function SchedulePage() {
@@ -27,8 +28,8 @@ export default function SchedulePage() {
 function Schedule() {
   const { scheduleData, isLoading, error } = useSchedule();
   console.log(scheduleData);
-  if (isLoading) return <div>loading...</div>;
-  if (error) return <div>Fail to Load Data</div>;
+  if (isLoading) return <Loading />;
+  if (error) return <div>Fail to Load Schedule</div>;
   return (
     <ScheduleByDay
       schedule={scheduleData.schedule}
@@ -75,12 +76,12 @@ function ScheduleByDay({
                 } flex gap-3 px-3 my-2
               `}
               >
-                <div className="min-w-[80px] font-medium">
+                <div className="min-w-[50px] sm:min-w-[80px] font-medium">
                   <LocalTime dateTime={show.date} />
                 </div>
-                <p>{show.title}</p>
+                <Link href={`/radio/${show.slug}`}>{show.title}</Link>
                 {show.title == liveNow && (
-                  <div className="h-4 w-4 bg-red animate-pulse rounded-full self-center" />
+                  <div className="flex-none	h-4 w-4 bg-red animate-pulse rounded-full self-center" />
                 )}
               </div>
             ))}

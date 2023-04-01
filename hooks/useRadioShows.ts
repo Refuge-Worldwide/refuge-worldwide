@@ -6,9 +6,9 @@ export default function useRadioShows(
   fallbackData: PastShowSchema[],
   filter: string[]
 ) {
-  const { data, size, isValidating, setSize } = useSWRInfinite(
-    (pageIndex) => ["RadioShows", pageIndex * RADIO_SHOWS_PAGE_SIZE, filter],
-    async (_, skip) => {
+  const { data, isValidating, setSize } = useSWRInfinite(
+    (pageIndex) => [pageIndex * RADIO_SHOWS_PAGE_SIZE, filter],
+    async (skip) => {
       const r = await fetch(
         `/api/shows?take=${RADIO_SHOWS_PAGE_SIZE}&skip=${skip}&filter=${encodeURIComponent(
           filter.join(",")
