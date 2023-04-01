@@ -1,17 +1,29 @@
 import dayjs from "dayjs";
+import dayjsPluginUTC from "dayjs-plugin-utc";
 import next from "next";
 import { graphql } from ".";
 import { ScheduleShow } from "../../types/shared";
 import { extractCollection } from "../../util";
+dayjs.extend(dayjsPluginUTC);
 
 export async function getScheduleData() {
   const cetAdjustment = 2;
+  let endScheduleAdjustment = 2;
   const start = Date.now();
   const nowUTC = dayjs.utc();
   const nowCET = nowUTC.add(cetAdjustment, "hours");
   const startOfDay = nowCET.startOf("day");
   const startSchedule = startOfDay.toISOString();
-  const endSchedule = startOfDay.add(2, "day").toISOString();
+  const dayOfWeek = startOfDay.day();
+  if (dayOfWeek == 5 || dayOfWeek == 6) {
+    endScheduleAdjustment = 3;
+  }
+  const endSchedule = startOfDay
+    .add(endScheduleAdjustment, "day")
+    .toISOString();
+
+  console.log(startSchedule);
+  console.log(endSchedule);
 
   const scheduleQuery = /* GraphQL */ `
     query scheduleQuery($startSchedule: DateTime, $endSchedule: DateTime) {
