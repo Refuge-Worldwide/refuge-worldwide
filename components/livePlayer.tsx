@@ -72,12 +72,12 @@ export default function LivePlayer() {
     <section className={playerWrapperClassNames}>
       <BroadcastingIndicator status={scheduleData?.status} />
 
-      {!isLoading ? (
+      {!isLoading && (
         <Marquee
-          key={scheduleData.liveNow.title}
-          text={<span className="pr-8">{scheduleData.liveNow.title}</span>}
+          key={scheduleData?.liveNow.title}
+          text={<span className="pr-8">{scheduleData?.liveNow.title}</span>}
         />
-      ) : null}
+      )}
 
       {isOnline && (
         <button

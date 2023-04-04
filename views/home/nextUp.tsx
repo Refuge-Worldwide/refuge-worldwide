@@ -9,15 +9,15 @@ import LocalTime from "../../components/localTime";
 import Marquee from "../../components/marquee";
 import { Cross } from "../../icons/cross";
 
-export default function NextUp({ content }: NextUpSection) {
+export default function NextUp() {
   const { scheduleData, isLoading } = useSchedule();
-  const shouldShowBanner = content && content.json;
+  // const shouldShowBanner = scheduleData.nextUp;
 
   const bgOptions = ["bg-orange", "bg-purple", "bg-pink", "bg-green", "bg-red"];
 
   const bgColour = bgOptions[Math.floor(Math.random() * bgOptions.length)];
 
-  if (shouldShowBanner)
+  if (scheduleData?.nextUp && !isLoading)
     return (
       <section className={`${bgColour} border-t-2 border-b-2`}>
         <div className="flex items-center">
