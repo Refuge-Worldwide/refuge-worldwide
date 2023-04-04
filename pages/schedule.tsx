@@ -19,7 +19,6 @@ export default function SchedulePage() {
           <h1>Schedule</h1>
         </Pill>
       </section>
-      <div className="" />
       <Schedule />
     </Layout>
   );
@@ -59,9 +58,12 @@ function ScheduleByDay({
   });
 
   return (
-    <div className="min-h-[60vh]">
+    <div className="min-h-[60vh] xl:grid-cols-2 xl:grid">
       {Object.keys(scheduleByDate).map((day, index) => (
-        <section key={day} className="p-4 sm:p-8 border-t-2 border-black">
+        <section
+          key={day}
+          className="p-4 xl:py-12 xl:border-r-2 sm:p-8 border-t-2 border-black"
+        >
           <div className="max-w-[700px]">
             <Pill outline size="medium">
               <h2>{day}</h2>
@@ -76,7 +78,7 @@ function ScheduleByDay({
                 } flex gap-3 px-3 my-2
               `}
               >
-                <div className="min-w-[50px] sm:min-w-[80px] font-medium">
+                <div className="min-w-[50px] sm:min-w-[80px]">
                   <LocalTime dateTime={show.date} />
                 </div>
                 <Link href={`/radio/${show.slug}`}>{show.title}</Link>
