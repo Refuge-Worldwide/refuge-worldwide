@@ -103,6 +103,7 @@ export type ScheduleShow = {
   artistsCollection: {
     items: ArtistInterface[];
   };
+  live?: boolean;
 };
 
 export enum ArticleType {

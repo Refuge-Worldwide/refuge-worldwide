@@ -80,7 +80,7 @@ function ScheduleByDay({
                 key={show.title}
                 className={`
                 ${
-                  show.title == liveNow ? "bg-black text-white py-3" : ""
+                  show.live ? "bg-black text-white py-3" : ""
                 } flex gap-3 px-3 my-2
               `}
               >
@@ -88,7 +88,7 @@ function ScheduleByDay({
                   <LocalTime dateTime={show.date} />
                 </div>
                 <Link href={`/radio/${show.slug}`}>{show.title}</Link>
-                {show.title == liveNow && (
+                {show.live && (
                   <div className="flex-none	h-4 w-4 bg-red animate-pulse rounded-full self-center" />
                 )}
               </div>

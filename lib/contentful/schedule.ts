@@ -76,6 +76,7 @@ export async function getScheduleData() {
       if (nowUTC.isAfter(dayjs(show.date))) {
         liveNow = show;
         nextUp = schedule.slice(index + 1, index + 5);
+        show.live = true;
       } else {
         nextUp = schedule.slice(index, index + 4);
       }
