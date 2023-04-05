@@ -8,14 +8,25 @@ import Marquee from "./marquee";
 
 const BroadcastingIndicator = ({
   status,
+  isLoading,
 }: {
   status: "online" | "offline";
+  isLoading: boolean;
 }) => {
   if (status === "online")
     return (
       <div className="grow-0 flex items-center space-x-6">
         <div className="shrink-0 w-7 h-7 sm:h-10 sm:w-10 rounded-full bg-red animate-pulse" />
         <p className="hidden md:block leading-none mt-1">Live</p>
+      </div>
+    );
+  else if (isLoading)
+    return (
+      <div className="grow-0 flex items-center space-x-6 opacity-70">
+        <div className="shrink-0 w-7 h-7 sm:h-10 sm:w-10 rounded-full bg-red" />
+        <p className="hidden md:block leading-none mt-1 animate-pulse">
+          Loading
+        </p>
       </div>
     );
 
@@ -70,7 +81,10 @@ export default function LivePlayer() {
 
   return (
     <section className={playerWrapperClassNames}>
-      <BroadcastingIndicator status={scheduleData?.status} />
+      <BroadcastingIndicator
+        status={scheduleData?.status}
+        isLoading={isLoading}
+      />
 
       {!isLoading && (
         <Marquee
