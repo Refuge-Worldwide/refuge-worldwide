@@ -23,7 +23,7 @@ export default function HomePage({
     <Layout>
       <PageMeta title="Refuge Worldwide" path="/" />
 
-      <NextUp {...nextUp} />
+      <NextUp />
 
       <FeaturedShows shows={featuredShows} />
 

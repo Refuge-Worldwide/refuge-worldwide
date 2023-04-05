@@ -1,21 +1,32 @@
 import cn from "classnames";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import usePlayerState from "../hooks/usePlayerState";
-import useRadioCoStatus from "../hooks/useRadioCoStatus";
+import useSchedule from "../hooks/useSchedule";
 import Pause from "../icons/pause";
 import Play from "../icons/play";
 import Marquee from "./marquee";
 
 const BroadcastingIndicator = ({
   status,
+  isLoading,
 }: {
   status: "online" | "offline";
+  isLoading: boolean;
 }) => {
   if (status === "online")
     return (
       <div className="grow-0 flex items-center space-x-6">
         <div className="shrink-0 w-7 h-7 sm:h-10 sm:w-10 rounded-full bg-red animate-pulse" />
         <p className="hidden md:block leading-none mt-1">Live</p>
+      </div>
+    );
+  else if (isLoading)
+    return (
+      <div className="grow-0 flex items-center space-x-6 opacity-70">
+        <div className="shrink-0 w-7 h-7 sm:h-10 sm:w-10 rounded-full bg-red" />
+        <p className="hidden md:block leading-none mt-1 animate-pulse">
+          Loading
+        </p>
       </div>
     );
 
@@ -32,8 +43,9 @@ export default function LivePlayer() {
 
   const AUDIO_SRC = `https://streaming.radio.co/${REFUGE_WORLDWIDE}/listen`;
 
-  const { data } = useRadioCoStatus(REFUGE_WORLDWIDE);
-  const isOnline = data?.status === "online";
+  const { scheduleData, isLoading } = useSchedule();
+
+  const isOnline = scheduleData?.status === "online";
 
   const player = useRef<HTMLAudioElement>(null);
   const source = useRef<HTMLSourceElement>(null);
@@ -52,31 +64,34 @@ export default function LivePlayer() {
   );
 
   useEffect(() => {
-    if ("mediaSession" in navigator && data?.current_track) {
+    if ("mediaSession" in navigator && scheduleData?.liveNow) {
       navigator.mediaSession.metadata = new MediaMetadata({
-        title: data.current_track.title,
+        title: scheduleData.liveNow.title,
         artist: "Refuge Worldwide",
         artwork: [
           {
-            src: data.current_track.artwork_url,
+            src: scheduleData.liveNow.artwork,
             sizes: "1024x1024",
             type: "image/png",
           },
         ],
       });
     }
-  }, [data]);
+  }, [scheduleData]);
 
   return (
     <section className={playerWrapperClassNames}>
-      <BroadcastingIndicator status={data?.status} />
+      <BroadcastingIndicator
+        status={scheduleData?.status}
+        isLoading={isLoading}
+      />
 
-      {isOnline ? (
+      {!isLoading && (
         <Marquee
-          key={data?.current_track?.title}
-          text={data?.current_track?.title}
+          key={scheduleData?.liveNow.title}
+          text={<span className="pr-8">{scheduleData?.liveNow.title}</span>}
         />
-      ) : null}
+      )}
 
       {isOnline && (
         <button

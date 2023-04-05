@@ -96,6 +96,23 @@ export interface ShowInterface {
   content: Content;
 }
 
+export type ScheduleShow = {
+  sys: {
+    id: string;
+  };
+  title: string;
+  localStartTime?: string;
+  date: string;
+  dateEnd: string;
+  slug: string;
+  coverImage: CoverImage;
+  coverImagePosition: CoverImagePosition;
+  artistsCollection: {
+    items: ArtistInterface[];
+  };
+  live?: boolean;
+};
+
 export enum ArticleType {
   Project = "Project",
   Blog = "Blog",

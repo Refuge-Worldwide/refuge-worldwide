@@ -25,7 +25,7 @@ type RadioCo = {
   }[];
 };
 
-async function getRadioCoStatus(_: string, stationId: string) {
+async function getRadioCoStatus(stationId: string) {
   const URL = `https://public.radio.co/stations/${stationId}/status`;
 
   const res = await fetch(URL);
@@ -34,7 +34,15 @@ async function getRadioCoStatus(_: string, stationId: string) {
 }
 
 export default function useRadioCoStatus(stationId: string) {
-  return useSWR<RadioCo>(["RadioCo", stationId], getRadioCoStatus, {
+  // return useSWR<RadioCo>(stationId, getRadioCoStatus, {
+  //   refreshInterval: 10 * 60 * 1000,
+  // });
+  const { data, isLoading } = useSWR<RadioCo>(stationId, getRadioCoStatus, {
     refreshInterval: 10 * 60 * 1000,
   });
+
+  return {
+    data: data,
+    isLoading,
+  };
 }
