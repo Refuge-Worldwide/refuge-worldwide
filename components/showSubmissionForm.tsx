@@ -11,6 +11,8 @@ import * as Yup from "yup";
 const today = new Date();
 const instaReg = /^([\w.\s]+, )*([\w.\s]+){1}$/;
 const listReg = /^([\w \s]+, )*([\w \s]+){1}$/;
+const onTheHourReg = /.*00$/;
+
 today.setHours(0, 0, 0, 0);
 
 const validationSchema = [
@@ -28,9 +30,12 @@ const validationSchema = [
       .email("Invalid email")
       .required("Please provide your email address"),
     number: Yup.string(),
-    name: Yup.string().required("Please provide a show name"),
-    datetime: Yup.date()
-      .min(today, "Date cannot be in the past")
+    showName: Yup.string().required("Please provide a show name"),
+    datetime: Yup.string()
+      .matches(
+        onTheHourReg,
+        "Shows must start on the hour - Please enter 00 for minutes"
+      )
       .required("Please choose a date for your show"),
     length: Yup.number().required("Please choose a length for your show"),
     genres: Yup.array()
@@ -107,7 +112,7 @@ const initialValues: SubmissionFormValues = {
   readInfo: false,
   email: "",
   number: "",
-  name: "",
+  showName: "",
   datetime: "",
   length: "1",
   genres: [],

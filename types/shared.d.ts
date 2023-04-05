@@ -189,7 +189,7 @@ export type SubmissionFormValues = {
   readInfo: Boolean;
   email: string;
   number: string;
-  name: string;
+  showName: string;
   datetime: string;
   length: string;
   genres: Array<{ value: string; label: string }>;

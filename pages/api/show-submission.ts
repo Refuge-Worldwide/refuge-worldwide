@@ -37,7 +37,7 @@ const appendToSpreadsheet = async (values) => {
   }
   const newRow = {
     Timestamp: dayjs().format("DD/MM/YYYY HH:mm:ss"),
-    "Show name": values.name,
+    "Show name": values.showName,
     "Show date": dayjs(values.datetime).format("DD/MM/YYYY HH:mm"),
     "Show description": values.description,
     "Host name(s)": values.hosts.map((x) => x.label).join(", "),
@@ -200,11 +200,15 @@ const addShow = async (values) => {
     const entry = await environment.createEntry(showContentTypeId, {
       fields: {
         title: {
-          "en-US": values.name + " | " + artistsForContentful,
+          "en-US": values.showName + " | " + artistsForContentful,
         },
         internal: {
           "en-US":
-            values.name + " - " + artistsForContentful + " - " + dateFormatted,
+            values.showName +
+            " - " +
+            artistsForContentful +
+            " - " +
+            dateFormatted,
         },
         date: {
           "en-US": startDateTime,
@@ -281,7 +285,7 @@ export default async function handler(
   const values = req.body;
   console.log(values);
   try {
-    values.imageId = await uploadImage(values.name, values.image);
+    values.imageId = await uploadImage(values.showName, values.image);
     if (values.isNewHost) {
       const contentfulNewHost = await addArtist(values.newHost);
       console.log(contentfulNewHost);

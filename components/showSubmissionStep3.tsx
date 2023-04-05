@@ -42,7 +42,12 @@ export default function ShowSubmissionStep3({
         <legend>
           <h2 className="font-sans text-base sm:text-large">Show info</h2>
         </legend>
-        <InputField name="name" type="text" label="Show name" required={true} />
+        <InputField
+          name="showName"
+          type="text"
+          label="Show name"
+          required={true}
+        />
         <InputField
           name="datetime"
           type={showType == "live" ? "datetime-local" : "date"}
