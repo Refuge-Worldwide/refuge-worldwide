@@ -14,7 +14,7 @@ export default function SchedulePage() {
   const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   return (
     <Layout className="bg-orange">
-      <PageMeta title="Schedule | Refuge Worldwide" path="radio/schedule" />
+      <PageMeta title="Schedule | Refuge Worldwide" path="schedule" />
       <section className="p-4 sm:p-8">
         <Pill outline>
           <h1>Schedule</h1>
