@@ -11,6 +11,7 @@ import Loading from "../components/loading";
 dayjs.extend(utc);
 
 export default function SchedulePage() {
+  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   return (
     <Layout className="bg-orange">
       <PageMeta title="Schedule | Refuge Worldwide" path="radio/schedule" />
@@ -18,6 +19,9 @@ export default function SchedulePage() {
         <Pill outline>
           <h1>Schedule</h1>
         </Pill>
+        <p className="mt-4 md:mt-8 text-small">
+          Displayed in your timezone: {timezone}
+        </p>
       </section>
       <Schedule />
     </Layout>
@@ -62,7 +66,9 @@ function ScheduleByDay({
       {Object.keys(scheduleByDate).map((day, index) => (
         <section
           key={day}
-          className="p-4 xl:py-12 xl:border-r-2 sm:p-8 border-t-2 border-black"
+          className={`p-4 xl:py-12  sm:p-8 border-t-2 border-black ${
+            index % 2 == 0 ? "xl:border-r-2" : ""
+          }`}
         >
           <div className="max-w-[700px]">
             <Pill outline size="medium">
