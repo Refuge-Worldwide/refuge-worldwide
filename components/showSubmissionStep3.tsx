@@ -127,9 +127,12 @@ export default function ShowSubmissionStep3({
         {showType === "preRecord" && (
           <fieldset>
             <legend>
-              Pre-recorded shows
+              Upload your show{" "}
+              <a href={uploadLink} rel="noreferrer" target="_blank">
+                here
+              </a>
               <span className="label-description">
-                Please check your all the options below before uploading
+                Please check all the options below before uploading.
               </span>
             </legend>
             <div>
@@ -170,15 +173,6 @@ export default function ShowSubmissionStep3({
               </label>
             </div>
           </fieldset>
-        )}
-
-        {showType === "preRecord" && mp3 && oneHr && micLevel && (
-          <p>
-            Please upload your show{" "}
-            <a href={uploadLink} rel="noreferrer" target="_blank">
-              here
-            </a>
-          </p>
         )}
 
         {showType === "live" && (
