@@ -7,9 +7,9 @@ import {
 
 export default function useNewsArticles(fallbackData: ArticleInterface[]) {
   const { data, setSize } = useSWRInfinite(
-    (pageIndex) => ["NewsArticles", pageIndex * NEWS_ARTICLES_PAGE_SIZE],
-    async (_, skip) =>
-      getNewsPageArticles(false, NEWS_ARTICLES_PAGE_SIZE, skip as number),
+    (pageIndex) => [pageIndex * NEWS_ARTICLES_PAGE_SIZE],
+    async (skip) =>
+      getNewsPageArticles(false, NEWS_ARTICLES_PAGE_SIZE, skip[0]),
     {
       fallbackData: [fallbackData],
       revalidateFirstPage: false,
