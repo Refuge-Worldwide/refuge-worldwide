@@ -131,6 +131,7 @@ export default function ShowSubmissionStep3({
               <a href={uploadLink} rel="noreferrer" target="_blank">
                 here
               </a>
+              *
               <span className="label-description">
                 Please check all the options below before uploading.
               </span>
