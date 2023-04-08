@@ -42,7 +42,12 @@ export default function ShowSubmissionStep3({
         <legend>
           <h2 className="font-sans text-base sm:text-large">Show info</h2>
         </legend>
-        <InputField name="name" type="text" label="Show name" required={true} />
+        <InputField
+          name="showName"
+          type="text"
+          label="Show name"
+          required={true}
+        />
         <InputField
           name="datetime"
           type={showType == "live" ? "datetime-local" : "date"}
@@ -122,9 +127,13 @@ export default function ShowSubmissionStep3({
         {showType === "preRecord" && (
           <fieldset>
             <legend>
-              Pre-recorded shows
+              Upload your show{" "}
+              <a href={uploadLink} rel="noreferrer" target="_blank">
+                here
+              </a>
+              *
               <span className="label-description">
-                Please check your all the options below before uploading
+                Please check all the options below before uploading.
               </span>
             </legend>
             <div>
@@ -165,15 +174,6 @@ export default function ShowSubmissionStep3({
               </label>
             </div>
           </fieldset>
-        )}
-
-        {showType === "preRecord" && mp3 && oneHr && micLevel && (
-          <p>
-            Please upload your show{" "}
-            <a href={uploadLink} rel="noreferrer" target="_blank">
-              here
-            </a>
-          </p>
         )}
 
         {showType === "live" && (

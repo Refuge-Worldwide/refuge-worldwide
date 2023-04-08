@@ -9,9 +9,10 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 
 const today = new Date();
-const phoneReg = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,7}$/;
-const instaReg = /^(([\w.](, )?)*)+$/;
-const listReg = /^(([\w\ ](, )?)*)+$/;
+const instaReg = /^([\w.\s]+, )*([\w.\s]+){1}$/;
+const listReg = /^([\w \s]+, )*([\w \s]+){1}$/;
+const onTheHourReg = /.*00$/;
+
 today.setHours(0, 0, 0, 0);
 
 const validationSchema = [
@@ -29,7 +30,7 @@ const validationSchema = [
       .email("Invalid email")
       .required("Please provide your email address"),
     number: Yup.string(),
-    name: Yup.string().required("Please provide a show name"),
+    showName: Yup.string().required("Please provide a show name"),
     datetime: Yup.date()
       .min(today, "Date cannot be in the past")
       .required("Please choose a date for your show"),
@@ -108,7 +109,7 @@ const initialValues: SubmissionFormValues = {
   readInfo: false,
   email: "",
   number: "",
-  name: "",
+  showName: "",
   datetime: "",
   length: "1",
   genres: [],
