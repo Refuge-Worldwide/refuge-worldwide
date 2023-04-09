@@ -71,7 +71,9 @@ function ScheduleByDay({
         <section
           key={day}
           className={`p-4 xl:py-12  sm:p-8 border-t-2 border-black ${
-            index % 2 == 0 ? "xl:border-r-2" : ""
+            index % 2 == 0 && Object.keys(scheduleByDate).length > 1
+              ? "xl:border-r-2"
+              : ""
           }`}
         >
           <div className="max-w-[700px]">
