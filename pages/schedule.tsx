@@ -62,7 +62,11 @@ function ScheduleByDay({
   });
 
   return (
-    <div className="min-h-[60vh] xl:grid-cols-2 xl:grid">
+    <div
+      className={`min-h-[60vh]  ${
+        Object.keys(scheduleByDate).length > 1 ? "xl:grid-cols-2 xl:grid" : ""
+      }`}
+    >
       {Object.keys(scheduleByDate).map((day, index) => (
         <section
           key={day}
