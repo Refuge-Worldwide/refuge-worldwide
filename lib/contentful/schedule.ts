@@ -30,7 +30,7 @@ export async function getScheduleData() {
       showCollection(
         order: date_ASC
         where: {
-          dateEnd_gt: $startSchedule
+          date_gt: $startSchedule
           dateEnd_lte: $endSchedule
           dateEnd_exists: true
         }
