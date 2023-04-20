@@ -17,7 +17,7 @@ const ChatRoom = () => {
   if (openChat) {
     return (
       <div className="relative">
-        <div className="absolute top-0 left-0 w-full bg-[#313338] text-white h-[50px] px-4 border-b border-white">
+        <div className="absolute top-0 left-0 w-full bg-black text-white h-[50px] px-4 border-b border-white">
           <div className="flex gap-4 items-center h-full">
             <span className="font-medium flex-grow">Chatroom</span>
             <a href="https://discord.gg/QJgtWbSz" target="_blank">
