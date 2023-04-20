@@ -5,9 +5,8 @@ import Footer from "../components/footer";
 import { LivePlayerLoading } from "../components/livePlayer";
 import Navigation from "../components/navigation";
 import useFathom from "../hooks/useFathom";
+import JoinChat from "../components/join-chat";
 import useSmoothscrollPolyfill from "../hooks/useSmoothscrollPolyfill";
-// import WidgetBotEmbed from "../components/discord";
-import WidgetBotCrate from "../components/WidgetBotCrate";
 import "../styles/globals.css";
 
 const MixcloudPlayer = dynamic(() => import("../components/mixcloudPlayer"), {
@@ -38,13 +37,7 @@ function RefugeApp({ Component, pageProps }: AppProps) {
       <Footer />
 
       <MixcloudPlayer />
-
-      <WidgetBotCrate
-        server="1077626733458620487"
-        channel="1077626735132164096"
-        color="#000"
-        glyph={["/images/chat.svg", "50%"]}
-      />
+      <JoinChat />
     </Fragment>
   );
 }
