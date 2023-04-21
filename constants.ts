@@ -18,6 +18,8 @@ export const CONTACT_URL = "mailto:hello@refugeworldwide.com";
 
 export const SHOP_URL = "https://shop.refugeworldwide.com";
 
+export const TELEGRAM_URL = "https://t.me/refugeworldwide";
+
 export const ALPHABET = [
   "A",
   "B",
