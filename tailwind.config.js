@@ -187,5 +187,6 @@ module.exports = {
       modifiers: ["lg"],
     }),
     require("@tailwindcss/forms"),
+    require("tailwindcss-safe-area"),
   ],
 };

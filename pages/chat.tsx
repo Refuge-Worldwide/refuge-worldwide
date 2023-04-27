@@ -20,7 +20,7 @@ export default function ChatPage() {
               </a>
             </div>
           </div>
-          <div className="w-screen h-screen">
+          <div className="w-screen h-screen pb-safe">
             <DiscordEmbed />
           </div>
         </div>
