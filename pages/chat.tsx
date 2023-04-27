@@ -22,7 +22,7 @@ export default function ChatPage() {
               </a>
             </div>
           </div>
-          <div className="w-full h-[calc(100vh-150px)] sm:h-[calc(100vh-55px)] pb-safe">
+          <div className="w-full h-[calc(100vh-130px)] sm:h-[calc(100vh-55px)] pb-safe">
             <DiscordEmbed />
           </div>
         </div>
