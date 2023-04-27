@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useState } from "react";
 import { MobileMenu } from "../components/mobileMenu";
-import { INSTAGRAM_URL, SHOP_URL } from "../constants";
+import { INSTAGRAM_URL, SHOP_URL, DISCORD_INVITE_URL } from "../constants";
 import Instagram from "../icons/instagram";
 import { Menu } from "../icons/menu";
 import MessageSquare from "../icons/message-square";
@@ -45,7 +45,7 @@ export default function Navigation() {
                 className="flex focus:outline-none focus:ring-4"
                 target="_blank"
                 rel="noopener noreferrer"
-                href="https://refugeworldwide.com/chat"
+                href="/chat"
               >
                 <span className="sr-only">Open Chat</span>
                 <span aria-hidden>
@@ -139,9 +139,13 @@ export default function Navigation() {
                       </NavigationLink>
                     </li>
                     <li className="h-6 leading-none">
-                      <button onClick={openChat}>
+                      <a
+                        href={DISCORD_INVITE_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
                         <MessageSquare />
-                      </button>
+                      </a>
                     </li>
                     <li>
                       <a

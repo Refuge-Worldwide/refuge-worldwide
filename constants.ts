@@ -18,6 +18,12 @@ export const CONTACT_URL = "mailto:hello@refugeworldwide.com";
 
 export const SHOP_URL = "https://shop.refugeworldwide.com";
 
+export const DISCORD_INVITE_URL = "https://discord.gg/QJgtWbSz";
+
+export const DISCORD_SERVER_ID = "1077626733458620487";
+
+export const DISCORD_CHANNEL_ID = "1077626735132164096";
+
 export const ALPHABET = [
   "A",
   "B",

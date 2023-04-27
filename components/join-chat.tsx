@@ -1,12 +1,13 @@
 import MessageSquare from "../icons/message-square";
 import { useState } from "react";
-import WidgetBot from "@widgetbot/react-embed";
 import { Cross } from "../icons/cross";
 import { Arrow } from "../icons/arrow";
+import { DISCORD_INVITE_URL } from "../constants";
+import DiscordEmbed from "./DiscordEmbed";
 
 export default function JoinChat() {
   return (
-    <div className="fixed bottom-4 right-4 hidden sm:block">
+    <div className="fixed bottom-4 right-4 hidden sm:block z-50">
       <ChatRoom />
     </div>
   );
@@ -20,7 +21,7 @@ const ChatRoom = () => {
         <div className="absolute top-0 left-0 w-full bg-black text-white h-[50px] px-4 border-b border-white rounded-t-xl">
           <div className="flex gap-4 items-center h-full">
             <span className="leading-6 flex-grow">Chatroom</span>
-            <a href="https://discord.gg/QJgtWbSz" target="_blank">
+            <a href={DISCORD_INVITE_URL} target="_blank">
               <Arrow className="-rotate-45" colour="white" />
             </a>
             <button onClick={() => setOpenChat(false)}>
@@ -28,11 +29,9 @@ const ChatRoom = () => {
             </button>
           </div>
         </div>
-        <WidgetBot
-          className="h-[500px] w-[350px]"
-          server="1077626733458620487"
-          channel="1077626735132164096"
-        />
+        <div className="h-[500px] w-[350px]">
+          <DiscordEmbed />
+        </div>
       </div>
     );
   } else {
