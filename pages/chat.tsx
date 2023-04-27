@@ -11,7 +11,7 @@ export default function ChatPage() {
       <PageMeta title="Chat | Refuge Worldwide" path="chat/" />
 
       <div className="h-screen w-screen">
-        <div className="relative">
+        <div className="relative h-full">
           <div className="absolute top-0 left-0 w-full bg-black text-white h-[50px] px-4 border-b border-white">
             <div className="flex gap-4 items-center h-full">
               <span className="leading-6 flex-grow">Chatroom</span>
@@ -20,7 +20,7 @@ export default function ChatPage() {
               </a>
             </div>
           </div>
-          <div className="w-screen h-screen pb-safe">
+          <div className="w-full h-full pb-safe">
             <DiscordEmbed />
           </div>
         </div>
