@@ -11,10 +11,10 @@ export default function ChatPage() {
     <div ref={ref} className="flex flex-col min-h-screen">
       <PageMeta title="Chat | Refuge Worldwide" path="chat/" />
 
-      <div className="h-screen w-screen">
+      <div className="h-screen w-screen bg-[#36393E]">
         <div className="relative h-full">
           <LivePlayer />
-          <div className="absolute top-12 left-0 w-full bg-black text-white h-[50px] px-4 border-b border-white">
+          <div className="absolute top-12 sm:top-16 left-0 w-full bg-black text-white h-[50px] px-4 border-b border-white">
             <div className="flex gap-4 items-center h-full">
               <span className="leading-6 flex-grow">Chatroom</span>
               <a href={DISCORD_INVITE_URL} target="_blank">
@@ -22,7 +22,7 @@ export default function ChatPage() {
               </a>
             </div>
           </div>
-          <div className="w-full h-[calc(100vh-150px)] sm:h-full pb-safe">
+          <div className="w-full h-[calc(100vh-150px)] sm:h-[calc(100vh-55px)] pb-safe">
             <DiscordEmbed />
           </div>
         </div>
