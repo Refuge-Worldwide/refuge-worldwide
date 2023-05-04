@@ -66,9 +66,7 @@ export const ArticlePreviewFragment = /* GraphQL */ `
     author {
       name
     }
-    content {
-      json
-    }
+    subtitle
     coverImage {
       sys {
         id

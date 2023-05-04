@@ -7,7 +7,6 @@ import { TypeArticle } from "../types/contentful";
 import type { ArticleInterface } from "../types/shared";
 import Badge from "./badge";
 import Date from "./date";
-import NewsExcerpt from "./newsExcerpt";
 
 interface ArticlePreview extends ArticleInterface {
   withType?: boolean;
@@ -20,6 +19,7 @@ export default function ArticlePreview({
   articleType,
   withType,
   coverImage,
+  subtitle,
   content,
 }: ArticlePreview) {
   return (
@@ -62,9 +62,7 @@ export default function ArticlePreview({
         )}
 
         <div className="hidden sm:block">
-          <div className="font-light">
-            <NewsExcerpt content={content} />
-          </div>
+          <p className="font-light">{subtitle}</p>
 
           <div className="h-4" />
 
