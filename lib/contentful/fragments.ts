@@ -96,5 +96,6 @@ export const RelatedArticleFragment = /* GraphQL */ `
     date
     slug
     title
+    subtitle
   }
 `;

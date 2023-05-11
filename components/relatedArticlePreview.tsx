@@ -11,10 +11,11 @@ export default function RelatedArticlePreview({
   coverImage,
   date,
   articleType,
+  subtitle,
 }: ArticleInterface) {
   return (
     <Link href={`/news/${slug}`} prefetch={false}>
-      <article className="text-small text-white">
+      {/* <article className="text-small text-white">
         <div className="flex">
           <Image
             src={coverImage.url}
@@ -41,7 +42,38 @@ export default function RelatedArticlePreview({
             <Badge invert text={articleType} />
           </li>
         </ul>
+      </article> */}
+      <article className="text-small leading-snug text-white">
+        <div className="flex relative">
+          <Image
+            key={coverImage.sys.id}
+            src={coverImage.url}
+            loader={loaders.contentful}
+            width={590}
+            height={369}
+            alt={title}
+            className="bg-black/10 object-cover object-center aspect-[16/10] w-full"
+          />
+          <div className="flex absolute bottom-4 left-4">
+            <Badge invert={true} text={articleType} />
+          </div>
+        </div>
+
+        <div className="h-3" />
+        <div className="md:flex space-x-2 items-center">
+          <p className="text-small">
+            <Date dateString={date} />
+          </p>
+        </div>
+        <div className="h-1" />
+
+        <h2 id={`article-${slug}`} className="font-sans font-medium">
+          {title}
+        </h2>
+
+        <p className="font-light">{subtitle}</p>
       </article>
+      ;
     </Link>
   );
 }

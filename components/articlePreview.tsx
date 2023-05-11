@@ -59,19 +59,6 @@ export default function ArticlePreview({
         </h2>
 
         <p className="font-light">{subtitle}</p>
-
-        {/* <div className="hidden sm:block">
-          <div className="font-light">
-            <NewsExcerpt content={content} />
-          </div>
-
-          <div className="h-4" />
-
-          <p className="inline-flex items-center gap-5">
-            <span className="underline">Read more</span>
-            <Arrow />
-          </p>
-        </div> */}
       </article>
     </Link>
   );
