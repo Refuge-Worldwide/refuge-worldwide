@@ -35,10 +35,18 @@ export default async function handler(
     const { data, duration } = await getScheduleData();
     const r = await fetch("https://public.radio.co/stations/s3699c5e49/status");
     const radioCoData: RadioCo = await r.json();
+    let liveNowArtwork = radioCoData.current_track.artwork_url;
+    const liveNowContentful = data.schedule.find((show) => {
+      return show.live;
+    });
+
+    if (liveNowContentful) {
+      liveNowArtwork = liveNowContentful.coverImage.url;
+    }
 
     const liveNow = {
       title: radioCoData.current_track.title,
-      artwork: radioCoData.current_track.artwork_url,
+      artwork: liveNowArtwork,
     };
 
     const scheduleData = {
