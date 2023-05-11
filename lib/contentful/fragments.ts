@@ -99,3 +99,17 @@ export const RelatedArticleFragment = /* GraphQL */ `
     subtitle
   }
 `;
+
+export const EventFragment = /* GraphQL */ `
+  fragment EventFragment on Event {
+    title
+    eventType
+    date
+    slug
+    location
+    ticketLink
+    article {
+      slug
+    }
+  }
+`;

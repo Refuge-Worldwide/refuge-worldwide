@@ -223,3 +223,12 @@ export type SubmissionFormValues = {
   hasGuests: boolean;
   guests?: Array<{ name: string; image: string }>;
 };
+
+export interface EventInterface {
+  title: string;
+  eventType: EventType;
+  date: string;
+  slug: string;
+  location: string;
+  ticketLink: string;
+}
