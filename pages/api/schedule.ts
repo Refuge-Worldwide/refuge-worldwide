@@ -40,7 +40,7 @@ export default async function handler(
       return show.live;
     });
 
-    if (liveNowContentful) {
+    if (liveNowContentful && liveNowContentful.coverImage) {
       liveNowArtwork = liveNowContentful.coverImage.url;
     }
 
