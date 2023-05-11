@@ -13,7 +13,7 @@ export default function AllArticles({
   return (
     <section>
       <div className="p-4 sm:p-8">
-        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
+        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-10 gap-y-12">
           {articles.map((article, i) => (
             <li key={i}>
               <ArticlePreview withType {...article} />
