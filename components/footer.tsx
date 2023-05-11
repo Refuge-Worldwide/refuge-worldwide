@@ -117,7 +117,17 @@ export default function Footer() {
             >
               mirshko
             </a>
-            . Powered by{" "}
+            &nbsp;&{" "}
+            <a
+              className="underline"
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://jackmurraybrown.com"
+            >
+              Jack Murray-Brown
+            </a>
+            . <br className="sm:hidden" />
+            Powered by{" "}
             <a
               target="_blank"
               rel="noopener noreferrer"
@@ -127,6 +137,17 @@ export default function Footer() {
                 className="inline h-3 w-auto"
                 src="/vercel-logotype-light.svg"
                 alt="Vercel"
+              />
+            </a>
+            <a
+              target="_blank"
+              rel="nofollow"
+              href="https://www.contentful.com/"
+            >
+              <img
+                className="inline h-4 w-auto ml-1"
+                src="/contentful-logo.svg"
+                alt="Powered by Contentful"
               />
             </a>
           </p>
