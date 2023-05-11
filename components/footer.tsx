@@ -4,12 +4,12 @@ import {
   PATREON_URL,
   SOUNDCLOUD_URL,
   CONTACT_URL,
-  TWITTER_URL,
+  TELEGRAM_URL,
 } from "../constants";
 import { Arrow } from "../icons/arrow";
 import Mixcloud from "../icons/mixcloud";
-import { TwitterFilled } from "../icons/twitter";
 import Soundcloud from "../icons/soundcloud";
+import Telegram from "../icons/telegram";
 
 export default function Footer() {
   const handleGoToTop = () =>
@@ -74,8 +74,8 @@ export default function Footer() {
               </Link>
             </li>
             <li>
-              <a target="_blank" rel="noopener noreferrer" href={TWITTER_URL}>
-                <TwitterFilled />
+              <a href={TELEGRAM_URL} target="_blank" rel="noopener noreferrer">
+                <Telegram />
               </a>
             </li>
             <li>
