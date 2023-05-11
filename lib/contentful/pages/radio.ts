@@ -167,7 +167,7 @@ export async function getAllGenres() {
 
 export type RelatedShowsType = Pick<
   ShowInterface,
-  "slug" | "title" | "coverImage" | "date" | "genresCollection"
+  "slug" | "title" | "coverImage" | "date" | "genresCollection" | "mixcloudLink"
 >;
 
 export async function getRelatedShows(
@@ -186,6 +186,7 @@ export async function getRelatedShows(
                 title
                 date
                 slug
+                mixcloudLink
                 coverImage {
                   sys {
                     id
@@ -219,7 +220,8 @@ export async function getRelatedShows(
     .filter(
       (show, index) =>
         show.slug !== slug &&
-        index === linkedFromShows.findIndex((t) => t.slug === show.slug)
+        index === linkedFromShows.findIndex((t) => t.slug === show.slug) &&
+        show.mixcloudLink
     )
     .filter((show) => dayjs(show.date).isBefore(dayjs()))
     .sort(sort.date_DESC);

@@ -96,6 +96,7 @@ export async function getArtistsPageSingle(slug: string, preview: boolean) {
                   height
                 }
                 date
+                mixcloudLink
                 genresCollection(limit: 9) {
                   items {
                     name
@@ -130,7 +131,9 @@ export async function getArtistsPageSingle(slug: string, preview: boolean) {
   const linkedFromFiltered = linkedFrom.filter(date_lt_TODAY);
 
   if (linkedFromFiltered.length > 0) {
-    relatedShows = linkedFromFiltered.sort(sort.date_DESC);
+    relatedShows = linkedFromFiltered
+      .filter((show) => show.mixcloudLink)
+      .sort(sort.date_DESC);
   }
 
   return {
