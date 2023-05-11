@@ -24,8 +24,8 @@ export default function ArticlePreview({
 }: ArticlePreview) {
   return (
     <Link href={`/news/${slug}`} aria-labelledby={`article-${slug}`}>
-      <article className="text-small font-medium leading-snug">
-        <div className="flex">
+      <article className="text-small leading-snug">
+        <div className="flex relative">
           <Image
             key={coverImage.sys.id}
             src={coverImage.url}
@@ -35,42 +35,30 @@ export default function ArticlePreview({
             alt={title}
             className="bg-black/10 object-cover object-center aspect-[16/10]"
           />
+          {withType ? (
+            <Fragment>
+              <div className="flex absolute bottom-4 left-4">
+                <Badge invert={true} text={articleType} />
+              </div>
+            </Fragment>
+          ) : (
+            <div className="hidden sm:block h-4" />
+          )}
         </div>
 
-        <div className="h-4" />
+        <div className="h-3" />
+        <div className="md:flex space-x-2 items-center">
+          <p className="text-small">
+            <Date dateString={date} />
+          </p>
+        </div>
+        <div className="h-1" />
 
-        <p>
-          <Date dateString={date} />
-        </p>
-
-        <h2 id={`article-${slug}`} className="font-sans">
+        <h2 id={`article-${slug}`} className="font-sans font-medium">
           {title}
         </h2>
 
-        {withType ? (
-          <Fragment>
-            <div className="h-2" />
-
-            <div className="flex">
-              <Badge text={articleType} />
-            </div>
-
-            <div className="hidden sm:block h-2" />
-          </Fragment>
-        ) : (
-          <div className="hidden sm:block h-4" />
-        )}
-
-        <div className="hidden sm:block">
-          <p className="font-light">{subtitle}</p>
-
-          <div className="h-4" />
-
-          <p className="inline-flex items-center gap-5">
-            <span className="underline">Read more</span>
-            <Arrow />
-          </p>
-        </div>
+        <p className="font-light">{subtitle}</p>
       </article>
     </Link>
   );
