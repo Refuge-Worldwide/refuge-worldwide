@@ -4,7 +4,7 @@ import Date from "./date";
 import Link from "next/link";
 export default function EventRow({ event }) {
   return (
-    <li className="border-t border-black p-5 lg:grid grid-cols-12 lg:gap-x-4">
+    <li className="border-t border-black p-5 lg:grid grid-cols-12 lg:gap-x-4 px-4 sm:px-8">
       <div className="hidden lg:block lg:col-span-1 text-small">
         <Date dateString={event.date} formatString="DD" />
       </div>

@@ -2,6 +2,7 @@ import { graphql } from "..";
 import { EventInterface } from "../../../types/shared";
 import { extractCollection, extractCollectionItem } from "../../../util";
 import { EventFragment } from "../fragments";
+import dayjs from "dayjs";
 
 export const EVENTS_PAGE_SIZE = 12;
 
@@ -32,7 +33,27 @@ export async function getUpcomingEvents(
     preview,
   });
 
-  return extractCollection<EventInterface>(res, "eventCollection");
+  const upcomingEvents = extractCollection<EventInterface>(
+    res,
+    "eventCollection"
+  );
+  let upcomingEventsByMonth = [];
+
+  upcomingEvents.forEach((event) => {
+    const month = dayjs(event.date).format("MMMM");
+    const i = upcomingEventsByMonth.findIndex((e) => e.month === month);
+    if (i > -1) {
+      upcomingEventsByMonth[i].events.push(event);
+    } else {
+      const newMonth = {
+        month: month,
+        events: [event],
+      };
+      upcomingEventsByMonth.push(newMonth);
+    }
+  });
+
+  return upcomingEventsByMonth;
 }
 
 export async function getPastEvents(
