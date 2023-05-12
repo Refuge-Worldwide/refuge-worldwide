@@ -2,11 +2,23 @@ import { Arrow } from "../icons/arrow";
 import Badge from "./badge";
 import Date from "./date";
 import Link from "next/link";
-export default function EventRow({ event }) {
+import { EventInterface } from "../types/shared";
+
+export default function EventRow({
+  event,
+  past,
+}: {
+  event: EventInterface;
+  past?: boolean;
+}) {
   return (
-    <li className="border-t border-black p-5 lg:grid grid-cols-12 lg:gap-x-4 px-4 sm:px-8">
+    <li className="border-b border-black p-5 lg:grid grid-cols-12 lg:gap-x-4 px-4 sm:px-8">
       <div className="hidden lg:block lg:col-span-1 text-small">
-        <Date dateString={event.date} formatString="DD" />
+        {past ? (
+          <Date dateString={event.date} />
+        ) : (
+          <Date dateString={event.date} formatString="DD" />
+        )}
       </div>
       <div className="flex lg:col-span-2">
         <Badge text={event.eventType} />
@@ -31,7 +43,7 @@ export default function EventRow({ event }) {
           </Link>
         ) : (
           <Link
-            href={`/news/${event.tickets}`}
+            href={`/news/${event.ticketLink}`}
             className="inline-flex items-center gap-5 text-small"
           >
             Tickets <Arrow />

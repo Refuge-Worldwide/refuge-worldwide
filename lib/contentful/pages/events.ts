@@ -4,7 +4,7 @@ import { extractCollection, extractCollectionItem } from "../../../util";
 import { EventFragment } from "../fragments";
 import dayjs from "dayjs";
 
-export const EVENTS_PAGE_SIZE = 12;
+export const EVENTS_PAGE_SIZE = 24;
 
 export async function getUpcomingEvents(
   preview: boolean,
@@ -56,13 +56,13 @@ export async function getUpcomingEvents(
   return upcomingEventsByMonth;
 }
 
-export async function getPastEvents(
+export async function getEvents(
   preview: boolean,
   limit?: number,
   skip?: number
 ) {
-  const PastQuery = /* GraphQL */ `
-    query PastQuery($preview: Boolean, $limit: Int, $skip: Int) {
+  const EventsQuery = /* GraphQL */ `
+    query EventsQuery($preview: Boolean, $limit: Int, $skip: Int) {
       eventCollection(
         order: date_DESC
         preview: $preview
@@ -78,7 +78,7 @@ export async function getPastEvents(
     ${EventFragment}
   `;
 
-  const res = await graphql(PastQuery, {
+  const res = await graphql(EventsQuery, {
     variables: { preview, limit, skip },
     preview,
   });
@@ -88,7 +88,6 @@ export async function getPastEvents(
 
 export async function getEventsPage(preview: boolean) {
   return {
-    upcomingEvents: await getUpcomingEvents(preview),
-    pastEvents: await getPastEvents(preview, EVENTS_PAGE_SIZE),
+    events: await getEvents(preview, EVENTS_PAGE_SIZE),
   };
 }
