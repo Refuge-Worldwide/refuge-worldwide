@@ -178,7 +178,7 @@ export function FeaturedShowPreview({
         prefetch={false}
         aria-labelledby={`show-${slug}`}
       >
-        <h2 id={`show-${slug}`} className="font-sans font-medium truncate">
+        <h2 id={`show-${slug}`} className="font-sans font-medium">
           {title}
         </h2>
         <p>
