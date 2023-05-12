@@ -118,17 +118,12 @@ const initialValues: SubmissionFormValues = {
   description: "",
   instagram: "",
   image: {},
-  hosts: [],
-  isNewHost: false,
-  newHost: {
-    name: "",
-    bio: "",
-    image: "",
-  },
-  hasGuests: false,
-  guests: [
+  artists: [],
+  hasExtraArtists: false,
+  extraArtists: [
     {
       name: "",
+      bio: "",
       image: "",
     },
   ],

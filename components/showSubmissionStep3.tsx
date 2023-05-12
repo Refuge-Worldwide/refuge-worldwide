@@ -195,134 +195,90 @@ export default function ShowSubmissionStep3({
 
       <fieldset>
         <legend>
-          <h2 className="font-sans text-base sm:text-large">Host/guest info</h2>
+          <h2 className="font-sans text-base sm:text-large">
+            Artist/guest info
+          </h2>
         </legend>
         <MultiSelectField
-          label="Host(s)"
-          name="hosts"
-          required={true}
+          label="Artist(s)"
+          description="Please include guests, collectives and show hosts."
+          name="artists"
           options={artists}
           limit={5}
         />
 
         <CheckboxField
-          name="isNewHost"
-          label="Are you a new host / Can't find your artist name in the dropdown?"
+          name="hasExtraArtists"
+          label="Can't find your artist/guest/collective in the dropdown?"
           size="small"
         />
 
-        {values.isNewHost && (
-          <fieldset>
-            <legend className="mb-6">New host info</legend>
-            <div className="border border-black p-8 mb-10">
-              <InputField
-                name="newHost.name"
-                type="text"
-                label="Name"
-                required={true}
-              />
-              <TextareaField
-                name="newHost.bio"
-                rows={4}
-                label="Bio"
-                required={true}
-              />
-              <ImageUploadField
-                label="Host image"
-                name="newHost.image"
-                required={true}
-              />
-            </div>
-          </fieldset>
-        )}
+        {values.hasExtraArtists && (
+          <fieldset className=" mb-8">
+            <legend className="mb-6">
+              Artist/guest info
+              {/* <span className="label-description">
+                Please put guest bios in the show description
+              </span> */}
+            </legend>
+            <FieldArray
+              name="extraArtists"
+              render={(arrayHelpers) => (
+                <div>
+                  {values.extraArtists &&
+                    values.extraArtists.map((extraArtist, index) => (
+                      <div
+                        className="mb-8 border border-black p-8 relative"
+                        key={"extraArtist" + index}
+                      >
+                        {index > 0 && (
+                          <button
+                            className="float-right"
+                            onClick={() => arrayHelpers.remove(index)}
+                            type="button"
+                          >
+                            <Close size={24} />
+                          </button>
+                        )}
 
-        <CheckboxField
-          name="hasGuests"
-          label="Do you have guests on your show?"
-        />
-      </fieldset>
-
-      {values.hasGuests && (
-        <fieldset>
-          <legend>
-            <h2 className="sr-only">Guest info</h2>
-          </legend>
-
-          <div>
-            {/* <MultiSelectField
-              label="Guest(s)"
-              name="guests"
-              options={artists}
-              limit={5}
-            />
-
-            <CheckboxField
-              name="hasNewGuests"
-              label="Can't find your guests names in the dropdown?"
-              size="small"
-            /> */}
-
-            <fieldset className=" mb-8">
-              <legend className="mb-6">
-                Guest(s) info
-                <span className="label-description">
-                  Please put guest bios in the show description
-                </span>
-              </legend>
-              <FieldArray
-                name="guests"
-                render={(arrayHelpers) => (
-                  <div>
-                    {values.guests &&
-                      values.guests.map((guest, index) => (
-                        <div
-                          className="mb-8 border border-black p-8 relative"
-                          key={"guest" + index}
-                        >
-                          {index > 0 && (
-                            <button
-                              className="float-right"
-                              onClick={() => arrayHelpers.remove(index)}
-                              type="button"
-                            >
-                              <Close size={24} />
-                            </button>
-                          )}
-
-                          <div className="mb-6 mt-6">
-                            <label htmlFor="name">Name*</label>
-                            <Field
-                              type="text"
-                              name={`guests.${index}.name`}
-                              className="pill-input"
-                              required
-                            />
-                            <ErrorMessage
-                              className="text-red mt-2 text-small"
-                              component="span"
-                              name={`guests.${index}.name`}
-                            />
-                          </div>
-                          <ImageUploadField
-                            label="Guest image"
-                            name={`guests.${index}.image`}
+                        <div className="mb-6 mt-6">
+                          <label htmlFor="name">Name*</label>
+                          <Field
+                            type="text"
+                            name={`extraArtists.${index}.name`}
+                            className="pill-input"
+                            required
+                          />
+                          <ErrorMessage
+                            className="text-red mt-2 text-small"
+                            component="span"
+                            name={`extraArtists.${index}.name`}
                           />
                         </div>
-                      ))}
-                    <button
-                      className="underline"
-                      onClick={() => arrayHelpers.push("")}
-                      type="button"
-                    >
-                      Add another guest
-                    </button>
-                  </div>
-                )}
-              />
-            </fieldset>
-          </div>
-        </fieldset>
-      )}
+                        <TextareaField
+                          name="newHost.bio"
+                          rows={4}
+                          label="Bio"
+                        />
+                        <ImageUploadField
+                          label="Artist/guest image"
+                          name={`extraArtists.${index}.image`}
+                        />
+                      </div>
+                    ))}
+                  <button
+                    className="underline"
+                    onClick={() => arrayHelpers.push("")}
+                    type="button"
+                  >
+                    Add another artist/guest
+                  </button>
+                </div>
+              )}
+            />
+          </fieldset>
+        )}
+      </fieldset>
     </div>
   );
 }
