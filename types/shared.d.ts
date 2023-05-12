@@ -140,6 +140,11 @@ export interface AboutPageData {
   content: Content;
 }
 
+export interface ValuesPageData {
+  coverImage: CoverImage;
+  content: Content;
+}
+
 export interface NextUpSection {
   content: Content;
 }
