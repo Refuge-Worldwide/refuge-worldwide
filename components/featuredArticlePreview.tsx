@@ -15,6 +15,7 @@ function getArticleBackgroundColor(type: ArticleType) {
   if (type === "News") bg = "bg-pink";
   if (type === "Event") bg = "bg-red";
   if (type === "Interview") bg = "bg-green";
+  if (type === "Workshop") bg = "bg-purple";
 
   return bg;
 }

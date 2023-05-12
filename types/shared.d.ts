@@ -119,6 +119,7 @@ export enum ArticleType {
   News = "News",
   Event = "Event",
   Interview = "Interview",
+  Workshop = "Workshop",
 }
 
 export interface ArticleInterface {
