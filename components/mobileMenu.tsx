@@ -69,17 +69,22 @@ function MobileMenuContent({ onDismiss }: { onDismiss: () => void }) {
           </MobileMenuLink>
         </li>
         <li>
+          <MobileMenuLink href="/events" activeClassName="text-blue">
+            Events
+          </MobileMenuLink>
+        </li>
+        {/* <li>
           <MobileMenuLink href="/support" activeClassName="text-pink">
             Support
           </MobileMenuLink>
-        </li>
+        </li> */}
         <li>
           <MobileMenuLink href="/about" activeClassName="text-brown">
             About
           </MobileMenuLink>
         </li>
         <li>
-          <MobileMenuLink href="/newsletter" activeClassName="text-blue">
+          <MobileMenuLink href="/newsletter" activeClassName="text-pink">
             Newsletter
           </MobileMenuLink>
         </li>
