@@ -22,11 +22,12 @@ export default function NewsPage({
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const router = useRouter();
   const now = dayjs();
-  let upcomingEvents = {};
-  let pastEvents = [];
   let reachedPastEvents = false;
   const [filter, setFilter] = useState<string>("");
   const [title, setTitle] = useState<string>("events");
+  const [upcomingEvents, setUpcomingEvents] = useState([]);
+  const [pastEvents, setPastEvents] = useState([]);
+
   const eventTypes = [
     {
       label: "Workshops",
@@ -57,29 +58,44 @@ export default function NewsPage({
       });
       setFilter("");
       setTitle("events");
+      sortEvents(events);
     } else {
       router.push(`/events?type=${encodeURIComponent(value)}`, undefined, {
         shallow: true,
       });
       setFilter(value);
       setTitle(label.toLowerCase());
+      sortEvents(filterEvents(value));
     }
   };
 
-  events.forEach((event) => {
-    if (!reachedPastEvents && dayjs(event.date).isAfter(now)) {
-      const month = dayjs(event.date).format("MMMM");
-      console.log(event);
-      if (upcomingEvents[month]) {
-        upcomingEvents[month].unshift(event);
+  const filterEvents = (filter) => {
+    const filteredEvents = events.filter((event) => event.eventType == filter);
+    return filteredEvents;
+  };
+
+  const sortEvents = (events) => {
+    let upcomingEvents = [];
+    let pastEvents = [];
+    events.forEach((event) => {
+      if (!reachedPastEvents && dayjs(event.date).isAfter(now)) {
+        const month = dayjs(event.date).format("MMMM");
+        console.log(event);
+        if (upcomingEvents[month]) {
+          upcomingEvents[month].unshift(event);
+        } else {
+          upcomingEvents[month] = [event];
+        }
       } else {
-        upcomingEvents[month] = [event];
+        reachedPastEvents = true;
+        pastEvents.push(event);
       }
-    } else {
-      reachedPastEvents = true;
-      pastEvents.push(event);
-    }
-  });
+    });
+    setUpcomingEvents(upcomingEvents);
+    setPastEvents(pastEvents);
+  };
+
+  // sortEvents(events);
 
   return (
     <Layout preview={preview}>
@@ -112,10 +128,10 @@ export default function NewsPage({
       {/* <pre>{JSON.stringify(upcomingEvents, null, 2)}</pre> */}
       {/* <pre>{JSON.stringify(pastEvents, null, 2)}</pre> */}
       {Object.keys(upcomingEvents).length > 0 && (
-        <UpcomingEvents filter={filter} events={upcomingEvents} />
+        <UpcomingEvents events={upcomingEvents} />
       )}
       {pastEvents.length > 0 && (
-        <PastEvents title={title} filter={filter} events={pastEvents} />
+        <PastEvents title={title} events={pastEvents} />
       )}
     </Layout>
   );

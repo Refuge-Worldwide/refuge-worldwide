@@ -2,7 +2,7 @@ import { EventInterface } from "../../types/shared";
 import Pill from "../../components/pill";
 import EventRow from "../../components/eventRow";
 import Image from "next/image";
-export default function PastEvents({ events, filter, title }) {
+export default function PastEvents({ events, title }) {
   return (
     <section className="bg-blue pt-24 lg:pt-32">
       <div className="p-4 sm:p-8 border-b-2 sticky top-12 lg:top-14 bg-blue">
@@ -13,12 +13,7 @@ export default function PastEvents({ events, filter, title }) {
 
       <ul>
         {events.map((event) => (
-          <EventRow
-            filter={filter}
-            past={true}
-            key={event.title}
-            event={event}
-          />
+          <EventRow past={true} key={event.title} event={event} />
         ))}
       </ul>
 

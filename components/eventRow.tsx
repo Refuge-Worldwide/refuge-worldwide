@@ -7,17 +7,13 @@ import { EventInterface } from "../types/shared";
 export default function EventRow({
   event,
   past,
-  filter,
 }: {
   event: EventInterface;
   past?: boolean;
-  filter: string;
 }) {
   return (
     <li
-      className={`border-b border-black p-5 grid-cols-12 lg:gap-x-4 px-4 sm:px-8 ${
-        filter == event.eventType || filter == "" ? "block lg:grid" : "hidden"
-      }`}
+      className={`border-b border-black p-5 grid-cols-12 lg:grid lg:gap-x-4 px-4 sm:px-8`}
     >
       <div className="hidden lg:block lg:col-span-1 text-small">
         {past ? (

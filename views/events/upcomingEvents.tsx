@@ -2,7 +2,7 @@ import { EventInterface } from "../../types/shared";
 import Pill from "../../components/pill";
 import EventRow from "../../components/eventRow";
 
-export default function UpcomingEvents({ events, filter }) {
+export default function UpcomingEvents({ events }) {
   return (
     <div className="border-t-2 bg-blue">
       {Object.keys(events).map((month, index) => (
@@ -18,7 +18,7 @@ export default function UpcomingEvents({ events, filter }) {
           </div>
           <ul>
             {events[month].map((event) => (
-              <EventRow filter={filter} key={event.title} event={event} />
+              <EventRow key={event.title} event={event} />
             ))}
           </ul>
         </div>
