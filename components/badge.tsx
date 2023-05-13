@@ -20,13 +20,13 @@ export default function Badge({
   const classNames = cn(
     "block uppercase font-medium border-1.5 rounded-full whitespace-nowrap focus:outline-none focus:ring-4 flex space-x-2",
     small ? "px-2 py-1 text-xxs" : "px-3 py-2 text-tiny",
-    eventType == "Workshops" ? "bg-green" : "",
-    eventType == "Parties" ? "bg-purple" : "",
-    eventType == "Fundraisers" ? "bg-orange" : "",
-    eventType == "Hang outs" ? "bg-pink" : "",
     invert
       ? "bg-black text-white border-white pr-3"
-      : "bg-transparent text-black border-black"
+      : "bg-transparent text-black border-black",
+    eventType == "Workshop" ? "bg-green" : "",
+    eventType == "Party" ? "bg-purple" : "",
+    eventType == "Fundraiser" ? "bg-orange" : "",
+    eventType == "Hang out" ? "bg-pink" : ""
   );
 
   return (

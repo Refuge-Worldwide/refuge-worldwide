@@ -7,12 +7,18 @@ import { EventInterface } from "../types/shared";
 export default function EventRow({
   event,
   past,
+  filter,
 }: {
   event: EventInterface;
   past?: boolean;
+  filter: string;
 }) {
   return (
-    <li className="border-b border-black p-5 lg:grid grid-cols-12 lg:gap-x-4 px-4 sm:px-8">
+    <li
+      className={`border-b border-black p-5 grid-cols-12 lg:gap-x-4 px-4 sm:px-8 ${
+        filter == event.eventType || filter == "" ? "block lg:grid" : "hidden"
+      }`}
+    >
       <div className="hidden lg:block lg:col-span-1 text-small">
         {past ? (
           <Date dateString={event.date} />
@@ -33,7 +39,7 @@ export default function EventRow({
         </span>
       </p>
       <div className="h-3 lg:hidden" />
-      <div className="lg:col-span-2">
+      <div className="lg:col-span-2 justify-self-end">
         {event.article ? (
           <Link
             href={`/news/${event.article.slug}`}
@@ -42,12 +48,13 @@ export default function EventRow({
             More info <Arrow />
           </Link>
         ) : (
-          <Link
-            href={`/news/${event.ticketLink}`}
+          <a
+            href={event.ticketLink}
+            target="_blank"
             className="inline-flex items-center gap-5 text-small"
           >
             Tickets <Arrow />
-          </Link>
+          </a>
         )}
       </div>
     </li>

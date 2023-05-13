@@ -26,25 +26,43 @@ export default function NewsPage({
   let pastEvents = [];
   let reachedPastEvents = false;
   const [filter, setFilter] = useState<string>("");
+  const [title, setTitle] = useState<string>("events");
   const eventTypes = [
-    "Workshops",
-    "Parties",
-    "Fundraisers",
-    "Hang outs",
-    "Exhibitions",
+    {
+      label: "Workshops",
+      value: "Workshop",
+    },
+    {
+      label: "Parties",
+      value: "Party",
+    },
+    {
+      label: "Fundraisers",
+      value: "Fundraiser",
+    },
+    {
+      label: "Hang outs",
+      value: "Hang out",
+    },
+    {
+      label: "Exhibitions",
+      value: "Exhibition",
+    },
   ];
 
-  const updateFilter = (newFilter: string) => () => {
-    if (newFilter == filter) {
+  const updateFilter = (value: string, label) => () => {
+    if (value == filter) {
       router.push(`/events`, undefined, {
         shallow: true,
       });
       setFilter("");
+      setTitle("events");
     } else {
-      router.push(`/events?type=${encodeURIComponent(newFilter)}`, undefined, {
+      router.push(`/events?type=${encodeURIComponent(value)}`, undefined, {
         shallow: true,
       });
-      setFilter(newFilter);
+      setFilter(value);
+      setTitle(label.toLowerCase());
     }
   };
 
@@ -70,18 +88,22 @@ export default function NewsPage({
       <section className="p-4 sm:p-8 md:flex justify-between bg-blue">
         <h1 className="hidden">Events</h1>
         <Pill outline>
-          <h2>Upcoming events</h2>
+          <h2>Upcoming {title}</h2>
         </Pill>
         <div className="h-5 md:hidden" />
         <div className="py-2 px-4 border-2 border-black rounded-full w-fit flex space-x-2 grow-1 relative">
-          <span className="text-small">FILTER</span>
+          <span className="text-tiny py-3 px-2 font-medium w-max">FILTER</span>
           {eventTypes.map((type) => (
             <button
-              key={type}
-              onClick={updateFilter(type)}
+              key={type.value}
+              onClick={updateFilter(type.value, type.label)}
               className="focus:outline-none focus:ring-4 rounded-full"
             >
-              <Badge eventType={type} invert={filter == type} text={type} />
+              <Badge
+                eventType={type.value}
+                invert={filter == type.value}
+                text={type.label}
+              />
             </button>
           ))}
         </div>
@@ -90,9 +112,11 @@ export default function NewsPage({
       {/* <pre>{JSON.stringify(upcomingEvents, null, 2)}</pre> */}
       {/* <pre>{JSON.stringify(pastEvents, null, 2)}</pre> */}
       {Object.keys(upcomingEvents).length > 0 && (
-        <UpcomingEvents events={upcomingEvents} />
+        <UpcomingEvents filter={filter} events={upcomingEvents} />
       )}
-      {pastEvents.length > 0 && <PastEvents events={pastEvents} />}
+      {pastEvents.length > 0 && (
+        <PastEvents title={title} filter={filter} events={pastEvents} />
+      )}
     </Layout>
   );
 }
