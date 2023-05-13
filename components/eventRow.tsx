@@ -1,5 +1,5 @@
 import { Arrow } from "../icons/arrow";
-import Badge from "./badge";
+import { EventBadge } from "./badge";
 import Date from "./date";
 import Link from "next/link";
 import { EventInterface } from "../types/shared";
@@ -23,7 +23,7 @@ export default function EventRow({
         )}
       </div>
       <div className="flex lg:col-span-2">
-        <Badge text={event.eventType} />
+        <EventBadge eventType={event.eventType} text={event.eventType} />
       </div>
       <div className="h-3 lg:hidden" />
       <p className="font-medium lg:col-span-5 text-small">{event.title}</p>

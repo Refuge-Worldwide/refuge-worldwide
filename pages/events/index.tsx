@@ -6,7 +6,7 @@ import Pill from "../../components/pill";
 import PageMeta from "../../components/seo/page";
 import { getEventsPage } from "../../lib/contentful/pages/events";
 import dayjs from "dayjs";
-import Badge from "../../components/badge";
+import { EventBadge } from "../../components/badge";
 import { useState } from "react";
 import { useRouter } from "next/router";
 
@@ -115,8 +115,9 @@ export default function NewsPage({
               onClick={updateFilter(type.value, type.label)}
               className="focus:outline-none focus:ring-4 rounded-full"
             >
-              <Badge
+              <EventBadge
                 eventType={type.value}
+                cross
                 invert={filter == type.value}
                 text={type.label}
               />
