@@ -5,7 +5,6 @@ export default function Badge({
   invert,
   small,
   cross,
-  eventType,
   as: As = "div",
   onClick,
 }: {
@@ -13,7 +12,6 @@ export default function Badge({
   invert?: boolean;
   cross?: boolean;
   small?: boolean;
-  eventType?: string;
   as?: any;
   onClick?: () => void;
 }) {
@@ -49,6 +47,7 @@ export function EventBadge({
   small,
   cross,
   eventType,
+  filter,
   as: As = "div",
   onClick,
 }: {
@@ -58,17 +57,22 @@ export function EventBadge({
   small?: boolean;
   eventType?: string;
   as?: any;
+  filter?: boolean;
   onClick?: () => void;
 }) {
   const classNames = cn(
-    "block uppercase font-medium border-1.5 rounded-full whitespace-nowrap focus:outline-none focus:ring-4 flex space-x-2",
+    "block uppercase font-medium border-1.5 rounded-full whitespace-nowrap focus:outline-none focus:ring-4 flex space-x-2 transition-all duration-100 text-center",
     small ? "px-2 py-1 text-xxs" : "px-3 py-2 text-tiny",
-    eventType == "Workshop" && !invert ? "bg-green" : "",
-    eventType == "Party" && !invert ? "bg-purple" : "",
-    eventType == "Fundraiser" && !invert ? "bg-orange" : "",
-    eventType == "Hang out" && !invert ? "bg-pink" : "",
-    eventType == "Exhibition" && !invert ? "bg-red" : "",
-    invert ? "bg-black text-white border-white pr-3" : ""
+    eventType == "Workshop" && filter ? "hover:bg-green" : "",
+    eventType == "Party" && filter ? "hover:bg-purple" : "",
+    eventType == "Fundraiser" && filter ? "hover:bg-orange" : "",
+    eventType == "Hang out" && filter ? "hover:bg-pink" : "",
+    eventType == "Exhibition" && filter ? "hover:bg-red" : "",
+    eventType == "Workshop" && (!filter || invert) ? "bg-green" : "",
+    eventType == "Party" && (!filter || invert) ? "bg-purple" : "",
+    eventType == "Fundraiser" && (!filter || invert) ? "bg-orange" : "",
+    eventType == "Hang out" && (!filter || invert) ? "bg-pink" : "",
+    eventType == "Exhibition" && (!filter || invert) ? "bg-red" : ""
   );
 
   return (
@@ -76,12 +80,12 @@ export function EventBadge({
       className={classNames}
       {...(typeof onClick === "function" && { onClick })}
     >
-      <span>{text}</span>
+      <span className="w-full">{text}</span>
       {invert && cross && (
         <Cross
           size={10}
           className="opacity-90"
-          colour="white"
+          colour="black"
           strokeWidth="4"
         />
       )}

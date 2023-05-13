@@ -22,7 +22,6 @@ export default function NewsPage({
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const router = useRouter();
   const now = dayjs();
-  let reachedPastEvents = false;
   const [filter, setFilter] = useState<string>("");
   const [title, setTitle] = useState<string>("events");
   const [upcomingEvents, setUpcomingEvents] = useState([]);
@@ -75,24 +74,25 @@ export default function NewsPage({
   };
 
   const sortEvents = (events) => {
-    let upcomingEvents = [];
-    let pastEvents = [];
+    let uEvents = [];
+    let pEvents = [];
+    let reachedPastEvents = false;
     events.forEach((event) => {
       if (!reachedPastEvents && dayjs(event.date).isAfter(now)) {
         const month = dayjs(event.date).format("MMMM");
         console.log(event);
-        if (upcomingEvents[month]) {
-          upcomingEvents[month].unshift(event);
+        if (uEvents[month]) {
+          uEvents[month].unshift(event);
         } else {
-          upcomingEvents[month] = [event];
+          uEvents[month] = [event];
         }
       } else {
         reachedPastEvents = true;
-        pastEvents.push(event);
+        pEvents.push(event);
       }
     });
-    setUpcomingEvents(upcomingEvents);
-    setPastEvents(pastEvents);
+    setUpcomingEvents(uEvents);
+    setPastEvents(pEvents);
   };
 
   // sortEvents(events);
@@ -118,6 +118,7 @@ export default function NewsPage({
               <EventBadge
                 eventType={type.value}
                 cross
+                filter
                 invert={filter == type.value}
                 text={type.label}
               />

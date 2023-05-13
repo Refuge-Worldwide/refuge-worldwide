@@ -13,29 +13,31 @@ export default function EventRow({
 }) {
   return (
     <li
-      className={`border-b border-black p-5 grid-cols-12 lg:grid lg:gap-x-4 px-4 sm:px-8`}
+      className={`border-b border-black p-5 grid-cols-12 lg:flex lg:gap-x-8 px-4 sm:px-8 hover:bg-black hover:text-white lg:items-center transition-all duration-100`}
     >
-      <div className="hidden lg:block lg:col-span-1 text-small">
+      <div className="hidden lg:block lg:col-span-1 text-small flex-initial">
         {past ? (
           <Date dateString={event.date} />
         ) : (
-          <Date dateString={event.date} formatString="DD" />
+          <Date dateString={event.date} formatString="DD MMM" />
         )}
       </div>
-      <div className="flex lg:col-span-2">
+      <div className="flex-initial lg:w-[106px]">
         <EventBadge eventType={event.eventType} text={event.eventType} />
       </div>
       <div className="h-3 lg:hidden" />
-      <p className="font-medium lg:col-span-5 text-small">{event.title}</p>
+      <p className="font-medium lg:col-span-5 text-small flex-grow min-w-[60%]">
+        {event.title}
+      </p>
       <div className="h-3 lg:hidden" />
-      <p className="lg:col-span-2 text-small">
+      <p className="lg:col-span-2 text-small flex-initial">
         {event.location}
         <span className="lg:hidden">
           | <Date dateString={event.date} />
         </span>
       </p>
       <div className="h-3 lg:hidden" />
-      <div className="lg:col-span-2 justify-self-end">
+      <div className="lg:col-span-2 flex-grow">
         {event.article ? (
           <Link
             href={`/news/${event.article.slug}`}
