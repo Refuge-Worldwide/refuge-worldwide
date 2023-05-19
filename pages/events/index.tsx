@@ -7,7 +7,7 @@ import PageMeta from "../../components/seo/page";
 import { getEventsPage } from "../../lib/contentful/pages/events";
 import dayjs from "dayjs";
 import { EventBadge } from "../../components/badge";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
 export async function getStaticProps({ preview = false }) {
@@ -73,11 +73,11 @@ export default function NewsPage({
     return filteredEvents;
   };
 
-  const sortEvents = (events) => {
+  const sortEvents = (e) => {
     let uEvents = [];
     let pEvents = [];
     let reachedPastEvents = false;
-    events.forEach((event) => {
+    e.forEach((event) => {
       if (!reachedPastEvents && dayjs(event.date).isAfter(now)) {
         const month = dayjs(event.date).format("MMMM");
         console.log(event);
@@ -95,19 +95,21 @@ export default function NewsPage({
     setPastEvents(pEvents);
   };
 
-  // sortEvents(events);
+  useEffect(() => {
+    sortEvents(events);
+  }, []);
 
   return (
     <Layout preview={preview}>
       <PageMeta title="Events | Refuge Worldwide" path="events/" />
 
-      <section className="p-4 sm:p-8 md:flex justify-between bg-blue">
+      <section className="p-4 sm:p-8 lg:flex justify-between bg-blue">
         <h1 className="hidden">Events</h1>
         <Pill outline>
           <h2>Upcoming {title}</h2>
         </Pill>
-        <div className="h-5 md:hidden" />
-        <div className="py-2 px-4 border-2 border-black rounded-full w-fit flex space-x-2 grow-1 relative">
+        <div className="h-5 lg:hidden" />
+        <div className="py-2 px-4 border-2 border-black rounded-full w-fit flex space-x-2 grow-1 relative max-w-full overflow-x-auto">
           <span className="text-tiny py-3 px-2 font-medium w-max">FILTER</span>
           {eventTypes.map((type) => (
             <button
@@ -129,8 +131,14 @@ export default function NewsPage({
 
       {/* <pre>{JSON.stringify(upcomingEvents, null, 2)}</pre> */}
       {/* <pre>{JSON.stringify(pastEvents, null, 2)}</pre> */}
-      {Object.keys(upcomingEvents).length > 0 && (
+      {Object.keys(upcomingEvents).length > 0 ? (
         <UpcomingEvents events={upcomingEvents} />
+      ) : (
+        <div className="border-t-2 bg-blue">
+          <p className="p-4 sm:p-8">
+            No upcoming {title}, please check back soon.
+          </p>
+        </div>
       )}
       {pastEvents.length > 0 && (
         <PastEvents title={title} events={pastEvents} />
