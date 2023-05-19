@@ -61,7 +61,7 @@ export function EventBadge({
   onClick?: () => void;
 }) {
   const classNames = cn(
-    "block uppercase font-medium border-1.5 rounded-full whitespace-nowrap focus:outline-none focus:ring-4 flex space-x-2 transition-all duration-100 text-center",
+    "block uppercase font-medium border-1.5 rounded-full whitespace-nowrap focus:outline-none focus:ring-4 flex space-x-2 text-center",
     small ? "px-2 py-1 text-xxs" : "px-3 py-2 text-tiny",
     eventType == "Workshop" && filter ? "hover:bg-green" : "",
     eventType == "Party" && filter ? "hover:bg-purple" : "",

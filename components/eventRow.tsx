@@ -12,9 +12,7 @@ export default function EventRow({
   past?: boolean;
 }) {
   return (
-    <li
-      className={`border-b border-black p-5 grid-cols-12 lg:flex lg:gap-x-8 px-4 sm:px-8 hover:bg-black hover:text-white lg:items-center transition-all duration-100`}
-    >
+    <EventLink event={event}>
       <div className="hidden lg:block lg:col-span-1 text-small flex-initial">
         {past ? (
           <Date dateString={event.date} />
@@ -22,39 +20,55 @@ export default function EventRow({
           <Date dateString={event.date} formatString="DD MMM" />
         )}
       </div>
-      <div className="flex-initial lg:w-[106px]">
+      <div className="flex-initial max-w-[106px] w-full lg:mx-auto lg:col-span-1">
         <EventBadge eventType={event.eventType} text={event.eventType} />
       </div>
       <div className="h-3 lg:hidden" />
-      <p className="font-medium lg:col-span-5 text-small flex-grow min-w-[60%]">
+      <p className="font-medium lg:col-span-4 text-small min-w-[60%]">
         {event.title}
       </p>
       <div className="h-3 lg:hidden" />
-      <p className="lg:col-span-2 text-small flex-initial">
+      <p className="lg:col-span-1 text-small flex-initial">
         {event.location}
         <span className="lg:hidden">
-          | <Date dateString={event.date} />
+          &nbsp;| <Date dateString={event.date} />
         </span>
       </p>
       <div className="h-3 lg:hidden" />
-      <div className="lg:col-span-2 flex-grow">
+      <div className="lg:col-span-1 lg:justify-self-end flex-grow">
         {event.article ? (
-          <Link
-            href={`/news/${event.article.slug}`}
-            className="inline-flex items-center gap-5 text-small"
-          >
+          <p className="inline-flex items-center gap-5 text-small">
             More info <Arrow />
-          </Link>
+          </p>
         ) : (
-          <a
-            href={event.ticketLink}
-            target="_blank"
-            className="inline-flex items-center gap-5 text-small"
-          >
+          <p className="inline-flex items-center gap-5 text-small">
             Tickets <Arrow />
-          </a>
+          </p>
         )}
       </div>
+    </EventLink>
+  );
+}
+
+function EventLink({ event, children }) {
+  return (
+    <li>
+      {event.article ? (
+        <Link
+          className={`block border-b border-black p-5 lg:grid-cols-8 lg:grid lg:gap-x-8 px-4 sm:px-8 hover:bg-black hover:text-white lg:items-center transition-all duration-100`}
+          href={`/news/${event.article.slug}`}
+        >
+          {children}
+        </Link>
+      ) : (
+        <a
+          className={`block border-b border-black p-5 lg:grid-cols-8 lg:grid lg:gap-x-8 px-4 sm:px-8 hover:bg-black hover:text-white lg:items-center transition-all duration-100`}
+          href={event.ticketLink}
+          target="_blank"
+        >
+          {children}
+        </a>
+      )}
     </li>
   );
 }
