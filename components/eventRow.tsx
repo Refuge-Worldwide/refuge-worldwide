@@ -28,7 +28,7 @@ export default function EventRow({
         {event.title}
       </p>
       <div className="h-3 lg:hidden" />
-      <p className="lg:col-span-1 text-small flex-initial">
+      <p className="lg:col-span-1 text-small flex-initial lg:min-w-[206px]">
         {event.location}
         <span className="lg:hidden">
           &nbsp;| <Date dateString={event.date} />
@@ -39,13 +39,13 @@ export default function EventRow({
         {(() => {
           if (event.article) {
             return (
-              <p className="inline-flex gap-5 text-small w-full justify-end">
+              <p className="inline-flex gap-5 text-small font-medium lg:w-full lg:justify-end">
                 More info <Arrow />
               </p>
             );
           } else if (event.ticketLink) {
             return (
-              <p className="inline-flex gap-5 text-small w-full justify-end">
+              <p className="inline-flex gap-5 text-small font-medium lg:w-full lg:justify-end">
                 Tickets <Arrow />
               </p>
             );
@@ -61,14 +61,14 @@ function EventLink({ event, children }) {
     <li>
       {event.article ? (
         <Link
-          className={`block border-b border-black p-5 lg:grid-cols-8 lg:flex lg:gap-x-12 px-4 sm:px-8 hover:bg-black hover:text-white lg:items-center transition-all duration-100`}
+          className={`block border-b border-black p-5 lg:p-7 lg:grid-cols-8 lg:flex lg:gap-x-12 2xl:gap-x-24 px-4 sm:px-8 hover:bg-black hover:text-white lg:items-center transition-all duration-100`}
           href={`/news/${event.article.slug}`}
         >
           {children}
         </Link>
       ) : (
         <a
-          className={`block border-b border-black p-5 lg:grid-cols-8 lg:flex lg:gap-x-12 px-4 sm:px-8 hover:bg-black hover:text-white lg:items-center transition-all duration-100`}
+          className={`block border-b border-black p-5 lg:p-7 lg:grid-cols-8 lg:flex lg:gap-x-12 2xl:gap-x-24 px-4 sm:px-8 hover:bg-black hover:text-white lg:items-center transition-all duration-100`}
           href={event.ticketLink}
           target="_blank"
         >
