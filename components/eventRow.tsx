@@ -35,16 +35,22 @@ export default function EventRow({
         </span>
       </p>
       <div className="h-3 lg:hidden" />
-      <div className="lg:col-span-1 lg:justify-self-end flex-initial lg:min-w-[106px]">
-        {event.article ? (
-          <p className="inline-flex items-center gap-5 text-small">
-            More info <Arrow />
-          </p>
-        ) : (
-          <p className="inline-flex items-center gap-5 text-small">
-            Tickets <Arrow />
-          </p>
-        )}
+      <div className="lg:col-span-1 lg:justify-self-end flex-initial lg:min-w-[106px] text-align-right">
+        {(() => {
+          if (event.article) {
+            return (
+              <p className="inline-flex gap-5 text-small w-full justify-end">
+                More info <Arrow />
+              </p>
+            );
+          } else if (event.ticketLink) {
+            return (
+              <p className="inline-flex gap-5 text-small w-full justify-end">
+                Tickets <Arrow />
+              </p>
+            );
+          }
+        })()}
       </div>
     </EventLink>
   );

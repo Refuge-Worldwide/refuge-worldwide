@@ -52,16 +52,16 @@ export default function NewsPage({
 
   const updateFilter = (value: string, label) => () => {
     if (value == filter) {
-      // router.push(`/events`, undefined, {
-      //   shallow: true,
-      // });
+      router.push(`/events`, undefined, {
+        shallow: true,
+      });
       setFilter("");
       setTitle("events");
       sortEvents(events);
     } else {
-      // router.push(`/events?type=${encodeURIComponent(value)}`, undefined, {
-      //   shallow: true,
-      // });
+      router.push(`/events?type=${encodeURIComponent(value)}`, undefined, {
+        shallow: true,
+      });
       setFilter(value);
       setTitle(label.toLowerCase());
       sortEvents(filterEvents(value));
