@@ -20,7 +20,7 @@ export default function UpcomingEvents({ events }) {
             </div>
             <ul>
               {events[month].map((event) => (
-                <EventRow key={event.title} event={event} />
+                <EventRow key={event.slug} event={event} />
               ))}
             </ul>
           </div>

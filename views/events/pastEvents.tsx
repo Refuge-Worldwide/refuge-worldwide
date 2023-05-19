@@ -13,7 +13,7 @@ export default function PastEvents({ events, title }) {
 
       <ul>
         {events.map((event) => (
-          <EventRow past={true} key={event.title} event={event} />
+          <EventRow past={true} key={event.slug} event={event} />
         ))}
       </ul>
 
