@@ -14,9 +14,11 @@ export default function UpcomingEvents({ events }) {
                 index > 0 ? "border-t" : ""
               }`}
             >
-              <Pill outline>
-                <h3>{month}</h3>
-              </Pill>
+              <div className="max-w-screen-xl mx-auto">
+                <Pill outline>
+                  <h3>{month}</h3>
+                </Pill>
+              </div>
             </div>
             <ul>
               {events[month].map((event) => (

@@ -6,9 +6,11 @@ export default function PastEvents({ events, title }) {
   return (
     <section className="bg-blue pt-24 lg:pt-32">
       <div className="p-4 sm:p-8 border-b-2 sticky top-12 lg:top-14 bg-blue">
-        <Pill outline>
-          <h2>Past {title}</h2>
-        </Pill>
+        <div className="max-w-screen-xl mx-auto">
+          <Pill outline>
+            <h2>Past {title}</h2>
+          </Pill>
+        </div>
       </div>
 
       <ul>
