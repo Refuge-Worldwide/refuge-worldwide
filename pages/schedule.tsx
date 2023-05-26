@@ -8,6 +8,7 @@ import utc from "dayjs/plugin/utc";
 import Pill from "../components/pill";
 import Link from "next/link";
 import Loading from "../components/loading";
+import { Arrow } from "../icons/arrow";
 dayjs.extend(utc);
 
 export default function SchedulePage() {
@@ -15,13 +16,24 @@ export default function SchedulePage() {
   return (
     <Layout className="bg-orange">
       <PageMeta title="Schedule | Refuge Worldwide" path="schedule" />
-      <section className="p-4 sm:p-8">
-        <Pill outline>
-          <h1>Schedule</h1>
-        </Pill>
-        <p className="mt-4 md:mt-8 text-small">
-          Displayed in your timezone: {timezone}
-        </p>
+      <section className="p-4 sm:p-8 flex justify-between">
+        <div>
+          <Pill outline>
+            <h1>Schedule</h1>
+          </Pill>
+          <p className="mt-4 md:mt-8 text-small">
+            Displayed in your timezone: {timezone}
+          </p>
+        </div>
+        <div>
+          <Link
+            href="/"
+            className="inline-flex items-center py-3 pr-4 sm:pr-6 pl-4 gap-3 font-light underline"
+          >
+            <Arrow size={24} className="h-5 w-5 sm:h-6 sm:w-6 rotate-180" />
+            <span className="hidden sm:inline leading-6">Back</span>
+          </Link>
+        </div>
       </section>
       <Schedule />
     </Layout>
