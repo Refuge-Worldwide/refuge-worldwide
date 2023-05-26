@@ -47,7 +47,15 @@ export default function EventRow({
             } else if (event.ticketLink) {
               return (
                 <p className="inline-flex gap-5 text-small font-medium lg:w-full lg:justify-end">
-                  Tickets <Arrow />
+                  {event.linkText ? event.linkText : "Tickets"}
+                  <Arrow />
+                </p>
+              );
+            } else if (event.linkText) {
+              return (
+                <p className="inline-flex gap-5 text-small font-medium lg:w-full lg:justify-end">
+                  {event.linkText}
+                  <Arrow className="invisible" />
                 </p>
               );
             }

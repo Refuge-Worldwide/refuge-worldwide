@@ -231,5 +231,6 @@ export interface EventInterface {
   slug: string;
   location: string;
   ticketLink: string;
+  linkText: string;
   article: Object<{ slug: string }>;
 }

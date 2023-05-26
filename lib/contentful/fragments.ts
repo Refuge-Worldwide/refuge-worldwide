@@ -108,6 +108,7 @@ export const EventFragment = /* GraphQL */ `
     slug
     location
     ticketLink
+    linkText
     article {
       slug
     }
