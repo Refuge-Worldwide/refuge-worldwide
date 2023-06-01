@@ -14,28 +14,9 @@ export default function EventRow({
 }) {
   return (
     <EventLink event={event}>
-      <div className="max-w-screen-xl mx-auto p-5 lg:p-7 lg:grid-cols-8 lg:flex lg:gap-x-12 2xl:gap-x-24 px-4 sm:px-8 lg:items-center">
+      <div className="max-w-screen-xl mx-auto py-5 lg:py-7 lg:grid-cols-8 lg:flex lg:gap-x-12 xl:gap-x-24 lg:items-center">
         <div className="hidden lg:block lg:col-span-1 text-small flex-initial lg:min-w-[116px]">
-          {event.endDate ? (
-            <div>
-              {sameMonth(event.date, event.endDate) ? (
-                <div>
-                  <Date dateString={event.date} formatString="DD" />
-                  &nbsp;-&nbsp;
-                  <Date dateString={event.endDate} />
-                </div>
-              ) : (
-                <div>
-                  <Date dateString={event.date} formatString="DD MMM" />
-                  &nbsp;-&nbsp;
-                  <br />
-                  <Date dateString={event.endDate} />
-                </div>
-              )}
-            </div>
-          ) : (
-            <Date dateString={event.date} />
-          )}
+          {EventDate(event)}
         </div>
         <div className="flex-initial max-w-[106px] w-full lg:col-span-1">
           <EventBadge eventType={event.eventType} text={event.eventType} />
@@ -47,9 +28,7 @@ export default function EventRow({
         <div className="h-3 lg:hidden" />
         <p className="lg:col-span-1 text-small flex-initial lg:min-w-[206px]">
           {event.location}
-          <span className="lg:hidden">
-            &nbsp;| <Date dateString={event.date} />
-          </span>
+          <span className="lg:hidden">&nbsp;| {EventDate(event)}</span>
         </p>
         <div className="h-3 lg:hidden" />
         <div className="lg:col-span-1 lg:justify-self-end flex-initial lg:min-w-[106px] text-align-right">
@@ -87,14 +66,14 @@ function EventLink({ event, children }) {
     <li>
       {event.article ? (
         <Link
-          className={`block border-b border-black hover:bg-black hover:text-white transition-all duration-100`}
+          className={`block border-b border-black hover:bg-black hover:text-white transition-all duration-100 px-4 sm:px-8`}
           href={`/news/${event.article.slug}`}
         >
           {children}
         </Link>
       ) : (
         <a
-          className={`block border-b border-black hover:bg-black hover:text-white transition-all duration-100`}
+          className={`block border-b border-black hover:bg-black hover:text-white transition-all duration-100 px-4 sm:px-8`}
           href={event.ticketLink}
           target="_blank"
         >
@@ -102,6 +81,33 @@ function EventLink({ event, children }) {
         </a>
       )}
     </li>
+  );
+}
+
+function EventDate(event) {
+  return (
+    <span>
+      {event.endDate ? (
+        <span>
+          {sameMonth(event.date, event.endDate) ? (
+            <span>
+              <Date dateString={event.date} formatString="DD" />
+              &nbsp;-&nbsp;
+              <Date dateString={event.endDate} />
+            </span>
+          ) : (
+            <span>
+              <Date dateString={event.date} formatString="DD MMM" />
+              &nbsp;-&nbsp;
+              <br className="hidden lg:block" />
+              <Date dateString={event.endDate} />
+            </span>
+          )}
+        </span>
+      ) : (
+        <Date dateString={event.date} />
+      )}
+    </span>
   );
 }
 
