@@ -4,7 +4,7 @@ import EventRow from "../../components/eventRow";
 
 export default function UpcomingEvents({ events }) {
   return (
-    <div className="border-t-2 bg-blue">
+    <div className="bg-blue">
       {Object.keys(events)
         .reverse()
         .map((month, index) => (

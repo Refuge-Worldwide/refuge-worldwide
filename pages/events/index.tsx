@@ -109,52 +109,58 @@ export default function NewsPage({
     <Layout preview={preview}>
       <PageMeta title="Events | Refuge Worldwide" path="events/" />
 
-      <section className="bg-blue p-4 sm:p-8">
-        <div className="lg:flex justify-between max-w-screen-xl mx-auto">
-          <h1 className="hidden">Events</h1>
-          <Pill outline>
-            <h2>Upcoming {title}</h2>
-          </Pill>
-          <div className="h-5 lg:hidden" />
-          <div className="py-2 px-4 border-2 border-black rounded-full w-fit flex space-x-2 grow-1 relative max-w-full overflow-x-auto">
-            <span className="text-tiny py-3 px-2 font-medium w-max">
-              FILTER
-            </span>
-            {eventTypes.map((type) => (
-              <button
-                key={type.value}
-                onClick={updateFilter(type.value, type.label)}
-                className="focus:outline-none focus:ring-4 rounded-full"
-              >
-                <EventBadge
-                  eventType={type.value}
-                  cross
-                  filter
-                  invert={filter == type.value}
-                  text={type.label}
-                />
-              </button>
-            ))}
+      <section className="bg-blue p-4 sm:p-8 border-b-2">
+        <div className="max-w-[1229px] mx-auto">
+          <div className="lg:flex justify-between ">
+            <h1 className="hidden">Events</h1>
+            <Pill outline>
+              <h2>Upcoming {title}</h2>
+            </Pill>
+            <div className="h-5 lg:hidden" />
+            <div className="py-2 px-4 border-2 border-black rounded-full w-fit flex space-x-2 grow-1 relative max-w-full overflow-x-auto">
+              <span className="text-tiny py-3 px-2 font-medium w-max">
+                FILTER
+              </span>
+              {eventTypes.map((type) => (
+                <button
+                  key={type.value}
+                  onClick={updateFilter(type.value, type.label)}
+                  className="focus:outline-none focus:ring-4 rounded-full"
+                >
+                  <EventBadge
+                    eventType={type.value}
+                    cross
+                    filter
+                    invert={filter == type.value}
+                    text={type.label}
+                  />
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* <pre>{JSON.stringify(upcomingEvents, null, 2)}</pre> */}
-      {/* <pre>{JSON.stringify(pastEvents, null, 2)}</pre> */}
-      {Object.keys(upcomingEvents).length > 0 ? (
-        <UpcomingEvents events={upcomingEvents} />
-      ) : (
-        <div className="border-t-2 bg-blue">
-          <div className="max-w-screen-xl mx-auto">
-            <p className="p-4 sm:p-8 xl:px-0">
-              No upcoming {title}, please check back soon.
-            </p>
-          </div>
+      <div className="bg-blue">
+        <div className="max-w-screen-xl mx-auto">
+          {/* <pre>{JSON.stringify(upcomingEvents, null, 2)}</pre> */}
+          {/* <pre>{JSON.stringify(pastEvents, null, 2)}</pre> */}
+          {Object.keys(upcomingEvents).length > 0 ? (
+            <UpcomingEvents events={upcomingEvents} />
+          ) : (
+            <div className="border-t-2 bg-blue">
+              <div className="max-w-screen-xl mx-auto">
+                <p className="p-4 sm:p-8 xl:px-0">
+                  No upcoming {title}, please check back soon.
+                </p>
+              </div>
+            </div>
+          )}
+          {pastEvents.length > 0 && (
+            <PastEvents title={title} events={pastEvents} />
+          )}
         </div>
-      )}
-      {pastEvents.length > 0 && (
-        <PastEvents title={title} events={pastEvents} />
-      )}
+      </div>
     </Layout>
   );
 }

@@ -14,7 +14,7 @@ export default function EventRow({
 }) {
   return (
     <EventLink event={event}>
-      <div className="max-w-screen-xl mx-auto py-5 lg:py-7 lg:grid-cols-8 lg:flex lg:gap-x-12 xl:gap-x-24 lg:items-center">
+      <div className="py-5 lg:py-7 lg:grid-cols-8 lg:flex lg:gap-x-12 xl:gap-x-24 lg:items-center">
         <div className="hidden lg:block lg:col-span-1 text-small flex-initial lg:min-w-[116px]">
           {EventDate(event)}
         </div>
