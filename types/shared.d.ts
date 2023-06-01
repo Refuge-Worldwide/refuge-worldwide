@@ -228,6 +228,7 @@ export interface EventInterface {
   title: string;
   eventType: EventType;
   date: string;
+  endDate?: string;
   slug: string;
   location: string;
   ticketLink: string;

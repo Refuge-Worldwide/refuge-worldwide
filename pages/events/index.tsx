@@ -78,7 +78,13 @@ export default function NewsPage({
     let pEvents = [];
     let reachedPastEvents = false;
     e.forEach((event) => {
-      if (!reachedPastEvents && dayjs(event.date).isAfter(now)) {
+      let eventEndDate;
+      if (event.endDate) {
+        eventEndDate = event.endDate;
+      } else {
+        eventEndDate = event.date;
+      }
+      if (!reachedPastEvents && dayjs(eventEndDate).isAfter(now)) {
         const month = dayjs(event.date).format("MMMM");
         console.log(event);
         if (uEvents[month]) {

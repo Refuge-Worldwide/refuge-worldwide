@@ -3,6 +3,7 @@ import { EventBadge } from "./badge";
 import Date from "./date";
 import Link from "next/link";
 import { EventInterface } from "../types/shared";
+import dayjs from "dayjs";
 
 export default function EventRow({
   event,
@@ -14,9 +15,24 @@ export default function EventRow({
   return (
     <EventLink event={event}>
       <div className="max-w-screen-xl mx-auto p-5 lg:p-7 lg:grid-cols-8 lg:flex lg:gap-x-12 2xl:gap-x-24 px-4 sm:px-8 lg:items-center">
-        <div className="hidden lg:block lg:col-span-1 text-small flex-initial lg:min-w-[106px]">
-          {past ? (
-            <Date dateString={event.date} />
+        <div className="hidden lg:block lg:col-span-1 text-small flex-initial lg:min-w-[116px]">
+          {event.endDate ? (
+            <div>
+              {sameMonth(event.date, event.endDate) ? (
+                <div>
+                  <Date dateString={event.date} formatString="DD" />
+                  &nbsp;-&nbsp;
+                  <Date dateString={event.endDate} />
+                </div>
+              ) : (
+                <div>
+                  <Date dateString={event.date} formatString="DD MMM" />
+                  &nbsp;-&nbsp;
+                  <br />
+                  <Date dateString={event.endDate} />
+                </div>
+              )}
+            </div>
           ) : (
             <Date dateString={event.date} />
           )}
@@ -87,4 +103,11 @@ function EventLink({ event, children }) {
       )}
     </li>
   );
+}
+
+function sameMonth(startDate, endDate) {
+  const start = dayjs(startDate);
+  const end = dayjs(endDate);
+  const sameMonth = start.isSame(end, "month");
+  return sameMonth;
 }

@@ -105,6 +105,7 @@ export const EventFragment = /* GraphQL */ `
     title
     eventType
     date
+    endDate
     slug
     location
     ticketLink
