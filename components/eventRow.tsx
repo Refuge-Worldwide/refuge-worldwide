@@ -14,41 +14,41 @@ export default function EventRow({
 }) {
   return (
     <EventLink event={event}>
-      <div className="py-5 lg:grid-cols-8 lg:flex lg:gap-x-12 xl:gap-x-24 lg:items-center">
-        <div className="hidden lg:block lg:col-span-1 text-small flex-initial lg:min-w-[116px]">
+      <div className="py-5 lg:grid-cols-8 md:flex md:gap-x-6 lg:gap-x-12 xl:gap-x-24 md:items-center">
+        <div className="hidden md:block lg:col-span-1 text-small flex-initial md:min-w-[116px] ">
           {EventDate(event)}
         </div>
         <div className="flex-initial max-w-[106px] w-full lg:col-span-1">
           <EventBadge eventType={event.eventType} text={event.eventType} />
         </div>
-        <div className="h-3 lg:hidden" />
+        <div className="h-3 md:hidden" />
         <p className="font-medium lg:col-span-4 text-small flex-grow">
           {event.title}
         </p>
-        <div className="h-3 lg:hidden" />
-        <p className="lg:col-span-1 text-small flex-initial lg:min-w-[206px]">
+        <div className="h-3 md:hidden" />
+        <p className="lg:col-span-1 text-small flex-initial md:min-w-[206px]">
           {event.location}
-          <span className="lg:hidden">&nbsp;| {EventDate(event)}</span>
+          <span className="md:hidden">&nbsp;| {EventDate(event)}</span>
         </p>
-        <div className="h-3 lg:hidden" />
-        <div className="lg:col-span-1 lg:justify-self-end flex-initial lg:min-w-[106px] text-align-right">
+        <div className="h-3 md:hidden" />
+        <div className="md:col-span-1 md:justify-self-end flex-initial md:min-w-[106px] text-align-right">
           {(() => {
             if (event.article) {
               return (
-                <p className="inline-flex gap-5 text-small font-medium lg:w-full lg:justify-end">
+                <p className="inline-flex gap-5 text-small font-medium md:w-full md:justify-end">
                   More info <Arrow />
                 </p>
               );
             } else if (event.ticketLink) {
               return (
-                <p className="inline-flex gap-5 text-small font-medium lg:w-full lg:justify-end">
+                <p className="inline-flex gap-5 text-small font-medium md:w-full md:justify-end">
                   {event.linkText ? event.linkText : "Tickets"}
                   <Arrow />
                 </p>
               );
             } else if (event.linkText) {
               return (
-                <p className="inline-flex gap-5 text-small font-medium lg:w-full lg:justify-end">
+                <p className="inline-flex gap-5 text-small font-medium md:w-full md:justify-end">
                   {event.linkText}
                   <Arrow className="invisible" />
                 </p>
@@ -99,7 +99,7 @@ function EventDate(event) {
             <span>
               <Date dateString={event.date} formatString="DD MMM" />
               &nbsp;-&nbsp;
-              <br className="hidden lg:block" />
+              <br className="hidden md:block" />
               <Date dateString={event.endDate} />
             </span>
           )}
