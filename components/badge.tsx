@@ -63,16 +63,18 @@ export function EventBadge({
   const classNames = cn(
     "block uppercase font-medium border-1.5 rounded-full whitespace-nowrap focus:outline-none focus:ring-4 flex space-x-2 text-center",
     small ? "px-2 py-1 text-xxs" : "px-3 py-2 text-tiny",
-    eventType == "Workshop" && filter ? "hover:bg-green" : "",
-    eventType == "Party" && filter ? "hover:bg-purple" : "",
-    eventType == "Fundraiser" && filter ? "hover:bg-orange" : "",
-    eventType == "Hang out" && filter ? "hover:bg-pink" : "",
-    eventType == "Exhibition" && filter ? "hover:bg-red" : "",
-    eventType == "Workshop" && (!filter || invert) ? "bg-green" : "",
-    eventType == "Party" && (!filter || invert) ? "bg-purple" : "",
-    eventType == "Fundraiser" && (!filter || invert) ? "bg-orange" : "",
-    eventType == "Hang out" && (!filter || invert) ? "bg-pink" : "",
-    eventType == "Exhibition" && (!filter || invert) ? "bg-red" : ""
+    filter ? "hover:bg-black hover:text-white" : "",
+    invert ? "bg-black text-white" : ""
+    // eventType == "Workshop" && filter ? "hover:bg-green" : "",
+    // eventType == "Party" && filter ? "hover:bg-purple" : "",
+    // eventType == "Fundraiser" && filter ? "hover:bg-orange" : "",
+    // eventType == "Hang out" && filter ? "hover:bg-pink" : "",
+    // eventType == "Exhibition" && filter ? "hover:bg-red" : "",
+    // eventType == "Workshop" && (!filter || invert) ? "bg-green" : "",
+    // eventType == "Party" && (!filter || invert) ? "bg-purple" : "",
+    // eventType == "Fundraiser" && (!filter || invert) ? "bg-orange" : "",
+    // eventType == "Hang out" && (!filter || invert) ? "bg-pink" : "",
+    // eventType == "Exhibition" && (!filter || invert) ? "bg-red" : ""
   );
 
   return (
@@ -85,7 +87,7 @@ export function EventBadge({
         <Cross
           size={10}
           className="opacity-90"
-          colour="black"
+          colour="white"
           strokeWidth="4"
         />
       )}
