@@ -8,10 +8,10 @@ export default function ChatPage() {
   const ref = useRef<HTMLDivElement>();
 
   return (
-    <div ref={ref} className="flex flex-col min-h-screen">
+    <div ref={ref} className="flex flex-col bg-black h-screen w-screen">
       <PageMeta title="Chat | Refuge Worldwide" path="chat/" />
 
-      <div className="h-screen w-screen bg-[#36393E]">
+      <div className="h-screen max-h-[75vh] w-screen max-h-lg max-w-xl mx-auto bg-[#36393E]">
         <div className="relative h-full">
           <LivePlayer />
           <div className="absolute top-12 sm:top-16 left-0 w-full bg-black text-white h-[50px] px-4 border-b border-white">
@@ -22,7 +22,7 @@ export default function ChatPage() {
               </a>
             </div>
           </div>
-          <div className="w-full h-[calc(100vh-130px)] sm:h-[calc(100vh-55px)] pb-safe">
+          <div className="w-full h-full pb-safe">
             <DiscordEmbed />
           </div>
         </div>
