@@ -18,7 +18,7 @@ export const CONTACT_URL = "mailto:hello@refugeworldwide.com";
 
 export const SHOP_URL = "https://shop.refugeworldwide.com";
 
-export const DISCORD_INVITE_URL = "https://discord.gg/QJgtWbSz";
+export const DISCORD_INVITE_URL = "https://discord.gg/ZyGNDsq7";
 
 export const DISCORD_SERVER_ID = "1077626733458620487";
 
