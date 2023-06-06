@@ -21,7 +21,11 @@ const ChatRoom = () => {
         <div className="absolute top-0 left-0 w-full bg-black text-white h-[50px] px-4 border-b border-white rounded-t-xl">
           <div className="flex gap-4 items-center h-full">
             <span className="leading-6 flex-grow">Chatroom</span>
-            <a href={DISCORD_INVITE_URL} target="_blank">
+            <a
+              href={DISCORD_INVITE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <Arrow className="-rotate-45" colour="white" />
             </a>
             <button onClick={() => setOpenChat(false)}>
