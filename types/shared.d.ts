@@ -119,6 +119,7 @@ export enum ArticleType {
   News = "News",
   Event = "Event",
   Interview = "Interview",
+  Workshop = "Workshop",
 }
 
 export interface ArticleInterface {
@@ -136,6 +137,11 @@ export interface ArticleInterface {
 }
 
 export interface AboutPageData {
+  coverImage: CoverImage;
+  content: Content;
+}
+
+export interface ValuesPageData {
   coverImage: CoverImage;
   content: Content;
 }

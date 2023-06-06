@@ -36,9 +36,9 @@ export default function usePlayerState({
 
       if (!sourceRef?.current?.getAttribute("src")) {
         sourceRef?.current?.setAttribute("src", url);
-        audioRef?.current?.load();
       }
 
+      await audioRef?.current?.load();
       await audioRef?.current?.play();
     } catch (error) {
       setIsPlaying(false);

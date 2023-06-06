@@ -24,6 +24,8 @@ export const DISCORD_SERVER_ID = "1077626733458620487";
 
 export const DISCORD_CHANNEL_ID = "1077626735132164096";
 
+export const TELEGRAM_URL = "https://t.me/refugeworldwide";
+
 export const ALPHABET = [
   "A",
   "B",

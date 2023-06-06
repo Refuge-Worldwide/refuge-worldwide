@@ -15,9 +15,9 @@ export async function getScheduleData() {
   const startOfDay = nowCET.startOf("day");
   const startSchedule = startOfDay.toISOString();
   const dayOfWeek = startOfDay.day();
-  if (dayOfWeek == 6 || dayOfWeek == 0) {
-    endScheduleAdjustment = 3;
-  }
+  // if (dayOfWeek == 6 || dayOfWeek == 0) {
+  //   endScheduleAdjustment = 3;
+  // }
   const endSchedule = startOfDay
     .add(endScheduleAdjustment, "day")
     .toISOString();
