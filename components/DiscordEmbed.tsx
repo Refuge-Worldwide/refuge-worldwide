@@ -10,10 +10,16 @@ import {
 export default function DiscordEmbed() {
   const [window, setWindow] = useState<boolean>(false);
   const avatars = [
-    "https://images.ctfassets.net/taoiy3h84mql/HD6ovuxiMGWFse3NGBmmj/dd8de8bfe69329472de46b0783e3cfa3/chatroom-avatar-1.png?h=250",
-    "https://images.ctfassets.net/taoiy3h84mql/7G8m3Usz71tzORSn8Z9lwC/d2d35f6eff19f7c6e6cb93232e47902d/chatroom-avatar-2.png?h=250",
-    "https://images.ctfassets.net/taoiy3h84mql/5bnmpZukdud44N58uWGoec/9b2bd26355ec0299304d2fed237952c0/chatroom-avatar-3.png?h=250",
-    "https://images.ctfassets.net/taoiy3h84mql/cUBSdUfEp1Kpa4cyPNmpy/dd5cdfb297dc50e286478f9b63564649/chatroom-avatar-4.png?h=250",
+    "https://refugeworldwide.com/images/chat-avatar.png",
+    "https://refugeworldwide.com/images/chat-avatar_1.png",
+    "https://refugeworldwide.com/images/chat-avatar_2.png",
+    "https://refugeworldwide.com/images/chat-avatar_3.png",
+    "https://refugeworldwide.com/images/chat-avatar_6.png",
+    "https://refugeworldwide.com/images/chat-avatar_7.png",
+    "https://refugeworldwide.com/images/chat-avatar_8.png",
+    "https://refugeworldwide.com/images/chat-avatar_9.png",
+    "https://refugeworldwide.com/images/chat-avatar_10.png",
+    "https://refugeworldwide.com/images/chat-avatar_11.png",
   ];
 
   const avatar = avatars[Math.floor(Math.random() * avatars.length)];
