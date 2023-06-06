@@ -6,7 +6,6 @@ import FeaturedShows from "../views/home/featuredShows";
 import LatestNews from "../views/home/latestNews";
 import NextUp from "../views/home/nextUp";
 import FeaturedArticles from "../views/news/featuredArticles";
-
 export async function getStaticProps() {
   return {
     props: await getHomePage(),

@@ -3,7 +3,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { forwardRef, useEffect } from "react";
-import { INSTAGRAM_URL, SHOP_URL, TWITTER_URL } from "../constants";
+import {
+  INSTAGRAM_URL,
+  SHOP_URL,
+  TWITTER_URL,
+  DISCORD_INVITE_URL,
+} from "../constants";
 import Instagram from "../icons/instagram";
 import { Close } from "../icons/menu";
 import MessageSquare from "../icons/message-square";
@@ -115,7 +120,7 @@ function MobileMenuContent({ onDismiss }: { onDismiss: () => void }) {
                 className="flex"
                 target="_blank"
                 rel="noopener noreferrer"
-                href="https://refugeworldwide.com/chat"
+                href={DISCORD_INVITE_URL}
               >
                 <MessageSquare size={40} />
               </a>
