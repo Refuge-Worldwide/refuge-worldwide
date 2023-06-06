@@ -11,20 +11,18 @@ export default function ChatPage() {
     <div ref={ref} className="flex flex-col bg-black h-screen">
       <PageMeta title="Chat | Refuge Worldwide" path="chat/" />
 
-      <div className="h-screen w-screen max-h-lg max-w-[520px] mx-auto bg-[#36393E]">
-        <div className="relative h-full border-white border">
-          <LivePlayer />
-          <div className="absolute top-12 sm:top-16 left-0 w-full bg-black text-white h-[50px] px-4 border-b border-t border-white">
-            <div className="flex gap-4 items-center h-full">
-              <span className="leading-6 flex-grow">Chatroom</span>
-              <a href={DISCORD_INVITE_URL} target="_blank">
-                <Arrow className="-rotate-45" colour="white" />
-              </a>
-            </div>
+      <div className="h-screen w-screen max-h-lg mx-auto bg-[#36393E]">
+        <LivePlayer />
+        <div className="absolute top-12 sm:top-16 left-0 w-full bg-black text-white h-[50px] px-4 border-b border-white">
+          <div className="flex gap-4 items-center h-full">
+            <span className="leading-6 flex-grow">Chatroom</span>
+            <a href={DISCORD_INVITE_URL} target="_blank">
+              <Arrow className="-rotate-45" colour="white" />
+            </a>
           </div>
-          <div className="w-full h-[calc(100vh-130px)] sm:h-[calc(100vh-55px)] pb-safe">
-            <DiscordEmbed />
-          </div>
+        </div>
+        <div className="w-full h-[calc(100vh-130px)] sm:h-[calc(100vh-55px)] pb-safe">
+          <DiscordEmbed />
         </div>
       </div>
     </div>
