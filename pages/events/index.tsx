@@ -148,9 +148,9 @@ export default function NewsPage({
           {Object.keys(upcomingEvents).length > 0 ? (
             <UpcomingEvents events={upcomingEvents} />
           ) : (
-            <div className="border-t-2 bg-blue">
+            <div className=" bg-blue">
               <div className="max-w-screen-xl mx-auto">
-                <p className="p-4 sm:p-8 xl:px-0">
+                <p className="p-4 sm:p-8 text-medium font-medium md:font-light md:text-small">
                   No upcoming {title}, please check back soon.
                 </p>
               </div>
