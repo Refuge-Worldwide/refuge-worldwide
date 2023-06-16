@@ -26,7 +26,7 @@ export default function EventRow({
           <EventBadge eventType={event.eventType} text={event.eventType} />
         </div>
         {/* <div className="h-3 md:hidden" /> */}
-        <p className="font-medium lg:col-span-4 text-small flex-grow mb-1 md:mb-0">
+        <p className="font-medium text-medium lg:col-span-4 md:text-small flex-grow mb-1 md:mb-0">
           {event.title}
         </p>
         {/* <div className="h-3 md:hidden" /> */}
