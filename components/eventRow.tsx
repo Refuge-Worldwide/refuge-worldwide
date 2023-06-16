@@ -19,13 +19,13 @@ export default function EventRow({
           {EventDate(event)}
         </div>
         <div className="flex distance-between md:hidden content-center w-full">
+          <div className="flex-grow text-left">{EventDate(event)}</div>
           <EventBadge eventType={event.eventType} text={event.eventType} />
-          <div className="flex-grow text-right">{EventDate(event)}</div>
         </div>
         <div className="hidden md:block flex-initial max-w-[106px] w-full lg:col-span-1">
           <EventBadge eventType={event.eventType} text={event.eventType} />
         </div>
-        <div className="h-3 md:hidden" />
+        {/* <div className="h-3 md:hidden" /> */}
         <p className="font-medium lg:col-span-4 text-small flex-grow mb-1 md:mb-0">
           {event.title}
         </p>
