@@ -95,13 +95,13 @@ function EventDate(event) {
           {sameMonth(event.date, event.endDate) ? (
             <span>
               <Date dateString={event.date} formatString="DD" />
-              &nbsp;-&nbsp;
+              —
               <Date dateString={event.endDate} />
             </span>
           ) : (
             <span>
               <Date dateString={event.date} formatString="DD MMM" />
-              &nbsp;-&nbsp;
+              —
               <br className="hidden md:block" />
               <Date dateString={event.endDate} />
             </span>
