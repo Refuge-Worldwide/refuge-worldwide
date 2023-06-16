@@ -15,20 +15,23 @@ export default function EventRow({
   return (
     <EventLink event={event}>
       <div className="py-5 lg:grid-cols-8 md:flex md:gap-x-6 lg:gap-x-12 xl:gap-x-24 md:items-center">
-        <div className="hidden md:block lg:col-span-1 text-small flex-initial md:min-w-[116px] ">
+        <div className="hidden md:block lg:col-span-1 text-small flex-initial md:min-w-[100px] lg:min-w-[116px] ">
           {EventDate(event)}
         </div>
-        <div className="flex-initial max-w-[106px] w-full lg:col-span-1">
+        <div className="flex distance-between md:hidden content-center w-full">
+          <EventBadge eventType={event.eventType} text={event.eventType} />
+          <div className="flex-grow text-right">{EventDate(event)}</div>
+        </div>
+        <div className="hidden md:block flex-initial max-w-[106px] w-full lg:col-span-1">
           <EventBadge eventType={event.eventType} text={event.eventType} />
         </div>
         <div className="h-3 md:hidden" />
         <p className="font-medium lg:col-span-4 text-small flex-grow">
           {event.title}
         </p>
-        <div className="h-3 md:hidden" />
-        <p className="lg:col-span-1 text-small flex-initial md:min-w-[206px]">
+        {/* <div className="h-3 md:hidden" /> */}
+        <p className="lg:col-span-1 text-small flex-initial md:min-w-[140px] lg:min-w-[206px]">
           {event.location}
-          <span className="md:hidden">&nbsp;| {EventDate(event)}</span>
         </p>
         <div className="h-3 md:hidden" />
         <div className="md:col-span-1 md:justify-self-end flex-initial md:min-w-[106px] text-align-right">
@@ -86,7 +89,7 @@ function EventLink({ event, children }) {
 
 function EventDate(event) {
   return (
-    <span>
+    <span className="text-small">
       {event.endDate ? (
         <span>
           {sameMonth(event.date, event.endDate) ? (
