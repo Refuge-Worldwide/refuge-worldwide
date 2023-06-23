@@ -23,10 +23,10 @@ export default function ShowSubmissionStep3({
     // We pass the event to the handleSubmit() function on submit.
     <div>
       {/* <pre className="text-white">{JSON.stringify(values, null, 2)}</pre> */}
-      <fieldset>
-        <legend>
+      <fieldset className="mt-16">
+        {/* <legend>
           <h2 className="font-sans text-base sm:text-large">Personal info</h2>
-        </legend>
+        </legend> */}
         <InputField
           name="email"
           type="email"
@@ -36,6 +36,12 @@ export default function ShowSubmissionStep3({
         {showType === "live" && (
           <InputField name="number" type="tel" label="Contact number" />
         )}
+      </fieldset>
+
+      <fieldset>
+        {/* <legend>
+          <h2 className="font-sans text-base sm:text-large">Show info</h2>
+        </legend> */}
         <MultiSelectField
           label="Artist(s)"
           description="Please include guests, collectives and show hosts."
@@ -115,12 +121,6 @@ export default function ShowSubmissionStep3({
             />
           </fieldset>
         )}
-      </fieldset>
-
-      <fieldset>
-        <legend>
-          <h2 className="font-sans text-base sm:text-large">Show info</h2>
-        </legend>
         <InputField
           name="showName"
           type="text"
