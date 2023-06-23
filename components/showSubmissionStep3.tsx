@@ -36,6 +36,85 @@ export default function ShowSubmissionStep3({
         {showType === "live" && (
           <InputField name="number" type="tel" label="Contact number" />
         )}
+        <MultiSelectField
+          label="Artist(s)"
+          description="Please include guests, collectives and show hosts."
+          name="artists"
+          options={artists}
+          limit={5}
+        />
+
+        <CheckboxField
+          name="hasExtraArtists"
+          label="Can't find your artist/guest/collective in the dropdown?"
+          size="small"
+        />
+
+        {values.hasExtraArtists && (
+          <fieldset className=" mb-8">
+            <legend className="mb-6">
+              Artist/guest info
+              {/* <span className="label-description">
+                Please put guest bios in the show description
+              </span> */}
+            </legend>
+            <FieldArray
+              name="extraArtists"
+              render={(arrayHelpers) => (
+                <div>
+                  {values.extraArtists &&
+                    values.extraArtists.map((extraArtist, index) => (
+                      <div
+                        className="mb-8 border border-black p-8 relative"
+                        key={"extraArtist" + index}
+                      >
+                        {index > 0 && (
+                          <button
+                            className="float-right"
+                            onClick={() => arrayHelpers.remove(index)}
+                            type="button"
+                          >
+                            <Close size={24} />
+                          </button>
+                        )}
+
+                        <div className="mb-6 mt-6">
+                          <label htmlFor="name">Name*</label>
+                          <Field
+                            type="text"
+                            name={`extraArtists.${index}.name`}
+                            className="pill-input"
+                            required
+                          />
+                          <ErrorMessage
+                            className="text-red mt-2 text-small"
+                            component="span"
+                            name={`extraArtists.${index}.name`}
+                          />
+                        </div>
+                        <TextareaField
+                          name="newHost.bio"
+                          rows={4}
+                          label="Bio"
+                        />
+                        <ImageUploadField
+                          label="Artist/guest image"
+                          name={`extraArtists.${index}.image`}
+                        />
+                      </div>
+                    ))}
+                  <button
+                    className="underline"
+                    onClick={() => arrayHelpers.push("")}
+                    type="button"
+                  >
+                    Add another artist/guest
+                  </button>
+                </div>
+              )}
+            />
+          </fieldset>
+        )}
       </fieldset>
 
       <fieldset>
@@ -190,93 +269,6 @@ export default function ShowSubmissionStep3({
             label="Please state what equipment you'll be bringing"
             required={true}
           />
-        )}
-      </fieldset>
-
-      <fieldset>
-        <legend>
-          <h2 className="font-sans text-base sm:text-large">
-            Artist/guest info
-          </h2>
-        </legend>
-        <MultiSelectField
-          label="Artist(s)"
-          description="Please include guests, collectives and show hosts."
-          name="artists"
-          options={artists}
-          limit={5}
-        />
-
-        <CheckboxField
-          name="hasExtraArtists"
-          label="Can't find your artist/guest/collective in the dropdown?"
-          size="small"
-        />
-
-        {values.hasExtraArtists && (
-          <fieldset className=" mb-8">
-            <legend className="mb-6">
-              Artist/guest info
-              {/* <span className="label-description">
-                Please put guest bios in the show description
-              </span> */}
-            </legend>
-            <FieldArray
-              name="extraArtists"
-              render={(arrayHelpers) => (
-                <div>
-                  {values.extraArtists &&
-                    values.extraArtists.map((extraArtist, index) => (
-                      <div
-                        className="mb-8 border border-black p-8 relative"
-                        key={"extraArtist" + index}
-                      >
-                        {index > 0 && (
-                          <button
-                            className="float-right"
-                            onClick={() => arrayHelpers.remove(index)}
-                            type="button"
-                          >
-                            <Close size={24} />
-                          </button>
-                        )}
-
-                        <div className="mb-6 mt-6">
-                          <label htmlFor="name">Name*</label>
-                          <Field
-                            type="text"
-                            name={`extraArtists.${index}.name`}
-                            className="pill-input"
-                            required
-                          />
-                          <ErrorMessage
-                            className="text-red mt-2 text-small"
-                            component="span"
-                            name={`extraArtists.${index}.name`}
-                          />
-                        </div>
-                        <TextareaField
-                          name="newHost.bio"
-                          rows={4}
-                          label="Bio"
-                        />
-                        <ImageUploadField
-                          label="Artist/guest image"
-                          name={`extraArtists.${index}.image`}
-                        />
-                      </div>
-                    ))}
-                  <button
-                    className="underline"
-                    onClick={() => arrayHelpers.push("")}
-                    type="button"
-                  >
-                    Add another artist/guest
-                  </button>
-                </div>
-              )}
-            />
-          </fieldset>
         )}
       </fieldset>
     </div>
