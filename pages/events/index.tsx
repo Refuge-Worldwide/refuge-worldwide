@@ -150,7 +150,7 @@ export default function NewsPage({
           ) : (
             <div className=" bg-blue">
               <div className="max-w-screen-xl mx-auto">
-                <p className="p-4 sm:p-8 text-medium font-medium md:font-light md:text-small">
+                <p className="p-4 sm:p-8 text-smedium font-medium md:font-light md:text-small">
                   No upcoming {title}, please check back soon.
                 </p>
               </div>
