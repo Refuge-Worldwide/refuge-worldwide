@@ -87,12 +87,24 @@ export async function getPastShows(
     return processed;
   }
 
-  const allShows = await getAllEntries<TypeShowFields>("show", 1000, {
+  // const allShows = await getAllEntries<TypeShowFields>("show", 1000, {
+  //   "fields.mixcloudLink[exists]": true,
+  //   "fields.date[lte]": now,
+  // });
+
+  // const processed = allShows.map(createPastShowSchema);
+
+  const { items } = await client.getEntries<TypeShowFields>({
     "fields.mixcloudLink[exists]": true,
     "fields.date[lte]": now,
+    order: "-fields.date,fields.title",
+    content_type: "show",
+    limit: 1000,
   });
 
-  const processed = allShows.map(createPastShowSchema);
+  const processed = (items as Entry<TypeShowFields>[]).map(
+    createPastShowSchema
+  );
 
   const filtered = processed.filter((show) =>
     show.genres.includes(filter.toString())
