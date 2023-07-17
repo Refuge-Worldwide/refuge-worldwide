@@ -22,7 +22,7 @@ export default function ShowSubmissionStep3({
   return (
     // We pass the event to the handleSubmit() function on submit.
     <div>
-      <pre className="text-white">{JSON.stringify(values, null, 2)}</pre>
+      {/* <pre className="text-white">{JSON.stringify(values, null, 2)}</pre> */}
       <fieldset className="mt-16">
         {/* <legend>
           <h2 className="font-sans text-base sm:text-large">Personal info</h2>
