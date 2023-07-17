@@ -85,8 +85,8 @@ const validationSchema = [
           Yup.object()
             .default({})
             .shape({
-              name: Yup.string().required("Please add a guest name"),
-              image: Yup.object(),
+              name: Yup.string().required("Please add an artist name"),
+              image: Yup.object().required("Please add an artist image"),
             })
         ),
     }),

@@ -22,7 +22,7 @@ export default function ShowSubmissionStep3({
   return (
     // We pass the event to the handleSubmit() function on submit.
     <div>
-      {/* <pre className="text-white">{JSON.stringify(values, null, 2)}</pre> */}
+      <pre className="text-white">{JSON.stringify(values, null, 2)}</pre>
       <fieldset className="mt-16">
         {/* <legend>
           <h2 className="font-sans text-base sm:text-large">Personal info</h2>
@@ -59,7 +59,7 @@ export default function ShowSubmissionStep3({
         {values.hasExtraArtists && (
           <fieldset className=" mb-8">
             <legend className="mb-6">
-              Artist/guest info
+              Additional artist(s)
               {/* <span className="label-description">
                 Please put guest bios in the show description
               </span> */}
@@ -99,12 +99,13 @@ export default function ShowSubmissionStep3({
                           />
                         </div>
                         <TextareaField
-                          name="newHost.bio"
+                          name={`extraArtists.${index}.bio`}
                           rows={4}
                           label="Bio"
                         />
                         <ImageUploadField
                           label="Artist/guest image"
+                          required
                           name={`extraArtists.${index}.image`}
                         />
                       </div>
@@ -124,7 +125,8 @@ export default function ShowSubmissionStep3({
         <InputField
           name="showName"
           type="text"
-          label="Show name"
+          label="Show title"
+          description="Without artist names"
           required={true}
         />
         <InputField

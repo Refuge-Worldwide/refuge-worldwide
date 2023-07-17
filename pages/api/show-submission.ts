@@ -3,6 +3,7 @@ import { createClient } from "contentful-management";
 import { richTextFromMarkdown } from "@contentful/rich-text-from-markdown";
 import { GoogleSpreadsheet } from "google-spreadsheet";
 import dayjs from "dayjs";
+import ExtraArtists from "../../components/formFields/extraArtists";
 
 const accesstoken = process.env.CONTENTFUL_MANAGEMENT_ACCESS_TOKEN;
 const spaceId = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID;
@@ -40,8 +41,8 @@ const appendToSpreadsheet = async (values) => {
     "Show name": values.showName,
     "Show date": dayjs(values.datetime).format("DD/MM/YYYY HH:mm"),
     "Show description": values.description,
-    "Host name(s)": values.hosts.map((x) => x.label).join(", "),
-    "Guest name(s)": values.guests.map((x) => x.name).join(", "),
+    "Host name(s)": values.artists.map((x) => x.label).join(", "),
+    // "Guest name(s)": values.guests.map((x) => x.name).join(", "),
     "Show genres (up to 3)": values.genres.map((x) => x.label).join(", "),
     "Instagram @ handle(s)": values.instagram
       .split(", ")
@@ -137,13 +138,17 @@ const addArtist = async (artist) => {
   }
 };
 
-const formatArtistsForContenful = (hosts, hasGuests, guests) => {
-  let artists = [...hosts];
-  if (hasGuests) {
-    guests.forEach((guest) => {
-      artists.push({ label: guest.name });
-    });
-  }
+const formatArtistsForContenful = (
+  artistsFromForm,
+  hasExtraArtists,
+  extraArtists
+) => {
+  let artists = [...artistsFromForm];
+  // if (hasExtraArtists) {
+  //   extraArtists.forEach((guest) => {
+  //     artists.push({ label: guest.name });
+  //   });
+  // }
   if (artists.length > 1) {
     const artistSimpleArray = artists.map((artist) => artist.label);
     const formattedArtists = [
@@ -181,11 +186,11 @@ const addGenre = async (genre) => {
 const addShow = async (values) => {
   try {
     const content = await richTextFromMarkdown(values.description);
-    const artists = createReferencesArray(values.hosts);
+    const artists = createReferencesArray(values.artists);
     const artistsForContentful = formatArtistsForContenful(
-      values.hosts,
-      values.hasGuests,
-      values.guests
+      values.artists,
+      values.hasExtraArtists,
+      values.extraArtists
     );
     const dateFormatted = dayjs(values.datetime).format("DD MMM YYYY");
     const genres = createReferencesArray(values.genres);
@@ -286,10 +291,15 @@ export default async function handler(
   console.log(values);
   try {
     values.imageId = await uploadImage(values.showName, values.image);
-    if (values.isNewHost) {
-      const contentfulNewHost = await addArtist(values.newHost);
-      console.log(contentfulNewHost);
-      values.hosts.push(contentfulNewHost);
+    if (values.hasExtraArtists) {
+      for (const artist of values.extraArtists) {
+        // if ((artist.bio && artist.image) || (artist.bio !== "" && artist.image !== "")) {
+        console.log("adding artist to contentful: " + artist.name);
+        const contentfulNewArtist = await addArtist(artist);
+        console.log(contentfulNewArtist);
+        values.artists.push(contentfulNewArtist);
+        // }
+      }
     }
     if (values.hasNewGenres) {
       const genres = values.newGenres.split(", ");
