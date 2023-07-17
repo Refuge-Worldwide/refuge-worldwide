@@ -47,7 +47,7 @@ export default function ShowSubmissionStep3({
           description="Please include guests, collectives and show hosts."
           name="artists"
           options={artists}
-          limit={5}
+          limit={10}
         />
 
         <CheckboxField
