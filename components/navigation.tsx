@@ -139,11 +139,7 @@ export default function Navigation() {
                       </NavigationLink>
                     </li>
                     <li className="h-6 leading-none">
-                      <a
-                        href={DISCORD_INVITE_URL}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
+                      <a href="/chat" target="_blank" rel="noopener noreferrer">
                         <MessageSquare />
                       </a>
                     </li>
