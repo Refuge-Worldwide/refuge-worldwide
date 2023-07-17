@@ -5,7 +5,7 @@ import ShowSubmissionForm from "../components/showSubmissionForm";
 import Layout from "../components/layout";
 import PageMeta from "../components/seo/page";
 import SinglePage from "../views/singlePage";
-
+import Head from "next/head";
 import { getAllGenres } from "../lib/contentful/pages/radio";
 import { getAllArtists } from "../lib/contentful/pages/submission";
 
@@ -49,6 +49,9 @@ export default function NewSubmissionPage({
 
   return (
     <Layout>
+      <Head>
+        <meta name="robots" content="noindex,nofollow" />
+      </Head>
       <PageMeta title="Show Submission | Refuge Worldwide" path="submission/" />
       <SinglePage coverImage={coverImage}>
         <section className="container-md p-4 sm:p-8 bg-white">
