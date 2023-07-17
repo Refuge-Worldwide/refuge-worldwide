@@ -51,6 +51,10 @@ export default function NewSubmissionPage({
     <Layout>
       <Head>
         <meta name="robots" content="noindex,nofollow" />
+        <meta
+          name="google-site-verification"
+          content="g7Ag5vgmFrmumUxVok2GYLriMQ1x0Ba-qbC26445h0I"
+        />
       </Head>
       <PageMeta title="Show Submission | Refuge Worldwide" path="submission/" />
       <SinglePage coverImage={coverImage}>
