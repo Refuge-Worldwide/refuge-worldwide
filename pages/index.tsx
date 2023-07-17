@@ -6,6 +6,8 @@ import FeaturedShows from "../views/home/featuredShows";
 import LatestNews from "../views/home/latestNews";
 import NextUp from "../views/home/nextUp";
 import FeaturedArticles from "../views/news/featuredArticles";
+import Head from "next/head";
+
 export async function getStaticProps() {
   return {
     props: await getHomePage(),
@@ -20,6 +22,12 @@ export default function HomePage({
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <Layout>
+      <Head>
+        <meta
+          name="google-site-verification"
+          content="g7Ag5vgmFrmumUxVok2GYLriMQ1x0Ba-qbC26445h0I"
+        />
+      </Head>
       <PageMeta title="Refuge Worldwide" path="/" />
 
       <NextUp />
