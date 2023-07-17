@@ -71,7 +71,7 @@ export async function getScheduleData() {
     show.dateEnd = dayjs(show.dateEnd)
       .subtract(cetAdjustment, "hours")
       .toISOString();
-    show.title = show.title.replace("|", "-");
+    show.title = show.title.replace("|", "—");
     if (!nextUp && nowUTC.isBefore(dayjs(show.dateEnd))) {
       if (nowUTC.isAfter(dayjs(show.date))) {
         liveNow = show;
