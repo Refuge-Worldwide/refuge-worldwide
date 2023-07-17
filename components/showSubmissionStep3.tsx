@@ -104,7 +104,7 @@ export default function ShowSubmissionStep3({
                           label="Bio"
                         />
                         <ImageUploadField
-                          label="Artist/guest image"
+                          label="Image"
                           required
                           name={`extraArtists.${index}.image`}
                         />
