@@ -1,6 +1,10 @@
 import { createClient, EntriesQueries, Entry } from "contentful";
+import { graphql } from ".";
+import { extractLinkedFromCollection, extractCollection } from "../../util";
+import { ShowPreviewFragment } from "./fragments";
 import dayjs from "dayjs";
 import type { TypeShow, TypeShowFields } from "../../types/contentful";
+import type { ShowInterface } from "../../types/shared";
 import { sort } from "../../util";
 
 export const client = createClient({
@@ -87,29 +91,63 @@ export async function getPastShows(
     return processed;
   }
 
-  // const allShows = await getAllEntries<TypeShowFields>("show", 1000, {
-  //   "fields.mixcloudLink[exists]": true,
-  //   "fields.date[lte]": now,
-  // });
+  const genreShowQuery = /* GraphQL */ `
+    query genreShowQuery($filter: String) {
+      genreCollection(where: { name: $filter }, limit: 1) {
+        items {
+          linkedFrom {
+            showCollection(limit: 999) {
+              items {
+                coverImage {
+                  sys {
+                    id
+                  }
+                  title
+                  description
+                  url
+                  width
+                  height
+                }
+                date
+                genresCollection(limit: 9) {
+                  items {
+                    name
+                  }
+                }
+                mixcloudLink
+                slug
+                title
+                sys {
+                  id
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
 
-  // const processed = allShows.map(createPastShowSchema);
-
-  const { items } = await client.getEntries<TypeShowFields>({
-    "fields.mixcloudLink[exists]": true,
-    "fields.date[lte]": now,
-    order: "-fields.date,fields.title",
-    content_type: "show",
-    limit: 1000,
+  const res = await graphql(genreShowQuery, {
+    variables: { filter },
   });
 
-  const processed = (items as Entry<TypeShowFields>[]).map(
-    createPastShowSchema
-  );
+  const items =
+    res.data.genreCollection.items[0].linkedFrom.showCollection.items;
 
-  const filtered = processed.filter((show) =>
-    show.genres.includes(filter.toString())
+  const processed = items.map((show) => ({
+    id: show.sys.id,
+    title: show.title,
+    date: show.date,
+    slug: show.slug,
+    mixcloudLink: show.mixcloudLink,
+    coverImage: show.coverImage.url,
+    genres: show.genresCollection.items.map((genre) => genre.name),
+  }));
+
+  const filtered = processed.filter(
+    (show) => show.mixcloudLink && show.date <= now
   );
-  // const filtered = processed.filter((show) => show.genres.some(g => filter.includes(g)));
 
   const sorted = filtered.sort((a, b) => {
     if (dayjs(a.date).isAfter(b.date)) return -1;

@@ -81,7 +81,7 @@ export default function ShowBody({
 
               <ul className="w-full flex flex-wrap justify-center gap-2">
                 {genres.map((genre, i) => (
-                  <li key={i}>
+                  <li className="cursor-pointer" key={i}>
                     <Link
                       href={`/radio?genre=${encodeURIComponent(genre)}#shows`}
                       legacyBehavior
