@@ -62,9 +62,8 @@ const validationSchema = [
       "Incorrect format. Should be a comma seperated list with space and NOT including the @ symbol."
     ),
     image: Yup.object().required("Please add a show image"),
-    // showImage: Yup.string().required("Please upload an image for your show"),
-    isNewHost: Yup.boolean(),
-    hosts: Yup.array().when("isNewHost", {
+    hasExtraArtists: Yup.boolean(),
+    artists: Yup.array().when("hasExtraArtists", {
       is: false,
       then: (schema) =>
         schema.min(
@@ -79,25 +78,15 @@ const validationSchema = [
           })
         ),
     }),
-    newHost: Yup.object().when("isNewHost", {
-      is: true,
-      then: (schema) =>
-        schema.shape({
-          name: Yup.string().required("Please add an artist name"),
-          bio: Yup.string().required("Please add an artist bio"),
-          image: Yup.object().required("Please add an artist image"),
-        }),
-    }),
-    hasGuests: Yup.boolean(),
-    guests: Yup.array().when("hasGuests", {
+    extraArtists: Yup.array().when("hasExtraArtists", {
       is: true,
       then: (schema) =>
         schema.of(
           Yup.object()
             .default({})
             .shape({
-              name: Yup.string().required("Please add a guest name"),
-              image: Yup.object(),
+              name: Yup.string().required("Please add an artist name"),
+              image: Yup.object().required("Please add an artist image"),
             })
         ),
     }),
@@ -118,17 +107,12 @@ const initialValues: SubmissionFormValues = {
   description: "",
   instagram: "",
   image: {},
-  hosts: [],
-  isNewHost: false,
-  newHost: {
-    name: "",
-    bio: "",
-    image: "",
-  },
-  hasGuests: false,
-  guests: [
+  artists: [],
+  hasExtraArtists: false,
+  extraArtists: [
     {
       name: "",
+      bio: "",
       image: "",
     },
   ],
