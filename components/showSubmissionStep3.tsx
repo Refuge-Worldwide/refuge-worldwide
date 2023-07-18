@@ -20,13 +20,9 @@ export default function ShowSubmissionStep3({
   const { values } = useFormikContext<SubmissionFormValues>();
 
   return (
-    // We pass the event to the handleSubmit() function on submit.
     <div>
       {/* <pre className="text-white">{JSON.stringify(values, null, 2)}</pre> */}
       <fieldset className="mt-16">
-        {/* <legend>
-          <h2 className="font-sans text-base sm:text-large">Personal info</h2>
-        </legend> */}
         <InputField
           name="email"
           type="email"
@@ -39,11 +35,8 @@ export default function ShowSubmissionStep3({
       </fieldset>
 
       <fieldset>
-        {/* <legend>
-          <h2 className="font-sans text-base sm:text-large">Show info</h2>
-        </legend> */}
         <MultiSelectField
-          label="Artist(s)"
+          label="Artist(s)*"
           description="Please include guests, collectives and show hosts."
           name="artists"
           options={artists}
@@ -58,12 +51,7 @@ export default function ShowSubmissionStep3({
 
         {values.hasExtraArtists && (
           <fieldset className=" mb-8">
-            <legend className="mb-6">
-              Additional artist(s)
-              {/* <span className="label-description">
-                Please put guest bios in the show description
-              </span> */}
-            </legend>
+            <legend className="mb-6">Additional artist(s)</legend>
             <FieldArray
               name="extraArtists"
               render={(arrayHelpers) => (
