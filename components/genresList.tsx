@@ -1,6 +1,6 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { useRouter } from "next/router";
-import { Dispatch, SetStateAction, useState, useRef } from "react";
+import { Dispatch, SetStateAction, useState, useRef, useEffect } from "react";
 import Badge from "./badge";
 import { Cross } from "../icons/cross";
 
@@ -23,8 +23,11 @@ export default function GenresList({ filter, genres }: GenreListProps) {
     );
     setFilteredGenres(filteredGenres);
   };
-
   const inputRef = useRef(null);
+
+  useEffect(() => {
+    setSelectedGenres(filter[0]);
+  }, [filter]);
 
   const updateGenreParam = (genre: string) => () => {
     if (genre == selectedGenres) {
@@ -75,6 +78,7 @@ export default function GenresList({ filter, genres }: GenreListProps) {
             {!selectedGenres && <span className="bl"> BY GENRE </span>}
           </button>
         </Dialog.Trigger>
+        {selectedGenres}
         {filter &&
           filter.map((genre, i) => (
             <button
