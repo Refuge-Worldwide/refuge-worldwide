@@ -3,7 +3,12 @@ import { createClient } from "contentful-management";
 import { richTextFromMarkdown } from "@contentful/rich-text-from-markdown";
 import { GoogleSpreadsheet } from "google-spreadsheet";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 import ExtraArtists from "../../components/formFields/extraArtists";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const accesstoken = process.env.CONTENTFUL_MANAGEMENT_ACCESS_TOKEN;
 const spaceId = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID;
@@ -37,7 +42,7 @@ const appendToSpreadsheet = async (values) => {
     });
   }
   const newRow = {
-    Timestamp: dayjs().format("DD/MM/YYYY HH:mm:ss"),
+    Timestamp: dayjs().tz("Europe/Berlin").format("DD/MM/YYYY HH:mm:ss"),
     "Show name": values.showName,
     "Show date": dayjs(values.datetime).format("DD/MM/YYYY HH:mm"),
     "Show description": values.description,
@@ -289,6 +294,7 @@ export default async function handler(
   // Get data submitted in request's body.
   const values = req.body;
   console.log(values);
+  console.log(dayjs().utcOffset());
   try {
     values.imageId = await uploadImage(values.showName, values.image);
     if (values.hasExtraArtists) {
