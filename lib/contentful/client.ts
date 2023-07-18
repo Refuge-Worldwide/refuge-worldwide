@@ -92,11 +92,11 @@ export async function getPastShows(
   }
 
   const genreShowQuery = /* GraphQL */ `
-    query genreShowQuery($filter: String, $take: Int, $skip: Int) {
+    query genreShowQuery($filter: String) {
       genreCollection(where: { name: $filter }, limit: 1) {
         items {
           linkedFrom {
-            showCollection(limit: $take, skip: $skip) {
+            showCollection(limit: 999) {
               items {
                 coverImage {
                   sys {
@@ -129,7 +129,7 @@ export async function getPastShows(
   `;
 
   const res = await graphql(genreShowQuery, {
-    variables: { filter, take, skip },
+    variables: { filter },
   });
 
   const items =
@@ -145,5 +145,15 @@ export async function getPastShows(
     genres: show.genresCollection.items.map((genre) => genre.name),
   }));
 
-  return processed;
+  const filtered = processed.filter(
+    (show) => show.mixcloudLink && show.date <= now
+  );
+
+  const sorted = filtered.sort((a, b) => {
+    if (dayjs(a.date).isAfter(b.date)) return -1;
+    if (dayjs(b.date).isAfter(a.date)) return 1;
+    return sort.alpha(a.title, b.title);
+  });
+
+  return sorted.slice(skip, skip + take);
 }
