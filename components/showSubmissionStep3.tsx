@@ -71,21 +71,17 @@ export default function ShowSubmissionStep3({
                             <Close size={24} />
                           </button>
                         )}
-
-                        <div className="mb-6 mt-6">
-                          <label htmlFor="name">Name*</label>
-                          <Field
-                            type="text"
-                            name={`extraArtists.${index}.name`}
-                            className="pill-input"
-                            required
-                          />
-                          <ErrorMessage
-                            className="text-red mt-2 text-small"
-                            component="span"
-                            name={`extraArtists.${index}.name`}
-                          />
-                        </div>
+                        <InputField
+                          name={`extraArtists.${index}.name`}
+                          type="text"
+                          label="Name"
+                          required
+                        />
+                        <InputField
+                          name={`extraArtists.${index}.pronouns`}
+                          type="text"
+                          label="Pronouns"
+                        />
                         <TextareaField
                           name={`extraArtists.${index}.bio`}
                           rows={4}

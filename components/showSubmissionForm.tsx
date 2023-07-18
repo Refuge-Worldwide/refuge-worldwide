@@ -112,6 +112,7 @@ const initialValues: SubmissionFormValues = {
   extraArtists: [
     {
       name: "",
+      pronouns: "",
       bio: "",
       image: "",
     },

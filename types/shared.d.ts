@@ -225,5 +225,10 @@ export type SubmissionFormValues = {
   additionalEqDesc?: string;
   artists?: Array<{ value: string; label: string }>;
   hasExtraArtists: boolean;
-  extraArtists?: Array<{ name: string; bio?: string; image?: string }>;
+  extraArtists?: Array<{
+    name: string;
+    pronouns: string;
+    bio?: string;
+    image?: string;
+  }>;
 };

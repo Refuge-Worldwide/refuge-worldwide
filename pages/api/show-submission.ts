@@ -112,6 +112,9 @@ const addArtist = async (artist) => {
         name: {
           "en-US": artist.name,
         },
+        pronouns: {
+          "en-US": artist.pronouns,
+        },
         role: {
           "en-US": false,
         },
