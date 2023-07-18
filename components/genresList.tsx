@@ -78,7 +78,6 @@ export default function GenresList({ filter, genres }: GenreListProps) {
             {!selectedGenres && <span className="bl"> BY GENRE </span>}
           </button>
         </Dialog.Trigger>
-        {selectedGenres}
         {filter &&
           filter.map((genre, i) => (
             <button
