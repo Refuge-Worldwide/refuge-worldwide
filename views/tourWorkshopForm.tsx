@@ -5,6 +5,7 @@ import InputField from "../components/formFields/inputField";
 import MultiSelectField from "../components/formFields/multiSelectField";
 import TextareaField from "../components/formFields/textareaField";
 import RadioField from "../components/formFields/radioField";
+import { AiOutlineInfoCircle } from "react-icons/ai";
 
 const initialValues = {
   workshop: "",
@@ -22,20 +23,19 @@ const initialValues = {
 const workshops = [
   {
     value: "Control Club, Bucharest",
-    label:
-      "Sept 16, 8-10pm, Control Club, Bucharest - Hosted by Via PRG - Romanian",
+    label: "Sept 16, 8-10pm - Control Club, Bucharest",
     additionalInfo:
       "Hosted by Via PRG, this workshop will be given in Romanian",
   },
   {
     value: "Arkaoda, Istanbul",
-    label: "Sept 22, 8-10pm, Arkaoda, Istanbul - Hosted by Ece Özel - Turkish",
+    label: "Sept 22, 8-10pm - Arkaoda, Istanbul",
     additionalInfo:
       "Hosted by Ece Özel, this workshop will be given in Turkish",
   },
   {
     value: "Horoom, Bassiani, Tbilisi",
-    label: "Sept 23, 8-10pm, Horoom, Bassiani, Tbilisi",
+    label: "Sept 23, 8-10pm - Horoom, Bassiani, Tbilisi",
   },
 ];
 
@@ -96,11 +96,12 @@ export default function TourWorkshopForm() {
             options={workshops}
             required={true}
           />
-          {/* {values.workshop.additionalInfo && (
-            <div className="border border-black p-6 mb-10 bg-orange">
+          {values.workshop.additionalInfo && (
+            <div className="flex gap-2 items-center border border-black p-3 lg:p-6 mb-10 bg-orange">
+              <AiOutlineInfoCircle />
               <p>{values.workshop.additionalInfo}</p>
             </div>
-          )} */}
+          )}
           <InputField
             name="name"
             type="text"
