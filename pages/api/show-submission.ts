@@ -31,13 +31,13 @@ const showImages = [];
 // Append Function
 const appendToSpreadsheet = async (values) => {
   let guestImages = "";
-  if (values.hasGuests) {
-    values.guests.forEach((guest, index) => {
-      if (guest.image) {
+  if (values.hasExtraArtists) {
+    values.extraArtists.forEach((artist, index) => {
+      if (artist.image) {
         if (index > 0) {
           guestImages += " + ";
         }
-        guestImages += guest.image.url;
+        guestImages += artist.image.url;
       }
     });
   }
