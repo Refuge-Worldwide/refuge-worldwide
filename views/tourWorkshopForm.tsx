@@ -6,6 +6,7 @@ import MultiSelectField from "../components/formFields/multiSelectField";
 import TextareaField from "../components/formFields/textareaField";
 import RadioField from "../components/formFields/radioField";
 import { AiOutlineInfoCircle } from "react-icons/ai";
+import { Arrow } from "../icons/arrow";
 
 const initialValues = {
   workshop: "",
@@ -13,8 +14,8 @@ const initialValues = {
   pronouns: "",
   email: "",
   number: "",
-  datetime: "",
-  minority: "",
+  background: "",
+  backgroundOther: "",
   experience: "",
   experienceExplained: "",
   hear: "",
@@ -39,13 +40,19 @@ const workshops = [
   },
 ];
 
-const validationSchema = [
-  Yup.object().shape({
-    email: Yup.string()
-      .email("Invalid email")
-      .required("Please provide your email address"),
-  }),
-];
+const validationSchema = Yup.object().shape({
+  workshop: Yup.object().required("Please select a workshop"),
+  name: Yup.string().required("Please provide your name"),
+  pronouns: Yup.string().required("Please provide your pronouns"),
+  email: Yup.string()
+    .email("Invalid email")
+    .required("Please provide your email address"),
+  number: Yup.string().required("Please provide your number"),
+  background: Yup.string().required("Please select an option above"),
+  experience: Yup.string().required("Please select an option above"),
+  experienceExplained: Yup.string().required("This field is required"),
+  hear: Yup.string().required("This field is requied"),
+});
 
 export default function TourWorkshopForm() {
   const [submissionError, setSubmissionError] = useState<boolean>(false);
@@ -53,7 +60,7 @@ export default function TourWorkshopForm() {
     console.log("submitting the form");
     console.log(values);
     const JSONData = JSON.stringify(values);
-    const endpoint = "/api/show-submission";
+    const endpoint = "/api/carhartt-wip-tour-submission";
     const options = {
       // The method is POST because we are sending data.
       method: "POST",
@@ -81,14 +88,14 @@ export default function TourWorkshopForm() {
   return (
     <Formik
       initialValues={initialValues}
-      // validationSchema={validationSchema}
+      validationSchema={validationSchema}
       onSubmit={_handleSubmit}
     >
       {({ values, isSubmitting }) => (
         <Form id="showSubmissionForm">
-          {/* <pre className="text-white bg-black p-4">
+          <pre className="text-white bg-black p-4">
             {JSON.stringify(values, null, 2)}
-          </pre> */}
+          </pre>
           <MultiSelectField
             name="workshop"
             label="Please select a workshop"
@@ -97,7 +104,7 @@ export default function TourWorkshopForm() {
             required={true}
           />
           {values.workshop.additionalInfo && (
-            <div className="flex gap-2 items-center border border-black p-3 lg:p-6 mb-10 bg-orange">
+            <div className="flex gap-2 md:gap-3 items-center border border-black p-3 md:p-6 mb-10 bg-orange">
               <AiOutlineInfoCircle />
               <p>{values.workshop.additionalInfo}</p>
             </div>
@@ -144,12 +151,12 @@ export default function TourWorkshopForm() {
                 aria-labelledby="my-radio-group"
                 className="flex flex-col"
               >
-                {/* <RadioField name="minority" label="Yes" value="Yes" /> */}
+                {/* <RadioField name="background" label="Yes" value="Yes" /> */}
                 <label className="space-x-3 text-base flex items-center">
                   <Field
                     className="h-6 w-6 rounded-full border-2 border-black text-black focus:ring-black"
                     type="radio"
-                    name="minority"
+                    name="background"
                     value="Yes"
                   />
                   <span>Yes</span>
@@ -158,7 +165,7 @@ export default function TourWorkshopForm() {
                   <Field
                     className="h-6 w-6 rounded-full border-2 border-black text-black focus:ring-black"
                     type="radio"
-                    name="minority"
+                    name="background"
                     value="No"
                   />
                   <span>No</span>
@@ -167,13 +174,13 @@ export default function TourWorkshopForm() {
                   <Field
                     className="h-6 w-6 rounded-full border-2 border-black text-black focus:ring-black"
                     type="radio"
-                    name="minority"
+                    name="background"
                     value="Other"
                   />
                   <span>Other</span>
                 </label>
-                {values.minority == "Other" && (
-                  <TextareaField name="priorityDesc" rows={2} />
+                {values.background == "Other" && (
+                  <TextareaField name="backgroundOther" rows={2} />
                 )}
               </div>
             </fieldset>
@@ -229,6 +236,16 @@ export default function TourWorkshopForm() {
               again and if this problem persists get in touch.
             </p>
           )}
+          <div>
+            <button
+              disabled={isSubmitting}
+              type="submit"
+              className="inline-flex items-center space-x-4 text-base font-medium mt-6"
+            >
+              <span className="underline">Submit</span>
+              <Arrow />
+            </button>
+          </div>
         </Form>
       )}
     </Formik>
