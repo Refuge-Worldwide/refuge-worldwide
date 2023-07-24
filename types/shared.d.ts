@@ -177,6 +177,11 @@ export interface SupportPageData {
   content: Content;
 }
 
+export interface TourPageData {
+  coverImage: CoverImage;
+  content: Content;
+}
+
 export interface SubmissionPageData {
   coverImage: CoverImage;
   liveShows: Content;
