@@ -1,6 +1,10 @@
 import dayjs from "dayjs";
 import { graphql } from "..";
-import { GenreInterface, ShowInterface } from "../../../types/shared";
+import {
+  GenreInterface,
+  ShowInterface,
+  PastShowSchema,
+} from "../../../types/shared";
 import {
   extractCollection,
   extractCollectionItem,
@@ -193,7 +197,7 @@ export async function getRelatedShows(
                   }
                   url
                 }
-                genresCollection(limit: 2) {
+                genresCollection(limit: 3) {
                   items {
                     name
                   }
@@ -216,15 +220,27 @@ export async function getRelatedShows(
     "showCollection"
   );
 
-  const filteredShows = linkedFromShows
+  // find a nicer way to process
+  const processed = linkedFromShows.map((show) => ({
+    title: show.title,
+    date: show.date,
+    slug: show.slug,
+    mixcloudLink: show.mixcloudLink,
+    coverImage: show.coverImage.url,
+    genres: show.genresCollection.items.map((genre) => genre.name),
+  }));
+
+  // filter should only take first 2 genres.
+  const filteredShows = processed
     .filter(
       (show, index) =>
         show.slug !== slug &&
-        index === linkedFromShows.findIndex((t) => t.slug === show.slug) &&
+        index === processed.findIndex((t) => t.slug === show.slug) &&
         show.mixcloudLink
     )
     .filter((show) => dayjs(show.date).isBefore(dayjs()))
-    .sort(sort.date_DESC);
+    .sort(sort.date_DESC)
+    .slice(0, 6);
 
   return filteredShows;
 }

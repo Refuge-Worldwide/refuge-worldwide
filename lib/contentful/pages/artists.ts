@@ -4,6 +4,7 @@ import {
   AllArtistEntry,
   ArtistEntry,
   ShowInterface,
+  PastShowSchema,
 } from "../../../types/shared";
 import { extractCollection, extractCollectionItem, sort } from "../../../util";
 import { AllArtistFragment } from "../fragments";
@@ -121,17 +122,26 @@ export async function getArtistsPageSingle(slug: string, preview: boolean) {
     throw new Error(`No Artist found for slug '${slug}'`);
   }
 
-  let relatedShows: ShowInterface[] = [];
+  let relatedShows: PastShowSchema[] = [];
 
-  const date_lt_TODAY = (show: ShowInterface) =>
+  const date_lt_TODAY = (show: PastShowSchema) =>
     dayjs(show.date).isBefore(today);
 
   const linkedFrom = artist.linkedFrom.showCollection.items;
 
   const linkedFromFiltered = linkedFrom.filter(date_lt_TODAY);
 
-  if (linkedFromFiltered.length > 0) {
-    relatedShows = linkedFromFiltered
+  const processed = linkedFromFiltered.map((show) => ({
+    title: show.title,
+    date: show.date,
+    slug: show.slug,
+    mixcloudLink: show.mixcloudLink,
+    coverImage: show.coverImage.url,
+    genres: show.genresCollection.items.map((genre) => genre.name),
+  }));
+
+  if (processed.length > 0) {
+    relatedShows = processed
       .filter((show) => show.mixcloudLink)
       .sort(sort.date_DESC);
   }
