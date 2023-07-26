@@ -218,7 +218,7 @@ export function ArticleShowPreview({
   className = "",
 }: ArticlePreviewProps) {
   const cachedClassNames = classNames(
-    "flex items-center justify-between gap-8 border border-black not-prose",
+    "grid grid-cols-12 items-center justify-between gap-4 sm:gap-8 border border-black not-prose",
     className
   );
 
@@ -228,7 +228,7 @@ export function ArticleShowPreview({
 
   return (
     <div className={cachedClassNames}>
-      <div className="flex items-center pl-8 pt-8 pb-8 gap-8">
+      <div className="col-span-8 flex items-center pl-4 pt-4 pb-4 sm:pl-8 sm:pt-8 sm:pb-8 gap-4 sm:gap-8">
         <div className="flex">
           {mixcloudLink && (
             <button
@@ -245,7 +245,7 @@ export function ArticleShowPreview({
           prefetch={false}
           aria-labelledby={`show-${slug}`}
         >
-          <p id={`show-${slug}`} className="font-sans font-medium">
+          <p id={`show-${slug}`} className="font-sans font-medium ">
             {title}
           </p>
           <Date dateString={date} />
@@ -258,7 +258,7 @@ export function ArticleShowPreview({
         width={266}
         height={150}
         alt={title}
-        className="bg-black/10 object-cover object-center aspect-video hidden sm:block"
+        className="col-span-4 bg-black/10 object-cover object-center aspect-video h-full"
       />
     </div>
   );
