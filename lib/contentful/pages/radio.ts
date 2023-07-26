@@ -171,7 +171,13 @@ export async function getAllGenres() {
 
 export type RelatedShowsType = Pick<
   ShowInterface,
-  "slug" | "title" | "coverImage" | "date" | "genresCollection" | "mixcloudLink"
+  | "sys"
+  | "slug"
+  | "title"
+  | "coverImage"
+  | "date"
+  | "genresCollection"
+  | "mixcloudLink"
 >;
 
 export async function getRelatedShows(
@@ -222,6 +228,7 @@ export async function getRelatedShows(
 
   // find a nicer way to process
   const processed = linkedFromShows.map((show) => ({
+    id: show.sys.id,
     title: show.title,
     date: show.date,
     slug: show.slug,

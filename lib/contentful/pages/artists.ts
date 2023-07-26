@@ -3,7 +3,6 @@ import { graphql } from "..";
 import {
   AllArtistEntry,
   ArtistEntry,
-  ShowInterface,
   PastShowSchema,
 } from "../../../types/shared";
 import { extractCollection, extractCollectionItem, sort } from "../../../util";
@@ -132,6 +131,7 @@ export async function getArtistsPageSingle(slug: string, preview: boolean) {
   const linkedFromFiltered = linkedFrom.filter(date_lt_TODAY);
 
   const processed = linkedFromFiltered.map((show) => ({
+    id: show.sys.id,
     title: show.title,
     date: show.date,
     slug: show.slug,

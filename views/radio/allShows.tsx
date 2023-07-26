@@ -3,7 +3,7 @@ import Pill from "../../components/pill";
 import ShowPreview from "../../components/showPreview";
 import useGenreFilter from "../../hooks/useGenreFilter";
 import useRadioShows from "../../hooks/useRadioShows";
-import { PastShowSchema } from "../../lib/contentful/client";
+import { PastShowSchema } from "../../types/shared";
 import Image from "next/image";
 import { useState } from "react";
 
