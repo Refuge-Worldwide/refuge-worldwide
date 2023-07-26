@@ -208,6 +208,9 @@ export async function getRelatedShows(
                     name
                   }
                 }
+                sys {
+                  id
+                }
               }
             }
           }

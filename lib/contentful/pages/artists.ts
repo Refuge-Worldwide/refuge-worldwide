@@ -102,6 +102,9 @@ export async function getArtistsPageSingle(slug: string, preview: boolean) {
                     name
                   }
                 }
+                sys {
+                  id
+                }
               }
             }
           }
