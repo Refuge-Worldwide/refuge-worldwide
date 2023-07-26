@@ -82,7 +82,7 @@ export async function getRadioPageSingle(slug: string, preview: boolean) {
 
   const genres = entry.genresCollection.items.map((genre) => genre.name);
 
-  const relatedShows = await getRelatedShows(slug, genres, 3, 0);
+  const relatedShows = await getRelatedShows(slug, genres, 7, 0);
 
   return {
     show: entry,
