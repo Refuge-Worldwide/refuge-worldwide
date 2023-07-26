@@ -218,7 +218,7 @@ export function ArticleShowPreview({
   className = "",
 }: ArticlePreviewProps) {
   const cachedClassNames = classNames(
-    "grid grid-cols-12 items-center justify-between gap-4 sm:gap-8 border border-black not-prose",
+    "sm:grid grid-cols-12 items-center justify-between gap-4 sm:gap-8 border border-black not-prose",
     className
   );
 
@@ -228,7 +228,15 @@ export function ArticleShowPreview({
 
   return (
     <div className={cachedClassNames}>
-      <div className="col-span-8 flex items-center pl-4 pt-4 pb-4 sm:pl-8 sm:pt-8 sm:pb-8 gap-4 sm:gap-8">
+      <Image
+        src={coverImage.url}
+        loader={loaders.contentful}
+        width={266}
+        height={150}
+        alt={title}
+        className="sm:col-span-4 sm:order-last bg-black/10 object-cover object-center aspect-video h-full w-full"
+      />
+      <div className="sm:col-span-8 sm:order-first flex items-center pl-4 pt-4 pb-4 sm:pl-8 sm:pt-8 sm:pb-8 gap-4 sm:gap-8">
         <div className="flex">
           {mixcloudLink && (
             <button
@@ -251,15 +259,6 @@ export function ArticleShowPreview({
           <Date dateString={date} />
         </Link>
       </div>
-
-      <Image
-        src={coverImage.url}
-        loader={loaders.contentful}
-        width={266}
-        height={150}
-        alt={title}
-        className="col-span-4 bg-black/10 object-cover object-center aspect-video h-full"
-      />
     </div>
   );
 }
