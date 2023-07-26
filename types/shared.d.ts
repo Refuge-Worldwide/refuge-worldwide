@@ -22,9 +22,23 @@ export interface Asset {
   height: number;
 }
 
+export interface Entry {
+  sys: { id: string };
+  __typename: string;
+  date: string;
+  id: string;
+  title: string;
+  slug: string;
+  coverImage: CoverImage;
+  mixcloudLink: string;
+}
+
 export interface Links {
   assets: {
     block: Asset[];
+  };
+  entries?: {
+    block: Entry[];
   };
 }
 

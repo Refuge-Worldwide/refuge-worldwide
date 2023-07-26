@@ -6,10 +6,12 @@ import PlayLarge from "../icons/playLarge";
 import { PastShowSchema } from "../types/shared";
 import loaders from "../lib/loaders";
 import { TypeShow } from "../types/contentful";
-import type { ShowPreviewEntry } from "../types/shared";
+import type { ShowPreviewEntry, CoverImage } from "../types/shared";
 import { getMixcloudKey, parseGenres } from "../util";
 import Badge from "./badge";
 import Date from "./date";
+import PlayCircle from "../icons/playCircle";
+import Play from "../icons/play";
 
 type ShowImageWithPlayerProps = {
   mixcloudLink: string;
@@ -194,5 +196,70 @@ export function FeaturedShowPreview({
         </ul>
       </Link>
     </article>
+  );
+}
+
+type ArticlePreviewProps = {
+  date: string;
+  id: string;
+  title: string;
+  slug: string;
+  coverImage: CoverImage;
+  mixcloudLink: string;
+  className?: string;
+};
+
+export function ArticleShowPreview({
+  slug,
+  title,
+  coverImage,
+  date,
+  mixcloudLink,
+  className = "",
+}: ArticlePreviewProps) {
+  const cachedClassNames = classNames(
+    "flex items-center justify-between gap-8 border border-black not-prose",
+    className
+  );
+
+  const showKeySet = useGlobalStore((state) => state.showKeySet);
+
+  const onClick = () => showKeySet(getMixcloudKey(mixcloudLink));
+
+  return (
+    <div className={cachedClassNames}>
+      <div className="flex items-center pl-8 pt-8 pb-8 gap-8">
+        <div className="flex">
+          {mixcloudLink && (
+            <button
+              className="w-20 h-20 sm:w-28 sm:h-28 rounded-full focus:outline-none focus:ring-4"
+              onClick={onClick}
+            >
+              <PlayCircle />
+            </button>
+          )}
+        </div>
+
+        <Link
+          href={`/radio/${slug}`}
+          prefetch={false}
+          aria-labelledby={`show-${slug}`}
+        >
+          <p id={`show-${slug}`} className="font-sans font-medium">
+            {title}
+          </p>
+          <Date dateString={date} />
+        </Link>
+      </div>
+
+      <Image
+        src={coverImage.url}
+        loader={loaders.contentful}
+        width={266}
+        height={150}
+        alt={title}
+        className="bg-black/10 object-cover object-center aspect-video hidden sm:block"
+      />
+    </div>
   );
 }
