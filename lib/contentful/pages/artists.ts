@@ -130,7 +130,7 @@ export async function getArtistsPageSingle(slug: string, preview: boolean) {
 
   const linkedFromFiltered = linkedFrom.filter(date_lt_TODAY);
 
-  const processed = linkedFromFiltered.map((show) => ({
+  const processed: PastShowSchema[] = linkedFromFiltered.map((show) => ({
     id: show.sys.id,
     title: show.title,
     date: show.date,
