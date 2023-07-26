@@ -5,6 +5,7 @@ import {
   ArtistInterface,
   GenreInterface,
   ShowInterface,
+  PastShowSchema,
 } from "./types/shared";
 
 interface PageResponse {
@@ -135,10 +136,14 @@ export const __SERVER__ = typeof window === "undefined";
 export const sort = {
   alpha: (a: string, b: string) =>
     a.localeCompare(b, "en", { sensitivity: "base" }),
-  date_DESC: (a: ShowInterface, b: ShowInterface) =>
-    dayjs(a.date).isAfter(b.date) ? -1 : 1,
-  date_ASC: (a: ShowInterface, b: ShowInterface) =>
-    dayjs(a.date).isBefore(b.date) ? -1 : 1,
+  date_DESC: (
+    a: ShowInterface | PastShowSchema,
+    b: ShowInterface | PastShowSchema
+  ) => (dayjs(a.date).isAfter(b.date) ? -1 : 1),
+  date_ASC: (
+    a: ShowInterface | PastShowSchema,
+    b: ShowInterface | PastShowSchema
+  ) => (dayjs(a.date).isBefore(b.date) ? -1 : 1),
 };
 
 export const delay = (time = 1500) => {

@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { assertError } from "ts-extras";
-import { getPastShows, PastShowSchema } from "../../lib/contentful/client";
+import { getPastShows } from "../../lib/contentful/client";
+import { PastShowSchema } from "../../types/shared";
 
 export default async function handler(
   req: NextApiRequest,

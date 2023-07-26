@@ -2,7 +2,7 @@ import Layout from "../../components/layout";
 import ArtistMeta from "../../components/seo/artist";
 import { getArtistsPageSingle } from "../../lib/contentful/pages/artists";
 import { getArtistPathsToPreRender } from "../../lib/contentful/paths";
-import { ArtistEntry, ShowInterface } from "../../types/shared";
+import { ArtistEntry, ShowInterface, PastShowSchema } from "../../types/shared";
 import ArtistBody from "../../views/artists/artistBody";
 import RelatedShows from "../../views/artists/relatedShows";
 import SinglePage from "../../views/singlePage";
@@ -10,7 +10,7 @@ import SinglePage from "../../views/singlePage";
 type ArtistProps = {
   artist: ArtistEntry;
   preview: boolean;
-  relatedShows?: ShowInterface[];
+  relatedShows?: PastShowSchema[];
 };
 
 export default function Artist({ artist, relatedShows, preview }: ArtistProps) {

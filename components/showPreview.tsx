@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useGlobalStore } from "../hooks/useStore";
 import PlayLarge from "../icons/playLarge";
-import { PastShowSchema } from "../lib/contentful/client";
+import { PastShowSchema } from "../types/shared";
 import loaders from "../lib/loaders";
 import { TypeShow } from "../types/contentful";
 import type { ShowPreviewEntry } from "../types/shared";
@@ -90,7 +90,7 @@ export default function ShowPreview({
         <ul className="w-full flex flex-wrap gap-2">
           {genres.map((genre, i) => (
             <li key={i}>
-              <Badge small text={genre} />
+              <Badge invert={className == "text-white"} small text={genre} />
             </li>
           ))}
         </ul>

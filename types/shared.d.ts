@@ -96,6 +96,16 @@ export interface ShowInterface {
   content: Content;
 }
 
+export type PastShowSchema = {
+  date: string;
+  id: string;
+  title: string;
+  slug: string;
+  coverImage: string;
+  mixcloudLink: string;
+  genres: string[];
+};
+
 export type ScheduleShow = {
   sys: {
     id: string;
