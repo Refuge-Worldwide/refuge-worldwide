@@ -7,10 +7,7 @@ type Props = {
   title?: string;
 };
 
-export default function RelatedShows({
-  shows,
-  title = "Related Shows",
-}: Props) {
+export default function RelatedShows({ shows, title = "Shows" }: Props) {
   return (
     <section className="border-b-2 border-white bg-black">
       <div className="p-4 sm:p-8">
