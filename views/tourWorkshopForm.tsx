@@ -24,95 +24,99 @@ const initialValues = {
 const workshops = [
   {
     value: "Control Club, Bucharest",
-    label: "Sept 16, 2000-2200 — Control Club, Bucharest",
+    label: "Sept 16 — Control Club, Bucharest",
     additionalInfo:
-      "Hosted by Via PRG, this workshop will be given in Romanian.",
+      "Hosted by Vio PRG from 8-10PM, this workshop will be given in Romanian.",
   },
   {
     value: "Arkaoda, Istanbul",
-    label: "Sept 22, 2000-2200 — Arkaoda, Istanbul x Root Radio",
+    label: "Sept 22— Arkaoda, Istanbul",
     additionalInfo:
-      "Hosted by Ece Özel, this workshop will be given in Turkish.",
+      "Hosted by Ece Özel from 8-10PM, this workshop will be given in Turkish. In collaboration with Root Radio.",
   },
   {
     value: "Horoom, Bassiani, Tbilisi",
-    label: "Sept 23, 2000-2200 — Horoom, Bassiani, Tbilisi",
-    additionalInfo: "This workshop will be given in English.",
+    label: "Sept 23 — Horoom, Bassiani, Tbilisi",
+    additionalInfo:
+      "Hosted by Willow from 8-10PM, this workshop will be given in English.",
   },
   {
     value: "Arkaoda, Berlin",
-    label: "Sept 30, 2000-2200 — Arkaoda, Berlin",
+    label: "Sept 30 — Arkaoda, Berlin",
     additionalInfo:
-      "Hosted by The Neighbourhood Character, this workshop will be vinyl only and will be given in English.",
+      "Hosted by The Neighbourhood Character from 8-10PM, this workshop will be vinyl only and will be given in English.",
   },
   {
     value: "Corsica Studios, London",
-    label: "Oct 07, 2000-2200 — Corsica Studios, London",
+    label: "Oct 7 — Corsica Studios, London",
     additionalInfo:
-      "This workshop will be given in English. In collaboration with Rhythm Section.",
+      "Hosted by ??? from 8-10PM, This workshop will be given in English. In collaboration with Rhythm Section.",
   },
   {
     value: "European Lab, Brussels",
-    label: "Oct 13, 2000-2200 — European Lab, Brussels",
+    label: "Oct 13 — European Lab, Brussels",
     additionalInfo:
-      "Hosted by Chloe Lula, this workshop will be given in English.",
+      "Hosted by Chloe Lula from 8-10PM, this workshop will be given in English.",
   },
   {
-    value: "Pleasure Control, Copenhagen",
-    label: "Oct 13, 2000-2200 — Pleasure Control, Copenhagen",
+    value: "Motopol, Copenhagen",
+    label: "Oct 13 — Motopol, Copenhagen",
     additionalInfo:
-      "Hosted by Shanti Celeste, this workshop will be given in English.",
+      "Hosted by Shanti Celeste from 8-10PM, this workshop will be given in English. In collaboration with Pleasure Control",
   },
   {
     value: "De School, Amsterdam",
-    label: "Oct 20, 2000-2200 — De School, Amsterdam",
-    additionalInfo: "This workshop will be given in English.",
+    label: "Oct 20 — De School, Amsterdam",
+    additionalInfo:
+      "Hosted by ??? from 8-10PM, this workshop will be given in English.",
   },
   {
     value: "Gewölbe, Cologne",
-    label: "Oct 20, 2100-2300 — Gewölbe, Cologne",
-    additionalInfo: "Hosted by AGY3NA, This workshop will be given in German.",
+    label: "Oct 20 — Gewölbe, Cologne",
+    additionalInfo:
+      "Hosted by AGY3NA from 9-11PM, This workshop will be given in German.",
   },
   {
-    value: "Bunker, Torin",
-    label: "Oct 21, 2100-2300 — Bunker, Torino",
-    additionalInfo: "Hosted by Andrea, This workshop will be given in Italian.",
+    value: "Bunker, Turin",
+    label: "Oct 21 — Bunker, Turin",
+    additionalInfo:
+      "Hosted by Andrea from 9-11PM, This workshop will be given in Italian.",
   },
   {
     value: "Jasna1, Warsaw",
-    label: "Nov 4, 2200-000 — Jasna1, Warsaw",
+    label: "Nov 4 — Jasna1, Warsaw",
     additionalInfo:
-      "Hosted by Mala Herba, This workshop will be given in Italian. In collaboration with Oramics.",
+      "Hosted by Mala Herba from 8-10PM, This workshop will be given in Italian. In collaboration with Oramics.",
   },
   {
     value: "Funke, Ghent",
-    label: "Nov 11, 2100-2300 — Funke, Ghent",
+    label: "Nov 11 — Funke, Ghent",
     additionalInfo:
-      "Hosted by Stella Zekri , this workshop will be vinyl only and will be given in English and French.",
+      "Hosted by Stella Zekri from 9-11PM, this workshop will be vinyl only and will be given in English and French.",
   },
   {
     value: "Lux, Lisbon",
-    label: "Nov 25, 2100-2300 — Lux, Lisbon",
+    label: "Nov 25 — Lux, Lisbon",
     additionalInfo:
-      "Hosted by Yen Sung, this workshop will be vinyl only and will be given in Portuguese.",
+      "Hosted by Yen Sung from 9-11PM, this workshop will be given in Portuguese.",
   },
   {
     value: "C12, Brussels",
-    label: "Dec 01, 2000-2200 — C12, Brussels",
+    label: "Dec 1 — C12, Brussels",
     additionalInfo:
-      "This workshop will be given in English. In collaboration with Kiosk Radio.",
+      "Hosted by ??? from 8-10PM, This workshop will be given in English. In collaboration with Kiosk Radio.",
   },
   {
     value: "La Marbrerie, Paris",
-    label: "Dec 02, 2100-2300 — La Marbrerie, Paris",
+    label: "Dec 2 — La Marbrerie, Paris",
     additionalInfo:
-      "Hosted by DJ Fart In The Club, this workshop will be given in English.",
+      "Hosted by DJ Fart In The Club from 9-11PM, this workshop will be given in English.",
   },
   {
-    value: "Panorama Bar, Berlin",
-    label: "Dec 08, 1300-1500 — Panorama Bar, Berlin",
+    value: "Oona Bar, Berlin",
+    label: "Dec 8 — Oona Bar, Berlin",
     additionalInfo:
-      "Hosted by JADALAREIGN, this workshop will be given in English.",
+      "Hosted by JADALAREIGN from 1-3PM, this workshop will be given in English.",
   },
 ];
 
@@ -172,7 +176,10 @@ export default function TourWorkshopForm() {
         <div>
           {status == "submitted" ? (
             <div>
-              <p className="font-medium">Submission successful.</p>
+              <p className="font-medium">
+                Submission successful. Thank you for your interest, we will be
+                in touch as soon as possible.
+              </p>
             </div>
           ) : (
             <Form id="showSubmissionForm">
@@ -223,12 +230,13 @@ export default function TourWorkshopForm() {
                     BIPoC, people from the LGBTQIA community, disabled people,
                     women, trans and non-binary people, or anyone else who feels
                     that due to their background, they face difficulties
-                    accessing music education in Berlin. Do you identify as any
-                    of the above, or have another reason that you need help
-                    accessing music education? If you want to explain a bit more
-                    about your identity or background, you can select
-                    &ldquo;other&rdquo; and add some more details. This
-                    information will be treated confidentially.*
+                    accessing music education.
+                    <br /> Do you identify as any of the above, or have another
+                    reason that you need help accessing music education? If you
+                    want to explain a bit more about your identity or
+                    background, you can select &ldquo;other&rdquo; and add some
+                    more details. This information will be treated
+                    confidentially.*
                   </legend>
                   <div
                     role="group"
