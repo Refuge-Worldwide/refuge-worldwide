@@ -25,7 +25,7 @@ export default function AboutPage({
   return (
     <Layout preview={preview}>
       <PageMeta
-        title="Refuge Worldwide x Carhartt DJ workshop | Refuge Worldwide"
+        title="Carhartt WIP Tour - Workshop Application | Refuge Worldwide"
         path="tour-workshop-signup/"
       />
       <SinglePage coverImage={coverImage}>
