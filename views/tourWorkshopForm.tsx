@@ -225,18 +225,22 @@ export default function TourWorkshopForm() {
               />
               <div className="border border-black p-6 mb-10">
                 <fieldset>
-                  <legend className="sm:mt-0.5 mb-4 text-small sm:text-base">
-                    Priority will be given to those with refugee backgrounds,
-                    BIPoC, people from the LGBTQIA community, disabled people,
-                    women, trans and non-binary people, or anyone else who feels
-                    that due to their background, they face difficulties
-                    accessing music education.
-                    <br /> Do you identify as any of the above, or have another
-                    reason that you need help accessing music education? If you
-                    want to explain a bit more about your identity or
-                    background, you can select &ldquo;other&rdquo; and add some
-                    more details. This information will be treated
-                    confidentially.*
+                  <legend className="sm:mt-0.5 mb-4 text-small sm:text-base prose">
+                    <p>
+                      Priority will be given to those with refugee backgrounds,
+                      BIPoC, people from the LGBTQIA community, disabled people,
+                      women, trans and non-binary people, or anyone else who
+                      feels that due to their background, they face difficulties
+                      accessing music education.
+                    </p>
+                    <p>
+                      Do you identify as any of the above, or have another
+                      reason that you need help accessing music education? If
+                      you want to explain a bit more about your identity or
+                      background, you can select &ldquo;other&rdquo; and add
+                      some more details. This information will be treated
+                      confidentially.*
+                    </p>
                   </legend>
                   <div
                     role="group"
