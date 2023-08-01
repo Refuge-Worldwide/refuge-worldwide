@@ -69,14 +69,14 @@ function EventLink({ event, children }) {
     <li>
       {event.article ? (
         <Link
-          className={`block border-b border-black hover:bg-black hover:text-white transition-all duration-100 px-4 sm:px-8`}
+          className={`block border-b border-black hover:bg-blue transition-all duration-100 px-4 sm:px-8`}
           href={`/news/${event.article.slug}`}
         >
           {children}
         </Link>
       ) : (
         <a
-          className={`block border-b border-black hover:bg-black hover:text-white transition-all duration-100 px-4 sm:px-8`}
+          className={`block border-b border-black hover:bg-blue transition-all duration-100 px-4 sm:px-8`}
           href={event.ticketLink}
           target="_blank"
         >

@@ -121,6 +121,14 @@ export enum ArticleType {
   Interview = "Interview",
 }
 
+export enum EventType {
+  Project = "Workshop",
+  Blog = "Party",
+  News = "Fundraiser",
+  Event = "Hang Out",
+  Interview = "Exhibition",
+}
+
 export interface ArticleInterface {
   title: string;
   subtitle?: string;
@@ -226,6 +234,7 @@ export type SubmissionFormValues = {
 
 export interface EventInterface {
   title: string;
+  coverImage?: CoverImage;
   eventType: EventType;
   date: string;
   endDate?: string;

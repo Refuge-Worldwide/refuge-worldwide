@@ -4,8 +4,8 @@ import EventRow from "../../components/eventRow";
 import Image from "next/image";
 export default function PastEvents({ events, title }) {
   return (
-    <section className="bg-blue pt-12">
-      <div className="p-4 sm:p-8 border-b-2 sticky top-12 lg:top-14 bg-blue">
+    <section className="pt-12">
+      <div className="p-4 sm:p-8 border-b-2 sticky top-12 lg:top-14 bg-white">
         <div className="max-w-screen-xl mx-auto">
           <Pill outline>
             <h2>Past {title}</h2>

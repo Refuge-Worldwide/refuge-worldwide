@@ -113,5 +113,15 @@ export const EventFragment = /* GraphQL */ `
     article {
       slug
     }
+    coverImage {
+      sys {
+        id
+      }
+      title
+      description
+      url
+      width
+      height
+    }
   }
 `;

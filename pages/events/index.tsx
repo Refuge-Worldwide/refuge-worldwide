@@ -9,6 +9,7 @@ import dayjs from "dayjs";
 import { EventBadge } from "../../components/badge";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import FeaturedEvents from "../../views/events/featuredEvents";
 
 export async function getStaticProps({ preview = false }) {
   return {
@@ -108,8 +109,8 @@ export default function NewsPage({
   return (
     <Layout preview={preview}>
       <PageMeta title="Events | Refuge Worldwide" path="events/" />
-
-      <section className="bg-blue p-4 sm:p-8 border-b-2">
+      <FeaturedEvents events={pastEvents.slice(0, 3)} />
+      <section className="p-4 sm:p-8 border-b-2">
         <div className="max-w-[1229px] mx-auto">
           <div className="lg:flex justify-between ">
             <h1 className="hidden">Events</h1>
@@ -141,14 +142,14 @@ export default function NewsPage({
         </div>
       </section>
 
-      <div className="bg-blue">
+      <div className="">
         <div className="max-w-screen-xl mx-auto">
           {/* <pre>{JSON.stringify(upcomingEvents, null, 2)}</pre> */}
           {/* <pre>{JSON.stringify(pastEvents, null, 2)}</pre> */}
           {Object.keys(upcomingEvents).length > 0 ? (
             <UpcomingEvents events={upcomingEvents} />
           ) : (
-            <div className=" bg-blue">
+            <div className="">
               <div className="max-w-screen-xl mx-auto">
                 <p className="p-4 sm:p-8 text-smedium font-medium md:font-light md:text-small">
                   No upcoming {title}, please check back soon.
