@@ -24,20 +24,95 @@ const initialValues = {
 const workshops = [
   {
     value: "Control Club, Bucharest",
-    label: "Sept 16, 8-10pm - Control Club, Bucharest",
+    label: "Sept 16, 2000-2200 — Control Club, Bucharest",
     additionalInfo:
-      "Hosted by Via PRG, this workshop will be given in Romanian",
+      "Hosted by Via PRG, this workshop will be given in Romanian.",
   },
   {
     value: "Arkaoda, Istanbul",
-    label: "Sept 22, 8-10pm - Arkaoda, Istanbul",
+    label: "Sept 22, 2000-2200 — Arkaoda, Istanbul x Root Radio",
     additionalInfo:
-      "Hosted by Ece Özel, this workshop will be given in Turkish",
+      "Hosted by Ece Özel, this workshop will be given in Turkish.",
   },
   {
     value: "Horoom, Bassiani, Tbilisi",
-    label: "Sept 23, 8-10pm - Horoom, Bassiani, Tbilisi",
-    additionalInfo: "This workshop will be given in English",
+    label: "Sept 23, 2000-2200 — Horoom, Bassiani, Tbilisi",
+    additionalInfo: "This workshop will be given in English.",
+  },
+  {
+    value: "Arkaoda, Berlin",
+    label: "Sept 30, 2000-2200 — Arkaoda, Berlin",
+    additionalInfo:
+      "Hosted by The Neighbourhood Character, this workshop will be vinyl only and will be given in English.",
+  },
+  {
+    value: "Corsica Studios, London",
+    label: "Oct 07, 2000-2200 — Corsica Studios, London",
+    additionalInfo:
+      "This workshop will be given in English. In collaboration with Rhythm Section.",
+  },
+  {
+    value: "European Lab, Brussels",
+    label: "Oct 13, 2000-2200 — European Lab, Brussels",
+    additionalInfo:
+      "Hosted by Chloe Lula, this workshop will be given in English.",
+  },
+  {
+    value: "Pleasure Control, Copenhagen",
+    label: "Oct 13, 2000-2200 — Pleasure Control, Copenhagen",
+    additionalInfo:
+      "Hosted by Shanti Celeste, this workshop will be given in English.",
+  },
+  {
+    value: "De School, Amsterdam",
+    label: "Oct 20, 2000-2200 — De School, Amsterdam",
+    additionalInfo: "This workshop will be given in English.",
+  },
+  {
+    value: "Gewölbe, Cologne",
+    label: "Oct 20, 2100-2300 — Gewölbe, Cologne",
+    additionalInfo: "Hosted by AGY3NA, This workshop will be given in German.",
+  },
+  {
+    value: "Bunker, Torin",
+    label: "Oct 21, 2100-2300 — Bunker, Torino",
+    additionalInfo: "Hosted by Andrea, This workshop will be given in Italian.",
+  },
+  {
+    value: "Jasna1, Warsaw",
+    label: "Nov 4, 2200-000 — Jasna1, Warsaw",
+    additionalInfo:
+      "Hosted by Mala Herba, This workshop will be given in Italian. In collaboration with Oramics.",
+  },
+  {
+    value: "Funke, Ghent",
+    label: "Nov 11, 2100-2300 — Funke, Ghent",
+    additionalInfo:
+      "Hosted by Stella Zekri , this workshop will be vinyl only and will be given in English and French.",
+  },
+  {
+    value: "Lux, Lisbon",
+    label: "Nov 25, 2100-2300 — Lux, Lisbon",
+    additionalInfo:
+      "Hosted by Yen Sung, this workshop will be vinyl only and will be given in Portuguese.",
+  },
+  {
+    value: "C12, Brussels",
+    label: "Dec 01, 2000-2200 — C12, Brussels",
+    additionalInfo:
+      "This workshop will be given in English. In collaboration with Kiosk Radio.",
+  },
+  {
+    value: "La Marbrerie, Paris",
+    label: "Dec 02, 2100-2300 — La Marbrerie, Paris",
+    additionalInfo:
+      "Hosted by DJ Fart In The Club, this workshop will be given in English.",
+  },
+  {
+    value: "Panorama Bar, Berlin",
+    label: "Dec 08, 1300-1500 — Panorama Bar, Berlin",
+    additionalInfo:
+      "Hosted by JADALAREIGN, this workshop will be given in English.",
   },
 ];
 
@@ -113,8 +188,8 @@ export default function TourWorkshopForm() {
               />
               {values.workshop.additionalInfo && (
                 <div className="flex gap-2 md:gap-3 items-center border border-black p-3 md:p-6 mb-10 bg-orange">
-                  <AiOutlineInfoCircle />
-                  <p>{values.workshop.additionalInfo}</p>
+                  <AiOutlineInfoCircle className="w-5 sm:w-6 md:w-8 h-full" />
+                  <p className="flex-1">{values.workshop.additionalInfo}</p>
                 </div>
               )}
               <InputField
@@ -143,7 +218,7 @@ export default function TourWorkshopForm() {
               />
               <div className="border border-black p-6 mb-10">
                 <fieldset>
-                  <legend className="sm:mt-0.5 text-small sm:text-base sm:leading-none">
+                  <legend className="sm:mt-0.5 mb-4 text-small sm:text-base">
                     Priority will be given to those with refugee backgrounds,
                     BIPoC, people from the LGBTQIA community, disabled people,
                     women, trans and non-binary people, or anyone else who feels
@@ -168,7 +243,7 @@ export default function TourWorkshopForm() {
                         name="background"
                         value="Yes"
                       />
-                      <span>Yes</span>
+                      <span className="text-small sm:text-base">Yes</span>
                     </label>
                     <label className="space-x-3 text-base flex items-center">
                       <Field
@@ -177,7 +252,7 @@ export default function TourWorkshopForm() {
                         name="background"
                         value="No"
                       />
-                      <span>No</span>
+                      <span className="text-small sm:text-base">No</span>
                     </label>
                     <label className="space-x-3 text-base flex items-center">
                       <Field
@@ -186,7 +261,7 @@ export default function TourWorkshopForm() {
                         name="background"
                         value="Other"
                       />
-                      <span>Other</span>
+                      <span className="text-small sm:text-base">Other</span>
                     </label>
                     {values.background == "Other" && (
                       <TextareaField name="backgroundOther" rows={2} />
@@ -196,7 +271,7 @@ export default function TourWorkshopForm() {
               </div>
               <div className="border border-black p-6 mb-10">
                 <fieldset>
-                  <legend className="sm:mt-0.5 text-small sm:text-base sm:leading-none">
+                  <legend className="sm:mt-0.5 mb-4 text-small sm:text-base">
                     Please note that this workshop is designed for people that
                     already have some DJ experience.*
                   </legend>
@@ -212,7 +287,9 @@ export default function TourWorkshopForm() {
                         name="experience"
                         value="Yes, I have some experience"
                       />
-                      <span>Yes, I have some experience</span>
+                      <span className="text-small sm:text-base">
+                        Yes, I have some experience
+                      </span>
                     </label>
                     <label className="space-x-3 text-base flex items-center">
                       <Field
@@ -221,7 +298,9 @@ export default function TourWorkshopForm() {
                         name="experience"
                         value="No, I am a beginner"
                       />
-                      <span>No, I am a beginner</span>
+                      <span className="text-small sm:text-base">
+                        No, I am a beginner
+                      </span>
                     </label>
                   </div>
                 </fieldset>
