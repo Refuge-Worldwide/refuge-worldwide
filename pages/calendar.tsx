@@ -58,7 +58,6 @@ function Calendar() {
           dateClick={handleDateClick}
           eventAdd={handleEventAdd}
           select={handleSelect}
-          resourcesSet={console.log("eeee")}
           firstDay={1}
           initialView="timeGridWeek"
           nowIndicator={true}
