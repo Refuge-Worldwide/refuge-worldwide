@@ -6,13 +6,13 @@ import { ScheduleShow } from "../../types/shared";
 import { extractCollection } from "../../util";
 dayjs.extend(utc);
 
-export async function getCalendarShows(start, end) {
+export async function getCalendarShows(preview: boolean, start, end) {
   const calendarQuery = /* GraphQL */ `
-    query calendarQuery($start: DateTime, $end: DateTime) {
+    query calendarQuery($preview: Boolean, $start: DateTime, $end: DateTime) {
       showCollection(
         order: date_ASC
         where: { date_gte: $start, dateEnd_lte: $end, dateEnd_exists: true }
-        preview: false
+        preview: $preview
       ) {
         items {
           title
@@ -37,7 +37,7 @@ export async function getCalendarShows(start, end) {
   `;
 
   const res = await graphql(calendarQuery, {
-    variables: { start, end },
+    variables: { preview, start, end },
   });
 
   console.log(res);
