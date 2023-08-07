@@ -253,3 +253,7 @@
 .fc table {
   @apply font-sans font-light text-small;
 }
+
+.fc .fc-timegrid-slot {
+  @apply py-1.5;
+}

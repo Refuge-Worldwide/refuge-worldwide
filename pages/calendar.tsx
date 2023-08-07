@@ -19,9 +19,6 @@ export default function CalendarPage() {
     <Layout>
       <div className="calendar-container">
         <Calendar />
-        <pre className="text-white bg-black">
-          {JSON.stringify(artists, null, 2)}
-        </pre>
       </div>
     </Layout>
   );
@@ -44,7 +41,7 @@ function Calendar() {
   }
 
   return (
-    <div className="p-8">
+    <div className="p-8 h-[calc(100vh-95px)]">
       {/* <pre className="text-white bg-black">
         {JSON.stringify(shows, null, 2)}
       </pre> */}
@@ -55,7 +52,7 @@ function Calendar() {
           center: "title",
           right: "dayGridMonth,timeGridWeek,dayGridDay,listWeek",
         }}
-        // height={"100vh - 100px"}
+        height={"100%"}
         hiddenDays={[0]}
         allDaySlot={false}
         scrollTime={"10:00:00"}
@@ -86,8 +83,6 @@ function Calendar() {
         selectMirror={true}
         events={getEvents}
         eventContent={renderEventContent}
-        endParam="dateEnd"
-        startParam="date"
       />
       <Dialog.Root
         open={showDialogOpen}
@@ -163,7 +158,7 @@ function renderEventContent(eventInfo) {
         <p className="text-xxs font-medium">{eventInfo.timeText}</p>
         <p className="text-xxs font-medium ">Booker</p>
       </div>
-      <p className="text-tiny">{eventInfo.event.title}</p>
+      <p className="text-small">{eventInfo.event.title}</p>
     </div>
   );
 }
