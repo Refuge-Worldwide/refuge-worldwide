@@ -142,6 +142,9 @@
   .hide-scrollbar::-webkit-scrollbar {
     display: none;
   }
+  .pause {
+    animation-play-state: paused;
+  }
 }
 
 /* Filepond / image upload field */

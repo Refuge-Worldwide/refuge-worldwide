@@ -177,6 +177,15 @@ module.exports = {
           },
         },
       }),
+      keyframes: {
+        refresh: {
+          from: { transform: "rotate(0deg)" },
+          to: { transform: "rotate(-360deg)" },
+        },
+      },
+      animation: {
+        refresh: "refresh 1.25s ease-in-out infinite forwards",
+      },
     },
   },
   corePlugins: {

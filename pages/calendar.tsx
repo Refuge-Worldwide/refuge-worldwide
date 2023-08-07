@@ -135,7 +135,10 @@ function Calendar() {
       />
       <button className="absolute top-2.5 right-0" onClick={reloadCalendar}>
         <TfiReload
-          className={`${calendarLoading ? "animate-spin animate-pulse" : null}`}
+          className={`animate-refresh animate-pulse ${
+            calendarLoading ? "" : "pause"
+          }
+          }`}
         />
       </button>
 
