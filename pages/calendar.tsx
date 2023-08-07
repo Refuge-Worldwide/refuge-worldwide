@@ -32,7 +32,7 @@ function Calendar() {
   const [showDialogOpen, setShowDialogOpen] = useState<boolean>(false);
   const [selectedShow, setSelectedShow] = useState(null);
   const [calendarLoading, setCalendarLoading] = useState<boolean>(false);
-  const calendarRef = useRef();
+  const calendarRef = useRef<any>();
 
   useEffect(() => {
     (async () => {
@@ -93,7 +93,7 @@ function Calendar() {
         }}
         customButtons={{
           addShow: {
-            text: "+",
+            text: "+ Show",
             hint: "Add show",
             click: () => {
               setShowDialogOpen(true);
