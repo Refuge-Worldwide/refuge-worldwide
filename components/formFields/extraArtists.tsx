@@ -1,109 +1,78 @@
 import { useState } from "react";
 import ImageUploadField from "./imageUploadField";
 import { Close } from "../../icons/menu";
-// import SingleLineField from "./singleLineField";
-// import TextareaField from "./textareaField";
+import TextareaField from "./textareaField";
+import CheckboxField from "./checkboxField";
+import InputField from "./inputField";
+import { useFormikContext, FieldArray } from "formik";
+import { SubmissionFormValues } from "../../types/shared";
 
-export default function ExtraArtists({
-  setExtraArtistsParent,
-}: {
-  setExtraArtistsParent: (arg: Array<{ name: string; bio: string }>) => void;
-}) {
-  const [artistExists, setArtistExists] = useState<boolean>(true);
-  const [extraArtists, setExtraArtists] = useState([{ name: "", bio: "" }]);
-
-  const handleFormChange = (event, index) => {
-    let data = [...extraArtists];
-    data[index][event.target.name] = event.target.value;
-    setExtraArtists(data);
-    setExtraArtistsParent(data);
-  };
-
-  const addArtistFields = () => {
-    let object = {
-      name: "",
-      bio: "",
-    };
-
-    setExtraArtists([...extraArtists, object]);
-  };
-
-  const removeArtistFields = (index) => {
-    let data = [...extraArtists];
-    data.splice(index, 1);
-    setExtraArtists(data);
-  };
+export default function ExtraArtists() {
+  const { values } = useFormikContext<SubmissionFormValues>();
 
   return (
     <div>
-      <div>
-        <input
-          type="checkbox"
-          id="artistExists"
-          name="artistExists"
-          onChange={(e) => setArtistExists(!e.target.checked)}
-          className="h-6 w-6 rounded-full border-2 border-black text-black focus:ring-black"
-        />
-        <label htmlFor="artistExists" className="checkbox-label">
-          Can&apos;t find artist/guest in the dropdown
-        </label>
-      </div>
+      <CheckboxField
+        name="hasExtraArtists"
+        label="Can't find your artist/guest/collective in the dropdown?"
+        size="small"
+      />
 
-      {!artistExists && (
-        <fieldset className="mt-8 mb-8">
-          <legend className="mb-6">Artist/guest info</legend>
-          {extraArtists.map((form, index) => {
-            return (
-              <div
-                className="mb-8 border border-black p-8 relative"
-                key={index}
-              >
+      {values.hasExtraArtists && (
+        <fieldset className=" mb-8">
+          <legend className="mb-6">Additional artist(s)</legend>
+          <FieldArray
+            name="extraArtists"
+            render={(arrayHelpers) => (
+              <div>
+                {values.extraArtists &&
+                  values.extraArtists.map((extraArtist, index) => (
+                    <div
+                      className="mb-8 border border-black p-8 relative"
+                      key={"extraArtist" + index}
+                    >
+                      {index > 0 && (
+                        <button
+                          className="float-right"
+                          onClick={() => arrayHelpers.remove(index)}
+                          type="button"
+                        >
+                          <Close size={24} />
+                        </button>
+                      )}
+                      <InputField
+                        name={`extraArtists.${index}.name`}
+                        type="text"
+                        label="Name"
+                        required
+                      />
+                      <InputField
+                        name={`extraArtists.${index}.pronouns`}
+                        type="text"
+                        label="Pronouns"
+                      />
+                      <TextareaField
+                        name={`extraArtists.${index}.bio`}
+                        rows={4}
+                        label="Bio"
+                      />
+                      <ImageUploadField
+                        label="Image"
+                        required
+                        name={`extraArtists.${index}.image`}
+                      />
+                    </div>
+                  ))}
                 <button
-                  className="float-right"
-                  onClick={() => removeArtistFields(index)}
+                  className="underline"
+                  onClick={() => arrayHelpers.push("")}
+                  type="button"
                 >
-                  <Close size={24} />
+                  Add another artist/guest
                 </button>
-                <div className="mb-6 mt-6">
-                  <label htmlFor="name">Name</label>
-                  <input
-                    type="text"
-                    name="name"
-                    className="pill-input"
-                    onChange={(event) => handleFormChange(event, index)}
-                    value={form.name}
-                    required
-                  />
-                </div>
-                <div className="mb-6">
-                  <label htmlFor="bio">Bio</label>
-                  <textarea
-                    rows={4}
-                    name="bio"
-                    className="pill-input"
-                    onChange={(event) => handleFormChange(event, index)}
-                    value={form.bio}
-                    required
-                  />
-                </div>
-                <ImageUploadField
-                  label="Guest image"
-                  name="guestImage"
-                  // required={true}
-                />
               </div>
-            );
-          })}
-          <button className="underline" onClick={addArtistFields}>
-            Add another artist/guest
-          </button>
-
-          {/* <SingleLineField
-            label="Instagram @ handle(s)"
-            name="instagram"
-            required={true}
-            type="text"
-          /> */}
+            )}
+          />
         </fieldset>
       )}
     </div>

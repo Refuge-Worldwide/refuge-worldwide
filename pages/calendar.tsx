@@ -9,10 +9,12 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { useState, useEffect } from "react";
 import InputField from "../components/formFields/inputField";
 import MultiSelectField from "../components/formFields/multiSelectField";
-import { Formik } from "formik";
+import { Formik, Form, FieldArray } from "formik";
 import { Cross } from "../icons/cross";
 import { getAllArtists } from "../lib/contentful/pages/submission";
 import { Arrow } from "../icons/arrow";
+import CheckboxField from "../components/formFields/checkboxField";
+import { Close } from "../icons/menu";
 
 export default function CalendarPage() {
   return (
@@ -55,6 +57,13 @@ function Calendar() {
     start: selectedShow?.startStr,
     end: selectedShow?.endStr,
     artists: selectedShow?.extendedProps?.artists,
+    hasExtraArtists: false,
+    extraArtists: [
+      {
+        name: "",
+        pronouns: "",
+      },
+    ],
   };
 
   const _handleSubmit = (values, actions) => {
@@ -111,7 +120,7 @@ function Calendar() {
       >
         <Dialog.Portal>
           <Dialog.Overlay className="w-screen h-screen fixed top-0 left-0 bg-black opacity-70 z-50" />
-          <Dialog.Content className="bg-white max-w-2xl fixed overflow-y-scroll max-h-screen top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 border-black border p-8">
+          <Dialog.Content className="bg-white max-w-2xl fixed overflow-y-scroll max-h-[95vh] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 border-black border p-8">
             <Dialog.Close asChild>
               <button className="float-right" aria-label="Close">
                 <Cross />
@@ -127,35 +136,95 @@ function Calendar() {
               {JSON.stringify(selectedShow, null, 2)}
             </pre> */}
             <Formik initialValues={initialValues} onSubmit={_handleSubmit}>
-              <form>
-                <InputField
-                  name="showName"
-                  label="Show name"
-                  required
-                  type="text"
-                />
-                <InputField name="booker" label="Booker" required type="text" />
-                <MultiSelectField
-                  label="Artist(s)*"
-                  description="Please include guests, collectives and show hosts."
-                  name="artists"
-                  options={artists}
-                  limit={10}
-                  value={initialValues.artists}
-                />
-                <InputField
-                  name="start"
-                  label="Start"
-                  required
-                  type="datetime-local"
-                />
-                <InputField
-                  name="end"
-                  label="End"
-                  required
-                  type="datetime-local"
-                />
-              </form>
+              {({ values, isSubmitting }) => (
+                <Form id="calendarShow">
+                  <InputField
+                    name="showName"
+                    label="Show name"
+                    required
+                    type="text"
+                  />
+                  <InputField
+                    name="booker"
+                    label="Booker"
+                    required
+                    type="text"
+                  />
+                  <MultiSelectField
+                    label="Artist(s)*"
+                    description="Please include guests, collectives and show hosts."
+                    name="artists"
+                    options={artists}
+                    limit={10}
+                    value={initialValues.artists}
+                  />
+                  <CheckboxField
+                    name="hasExtraArtists"
+                    label="New artist?"
+                    size="small"
+                  />
+
+                  {values.hasExtraArtists && (
+                    <fieldset className=" mb-8">
+                      <legend className="mb-6">New artist(s)</legend>
+                      <FieldArray
+                        name="extraArtists"
+                        render={(arrayHelpers) => (
+                          <div>
+                            {values.extraArtists &&
+                              values.extraArtists.map((extraArtist, index) => (
+                                <div
+                                  className="mb-8 border border-black p-8 relative"
+                                  key={"extraArtist" + index}
+                                >
+                                  {index > 0 && (
+                                    <button
+                                      className="float-right"
+                                      onClick={() => arrayHelpers.remove(index)}
+                                      type="button"
+                                    >
+                                      <Close size={24} />
+                                    </button>
+                                  )}
+                                  <InputField
+                                    name={`extraArtists.${index}.name`}
+                                    type="text"
+                                    label="Name"
+                                    required
+                                  />
+                                  <InputField
+                                    name={`extraArtists.${index}.pronouns`}
+                                    type="text"
+                                    label="Pronouns"
+                                  />
+                                </div>
+                              ))}
+                            <button
+                              className="underline"
+                              onClick={() => arrayHelpers.push("")}
+                              type="button"
+                            >
+                              Add another artist
+                            </button>
+                          </div>
+                        )}
+                      />
+                    </fieldset>
+                  )}
+                  <InputField
+                    name="start"
+                    label="Start"
+                    required
+                    type="datetime-local"
+                  />
+                  <InputField
+                    name="end"
+                    label="End"
+                    required
+                    type="datetime-local"
+                  />
+                </Form>
+              )}
             </Formik>
             <Dialog.Close asChild>
               <button className="font-medium underline flex gap-3 items-center">
