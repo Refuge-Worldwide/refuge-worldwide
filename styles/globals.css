@@ -255,5 +255,16 @@
 }
 
 .fc .fc-timegrid-slot {
-  @apply py-1.5;
+  @apply py-2;
+}
+
+.fc .slot-title {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.fc .fc-toolbar.fc-header-toolbar {
+  margin-bottom: 1rem;
 }

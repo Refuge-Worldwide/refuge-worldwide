@@ -156,9 +156,20 @@ function renderEventContent(eventInfo) {
     <div className="p-1">
       <div className="mt-1 flex justify-between">
         <p className="text-xxs font-medium">{eventInfo.timeText}</p>
-        <p className="text-xxs font-medium ">Booker</p>
+        <p className="text-xxs italic">Booker</p>
       </div>
-      <p className="text-small">{eventInfo.event.title}</p>
+      <p className="text-tiny mt-1 line-clamp-2 slot-title">
+        {eventInfo.event.title}
+      </p>
+      <p className="text-xxs mt-1">
+        {eventInfo.event.extendedProps.artists &&
+          eventInfo.event.extendedProps.artists.map((artist, i) => (
+            <span key={i}>
+              {i > 0 && ", "}
+              {artist.name}
+            </span>
+          ))}
+      </p>
     </div>
   );
 }

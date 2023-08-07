@@ -49,6 +49,7 @@ export async function getCalendarShows(preview: boolean, start, end) {
   const processed = shows.map((event) => {
     return {
       title: event.title,
+      artists: event.artistsCollection.items,
       start: event.date,
       end: event.dateEnd,
     };
