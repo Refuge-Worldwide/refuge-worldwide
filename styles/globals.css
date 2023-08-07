@@ -272,3 +272,7 @@
 .fc .fc-button {
   @apply px-3 py-2;
 }
+
+.fc .fc-toolbar.fc-header-toolbar {
+  @apply mr-11;
+}

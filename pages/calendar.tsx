@@ -6,7 +6,7 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
 import Loading from "../components/loading";
 import * as Dialog from "@radix-ui/react-dialog";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import InputField from "../components/formFields/inputField";
 import MultiSelectField from "../components/formFields/multiSelectField";
 import { Formik, Form, FieldArray } from "formik";
@@ -15,6 +15,7 @@ import { getAllArtists } from "../lib/contentful/pages/submission";
 import { Arrow } from "../icons/arrow";
 import CheckboxField from "../components/formFields/checkboxField";
 import { Close } from "../icons/menu";
+import { TfiReload } from "react-icons/tfi";
 
 export default function CalendarPage() {
   return (
@@ -30,6 +31,8 @@ function Calendar() {
   const [artists, setArtists] = useState(null);
   const [showDialogOpen, setShowDialogOpen] = useState<boolean>(false);
   const [selectedShow, setSelectedShow] = useState(null);
+  const [calendarLoading, setCalendarLoading] = useState<boolean>(false);
+  const calendarRef = useRef();
 
   useEffect(() => {
     (async () => {
@@ -70,17 +73,32 @@ function Calendar() {
     console.log("submit form");
   };
 
+  const reloadCalendar = () => {
+    let calendarApi = calendarRef.current.getApi();
+    calendarApi.refetchEvents();
+  };
+
   return (
-    <div className="p-8 h-[calc(100vh-95px)]">
+    <div className="m-8 h-[calc(100vh-150px)] relative">
       {/* <pre className="text-white bg-black">
         {JSON.stringify(shows, null, 2)}
       </pre> */}
       <FullCalendar
+        ref={calendarRef}
         plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin, listPlugin]}
         headerToolbar={{
           left: "prev,next today",
           center: "title",
-          right: "dayGridMonth,timeGridWeek,dayGridDay,listWeek",
+          right: "dayGridMonth,timeGridWeek,dayGridDay,listWeek addShow",
+        }}
+        customButtons={{
+          addShow: {
+            text: "+",
+            hint: "Add show",
+            click: () => {
+              setShowDialogOpen(true);
+            },
+          },
         }}
         height={"100%"}
         hiddenDays={[0]}
@@ -105,6 +123,7 @@ function Calendar() {
         dateClick={handleDateClick}
         eventAdd={handleEventAdd}
         select={handleSelect}
+        loading={(e) => setCalendarLoading(e)}
         firstDay={1}
         initialView="timeGridWeek"
         nowIndicator={true}
@@ -114,6 +133,12 @@ function Calendar() {
         events={getEvents}
         eventContent={renderEventContent}
       />
+      <button className="absolute top-2.5 right-0" onClick={reloadCalendar}>
+        <TfiReload
+          className={`${calendarLoading ? "animate-spin animate-pulse" : null}`}
+        />
+      </button>
+
       <Dialog.Root
         open={showDialogOpen}
         onOpenChange={(showDialogOpen) => setShowDialogOpen(showDialogOpen)}
