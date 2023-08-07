@@ -30,15 +30,28 @@ function Calendar() {
 
   function handleSelect(selectInfo) {
     console.log("select info");
-    console.log(selectInfo);
     setShowDialogOpen(true);
     setSelectedShow(selectInfo);
+    console.log(selectInfo.startStr);
   }
 
   function handleEventClick(eventInfo) {
+    // remove UTC timezone stamp
     setShowDialogOpen(true);
-    setSelectedShow(eventInfo);
+    setSelectedShow(eventInfo.event);
   }
+
+  const initialValues = {
+    showName: selectedShow?.title,
+    booker: "George",
+    start: selectedShow?.startStr,
+    end: selectedShow?.endStr,
+    artists: selectedShow?.artists,
+  };
+
+  const _handleSubmit = (values, actions) => {
+    console.log("submit form");
+  };
 
   return (
     <div className="p-8 h-[calc(100vh-95px)]">
@@ -97,13 +110,15 @@ function Calendar() {
               </button>
             </Dialog.Close>
             <Dialog.Title asChild className="mb-6">
-              <h5 className="font-sans font-medium">New show</h5>
+              <h5 className="font-sans font-medium">
+                {selectedShow?.title ? "Edit" : "New"} show
+              </h5>
             </Dialog.Title>
             {/* <Dialog.Description className=""></Dialog.Description> */}
             {/* <pre className="text-white bg-black h-96 overflow-scroll">
               {JSON.stringify(selectedShow, null, 2)}
             </pre> */}
-            <Formik>
+            <Formik initialValues={initialValues} onSubmit={_handleSubmit}>
               <form>
                 <InputField
                   name="showName"
@@ -111,13 +126,7 @@ function Calendar() {
                   required
                   type="text"
                 />
-                <InputField
-                  name="booker"
-                  label="Booker"
-                  required
-                  type="text"
-                  value="George"
-                />
+                <InputField name="booker" label="Booker" required type="text" />
                 <InputField
                   name="artist"
                   label="Artist(s)"
@@ -129,19 +138,20 @@ function Calendar() {
                   label="Start"
                   required
                   type="datetime-local"
-                  value={selectedShow?.startStr}
                 />
                 <InputField
                   name="end"
                   label="End"
                   required
                   type="datetime-local"
-                  value={selectedShow?.endStr}
                 />
               </form>
             </Formik>
             <Dialog.Close asChild>
-              <button className="font-medium underline">Add show</button>
+              <button className="font-medium underline">
+                {" "}
+                {selectedShow?.title ? "Edit" : "Add"} show
+              </button>
             </Dialog.Close>
           </Dialog.Content>
         </Dialog.Portal>
@@ -189,6 +199,5 @@ async function getEvents(info: any) {
     `/api/calendar?start=${info.startStr}&end=${info.endStr}`
   );
   const shows = await response.json();
-  console.log(shows.processed);
   return shows.processed;
 }

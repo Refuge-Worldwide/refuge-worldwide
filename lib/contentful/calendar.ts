@@ -40,9 +40,9 @@ export async function getCalendarShows(preview: boolean, start, end) {
     variables: { preview, start, end },
   });
 
-  console.log(res);
-
   const shows = extractCollection<ScheduleShow>(res, "showCollection");
+
+  console.log(shows[0]);
 
   // const end = Date.now();
 
@@ -50,8 +50,8 @@ export async function getCalendarShows(preview: boolean, start, end) {
     return {
       title: event.title,
       artists: event.artistsCollection.items,
-      start: event.date,
-      end: event.dateEnd,
+      start: event.date.slice(0, -1),
+      end: event.dateEnd.slice(0, -1),
     };
   });
 
