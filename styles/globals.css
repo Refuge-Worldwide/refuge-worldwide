@@ -241,3 +241,15 @@
 .genre-sidebar::-webkit-scrollbar-thumb:hover {
   @apply bg-black;
 }
+
+.fc .fc-button-primary {
+  @apply uppercase font-medium text-small border-1.5 rounded-full whitespace-nowrap focus:outline-none focus:ring-4 space-x-2 bg-transparent text-black border-black;
+}
+
+.fc .fc-toolbar-title {
+  @apply font-sans font-medium text-base;
+}
+
+.fc table {
+  @apply font-sans font-light text-small;
+}

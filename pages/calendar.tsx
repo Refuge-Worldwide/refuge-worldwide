@@ -4,17 +4,24 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
-// import useSchedule from "../hooks/useSchedule";
 import Loading from "../components/loading";
-// import useCalendar from "../hooks/useCalendar";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useState } from "react";
+import InputField from "../components/formFields/inputField";
+import { Formik } from "formik";
+import { Cross } from "../icons/cross";
+import { getAllArtists } from "../lib/contentful/pages/submission";
 
 export default function CalendarPage() {
+  const [artists, setArtists] = useState(getAllArtists);
+
   return (
     <Layout>
       <div className="calendar-container">
         <Calendar />
+        <pre className="text-white bg-black">
+          {JSON.stringify(artists, null, 2)}
+        </pre>
       </div>
     </Layout>
   );
@@ -37,7 +44,7 @@ function Calendar() {
   }
 
   return (
-    <div>
+    <div className="p-8">
       {/* <pre className="text-white bg-black">
         {JSON.stringify(shows, null, 2)}
       </pre> */}
@@ -52,6 +59,8 @@ function Calendar() {
         hiddenDays={[0]}
         allDaySlot={false}
         scrollTime={"10:00:00"}
+        eventColor="#a1cfad"
+        eventTextColor="#000"
         timeZone="Europe/Berlin"
         slotLabelFormat={{
           hour: "2-digit",
@@ -86,27 +95,58 @@ function Calendar() {
       >
         <Dialog.Portal>
           <Dialog.Overlay className="w-screen h-screen fixed top-0 left-0 bg-black opacity-70 z-50" />
-          <Dialog.Content className="bg-white max-w-2xl fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
-            <Dialog.Title className="DialogTitle">New show</Dialog.Title>
-            <Dialog.Description className="DialogDescription"></Dialog.Description>
-            <pre className="text-white bg-black h-96 overflow-scroll">
-              {JSON.stringify(selectedShow, null, 2)}
-            </pre>
-            <div
-              style={{
-                display: "flex",
-                marginTop: 25,
-                justifyContent: "flex-end",
-              }}
-            >
-              <Dialog.Close asChild>
-                <button className="Button green">Add show</button>
-              </Dialog.Close>
-            </div>
+          <Dialog.Content className="bg-white max-w-2xl fixed overflow-y-scroll max-h-screen top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 border-black border p-8">
             <Dialog.Close asChild>
-              <button className="IconButton" aria-label="Close">
-                Close
+              <button className="float-right" aria-label="Close">
+                <Cross />
               </button>
+            </Dialog.Close>
+            <Dialog.Title asChild className="mb-6">
+              <h5 className="font-sans font-medium">New show</h5>
+            </Dialog.Title>
+            {/* <Dialog.Description className=""></Dialog.Description> */}
+            {/* <pre className="text-white bg-black h-96 overflow-scroll">
+              {JSON.stringify(selectedShow, null, 2)}
+            </pre> */}
+            <Formik>
+              <form>
+                <InputField
+                  name="showName"
+                  label="Show name"
+                  required
+                  type="text"
+                />
+                <InputField
+                  name="booker"
+                  label="Booker"
+                  required
+                  type="text"
+                  value="George"
+                />
+                <InputField
+                  name="artist"
+                  label="Artist(s)"
+                  required
+                  type="text"
+                />
+                <InputField
+                  name="start"
+                  label="Start"
+                  required
+                  type="datetime-local"
+                  value={selectedShow?.startStr}
+                />
+                <InputField
+                  name="end"
+                  label="End"
+                  required
+                  type="datetime-local"
+                  value={selectedShow?.endStr}
+                />
+              </form>
+            </Formik>
+            <Dialog.Close asChild>
+              <button className="font-medium underline">Add show</button>
             </Dialog.Close>
           </Dialog.Content>
         </Dialog.Portal>
@@ -123,7 +163,7 @@ function renderEventContent(eventInfo) {
         <p className="text-xxs font-medium">{eventInfo.timeText}</p>
         <p className="text-xxs font-medium ">Booker</p>
       </div>
-      <p className="text-small">{eventInfo.event.title}</p>
+      <p className="text-tiny">{eventInfo.event.title}</p>
     </div>
   );
 }

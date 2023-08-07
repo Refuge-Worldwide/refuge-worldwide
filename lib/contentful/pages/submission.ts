@@ -84,7 +84,7 @@ export async function getSubmissionPage(preview: boolean) {
   return extractPage<SubmissionPageData>(data, "pageSubmission");
 }
 
-export async function getAllArtists(limit: number, skip: number) {
+export async function getArtists(limit: number, skip: number) {
   const AllArtistsQuery = /* GraphQL */ `
     query AllArtistsQuery($limit: Int, $skip: Int) {
       artistCollection(order: name_ASC, limit: $limit, skip: $skip) {
@@ -103,6 +103,15 @@ export async function getAllArtists(limit: number, skip: number) {
   });
 
   return extractCollection<DropdownArtistEntry>(data, "artistCollection");
+}
+
+export async function getAllArtists() {
+  const artists = await getArtists(1000, 0);
+  const artistsTwo = await getArtists(1000, 1000);
+  const artistsThree = await getArtists(1000, 2000);
+
+  const AllArtists = artists.concat(artistsTwo.concat(artistsThree));
+  return AllArtists;
 }
 
 // export async function getArtistsPage(
