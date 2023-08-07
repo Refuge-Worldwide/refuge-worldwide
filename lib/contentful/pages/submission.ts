@@ -110,8 +110,14 @@ export async function getAllArtists() {
   const artistsTwo = await getArtists(1000, 1000);
   const artistsThree = await getArtists(1000, 2000);
 
-  const AllArtists = artists.concat(artistsTwo.concat(artistsThree));
-  return AllArtists;
+  const allArtists = artists.concat(artistsTwo.concat(artistsThree));
+
+  const mappedArtists = allArtists.map((artists) => ({
+    value: artists.sys.id,
+    label: artists.name,
+  }));
+
+  return mappedArtists;
 }
 
 // export async function getArtistsPage(

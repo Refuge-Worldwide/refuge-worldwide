@@ -18,10 +18,7 @@ export async function getStaticProps({ preview = false }) {
         value: genre.sys.id,
         label: genre.name,
       })),
-      artists: AllArtists.map((artists) => ({
-        value: artists.sys.id,
-        label: artists.name,
-      })),
+      artists: AllArtists,
       preview,
       ...(await getSubmissionPage(preview)),
     },

@@ -268,3 +268,7 @@
 .fc .fc-toolbar.fc-header-toolbar {
   margin-bottom: 1rem;
 }
+
+.fc .fc-button {
+  @apply px-3 py-2;
+}

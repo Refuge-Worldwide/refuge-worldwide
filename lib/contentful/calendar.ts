@@ -28,7 +28,9 @@ export async function getCalendarShows(preview: boolean, start, end) {
           artistsCollection(limit: 9) {
             items {
               name
-              slug
+              sys {
+                id
+              }
             }
           }
         }
@@ -42,14 +44,17 @@ export async function getCalendarShows(preview: boolean, start, end) {
 
   const shows = extractCollection<ScheduleShow>(res, "showCollection");
 
-  console.log(shows[0]);
+  console.log(shows[0].artistsCollection);
 
   // const end = Date.now();
 
   const processed = shows.map((event) => {
     return {
       title: event.title,
-      artists: event.artistsCollection.items,
+      artists: event.artistsCollection.items.map((artists) => ({
+        value: artists.sys.id,
+        label: artists.name,
+      })),
       start: event.date.slice(0, -1),
       end: event.dateEnd.slice(0, -1),
     };

@@ -6,15 +6,15 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
 import Loading from "../components/loading";
 import * as Dialog from "@radix-ui/react-dialog";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import InputField from "../components/formFields/inputField";
+import MultiSelectField from "../components/formFields/multiSelectField";
 import { Formik } from "formik";
 import { Cross } from "../icons/cross";
 import { getAllArtists } from "../lib/contentful/pages/submission";
+import { Arrow } from "../icons/arrow";
 
 export default function CalendarPage() {
-  const [artists, setArtists] = useState(getAllArtists);
-
   return (
     <Layout>
       <div className="calendar-container">
@@ -25,8 +25,16 @@ export default function CalendarPage() {
 }
 
 function Calendar() {
+  const [artists, setArtists] = useState(null);
   const [showDialogOpen, setShowDialogOpen] = useState<boolean>(false);
   const [selectedShow, setSelectedShow] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      const artists = await getAllArtists();
+      setArtists(artists);
+    })();
+  }, []);
 
   function handleSelect(selectInfo) {
     console.log("select info");
@@ -46,7 +54,7 @@ function Calendar() {
     booker: "George",
     start: selectedShow?.startStr,
     end: selectedShow?.endStr,
-    artists: selectedShow?.artists,
+    artists: selectedShow?.extendedProps?.artists,
   };
 
   const _handleSubmit = (values, actions) => {
@@ -127,11 +135,13 @@ function Calendar() {
                   type="text"
                 />
                 <InputField name="booker" label="Booker" required type="text" />
-                <InputField
-                  name="artist"
-                  label="Artist(s)"
-                  required
-                  type="text"
+                <MultiSelectField
+                  label="Artist(s)*"
+                  description="Please include guests, collectives and show hosts."
+                  name="artists"
+                  options={artists}
+                  limit={10}
+                  value={initialValues.artists}
                 />
                 <InputField
                   name="start"
@@ -148,9 +158,10 @@ function Calendar() {
               </form>
             </Formik>
             <Dialog.Close asChild>
-              <button className="font-medium underline">
+              <button className="font-medium underline flex gap-3 items-center">
                 {" "}
                 {selectedShow?.title ? "Edit" : "Add"} show
+                <Arrow />
               </button>
             </Dialog.Close>
           </Dialog.Content>
@@ -176,7 +187,7 @@ function renderEventContent(eventInfo) {
           eventInfo.event.extendedProps.artists.map((artist, i) => (
             <span key={i}>
               {i > 0 && ", "}
-              {artist.name}
+              {artist.label}
             </span>
           ))}
       </p>
