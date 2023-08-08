@@ -44,10 +44,6 @@ export async function getCalendarShows(preview: boolean, start, end) {
 
   const shows = extractCollection<ScheduleShow>(res, "showCollection");
 
-  console.log(shows[0].artistsCollection);
-
-  // const end = Date.now();
-
   const processed = shows.map((event) => {
     return {
       title: event.title,

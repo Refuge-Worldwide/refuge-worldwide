@@ -6,6 +6,10 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import ExtraArtists from "../../components/formFields/extraArtists";
+import {
+  formatArtistsForContenful,
+  createReferencesArray,
+} from "../../lib/contentful/management";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -83,21 +87,6 @@ const appendToSpreadsheet = async (values) => {
   }
 };
 
-//transform array to array of references for contentful
-const createReferencesArray = (array) => {
-  let referencesArray = [];
-  array.forEach((element) => {
-    referencesArray.push({
-      sys: {
-        type: "Link",
-        linkType: "Entry",
-        id: element.value,
-      },
-    });
-  });
-  return referencesArray;
-};
-
 const addArtist = async (artist) => {
   try {
     const image = await uploadImage(artist.name, artist.image);
@@ -143,29 +132,6 @@ const addArtist = async (artist) => {
   } catch (err) {
     console.log(err);
     throw 400;
-  }
-};
-
-const formatArtistsForContenful = (
-  artistsFromForm,
-  hasExtraArtists,
-  extraArtists
-) => {
-  let artists = [...artistsFromForm];
-  // if (hasExtraArtists) {
-  //   extraArtists.forEach((guest) => {
-  //     artists.push({ label: guest.name });
-  //   });
-  // }
-  if (artists.length > 1) {
-    const artistSimpleArray = artists.map((artist) => artist.label);
-    const formattedArtists = [
-      artistSimpleArray.slice(0, -1).join(", "),
-      artistSimpleArray.slice(-1)[0],
-    ].join(artistSimpleArray.length < 2 ? "" : " & ");
-    return formattedArtists;
-  } else {
-    return artists[0].label.toString();
   }
 };
 
