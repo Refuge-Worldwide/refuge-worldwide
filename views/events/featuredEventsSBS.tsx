@@ -3,6 +3,7 @@ import Image from "next/image";
 import { EventInterface } from "../../types/shared";
 import loaders from "../../lib/loaders";
 import Date from "../../components/date";
+import { EventBadge } from "../../components/badge";
 
 export default function FeaturedEventsSBS({
   events,
@@ -10,9 +11,9 @@ export default function FeaturedEventsSBS({
   events: EventInterface[];
 }) {
   return (
-    <section className="bg-blue border-2">
+    <section className="bg-blue border-t-2 border-b-2">
       <div className="p-4 sm:p-8">
-        <Pill>
+        <Pill outline>
           <h2>Featured Events</h2>
         </Pill>
 
@@ -27,21 +28,22 @@ export default function FeaturedEventsSBS({
                     key={event.coverImage.sys.id}
                     src={event.coverImage.url}
                     loader={loaders.contentful}
-                    width={590}
-                    height={335}
+                    width={500}
+                    height={500}
                     alt={event.title}
-                    className="bg-black/10 object-cover object-center aspect-[1/1.414]"
+                    className="bg-black/10 object-cover object-center aspect-square"
                   />
                 </div>
 
                 <div className="h-4" />
 
                 <div className="flex">
-                  <Pill size="small">
-                    <span className="font-serif text-tiny sm:text-small">
-                      {event.eventType}
-                    </span>
-                  </Pill>
+                  <EventBadge
+                    eventType={event.eventType}
+                    cross
+                    filter
+                    text={event.eventType}
+                  />
                 </div>
 
                 <div className="h-2" />
