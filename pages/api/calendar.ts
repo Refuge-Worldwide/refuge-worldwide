@@ -12,7 +12,7 @@ export default async function handler(
       end: string;
     };
 
-    const shows = await getCalendarShows(false, start, end);
+    const shows = await getCalendarShows(true, start, end);
 
     res
       .setHeader("Cache-Control", "s-maxage=1, stale-while-revalidate=59")
