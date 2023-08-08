@@ -37,7 +37,7 @@ export default function FeaturedEventsSBS({
         >
           {events.map((event, i) => (
             <SplideSlide key={i}>
-              <article className="flex flex-col">
+              <article className="flex flex-col w-80 md:w-auto md:w-auto md:h-auto">
                 <div>
                   <Image
                     key={event.coverImage.sys.id}
@@ -46,7 +46,7 @@ export default function FeaturedEventsSBS({
                     width={400}
                     height={400}
                     alt={event.title}
-                    className="bg-black/10 object-cover object-center aspect-square h-full h-full"
+                    className="bg-black/10 object-cover object-center aspect-square"
                   />
                 </div>
 
