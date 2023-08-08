@@ -2,9 +2,26 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import next from "next";
 import { graphql } from ".";
-import { ScheduleShow } from "../../types/shared";
 import { extractCollection } from "../../util";
+import { ArtistInterface } from "../../types/shared";
 dayjs.extend(utc);
+
+interface CalendarShow {
+  sys: {
+    id: string;
+    publishedVersion: string;
+  };
+  status: string;
+  title: string;
+  localStartTime?: string;
+  date: string;
+  dateEnd: string;
+  slug: string;
+  artistsCollection: {
+    items: ArtistInterface[];
+  };
+  live?: boolean;
+}
 
 export async function getCalendarShows(preview: boolean, start, end) {
   const calendarQuery = /* GraphQL */ `
@@ -19,6 +36,11 @@ export async function getCalendarShows(preview: boolean, start, end) {
           date
           dateEnd
           slug
+          sys {
+            publishedVersion
+            id
+          }
+          status
           coverImage {
             sys {
               id
@@ -42,7 +64,9 @@ export async function getCalendarShows(preview: boolean, start, end) {
     variables: { preview, start, end },
   });
 
-  const shows = extractCollection<ScheduleShow>(res, "showCollection");
+  const shows = extractCollection<CalendarShow>(res, "showCollection");
+
+  console.log(shows);
 
   const processed = shows.map((event) => {
     return {
@@ -53,6 +77,25 @@ export async function getCalendarShows(preview: boolean, start, end) {
       })),
       start: event.date.slice(0, -1),
       end: event.dateEnd.slice(0, -1),
+      status: event.status,
+      published: event.sys.publishedVersion ? true : false,
+      backgroundColor:
+        event.status == "TBC"
+          ? "#94c9ff"
+          : event.status == "Confirmed"
+          ? "#ffc88a"
+          : event.status == "Submitted"
+          ? "#a1cfad"
+          : "#a1cfad",
+      borderColor:
+        event.status == "TBC"
+          ? "#94c9ff"
+          : event.status == "Confirmed"
+          ? "#ffc88a"
+          : event.status == "Submitted"
+          ? "#a1cfad"
+          : "#a1cfad",
+      contentfulId: event.sys.id,
     };
   });
 
