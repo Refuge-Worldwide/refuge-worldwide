@@ -19,7 +19,7 @@ export default function FeaturedEventsSBS({
 
         <div className="h-5 sm:h-8" />
 
-        <ul className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+        <ul className="grid grid-cols-1 sm:grid-cols-4 gap-8">
           {events.map((event, i) => (
             <li key={i}>
               <article>
