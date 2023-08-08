@@ -4,6 +4,8 @@ import { EventInterface } from "../../types/shared";
 import loaders from "../../lib/loaders";
 import Date from "../../components/date";
 import { EventBadge } from "../../components/badge";
+import { Splide, SplideSlide } from "@splidejs/react-splide";
+import "@splidejs/react-splide/css/core";
 
 export default function FeaturedEventsSBS({
   events,
@@ -18,20 +20,33 @@ export default function FeaturedEventsSBS({
         </Pill>
 
         <div className="h-5 sm:h-8" />
-
-        <ul className="grid grid-cols-1 sm:grid-cols-4 gap-8">
+        <Splide
+          aria-label="Featured events"
+          options={{
+            type: "slide",
+            // height: 600,
+            width: "100%",
+            gap: "2rem",
+            focus: 0,
+            autoWidth: true,
+            autoHeight: true,
+            lazyLoad: "nearby",
+            drag: "free",
+            arrows: false,
+          }}
+        >
           {events.map((event, i) => (
-            <li key={i}>
-              <article>
-                <div className="flex w-full">
+            <SplideSlide key={i}>
+              <article className="flex flex-col">
+                <div>
                   <Image
                     key={event.coverImage.sys.id}
                     src={event.coverImage.url}
                     loader={loaders.contentful}
-                    width={500}
-                    height={500}
+                    width={400}
+                    height={400}
                     alt={event.title}
-                    className="bg-black/10 object-cover object-center aspect-square"
+                    className="bg-black/10 object-cover object-center aspect-square h-full h-full"
                   />
                 </div>
 
@@ -64,9 +79,9 @@ export default function FeaturedEventsSBS({
 
                 <div className="h-3" />
               </article>
-            </li>
+            </SplideSlide>
           ))}
-        </ul>
+        </Splide>
       </div>
     </section>
   );
