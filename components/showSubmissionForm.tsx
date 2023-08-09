@@ -219,7 +219,7 @@ export default function ShowSubmissionForm({
             disabled={currentStep == 0}
             className={currentStep == 0 ? "font-medium" : ""}
           >
-            1. Live / Pre-record
+            1. Live / Pre-recorded
           </button>
           <Arrow className="hidden md:block" />
           <button

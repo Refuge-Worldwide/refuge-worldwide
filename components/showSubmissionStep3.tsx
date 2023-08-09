@@ -160,7 +160,7 @@ export default function ShowSubmissionStep3({
           name="showName"
           type="text"
           label="Show title"
-          description="Without artist names"
+          description="Without artist names."
           required={true}
         />
         <ImageUploadField
