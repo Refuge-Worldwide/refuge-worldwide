@@ -18,6 +18,7 @@ import { Close } from "../icons/menu";
 import { TfiReload } from "react-icons/tfi";
 import { IoMdCheckmark } from "react-icons/io";
 import { RxExternalLink } from "react-icons/rx";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import Link from "next/link";
 
 export default function CalendarPage() {
@@ -74,11 +75,22 @@ function Calendar() {
 
   const initialValues = {
     showName: selectedShow?.title,
-    booker: "George",
     start: selectedShow?.startStr,
     end: selectedShow?.endStr,
-    artists: selectedShow?.extendedProps?.artists,
-    status: selectedShow?.extendedProps?.status,
+    artists: selectedShow?.extendedProps?.artists
+      ? selectedShow?.extendedProps?.artists
+      : [],
+    status: [
+      {
+        value: selectedShow?.extendedProps?.status
+          ? selectedShow?.extendedProps?.status
+          : "TBC",
+        label: selectedShow?.extendedProps?.status
+          ? selectedShow?.extendedProps?.status
+          : "TBC",
+      },
+    ],
+    booker: selectedShow?.extendedProps?.booker,
     hasExtraArtists: false,
     extraArtists: [
       {
@@ -86,10 +98,39 @@ function Calendar() {
         pronouns: "",
       },
     ],
+    contentfulId: selectedShow?.extendedProps?.contentfulId,
   };
 
-  const _handleSubmit = (values, actions) => {
-    console.log("submit form");
+  const _handleSubmit = async (values, actions) => {
+    console.log("submitting the form");
+    console.log(values);
+    const JSONData = JSON.stringify(values);
+    const endpoint = "/api/calendar";
+    const options = {
+      // The method is POST because we are sending data.
+      method: "POST",
+      // Tell the server we're sending JSON.
+      headers: {
+        "Content-Type": "application/json",
+      },
+      // Body of the request is the JSON data we created above.
+      body: JSONData,
+    };
+    const response = await fetch(endpoint, options);
+    if (response.status === 400) {
+      // Validation error
+      actions.setSubmitting(false);
+    } else if (response.ok) {
+      // successful
+      reloadCalendar();
+      console.log("form submitted successfully");
+      actions.setSubmitting(false);
+      actions.setStatus("submitted");
+      setShowDialogOpen(false);
+    } else {
+      // unknown error
+      actions.setSubmitting(false);
+    }
   };
 
   const reloadCalendar = () => {
@@ -188,8 +229,8 @@ function Calendar() {
               </Dialog.Title>
               {/* <Dialog.Description className=""></Dialog.Description> */}
               {/* <pre className="text-white bg-black h-96 overflow-scroll">
-              {JSON.stringify(selectedShow, null, 2)}
-            </pre> */}
+                {JSON.stringify(selectedShow.extendedProps, null, 2)}
+              </pre> */}
               <Formik initialValues={initialValues} onSubmit={_handleSubmit}>
                 {({ values, isSubmitting }) => (
                   <Form id="calendarShow">
@@ -279,7 +320,7 @@ function Calendar() {
                       label="Status"
                       name="status"
                       options={statusOptions}
-                      limit={10}
+                      limit={1}
                       value={initialValues.status}
                     />
                     <InputField
@@ -288,12 +329,21 @@ function Calendar() {
                       required
                       type="text"
                     />
-
-                    <button className="font-medium underline flex gap-3 items-center">
-                      {" "}
-                      {selectedShow?.title ? "Edit" : "Add"} show
-                      <Arrow />
-                    </button>
+                    <div>
+                      <button
+                        disabled={isSubmitting}
+                        type="submit"
+                        className="inline-flex items-center space-x-4 text-base font-medium mt-6"
+                      >
+                        <span className="underline">
+                          {selectedShow?.title ? "Edit" : "Add"} show
+                        </span>
+                        {!isSubmitting && <Arrow />}
+                        {isSubmitting && (
+                          <AiOutlineLoading3Quarters className="animate-spin" />
+                        )}
+                      </button>
+                    </div>
                   </Form>
                 )}
               </Formik>

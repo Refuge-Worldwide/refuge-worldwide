@@ -17,6 +17,7 @@ interface CalendarShow {
   date: string;
   dateEnd: string;
   slug: string;
+  booker: string;
   artistsCollection: {
     items: ArtistInterface[];
   };
@@ -36,6 +37,7 @@ export async function getCalendarShows(preview: boolean, start, end) {
           date
           dateEnd
           slug
+          booker
           sys {
             publishedVersion
             id
@@ -77,7 +79,7 @@ export async function getCalendarShows(preview: boolean, start, end) {
       })),
       start: event.date.slice(0, -1),
       end: event.dateEnd.slice(0, -1),
-      status: event.status,
+      status: event.status ? event.status : "Submitted",
       published: event.sys.publishedVersion ? true : false,
       backgroundColor:
         event.status == "TBC"
@@ -96,6 +98,7 @@ export async function getCalendarShows(preview: boolean, start, end) {
           ? "#a1cfad"
           : "#a1cfad",
       contentfulId: event.sys.id,
+      booker: event.booker ? event.booker : "George",
     };
   });
 
