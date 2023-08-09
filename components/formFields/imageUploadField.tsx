@@ -68,8 +68,10 @@ export default function ImageUploadField({
       <label htmlFor={props.name}>
         {label}
         {props.required && "*"}
-        <span className="label-description">
-          Landscape format, 1800x1450px or larger, 3MB max.
+        <span className="label-description max-w-2xl">
+          {description
+            ? description
+            : "Minimum dimensions: 1000x1000px, maximum file size: 3MB."}
         </span>
       </label>
       <FilePond

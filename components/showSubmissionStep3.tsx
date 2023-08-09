@@ -35,48 +35,7 @@ export default function ShowSubmissionStep3({
           <InputField name="number" type="tel" label="Contact number" />
         )}
       </fieldset>
-      <InputField
-        name="datetime"
-        type={showType == "live" ? "datetime-local" : "date"}
-        label={showType == "live" ? "Date / time (CET)" : "Date"}
-        required={true}
-      />
-      <fieldset className="mb-10">
-        <legend>Length</legend>
-        <div className="flex">
-          <div className="w-1/2">
-            <Field
-              type="radio"
-              id="1hr"
-              name="length"
-              value="1"
-              className="peer hidden"
-            />
-            <label
-              htmlFor="1hr"
-              className="block cursor-pointer select-none pill-input rounded-tr-none rounded-br-none py-3 text-center peer-checked:bg-black peer-checked:text-white peer-checked:font-bold"
-            >
-              1hr
-            </label>
-          </div>
-          <div className="w-1/2">
-            <Field
-              type="radio"
-              id="2hr"
-              name="length"
-              value="2"
-              className="peer hidden"
-            />
-            <label
-              htmlFor="2hr"
-              className="block cursor-pointer select-none pill-input rounded-tl-none rounded-bl-none py-3 text-center peer-checked:bg-black peer-checked:text-white peer-checked:font-bold"
-            >
-              2hrs
-            </label>
-          </div>
-        </div>
-        <ErrorMessage className="text-red" component="span" name="length" />
-      </fieldset>
+
       <fieldset>
         <MultiSelectField
           label="Artist(s)*"
@@ -155,6 +114,48 @@ export default function ShowSubmissionStep3({
           label="Instagram @ handle(s)"
           description="For you and your guest(s). A comma seperated list NOT including the @ symbol."
         />
+        <InputField
+          name="datetime"
+          type={showType == "live" ? "datetime-local" : "date"}
+          label={showType == "live" ? "Show date / time (CET)" : "Show date"}
+          required={true}
+        />
+        <fieldset className="mb-10">
+          <legend>Show length</legend>
+          <div className="flex">
+            <div className="w-1/2">
+              <Field
+                type="radio"
+                id="1hr"
+                name="length"
+                value="1"
+                className="peer hidden"
+              />
+              <label
+                htmlFor="1hr"
+                className="block cursor-pointer select-none pill-input rounded-tr-none rounded-br-none py-3 text-center peer-checked:bg-black peer-checked:text-white peer-checked:font-bold"
+              >
+                1hr
+              </label>
+            </div>
+            <div className="w-1/2">
+              <Field
+                type="radio"
+                id="2hr"
+                name="length"
+                value="2"
+                className="peer hidden"
+              />
+              <label
+                htmlFor="2hr"
+                className="block cursor-pointer select-none pill-input rounded-tl-none rounded-bl-none py-3 text-center peer-checked:bg-black peer-checked:text-white peer-checked:font-bold"
+              >
+                2hrs
+              </label>
+            </div>
+          </div>
+          <ErrorMessage className="text-red" component="span" name="length" />
+        </fieldset>
         <InputField
           name="showName"
           type="text"
