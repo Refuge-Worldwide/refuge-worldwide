@@ -57,7 +57,7 @@ export default function MultiSelectField({
         className="basic-multi-select pill-input mb-2 p-2"
         value={selectedOptions}
         onChange={(o) => onSetSelectedOptions(o)}
-        isOptionDisabled={() => selectedOptions.length >= limit}
+        isOptionDisabled={() => selectedOptions.length >= limit && limit != 1}
         name={props.name}
         id={props.name}
         classNamePrefix="select"
