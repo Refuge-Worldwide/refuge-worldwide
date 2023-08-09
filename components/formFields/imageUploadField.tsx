@@ -22,14 +22,18 @@ const spaceId = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID;
 // Our app
 export default function ImageUploadField({
   label,
+  multi = false,
+  description,
   ...props
 }: {
   label: string;
   name: string;
+  multi?: boolean;
   required?: boolean;
+  description?: string;
 }) {
   const [field, meta, helpers] = useField(props);
-  const { setFieldValue } = useFormikContext();
+  const { setFieldValue, values } = useFormikContext();
 
   // const setFieldValue(field, value){
   const imageUploaded = (file) => {
@@ -38,8 +42,25 @@ export default function ImageUploadField({
       type: file.fileType,
       url: file.serverId,
     };
+    if (multi) {
+      let images = values[props.name];
+      images.push(image);
+      setFieldValue(props.name, images);
+    } else {
+      setFieldValue(props.name, [image]);
+    }
+  };
 
-    setFieldValue(props.name, image);
+  const _reorderHandler = (files) => {
+    console.log(files);
+    const processed = files.map((file) => {
+      return {
+        filename: file.filename,
+        type: file.fileType,
+        url: file.serverId,
+      };
+    });
+    setFieldValue(props.name, processed);
   };
 
   return (
@@ -48,8 +69,7 @@ export default function ImageUploadField({
         {label}
         {props.required && "*"}
         <span className="label-description">
-          Landscape format, 1800x1450px or larger, 3MB max. Please include show
-          and host names in filename.
+          Landscape format, 1800x1450px or larger, 3MB max.
         </span>
       </label>
       <FilePond
@@ -57,13 +77,16 @@ export default function ImageUploadField({
         {...props}
         className="min-h-36"
         // files={files}
-        allowMultiple={false}
+        allowMultiple={multi}
         credits={false}
         server={serverOptions}
         onprocessfile={(error, file) => {
-          console.log(file);
           imageUploaded(file);
         }}
+        onreorderfiles={(files) => {
+          _reorderHandler(files);
+        }}
+        allowReorder={true}
         labelIdle='Drag & Drop your image or <span class="filepond--label-action">Browse</span>'
         acceptedFileTypes={["image/png", "image/jpeg"]}
         labelFileTypeNotAllowed="Invalid file type. Please only upload images of JPEG and PNG format"
