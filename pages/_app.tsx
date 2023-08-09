@@ -26,18 +26,18 @@ function RefugeApp({ Component, pageProps }: AppProps) {
 
   return (
     <Fragment>
-      <header>
+      {/* <header>
         <Navigation />
-      </header>
+      </header> */}
 
       <LivePlayer />
 
-      <Component {...pageProps} />
+      {/* <Component {...pageProps} />
 
       <Footer />
 
       <MixcloudPlayer />
-      <JoinChat />
+      <JoinChat /> */}
     </Fragment>
   );
 }

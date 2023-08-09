@@ -5,6 +5,7 @@ import useSchedule from "../hooks/useSchedule";
 import Pause from "../icons/pause";
 import Play from "../icons/play";
 import Marquee from "./marquee";
+import Image from "next/image";
 
 const BroadcastingIndicator = ({
   status,
@@ -57,7 +58,7 @@ export default function LivePlayer() {
   });
 
   const playerWrapperClassNames = cn(
-    "bg-black text-white h-12 sm:h-16 px-4 sm:px-8 flex items-center space-x-3 sm:space-x-9",
+    "bg-black text-white h-screen text-[20rem] px-4 sm:px-8 flex items-center space-x-3 sm:space-x-9",
     {
       "sticky top-0 z-50": isOnline,
     }
@@ -81,28 +82,33 @@ export default function LivePlayer() {
 
   return (
     <section className={playerWrapperClassNames}>
-      <BroadcastingIndicator
-        status={scheduleData?.status}
-        isLoading={isLoading}
-      />
-
       {!isLoading && (
         <Marquee
+          speed={3}
           key={scheduleData?.liveNow.title}
-          text={<span className="pr-8">{scheduleData?.liveNow.title}</span>}
-        />
-      )}
-
-      {isOnline && (
-        <button
-          className="grow-0 h-7 w-7 sm:h-9 sm:w-9 focus:outline-none focus:ring-4"
-          onClick={isPlaying ? pause : play}
-          aria-label={
-            isPlaying ? "Pause Live Broadcast" : "Play Live Broadcast"
+          text={
+            <div className="flex gap-12 items-center">
+              <span>Live now</span>
+              <Image
+                src="/images/navigation-smile-white.svg"
+                width={450}
+                height={200}
+                alt="Refuge"
+                priority
+                unoptimized
+              />
+              <span className="pr-8">{scheduleData?.liveNow.title}</span>
+              <Image
+                src="/images/navigation-smile-white.svg"
+                width={450}
+                height={200}
+                alt="Refuge"
+                priority
+                unoptimized
+              />
+            </div>
           }
-        >
-          {isPlaying ? <Pause /> : <Play />}
-        </button>
+        />
       )}
 
       <audio hidden id="refuge-live-player" preload="none" ref={player}>
