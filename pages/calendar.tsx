@@ -19,6 +19,7 @@ import { TfiReload } from "react-icons/tfi";
 import { IoMdCheckmark } from "react-icons/io";
 import { RxExternalLink } from "react-icons/rx";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { RiDeleteBin7Line } from "react-icons/ri";
 import Link from "next/link";
 
 export default function CalendarPage() {
@@ -149,7 +150,7 @@ function Calendar() {
         headerToolbar={{
           left: "prev,next today",
           center: "title",
-          right: "dayGridMonth,timeGridWeek,dayGridDay,listWeek addShow",
+          right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek addShow",
         }}
         customButtons={{
           addShow: {
@@ -215,7 +216,7 @@ function Calendar() {
                   <Cross />
                 </button>
               </Dialog.Close>
-              <Dialog.Title asChild className="mb-6">
+              <Dialog.Title asChild className="mb-6 pb-3 border-b border-black">
                 <h5 className="font-sans font-medium">
                   {selectedShow?.title ? "Edit" : "New"} show
                   {selectedShow?.extendedProps?.contentfulId && (
@@ -329,20 +330,28 @@ function Calendar() {
                       required
                       type="text"
                     />
-                    <div>
+                    <div className="flex justify-between items-center">
                       <button
-                        disabled={isSubmitting}
+                        disabled={selectedShow?.title}
                         type="submit"
-                        className="inline-flex items-center space-x-4 text-base font-medium mt-6"
+                        className={`inline-flex items-center space-x-4 text-base font-medium mt-6 ${
+                          selectedShow?.title ? "cursor-not-allowed" : ""
+                        }`}
                       >
                         <span className="underline">
-                          {selectedShow?.title ? "Edit" : "Add"} show
+                          {selectedShow?.title ? "Edit" : "Add"} show{" "}
+                          {selectedShow?.title ? "(coming soon)" : null}
                         </span>
                         {!isSubmitting && <Arrow />}
                         {isSubmitting && (
                           <AiOutlineLoading3Quarters className="animate-spin" />
                         )}
                       </button>
+                      {selectedShow?.title && (
+                        <button disabled className="cursor-not-allowed">
+                          <RiDeleteBin7Line />
+                        </button>
+                      )}
                     </div>
                   </Form>
                 )}
@@ -361,7 +370,9 @@ function renderEventContent(eventInfo) {
     <div className="p-1">
       <div className="mt-1 flex justify-between">
         <p className="text-xxs font-medium">{eventInfo.timeText} </p>
-        <p className="text-xxs italic">George </p>
+        <p className="text-xxs italic">
+          {eventInfo.event.extendedProps.booker}
+        </p>
       </div>
       <p className="text-tiny mt-1 line-clamp-2 slot-title">
         {eventInfo.event.title}
