@@ -21,9 +21,9 @@ export default function ShowSubmissionStep3({
 
   return (
     <div>
-      <pre className="text-white bg-black">
+      {/* <pre className="text-white bg-black">
         {JSON.stringify(values, null, 2)}
-      </pre>
+      </pre> */}
       <fieldset className="mt-16">
         <InputField
           name="email"
