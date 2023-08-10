@@ -148,6 +148,10 @@
 .filepond--root .filepond--drop-label {
   min-height: 9rem !important;
 }
+
+.filepond--item {
+  width: calc(50% - 0.5em);
+}
 /* GENRE SIDEBAR */
 
 .border-wicked-dashed {

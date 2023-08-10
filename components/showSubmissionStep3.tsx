@@ -21,7 +21,9 @@ export default function ShowSubmissionStep3({
 
   return (
     <div>
-      {/* <pre className="text-white">{JSON.stringify(values, null, 2)}</pre> */}
+      {/* <pre className="text-white bg-black">
+        {JSON.stringify(values, null, 2)}
+      </pre> */}
       <fieldset className="mt-16">
         <InputField
           name="email"
@@ -107,20 +109,19 @@ export default function ShowSubmissionStep3({
           </fieldset>
         )}
         <InputField
-          name="showName"
+          name="instagram"
           type="text"
-          label="Show title"
-          description="Without artist names"
-          required={true}
+          label="Instagram @ handle(s)"
+          description="For you and your guest(s). A comma seperated list NOT including the @ symbol."
         />
         <InputField
           name="datetime"
           type={showType == "live" ? "datetime-local" : "date"}
-          label={showType == "live" ? "Date / time (CET)" : "Date"}
+          label={showType == "live" ? "Show date / time (CET)" : "Show date"}
           required={true}
         />
         <fieldset className="mb-10">
-          <legend>Length</legend>
+          <legend>Show length</legend>
           <div className="flex">
             <div className="w-1/2">
               <Field
@@ -155,6 +156,26 @@ export default function ShowSubmissionStep3({
           </div>
           <ErrorMessage className="text-red" component="span" name="length" />
         </fieldset>
+        <InputField
+          name="showName"
+          type="text"
+          label="Show title"
+          description="Without artist names."
+          required={true}
+        />
+        <ImageUploadField
+          label="Show image(s)"
+          name="image"
+          description="Please upload your show / artist image(s) below, including any guest images. Minimum dimensions: 1000x1000px, maximum file size: 3MB."
+          required={true}
+          multi={true}
+        />
+        <TextareaField
+          name="description"
+          rows={4}
+          label="Show description"
+          required={true}
+        />
         <MultiSelectField
           label="Genres"
           description="Up to 3. If you can't find a genre on this list please get in touch."
@@ -175,19 +196,6 @@ export default function ShowSubmissionStep3({
             label="Please add additional genres here"
           />
         )}
-        <TextareaField
-          name="description"
-          rows={4}
-          label="Show description"
-          required={true}
-        />
-        <InputField
-          name="instagram"
-          type="text"
-          label="Instagram @ handle(s)"
-          description="For you and your guest(s). A comma seperated list NOT including the @ symbol."
-        />
-        <ImageUploadField label="Show image" name="image" required={true} />
 
         {showType === "preRecord" && (
           <fieldset>
