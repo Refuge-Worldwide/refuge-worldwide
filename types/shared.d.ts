@@ -244,7 +244,7 @@ export type SubmissionFormValues = {
   newGenres: string;
   description: string;
   instagram: string;
-  image: Array;
+  image: object;
   additionalEq?: boolean;
   additionalEqDesc?: string;
   artists?: Array<{ value: string; label: string }>;

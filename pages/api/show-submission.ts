@@ -31,24 +31,16 @@ const showImages = [];
 // Append Function
 const appendToSpreadsheet = async (values) => {
   let guestImages = "";
-  let imagesToProcess = [];
-  if (values.image.length > 1) {
-    imagesToProcess = values.image.slice(1);
-  }
   if (values.hasExtraArtists) {
-    const extraArtistsImages = values.extraArtists.map((artist) => {
-      return artist.image;
+    values.extraArtists.forEach((artist, index) => {
+      if (artist.image) {
+        if (index > 0) {
+          guestImages += " + ";
+        }
+        guestImages += artist.image.url;
+      }
     });
-    imagesToProcess = imagesToProcess.concat(extraArtistsImages);
   }
-  imagesToProcess.forEach((e, index) => {
-    console.log(e);
-    if (index > 0) {
-      guestImages += " + ";
-    }
-    guestImages += e.url;
-  });
-
   const newRow = {
     Timestamp: dayjs().tz("Europe/Berlin").format("DD/MM/YYYY HH:mm:ss"),
     "Show name": values.showName,
@@ -74,6 +66,8 @@ const appendToSpreadsheet = async (values) => {
       values.additionalEqDesc,
   };
 
+  console.log(showImages);
+
   try {
     await doc.useServiceAccountAuth({
       client_email: GOOGLE_CLIENT_EMAIL,
@@ -98,21 +92,6 @@ const createReferencesArray = (array) => {
         type: "Link",
         linkType: "Entry",
         id: element.value,
-      },
-    });
-  });
-  return referencesArray;
-};
-
-//transform array to array of images for contentful
-const createImagesReferencesArray = (array) => {
-  let referencesArray = [];
-  array.forEach((element) => {
-    referencesArray.push({
-      sys: {
-        type: "Link",
-        linkType: "Asset",
-        id: element,
       },
     });
   });
@@ -320,24 +299,15 @@ export default async function handler(
   console.log(values);
   console.log(dayjs().utcOffset());
   try {
-    values.imageId = await uploadImage(values.showName, values.image[0]);
-    // if (values.image.length > 1) {
-    //   console.log("additional images to upload")
-    //   values.additionalImages = []
-    //   let additionalImagesToUpload = values.images.slice(1)
-    //   console.log(additionalImagesToUpload)
-    //   for (var i = 0; i < additionalImagesToUpload.length; i++) {
-    //     console.log(additionalImagesToUpload[i])
-    //     const uploadedLoaded = await uploadImage(values.showName + "[" + i + "]", additionalImagesToUpload[i]);
-    //     console.log("image uploaded")
-    //     console.log(uploadedLoaded)
-    //     values.additionalImages.push(uploadedLoaded)
-    //   };
-    // }
+    values.imageId = await uploadImage(values.showName, values.image);
     if (values.hasExtraArtists) {
       for (const artist of values.extraArtists) {
+        // if ((artist.bio && artist.image) || (artist.bio !== "" && artist.image !== "")) {
+        console.log("adding artist to contentful: " + artist.name);
         const contentfulNewArtist = await addArtist(artist);
+        console.log(contentfulNewArtist);
         values.artists.push(contentfulNewArtist);
+        // }
       }
     }
     if (values.hasNewGenres) {

@@ -61,7 +61,7 @@ const validationSchema = [
       instaReg,
       "Incorrect format. Should be a comma seperated list with space and NOT including the @ symbol."
     ),
-    image: Yup.array().required("Please add a show image"),
+    image: Yup.object().required("Please add a show image"),
     hasExtraArtists: Yup.boolean(),
     artists: Yup.array().when("hasExtraArtists", {
       is: false,
@@ -106,7 +106,7 @@ const initialValues: SubmissionFormValues = {
   newGenres: "",
   description: "",
   instagram: "",
-  image: [],
+  image: {},
   artists: [],
   hasExtraArtists: false,
   extraArtists: [
@@ -219,7 +219,7 @@ export default function ShowSubmissionForm({
             disabled={currentStep == 0}
             className={currentStep == 0 ? "font-medium" : ""}
           >
-            1. Live / Pre-recorded
+            1. Live / Pre-record
           </button>
           <Arrow className="hidden md:block" />
           <button
