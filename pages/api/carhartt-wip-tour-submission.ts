@@ -58,8 +58,8 @@ export default async function handler(
   console.log(dayjs().utcOffset());
   try {
     await appendToSpreadsheet(values);
-    console.log("form submitted successfully");
-    res.status(200).json({ data: "successfully created show :)" });
+    console.log("tour form submitted successfully");
+    res.status(200).json({ data: "successfully submitted :)" });
   } catch (err) {
     res.status(400).json({ data: "issue submitting form" });
   }
