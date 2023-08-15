@@ -4,7 +4,6 @@ import * as Yup from "yup";
 import InputField from "../components/formFields/inputField";
 import MultiSelectField from "../components/formFields/multiSelectField";
 import TextareaField from "../components/formFields/textareaField";
-import RadioField from "../components/formFields/radioField";
 import { AiOutlineInfoCircle, AiOutlineLoading3Quarters } from "react-icons/ai";
 import { Arrow } from "../icons/arrow";
 import GDPR from "../components/formFields/gdpr";
@@ -57,13 +56,13 @@ const workshops = [
     value: "European Lab, Brussels",
     label: "Oct 13 — European Lab, Brussels",
     additionalInfo:
-      "Hosted by Donia from 8-10PM, this workshop will be given in English.",
+      "Hosted by Donia, time TBC, this workshop will be given in English.",
   },
   {
     value: "Motopol, Copenhagen",
     label: "Oct 13 — Motopol, Copenhagen",
     additionalInfo:
-      "Hosted by ??? from 8-10PM, this workshop will be given in English. In collaboration with Pleasure Control",
+      "Hosted by TBC from 8-10PM, this workshop will be given in English. In collaboration with Pleasure Control",
   },
   {
     value: "De School, Amsterdam",
@@ -105,19 +104,19 @@ const workshops = [
     value: "C12, Brussels",
     label: "Dec 1 — C12, Brussels",
     additionalInfo:
-      "Hosted by ??? from 9-11PM, This workshop will be given in English. In collaboration with Kiosk Radio.",
+      "Hosted by TBC from 9-11PM, This workshop will be given in English. In collaboration with Kiosk Radio.",
   },
   {
     value: "La Marbrerie, Paris",
     label: "Dec 2 — La Marbrerie, Paris",
     additionalInfo:
-      "Hosted by DJ Fart In The Club from 7-9PM, this workshop will be given in English. In collaboration with HORS-SOL.",
+      "Hosted by DJ Fart In The Club, time and language TBC. In collaboration with HORS-SOL.",
   },
   {
     value: "Oona Bar, Berlin",
     label: "Dec 8 — Oona Bar, Berlin",
     additionalInfo:
-      "Hosted by JADALAREIGN from 1-3PM, this workshop will be given in English.",
+      "Hosted by TBC from 1-3PM, this workshop will be given in English.",
   },
 ];
 

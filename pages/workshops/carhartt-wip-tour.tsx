@@ -1,11 +1,11 @@
 import { InferGetStaticPropsType } from "next";
-import Layout from "../components/layout";
-import Prose from "../components/Prose";
-import PageMeta from "../components/seo/page";
-import { getTourPage } from "../lib/contentful/pages/tour";
-import { renderRichTextWithImages } from "../lib/rich-text";
-import SinglePage from "../views/singlePage";
-import TourWorkshopForm from "../views/tourWorkshopForm";
+import Layout from "../../components/layout";
+import Prose from "../../components/Prose";
+import PageMeta from "../../components/seo/page";
+import { getTourPage } from "../../lib/contentful/pages/tour";
+import { renderRichTextWithImages } from "../../lib/rich-text";
+import SinglePage from "../../views/singlePage";
+import TourWorkshopForm from "../../views/tourWorkshopForm";
 
 export async function getStaticProps({ preview = false }) {
   return {
