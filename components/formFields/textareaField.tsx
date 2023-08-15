@@ -6,7 +6,7 @@ export default function TextareaField({
   description,
   ...props
 }: {
-  label: string;
+  label?: string;
   rows: number;
   name: string;
   description?: string;
@@ -16,14 +16,23 @@ export default function TextareaField({
 
   return (
     <div className="mb-10">
-      <label htmlFor={props.name}>
-        {label}
-        {props.required && "*"}
-        {description && (
-          <span className="label-description">{description}</span>
-        )}
-      </label>
-      <textarea {...field} {...props} rows={rows} className="pill-input" />
+      {label && (
+        <label htmlFor={props.name}>
+          {label}
+          {props.required && "*"}
+          {description && (
+            <span className="label-description">{description}</span>
+          )}
+        </label>
+      )}
+      <textarea
+        {...field}
+        {...props}
+        rows={rows}
+        className={`pill-input ${
+          meta.touched && meta.error ? "border-red shadow-red" : ""
+        }`}
+      />
       {meta.touched && meta.error ? (
         <span className="text-red mt-2 text-small">{meta.error}</span>
       ) : null}

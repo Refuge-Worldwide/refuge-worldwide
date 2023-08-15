@@ -9,6 +9,7 @@ export default function CheckboxField({
   label: string;
   description?: string;
   name: string;
+  required?: boolean;
   size?: string;
 }) {
   const [field, meta, helpers] = useField(props);
@@ -17,14 +18,14 @@ export default function CheckboxField({
     <div
       className={`${
         size == "small" ? "-mt-6" : ""
-      } flex space-x-3 text-base mb-10 items-center`}
+      } flex space-x-3 text-base mb-10 items-top`}
     >
       <input
         type="checkbox"
         id={props.name}
         {...field}
         {...props}
-        className="h-6 w-6 rounded-full border-2 border-black text-black focus:ring-black"
+        className="h-6 w-6 mt-1 rounded-full border-2 border-black text-black focus:ring-black"
       />
       <label
         htmlFor={props.name}
@@ -33,6 +34,7 @@ export default function CheckboxField({
         } sm:leading-none checkbox-label`}
       >
         {label}
+        {props.required && "*"}
       </label>
     </div>
   );
