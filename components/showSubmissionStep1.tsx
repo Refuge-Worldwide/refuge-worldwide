@@ -34,7 +34,7 @@ export default function ShowSubmissionStep1() {
               htmlFor="preRecord"
               className="block cursor-pointer select-none pill-input rounded-tl-none rounded-bl-none py-3 text-center peer-checked:bg-blue peer-checked:font-bold"
             >
-              Pre-record
+              Pre-recorded
             </label>
           </div>
         </div>
