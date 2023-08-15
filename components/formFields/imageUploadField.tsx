@@ -47,7 +47,7 @@ export default function ImageUploadField({
       images.push(image);
       setFieldValue(props.name, images);
     } else {
-      setFieldValue(props.name, [image]);
+      setFieldValue(props.name, image);
     }
   };
 
@@ -64,7 +64,7 @@ export default function ImageUploadField({
   };
 
   return (
-    <div className="mb-10">
+    <div className={`mb-10 ${multi ? "multi" : null}`}>
       <label htmlFor={props.name}>
         {label}
         {props.required && "*"}
@@ -86,9 +86,11 @@ export default function ImageUploadField({
           imageUploaded(file);
         }}
         onreorderfiles={(files) => {
-          _reorderHandler(files);
+          if (multi) {
+            _reorderHandler(files);
+          }
         }}
-        allowReorder={true}
+        allowReorder={multi}
         labelIdle='Drag & Drop your image or <span class="filepond--label-action">Browse</span>'
         acceptedFileTypes={["image/png", "image/jpeg"]}
         labelFileTypeNotAllowed="Invalid file type. Please only upload images of JPEG and PNG format"

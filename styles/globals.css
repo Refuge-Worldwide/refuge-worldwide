@@ -149,7 +149,7 @@
   min-height: 9rem !important;
 }
 
-.filepond--item {
+.multi .filepond--item {
   width: calc(50% - 0.5em);
 }
 /* GENRE SIDEBAR */
