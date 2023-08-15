@@ -28,7 +28,7 @@ export default function AboutPage({
         title="Carhartt WIP Tour - Workshop Application | Refuge Worldwide"
         path="tour-workshop-signup/"
       />
-      <SinglePage coverImage={coverImage}>
+      <SinglePage coverImage={coverImage} objectPosition="top">
         <div className="container-md p-4 sm:p-8 bg-white">
           <div>
             <Prose>{renderRichTextWithImages(content)}</Prose>

@@ -7,6 +7,7 @@ import TextareaField from "../components/formFields/textareaField";
 import RadioField from "../components/formFields/radioField";
 import { AiOutlineInfoCircle, AiOutlineLoading3Quarters } from "react-icons/ai";
 import { Arrow } from "../icons/arrow";
+import GDPR from "../components/formFields/gdpr";
 
 const initialValues = {
   workshop: "",
@@ -30,7 +31,7 @@ const workshops = [
   },
   {
     value: "Arkaoda, Istanbul",
-    label: "Sept 22— Arkaoda, Istanbul",
+    label: "Sept 22 — Arkaoda, Istanbul",
     additionalInfo:
       "Hosted by Ece Özel from 8-10PM, this workshop will be given in Turkish. In collaboration with Root Radio.",
   },
@@ -38,7 +39,7 @@ const workshops = [
     value: "Horoom, Bassiani, Tbilisi",
     label: "Sept 23 — Horoom, Bassiani, Tbilisi",
     additionalInfo:
-      "Hosted by Willow from 8-10PM, this workshop will be given in English.",
+      "Hosted by HVL from 10-12PM, this workshop will be given in Georgian.",
   },
   {
     value: "Arkaoda, Berlin",
@@ -50,31 +51,31 @@ const workshops = [
     value: "Corsica Studios, London",
     label: "Oct 7 — Corsica Studios, London",
     additionalInfo:
-      "Hosted by ??? from 8-10PM, This workshop will be given in English. In collaboration with Rhythm Section.",
+      "Hosted by LAANI from 8-10PM, This workshop will be given in English. In collaboration with Rhythm Section.",
   },
   {
     value: "European Lab, Brussels",
     label: "Oct 13 — European Lab, Brussels",
     additionalInfo:
-      "Hosted by Chloe Lula from 8-10PM, this workshop will be given in English.",
+      "Hosted by Donia from 8-10PM, this workshop will be given in English.",
   },
   {
     value: "Motopol, Copenhagen",
     label: "Oct 13 — Motopol, Copenhagen",
     additionalInfo:
-      "Hosted by Shanti Celeste from 8-10PM, this workshop will be given in English. In collaboration with Pleasure Control",
+      "Hosted by ??? from 8-10PM, this workshop will be given in English. In collaboration with Pleasure Control",
   },
   {
     value: "De School, Amsterdam",
     label: "Oct 20 — De School, Amsterdam",
     additionalInfo:
-      "Hosted by ??? from 8-10PM, this workshop will be given in English.",
+      "Hosted by Jesse G from 8-10PM, this workshop will be given in English.",
   },
   {
     value: "Gewölbe, Cologne",
     label: "Oct 20 — Gewölbe, Cologne",
     additionalInfo:
-      "Hosted by AGY3NA from 9-11PM, This workshop will be given in German.",
+      "Hosted by AGY3NA from 8.30-10.30PM, This workshop will be given in German.",
   },
   {
     value: "Bunker, Turin",
@@ -86,7 +87,7 @@ const workshops = [
     value: "Jasna1, Warsaw",
     label: "Nov 4 — Jasna1, Warsaw",
     additionalInfo:
-      "Hosted by Mala Herba from 8-10PM, This workshop will be given in Italian. In collaboration with Oramics.",
+      "Hosted by Mala Herba from 8-10PM, This workshop will be given in Polish. In collaboration with Oramics.",
   },
   {
     value: "Funke, Ghent",
@@ -104,13 +105,13 @@ const workshops = [
     value: "C12, Brussels",
     label: "Dec 1 — C12, Brussels",
     additionalInfo:
-      "Hosted by ??? from 8-10PM, This workshop will be given in English. In collaboration with Kiosk Radio.",
+      "Hosted by ??? from 9-11PM, This workshop will be given in English. In collaboration with Kiosk Radio.",
   },
   {
     value: "La Marbrerie, Paris",
     label: "Dec 2 — La Marbrerie, Paris",
     additionalInfo:
-      "Hosted by DJ Fart In The Club from 9-11PM, this workshop will be given in English.",
+      "Hosted by DJ Fart In The Club from 7-9PM, this workshop will be given in English. In collaboration with HORS-SOL.",
   },
   {
     value: "Oona Bar, Berlin",
@@ -132,6 +133,7 @@ const validationSchema = Yup.object().shape({
   experience: Yup.string().required("Please select an option above"),
   experienceExplained: Yup.string().required("This field is required"),
   hear: Yup.string().required("This field is requied"),
+  gdpr: Yup.boolean().required(),
 });
 
 export default function TourWorkshopForm() {
@@ -329,6 +331,7 @@ export default function TourWorkshopForm() {
                 label="How did you hear about these workshops?"
                 required={true}
               />
+              <GDPR />
               <div>
                 <button
                   disabled={isSubmitting}
