@@ -189,7 +189,7 @@ function Calendar() {
   };
 
   return (
-    <div className="m-8 h-[calc(100vh-150px)] relative">
+    <div className="m-8 h-[calc(100vh-151px)] relative">
       {/* <pre className="text-white bg-black">
         {JSON.stringify(shows, null, 2)}
       </pre> */}

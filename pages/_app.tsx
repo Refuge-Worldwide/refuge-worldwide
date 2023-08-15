@@ -7,6 +7,7 @@ import Navigation from "../components/navigation";
 import useFathom from "../hooks/useFathom";
 import JoinChat from "../components/join-chat";
 import useSmoothscrollPolyfill from "../hooks/useSmoothscrollPolyfill";
+import { useRouter } from "next/router";
 import "../styles/globals.css";
 
 const MixcloudPlayer = dynamic(() => import("../components/mixcloudPlayer"), {
@@ -21,6 +22,7 @@ const LivePlayer = dynamic(() => import("../components/livePlayer"), {
 function RefugeApp({ Component, pageProps }: AppProps) {
   useSmoothscrollPolyfill();
   useFathom();
+  const router = useRouter();
 
   if ((Component as any).noLayout) return <Component {...pageProps} />;
 
@@ -34,7 +36,7 @@ function RefugeApp({ Component, pageProps }: AppProps) {
 
       <Component {...pageProps} />
 
-      <Footer />
+      {router.pathname != "/calendar" && <Footer />}
 
       <MixcloudPlayer />
       <JoinChat />
