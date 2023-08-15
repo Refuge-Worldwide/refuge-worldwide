@@ -8,10 +8,21 @@ import {
 } from "../../lib/contentful/management";
 import dayjs from "dayjs";
 
+const accesstoken = process.env.CONTENTFUL_MANAGEMENT_ACCESS_TOKEN;
+const spaceId = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID;
+const client = createClient({
+  accessToken: accesstoken,
+});
+const environmentId = process.env.NEXT_PUBLIC_CONTENTFUL_ENVIRONMENT_ID;
+const showContentTypeId = "show";
+const artistContentTypeId = "artist";
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const values = req.body;
+
   switch (req.method) {
     case "GET":
       try {
@@ -35,16 +46,6 @@ export default async function handler(
         res.status(400).json({ message: error.message });
       }
     case "POST":
-      const values = req.body;
-      const accesstoken = process.env.CONTENTFUL_MANAGEMENT_ACCESS_TOKEN;
-      const spaceId = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID;
-      const client = createClient({
-        accessToken: accesstoken,
-      });
-      const environmentId = process.env.NEXT_PUBLIC_CONTENTFUL_ENVIRONMENT_ID;
-      const showContentTypeId = "show";
-      const artistContentTypeId = "artist";
-
       try {
         const artists = createReferencesArray(values.artists);
         // const artistsForContentful = formatArtistsForContenful(
@@ -72,9 +73,6 @@ export default async function handler(
             dateEnd: {
               "en-US": endDateTime,
             },
-            coverImagePosition: {
-              "en-US": "center",
-            },
             artists: {
               "en-US": artists,
             },
@@ -94,11 +92,43 @@ export default async function handler(
         throw 400;
       }
     case "PATCH":
+      const startDateTime = dayjs(values.start + "Z").toISOString();
+      const endDateTime = dayjs(values.end + "Z").toISOString();
+      let artists;
+      if (values.artists) {
+        artists = createReferencesArray(values.artists);
+      }
       //fetch entry using contentfulID
-      //update fields with values from form
-      //Fetch current resource.
+      client
+        .getSpace(spaceId)
+        .then((space) => space.getEnvironment(environmentId))
+        .then((environment) => environment.getEntry(values.contentfulId))
+        //update fields with values from form
+        .then((entry) => {
+          entry.fields.date["en-US"] = startDateTime;
+          entry.fields.dateEnd["en-US"] = endDateTime;
+          if (values.showName) {
+            entry.fields.title["en-US"] = values.showName;
+            entry.fields.internal["en-US"] = values.showName;
+          }
+          if (values.artists) {
+            entry.fields.artists["en-US"] = artists;
+          }
+          if (values.status) {
+            entry.fields.status["en-US"] = values.status[0].value;
+          }
+          if (values.booker) {
+            entry.fields.booker["en-US"] = values.booker;
+          }
+          return entry.update();
+        })
+        .then((entry) => {
+          console.log(`Entry ${entry.sys.id} updated.`);
+          res.status(200).json({});
+        })
+        .catch(console.error);
+      // let show = getCalendarShow(value.id)
       //Update the resource by passing the changed resource along with current version number.
-      res.status(200).json({});
       break;
     case "DELETE":
       res.status(202).json({});

@@ -6,10 +6,10 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
 import Loading from "../components/loading";
 import * as Dialog from "@radix-ui/react-dialog";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import InputField from "../components/formFields/inputField";
 import MultiSelectField from "../components/formFields/multiSelectField";
-import { Formik, Form, FieldArray } from "formik";
+import { Formik, Form, FieldArray, Field, useFormikContext } from "formik";
 import { Cross } from "../icons/cross";
 import { getAllArtists } from "../lib/contentful/pages/submission";
 import { Arrow } from "../icons/arrow";
@@ -38,6 +38,13 @@ function Calendar() {
   const [selectedShow, setSelectedShow] = useState(null);
   const [calendarLoading, setCalendarLoading] = useState<boolean>(false);
   const calendarRef = useRef<any>();
+  const formRef = useRef<any>();
+
+  useEffect(() => {
+    if (formRef.current) {
+      console.log(formRef);
+    }
+  }, [formRef]);
 
   const statusOptions = [
     {
@@ -59,20 +66,11 @@ function Calendar() {
       const artists = await getAllArtists();
       setArtists(artists);
     })();
+    const interval = setInterval(() => reloadCalendar(), 30000);
+    return () => {
+      clearInterval(interval);
+    };
   }, []);
-
-  function handleSelect(selectInfo) {
-    console.log("select info");
-    setShowDialogOpen(true);
-    setSelectedShow(selectInfo);
-    console.log(selectInfo.startStr);
-  }
-
-  function handleEventClick(eventInfo) {
-    // remove UTC timezone stamp
-    setShowDialogOpen(true);
-    setSelectedShow(eventInfo.event);
-  }
 
   const initialValues = {
     showName: selectedShow?.title,
@@ -103,13 +101,14 @@ function Calendar() {
   };
 
   const _handleSubmit = async (values, actions) => {
+    setCalendarLoading(true);
     console.log("submitting the form");
     console.log(values);
     const JSONData = JSON.stringify(values);
     const endpoint = "/api/calendar";
     const options = {
       // The method is POST because we are sending data.
-      method: "POST",
+      method: values.contentfulId ? "PATCH" : "POST",
       // Tell the server we're sending JSON.
       headers: {
         "Content-Type": "application/json",
@@ -123,18 +122,68 @@ function Calendar() {
       actions.setSubmitting(false);
     } else if (response.ok) {
       // successful
-      reloadCalendar();
       console.log("form submitted successfully");
       actions.setSubmitting(false);
       actions.setStatus("submitted");
       setShowDialogOpen(false);
+      setTimeout(reloadCalendar, 3000);
     } else {
       // unknown error
       actions.setSubmitting(false);
     }
+    setCalendarLoading(false);
+  };
+
+  function _handleSelect(selectInfo) {
+    console.log("select info");
+    setShowDialogOpen(true);
+    setSelectedShow(selectInfo);
+    console.log(selectInfo.startStr);
+  }
+
+  function _handleEventClick(eventInfo) {
+    // remove UTC timezone stamp
+    setShowDialogOpen(true);
+    setSelectedShow(eventInfo.event);
+  }
+
+  const _handleEventDrop = async (eventInfo) => {
+    setCalendarLoading(true);
+    console.log("handle drop: " + eventInfo);
+    const values = {
+      contentfulId: eventInfo.event.extendedProps.contentfulId,
+      start: eventInfo.event.startStr,
+      end: eventInfo.event.endStr,
+    };
+    console.log(values);
+    const JSONData = JSON.stringify(values);
+    const endpoint = "/api/calendar";
+    const options = {
+      // The method is POST because we are sending data.
+      method: values.contentfulId ? "PATCH" : "POST",
+      // Tell the server we're sending JSON.
+      headers: {
+        "Content-Type": "application/json",
+      },
+      // Body of the request is the JSON data we created above.
+      body: JSONData,
+    };
+    const response = await fetch(endpoint, options);
+    if (response.status === 400) {
+      // Validation error
+      reloadCalendar();
+    } else if (response.ok) {
+      // successful
+      console.log("form submitted successfully");
+    } else {
+      // unknown error
+      reloadCalendar();
+    }
+    setCalendarLoading(false);
   };
 
   const reloadCalendar = () => {
+    console.log("reloading calendar");
     let calendarApi = calendarRef.current.getApi();
     calendarApi.refetchEvents();
   };
@@ -174,16 +223,20 @@ function Calendar() {
           meridiem: false,
           hour12: false,
         }}
+        // dayHeaderFormat={{
+        //   // fix header format for week view
+        // }}
         eventTimeFormat={{
           hour: "2-digit",
           minute: "2-digit",
           meridiem: false,
           hour12: false,
         }}
-        eventClick={handleEventClick}
+        eventClick={_handleEventClick}
+        eventDrop={_handleEventDrop}
         dateClick={handleDateClick}
         eventAdd={handleEventAdd}
-        select={handleSelect}
+        select={_handleSelect}
         loading={(e) => setCalendarLoading(e)}
         firstDay={1}
         initialView="timeGridWeek"
@@ -232,9 +285,14 @@ function Calendar() {
               {/* <pre className="text-white bg-black h-96 overflow-scroll">
                 {JSON.stringify(selectedShow.extendedProps, null, 2)}
               </pre> */}
-              <Formik initialValues={initialValues} onSubmit={_handleSubmit}>
+              <Formik
+                innerRef={formRef}
+                initialValues={initialValues}
+                onSubmit={_handleSubmit}
+              >
                 {({ values, isSubmitting }) => (
                   <Form id="calendarShow">
+                    <Field type="hidden" name="contentfulId" />
                     <InputField
                       name="showName"
                       label="Show name"
@@ -330,17 +388,13 @@ function Calendar() {
                       required
                       type="text"
                     />
-                    <div className="flex justify-between items-center">
+                    <div className="flex justify-between items-center mt-6">
                       <button
-                        disabled={selectedShow?.title}
                         type="submit"
-                        className={`inline-flex items-center space-x-4 text-base font-medium mt-6 ${
-                          selectedShow?.title ? "cursor-not-allowed" : ""
-                        }`}
+                        className="inline-flex items-center space-x-4 text-base font-medium"
                       >
                         <span className="underline">
                           {selectedShow?.title ? "Edit" : "Add"} show{" "}
-                          {selectedShow?.title ? "(coming soon)" : null}
                         </span>
                         {!isSubmitting && <Arrow />}
                         {isSubmitting && (
@@ -365,7 +419,6 @@ function Calendar() {
 }
 
 function renderEventContent(eventInfo) {
-  console.log(eventInfo);
   return (
     <div className="p-1">
       <div className="mt-1 flex justify-between">
