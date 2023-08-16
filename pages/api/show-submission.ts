@@ -62,7 +62,7 @@ const appendToSpreadsheet = async (values) => {
       .map((s) => "@" + s)
       .join(" "),
     "Show / Host image - landscape format, ideally 1800x1450px or larger, 10MB max, no HEIC files. Please include show and host names in filename.":
-      values.image.url,
+      values.image[0].url,
     "Guest image  - landscape format, ideally 1800x1450px or larger, 10MB max, no HEIC files. Please include show and host names in filename.":
       guestImages,
     "Email address": values.email,
