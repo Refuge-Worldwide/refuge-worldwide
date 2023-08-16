@@ -37,6 +37,8 @@ function Calendar() {
   const [showDialogOpen, setShowDialogOpen] = useState<boolean>(false);
   const [selectedShow, setSelectedShow] = useState(null);
   const [calendarLoading, setCalendarLoading] = useState<boolean>(false);
+  const [calendarLoadingIcon, setCalendarLoadingIcon] =
+    useState<boolean>(false);
   const calendarRef = useRef<any>();
   const formRef = useRef<any>();
 
@@ -45,6 +47,15 @@ function Calendar() {
       console.log(formRef);
     }
   }, [formRef]);
+
+  useEffect(() => {
+    (async () => {
+      if (!calendarLoading) {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      }
+      setCalendarLoadingIcon(calendarLoading);
+    })();
+  }, [calendarLoading]);
 
   const statusOptions = [
     {
@@ -252,7 +263,7 @@ function Calendar() {
       <button className="absolute top-2.5 right-0" onClick={reloadCalendar}>
         <TfiReload
           className={`animate-refresh animate-pulse ${
-            calendarLoading ? "" : "pause"
+            calendarLoadingIcon ? "" : "pause"
           }
           }`}
         />
