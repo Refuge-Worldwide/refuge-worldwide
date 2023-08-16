@@ -16,7 +16,7 @@ import { Arrow } from "../icons/arrow";
 import CheckboxField from "../components/formFields/checkboxField";
 import { Close } from "../icons/menu";
 import { TfiReload } from "react-icons/tfi";
-import { IoMdCheckmark } from "react-icons/io";
+import { IoMdCheckmark, IoMdMusicalNote } from "react-icons/io";
 import { RxExternalLink } from "react-icons/rx";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { RiDeleteBin7Line } from "react-icons/ri";
@@ -168,6 +168,7 @@ function Calendar() {
       // Body of the request is the JSON data we created above.
       body: JSONData,
     };
+    console.log(options);
     const response = await fetch(endpoint, options);
     if (response.status === 400) {
       // Validation error
@@ -234,6 +235,7 @@ function Calendar() {
         }}
         eventClick={_handleEventClick}
         eventDrop={_handleEventDrop}
+        eventResize={_handleEventDrop}
         dateClick={handleDateClick}
         eventAdd={handleEventAdd}
         select={_handleSelect}
@@ -274,6 +276,7 @@ function Calendar() {
                   {selectedShow?.title ? "Edit" : "New"} show
                   {selectedShow?.extendedProps?.contentfulId && (
                     <Link
+                      target="_blank"
                       href={`https://app.contentful.com/spaces/taoiy3h84mql/environments/master/entries/${selectedShow.extendedProps.contentfulId}`}
                     >
                       <RxExternalLink className="inline ml-2 mb-1" />
@@ -439,9 +442,10 @@ function renderEventContent(eventInfo) {
             </span>
           ))}
       </p>
-      {eventInfo.event?.extendedProps?.published && (
-        <IoMdCheckmark className="inline mb-0.5 ml-1 opacity-30 absolute bottom-1 right-1" />
-      )}
+      <div className="absolute bottom-1 right-1 opacity-50 flex">
+        {eventInfo.event?.extendedProps?.mixcloudLink && <IoMdMusicalNote />}
+        {eventInfo.event?.extendedProps?.published && <IoMdCheckmark />}
+      </div>
     </div>
   );
 }

@@ -39,7 +39,7 @@ function RefugeApp({ Component, pageProps }: AppProps) {
       {router.pathname != "/calendar" && <Footer />}
 
       <MixcloudPlayer />
-      <JoinChat />
+      {router.pathname != "/calendar" && <JoinChat />}
     </Fragment>
   );
 }

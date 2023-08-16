@@ -18,6 +18,7 @@ interface CalendarShow {
   dateEnd: string;
   slug: string;
   booker: string;
+  mixcloudLink: string;
   artistsCollection: {
     items: ArtistInterface[];
   };
@@ -43,6 +44,7 @@ export async function getCalendarShows(preview: boolean, start, end) {
             id
           }
           status
+          mixcloudLink
           coverImage {
             sys {
               id
@@ -68,8 +70,6 @@ export async function getCalendarShows(preview: boolean, start, end) {
 
   const shows = extractCollection<CalendarShow>(res, "showCollection");
 
-  console.log(shows);
-
   const processed = shows.map((event) => {
     return {
       title: event.title,
@@ -83,22 +83,23 @@ export async function getCalendarShows(preview: boolean, start, end) {
       published: event.sys.publishedVersion ? true : false,
       backgroundColor:
         event.status == "TBC"
-          ? "#94c9ff"
-          : event.status == "Confirmed"
           ? "#ffc88a"
-          : event.status == "Submitted"
+          : event.status == "Confirmed"
           ? "#a1cfad"
-          : "#a1cfad",
+          : event.status == "Submitted"
+          ? "#94c9ff"
+          : "#94c9ff",
       borderColor:
         event.status == "TBC"
-          ? "#94c9ff"
-          : event.status == "Confirmed"
           ? "#ffc88a"
-          : event.status == "Submitted"
+          : event.status == "Confirmed"
           ? "#a1cfad"
-          : "#a1cfad",
+          : event.status == "Submitted"
+          ? "#94c9ff"
+          : "#94c9ff",
       contentfulId: event.sys.id,
       booker: event.booker ? event.booker : "George",
+      mixcloudLink: event.mixcloudLink,
     };
   });
 

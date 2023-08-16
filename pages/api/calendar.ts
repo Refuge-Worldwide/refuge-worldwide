@@ -22,7 +22,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const values = req.body;
-
+  console.log("REQUEST METHOD: " + req.method);
   switch (req.method) {
     case "GET":
       try {
@@ -77,7 +77,7 @@ export default async function handler(
               "en-US": artists,
             },
             status: {
-              "en-US": values.status[0].value,
+              "en-US": values.status.value,
             },
             booker: {
               "en-US": values.booker,
@@ -92,6 +92,7 @@ export default async function handler(
         throw 400;
       }
     case "PATCH":
+      console.log(values);
       const startDateTime = dayjs(values.start + "Z").toISOString();
       const endDateTime = dayjs(values.end + "Z").toISOString();
       let artists;
@@ -105,6 +106,7 @@ export default async function handler(
         .then((environment) => environment.getEntry(values.contentfulId))
         //update fields with values from form
         .then((entry) => {
+          console.log(entry);
           entry.fields.date["en-US"] = startDateTime;
           entry.fields.dateEnd["en-US"] = endDateTime;
           if (values.showName) {
@@ -114,10 +116,10 @@ export default async function handler(
           if (values.artists) {
             entry.fields.artists["en-US"] = artists;
           }
-          if (values.status) {
-            entry.fields.status["en-US"] = values.status[0].value;
+          if (values.status && entry.fields.status) {
+            entry.fields.status["en-US"] = values.status.value;
           }
-          if (values.booker) {
+          if (values.booker & entry.fields.booker) {
             entry.fields.booker["en-US"] = values.booker;
           }
           return entry.update();
