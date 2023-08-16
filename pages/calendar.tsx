@@ -21,6 +21,7 @@ import { RxExternalLink } from "react-icons/rx";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { RiDeleteBin7Line } from "react-icons/ri";
 import Link from "next/link";
+import dayjs from "dayjs";
 
 export default function CalendarPage() {
   return (
@@ -205,13 +206,14 @@ function Calendar() {
       {/* <pre className="text-white bg-black">
         {JSON.stringify(shows, null, 2)}
       </pre> */}
+      {/* <input type="date"/> */}
       <FullCalendar
         ref={calendarRef}
         plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin, listPlugin]}
         headerToolbar={{
           left: "prev,next today",
           center: "title",
-          right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek addShow",
+          right: "timeGridWeek,timeGridDay,listMonth addShow",
         }}
         customButtons={{
           addShow: {
@@ -222,6 +224,7 @@ function Calendar() {
             },
           },
         }}
+        expandRows={true}
         height={"100%"}
         hiddenDays={[0]}
         allDaySlot={false}
@@ -235,9 +238,13 @@ function Calendar() {
           meridiem: false,
           hour12: false,
         }}
+        nextDayThreshold="09:00:00"
         // dayHeaderFormat={{
         //   // fix header format for week view
         // }}
+        dayHeaderContent={(args) => {
+          return dayjs(args.date).format("ddd DD/MM");
+        }}
         eventTimeFormat={{
           hour: "2-digit",
           minute: "2-digit",

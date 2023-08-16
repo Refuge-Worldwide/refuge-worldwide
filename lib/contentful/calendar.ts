@@ -32,6 +32,7 @@ export async function getCalendarShows(preview: boolean, start, end) {
         order: date_ASC
         where: { date_gte: $start, dateEnd_lte: $end, dateEnd_exists: true }
         preview: $preview
+        limit: 999
       ) {
         items {
           title
@@ -83,20 +84,20 @@ export async function getCalendarShows(preview: boolean, start, end) {
       published: event.sys.publishedVersion ? true : false,
       backgroundColor:
         event.status == "TBC"
-          ? "#ffc88a"
+          ? "#EDB8B4"
           : event.status == "Confirmed"
-          ? "#a1cfad"
+          ? "#F1E2AF"
           : event.status == "Submitted"
-          ? "#94c9ff"
-          : "#94c9ff",
+          ? "#B3DCC1"
+          : "#B3DCC1",
       borderColor:
         event.status == "TBC"
-          ? "#ffc88a"
+          ? "#EDB8B4"
           : event.status == "Confirmed"
-          ? "#a1cfad"
+          ? "#F1E2AF"
           : event.status == "Submitted"
-          ? "#94c9ff"
-          : "#94c9ff",
+          ? "#B3DCC1"
+          : "#B3DCC1",
       contentfulId: event.sys.id,
       booker: event.booker ? event.booker : "George",
       mixcloudLink: event.mixcloudLink,

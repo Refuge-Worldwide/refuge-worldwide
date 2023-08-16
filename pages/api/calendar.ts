@@ -26,6 +26,7 @@ export default async function handler(
   switch (req.method) {
     case "GET":
       try {
+        console.log(req.query);
         const { start, end } = req.query as typeof req.query & {
           start: string;
           end: string;

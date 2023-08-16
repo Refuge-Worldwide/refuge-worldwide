@@ -279,3 +279,12 @@
 .fc .fc-toolbar.fc-header-toolbar {
   @apply mr-11;
 }
+
+.fc-day-today {
+  background: #ececec !important;
+  border: none !important;
+}
+
+.fc .fc-timegrid-now-indicator-line {
+  border-width: 1px;
+}
