@@ -62,7 +62,7 @@ const workshops = [
     value: "Motopol, Copenhagen",
     label: "Oct 13 — Motopol, Copenhagen",
     additionalInfo:
-      "Hosted by TBC from 8-10PM, this workshop will be given in English. In collaboration with Pleasure Control",
+      "Hosted by a host to-be-announced from 8-10PM, this workshop will be given in English. In collaboration with Pleasure Control.",
   },
   {
     value: "De School, Amsterdam",
@@ -86,7 +86,7 @@ const workshops = [
     value: "Jasna1, Warsaw",
     label: "Nov 4 — Jasna1, Warsaw",
     additionalInfo:
-      "Hosted by Mala Herba from 8-10PM, This workshop will be given in Polish. In collaboration with Oramics.",
+      "Hosted by Mala Herba from 8-10PM, This workshop is about MUSIC PRODUCTION, not DJing, and will be given in Polish. In collaboration with Oramics.",
   },
   {
     value: "Funke, Ghent",
