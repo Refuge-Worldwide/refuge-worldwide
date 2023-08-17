@@ -241,3 +241,18 @@
 .genre-sidebar::-webkit-scrollbar-thumb:hover {
   @apply bg-black;
 }
+
+/* splide carousel */
+
+/* pagination dots */
+.splide__pagination {
+  @apply space-x-3;
+}
+
+.splide__pagination__page {
+  @apply block h-6 w-6 rounded-full border-2 border-white focus:outline-none focus:ring-4 bg-transparent;
+}
+
+.splide__pagination__page.is-active {
+  @apply bg-white;
+}

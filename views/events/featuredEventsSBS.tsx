@@ -32,14 +32,16 @@ export default function FeaturedEventsSBS({
             autoWidth: true,
             autoHeight: true,
             lazyLoad: "nearby",
-            drag: "free",
+            drag: true,
             arrows: false,
+            pagination: true,
           }}
-          className="flex"
         >
           {events.map((event, i) => (
             <SplideSlide
-              className="w-[calc(100vw-2rem)] max-w-[400px] "
+              className={`w-[calc(100vw-2rem)] max-w-[400px] ${
+                events.length < 4 ? "xl:max-w-[calc((100vw/3)-3rem)]" : null
+              }`}
               key={i}
             >
               <EventLink event={event}>
@@ -51,7 +53,7 @@ export default function FeaturedEventsSBS({
                     width={400}
                     height={400}
                     alt={event.title}
-                    className="bg-black/10 object-cover object-center aspect-square"
+                    className="bg-black/10 object-cover object-center aspect-square w-full h-auto"
                   />
                 </div>
 
