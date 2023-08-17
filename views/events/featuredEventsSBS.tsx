@@ -6,6 +6,7 @@ import Date from "../../components/date";
 import { EventBadge } from "../../components/badge";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/react-splide/css/core";
+import { EventLink } from "../../components/eventRow";
 
 export default function FeaturedEventsSBS({
   events,
@@ -24,7 +25,7 @@ export default function FeaturedEventsSBS({
           aria-label="Featured events"
           options={{
             type: "slide",
-            // height: 600,
+            height: "100%",
             width: "100%",
             gap: "2rem",
             focus: 0,
@@ -34,11 +35,15 @@ export default function FeaturedEventsSBS({
             drag: "free",
             arrows: false,
           }}
+          className="flex"
         >
           {events.map((event, i) => (
-            <SplideSlide key={i}>
-              <article className="flex flex-col w-80 md:w-auto md:w-auto md:h-auto">
-                <div>
+            <SplideSlide
+              className="w-[calc(100vw-2rem)] max-w-[400px] "
+              key={i}
+            >
+              <EventLink event={event}>
+                <div className="flex flex-col md:w-auto md:h-auto">
                   <Image
                     key={event.coverImage.sys.id}
                     src={event.coverImage.url}
@@ -76,9 +81,7 @@ export default function FeaturedEventsSBS({
                   {" "}
                   <Date dateString={event.date} />
                 </p>
-
-                <div className="h-3" />
-              </article>
+              </EventLink>
             </SplideSlide>
           ))}
         </Splide>
