@@ -68,7 +68,7 @@ const workshops = [
     value: "De School, Amsterdam",
     label: "Oct 20 — De School, Amsterdam",
     additionalInfo:
-      "Hosted by Jesse G from 8-10PM, this workshop will be given in English.",
+      "Hosted by Jesse G from 8-10PM, this workshop will be given in English. Please note: this workshop is on the 20th October, while the Refuge takeover of the café at De School is on the 22nd October.",
   },
   {
     value: "Gewölbe, Cologne",
