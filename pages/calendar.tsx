@@ -6,6 +6,7 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
 import Loading from "../components/loading";
 import * as Dialog from "@radix-ui/react-dialog";
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { useState, useEffect, useRef, useCallback } from "react";
 import InputField from "../components/formFields/inputField";
 import MultiSelectField from "../components/formFields/multiSelectField";
@@ -18,7 +19,7 @@ import { Close } from "../icons/menu";
 import { TfiReload } from "react-icons/tfi";
 import { IoMdCheckmark, IoMdMusicalNote } from "react-icons/io";
 import { RxExternalLink } from "react-icons/rx";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { AiOutlineLoading3Quarters, AiOutlinePlus } from "react-icons/ai";
 import { RiDeleteBin7Line } from "react-icons/ri";
 import Link from "next/link";
 import dayjs from "dayjs";
@@ -36,6 +37,7 @@ export default function CalendarPage() {
 function Calendar() {
   const [artists, setArtists] = useState(null);
   const [showDialogOpen, setShowDialogOpen] = useState<boolean>(false);
+  const [addDropdownOpen, setAddDropdownOpen] = useState<boolean>(false);
   const [selectedShow, setSelectedShow] = useState(null);
   const [calendarLoading, setCalendarLoading] = useState<boolean>(false);
   const [calendarLoadingIcon, setCalendarLoadingIcon] =
@@ -138,6 +140,9 @@ function Calendar() {
       actions.setSubmitting(false);
       actions.setStatus("submitted");
       setShowDialogOpen(false);
+      //add / edit event
+      // .fullCalendar( ‘updateEvent’, event )
+      // calendar.addEvent( event [, source ] )
       setTimeout(reloadCalendar, 3000);
     } else {
       // unknown error
@@ -213,7 +218,7 @@ function Calendar() {
         headerToolbar={{
           left: "prev,next today",
           center: "title",
-          right: "timeGridWeek,timeGridDay,listMonth addShow",
+          right: "timeGridWeek,timeGridDay,listMonth",
         }}
         customButtons={{
           addShow: {
@@ -239,9 +244,6 @@ function Calendar() {
           hour12: false,
         }}
         nextDayThreshold="09:00:00"
-        // dayHeaderFormat={{
-        //   // fix header format for week view
-        // }}
         dayHeaderContent={(args) => {
           return dayjs(args.date).format("ddd DD/MM");
         }}
@@ -275,6 +277,37 @@ function Calendar() {
           }`}
         />
       </button>
+      <DropdownMenu.Root
+        open={addDropdownOpen}
+        onOpenChange={setAddDropdownOpen}
+      >
+        <DropdownMenu.Trigger asChild>
+          <button className="absolute bottom-2 right-2 p-4 z-40 border-black border-2 rounded-full bg-white shadow-lg">
+            <Cross className="rotate-45" />
+          </button>
+        </DropdownMenu.Trigger>
+        <DropdownMenu.Portal>
+          <DropdownMenu.Content
+            className="min-w-[220px] bg-white  p-[5px] shadow-2xl z-50 border-black border"
+            sideOffset={5}
+            align="end"
+          >
+            <DropdownMenu.Item
+              onSelect={() => {
+                setSelectedShow(null);
+                setShowDialogOpen(true);
+                setAddDropdownOpen(false);
+              }}
+              className="group text-small leading-none text-violet11 flex items-center h-[25px] px-[5px] relative pl-[25px] select-none hover:bg-grey outline-none cursor-pointer"
+            >
+              New Show
+            </DropdownMenu.Item>
+            <DropdownMenu.Item className="group text-small leading-none text-violet11 flex items-center h-[25px] px-[5px] relative pl-[25px] select-none cursor-not-allowed hover:bg-grey outline-none">
+              Download images
+            </DropdownMenu.Item>
+          </DropdownMenu.Content>
+        </DropdownMenu.Portal>
+      </DropdownMenu.Root>
 
       <Dialog.Root
         open={showDialogOpen}

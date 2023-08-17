@@ -281,7 +281,7 @@
 }
 
 .fc-day-today {
-  background: #ececec !important;
+  @apply bg-grey;
   border: none !important;
 }
 

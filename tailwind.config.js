@@ -55,6 +55,7 @@ module.exports = {
       red: "#ff0000",
       black: "#000",
       white: "#fff",
+      grey: "#ececec",
       transparent: "transparent",
       social: {
         telegram: "#26A5E4",

@@ -33,7 +33,7 @@
     "@fullcalendar/react": "^6.1.8",
     "@fullcalendar/timegrid": "^6.1.8",
     "@radix-ui/react-dialog": "^1.0.2",
-    "@radix-ui/react-dropdown-menu": "^2.0.1",
+    "@radix-ui/react-dropdown-menu": "^2.0.5",
     "@react-hookz/web": "^20.0.3",
     "@use-it/interval": "^1.0.0",
     "@widgetbot/crate": "^3.5.4",
