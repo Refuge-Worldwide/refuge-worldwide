@@ -40,7 +40,7 @@ export default function FeaturedEventsSBS({
           {events.map((event, i) => (
             <SplideSlide
               className={`w-[calc(100vw-2rem)] max-w-[400px] ${
-                events.length < 4 ? "xl:max-w-[calc((100vw/3)-3rem)]" : null
+                events.length < 4 ? "xl:max-w-[calc((100vw/3)-4rem)]" : null
               }`}
               key={i}
             >
