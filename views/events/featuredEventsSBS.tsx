@@ -50,8 +50,8 @@ export default function FeaturedEventsSBS({
                     key={event.coverImage.sys.id}
                     src={event.coverImage.url}
                     loader={loaders.contentful}
-                    width={400}
-                    height={400}
+                    width={600}
+                    height={600}
                     alt={event.title}
                     className="bg-black/10 object-cover object-center aspect-square w-full h-auto"
                   />
@@ -63,7 +63,6 @@ export default function FeaturedEventsSBS({
                   <EventBadge
                     eventType={event.eventType}
                     cross
-                    filter
                     text={event.eventType}
                   />
                 </div>

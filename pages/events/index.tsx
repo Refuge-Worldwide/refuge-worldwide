@@ -136,12 +136,12 @@ export default function NewsPage({
                   gap: "0.5rem",
                 }}
                 hasTrack={false}
-                className="w-full pl-2 pr-16 md:pr-0 relative"
+                className="w-full pl-2 pr-16 md:pr-0 md:-mr-2 relative"
                 aria-label="Filter events by type"
               >
                 <SplideTrack className="">
                   {eventTypes.map((type) => (
-                    <SplideSlide className="w-min" key={type.value}>
+                    <SplideSlide className="flex items-center" key={type.value}>
                       <button
                         key={type.value}
                         onClick={updateFilter(type.value, type.label)}
