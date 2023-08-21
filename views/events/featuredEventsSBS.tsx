@@ -40,7 +40,7 @@ export default function FeaturedEventsSBS({
           {events.map((event, i) => (
             <SplideSlide
               className={`w-[calc(100vw-2rem)] max-w-[400px] ${
-                events.length < 4 ? "xl:max-w-[calc((100vw/3)-4rem)]" : null
+                events.length < 4 ? "xl:max-w-[calc((100vw/3)-3rem)]" : null
               }`}
               key={i}
             >
@@ -72,14 +72,14 @@ export default function FeaturedEventsSBS({
 
                 <h2
                   id={`upcoming-${event.slug}`}
-                  className="text-base sm:text-large"
+                  className="text-base sm:text-base"
                 >
                   {event.title}
                 </h2>
 
                 <div className="h-2" />
 
-                <p>
+                <p className="text-small">
                   {" "}
                   <Date dateString={event.date} />
                 </p>

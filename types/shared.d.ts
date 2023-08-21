@@ -158,6 +158,12 @@ export type HomePageData = {
   };
 };
 
+export type EventPageData = {
+  featuredEventsCollection: {
+    items: Array<EventInterface>;
+  };
+};
+
 type ShowPreviewEntry = {
   coverImage: CoverImage;
   date: string;

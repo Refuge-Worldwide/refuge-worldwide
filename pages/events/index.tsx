@@ -22,6 +22,7 @@ export async function getStaticProps({ preview = false }) {
 }
 
 export default function NewsPage({
+  featuredEvents,
   events,
   preview,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
@@ -114,7 +115,7 @@ export default function NewsPage({
     <Layout preview={preview}>
       <PageMeta title="Events | Refuge Worldwide" path="events/" />
       {/* <GameOfLife /> */}
-      <FeaturedEventsSBS events={events.slice(0, 3).reverse()} />
+      <FeaturedEventsSBS events={featuredEvents} />
       <section className="p-4 sm:p-8 border-b-2">
         <div className="max-w-[1229px] mx-auto">
           <div className="lg:flex justify-between ">

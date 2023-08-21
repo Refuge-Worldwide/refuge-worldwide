@@ -1,6 +1,6 @@
 import { graphql } from "..";
-import { EventInterface } from "../../../types/shared";
-import { extractCollection, extractCollectionItem } from "../../../util";
+import { EventInterface, EventPageData } from "../../../types/shared";
+import { extractCollection, extractPage } from "../../../util";
 import { EventFragment } from "../fragments";
 import dayjs from "dayjs";
 
@@ -56,21 +56,20 @@ export async function getUpcomingEvents(
   return upcomingEventsByMonth;
 }
 
-export async function getEvents(
-  preview: boolean,
-  limit?: number,
-  skip?: number
-) {
+export async function getEventsPage(preview: boolean) {
   const EventsQuery = /* GraphQL */ `
-    query EventsQuery($preview: Boolean, $limit: Int, $skip: Int) {
-      eventCollection(
-        order: date_DESC
-        preview: $preview
-        limit: $limit
-        skip: $skip
-      ) {
+    query EventsQuery($preview: Boolean) {
+      eventCollection(order: date_DESC, preview: $preview) {
         items {
           ...EventFragment
+        }
+      }
+
+      pageEvents(id: "lKe72za4E77V7CaGNcGGS") {
+        featuredEventsCollection(preview: $preview) {
+          items {
+            ...EventFragment
+          }
         }
       }
     }
@@ -78,16 +77,16 @@ export async function getEvents(
     ${EventFragment}
   `;
 
-  const res = await graphql(EventsQuery, {
-    variables: { preview, limit, skip },
+  const data = await graphql(EventsQuery, {
+    variables: { preview },
     preview,
   });
 
-  return extractCollection<EventInterface>(res, "eventCollection");
-}
+  console.log(data.featuredEventsCollection);
 
-export async function getEventsPage(preview: boolean) {
   return {
-    events: await getEvents(preview, EVENTS_PAGE_SIZE),
+    featuredEvents: extractPage<EventPageData>(data, "pageEvents")
+      .featuredEventsCollection.items,
+    events: extractCollection<EventInterface>(data, "eventCollection"),
   };
 }
