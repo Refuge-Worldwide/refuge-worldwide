@@ -146,6 +146,14 @@ export enum ArticleType {
   Workshop = "Workshop",
 }
 
+export enum EventType {
+  Project = "Workshop",
+  Blog = "Party",
+  News = "Fundraiser",
+  Event = "Hang Out",
+  Interview = "Exhibition",
+}
+
 export interface ArticleInterface {
   title: string;
   subtitle?: string;
@@ -177,6 +185,12 @@ export interface NextUpSection {
 export type HomePageData = {
   featuredShowsCollection: {
     items: Array<ShowPreviewEntry>;
+  };
+};
+
+export type EventPageData = {
+  featuredEventsCollection: {
+    items: Array<EventInterface>;
   };
 };
 
@@ -261,3 +275,16 @@ export type SubmissionFormValues = {
     image?: string;
   }>;
 };
+
+export interface EventInterface {
+  title: string;
+  coverImage?: CoverImage;
+  eventType: EventType;
+  date: string;
+  endDate?: string;
+  slug: string;
+  location: string;
+  ticketLink: string;
+  linkText: string;
+  article: Object<{ slug: string }>;
+}

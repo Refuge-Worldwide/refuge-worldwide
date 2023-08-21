@@ -92,11 +92,11 @@ export default function Navigation() {
                 </li>
                 <li>
                   <NavigationLink
-                    href="/support"
-                    activeClassName="text-pink"
-                    className="hover:text-pink focus:text-pink"
+                    href="/events"
+                    activeClassName="text-blue"
+                    className="hover:text-blue focus:text-blue"
                   >
-                    Support
+                    Events
                   </NavigationLink>
                 </li>
                 <li>
@@ -111,8 +111,8 @@ export default function Navigation() {
                 <li>
                   <NavigationLink
                     href="/newsletter"
-                    activeClassName="text-blue"
-                    className="hover:text-blue focus:text-blue"
+                    activeClassName="text-pink"
+                    className="hover:text-pink focus:text-pink"
                   >
                     Newsletter
                   </NavigationLink>

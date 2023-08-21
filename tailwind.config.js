@@ -16,6 +16,7 @@ module.exports = {
       tiny: ["1rem", 1],
       small: ["1.25rem", 1.3],
       base: ["1.875rem", 1.2666666667],
+      smedium: ["2rem", 1.11111111],
       medium: ["2.4rem", 1.11111111],
       large: ["2.8125rem", 1.1111111111],
     },

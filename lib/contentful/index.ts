@@ -32,7 +32,7 @@ export async function graphql(
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${
-        preview
+        !preview
           ? process.env.NEXT_PUBLIC_CONTENTFUL_PREVIEW_ACCESS_TOKEN
           : process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN
       }`,
