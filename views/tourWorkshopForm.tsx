@@ -62,7 +62,7 @@ const workshops = [
     value: "Motopol, Copenhagen",
     label: "Oct 13 — Motopol, Copenhagen",
     additionalInfo:
-      "Hosted by a host to-be-announced from 8-10PM, this workshop will be given in English. In collaboration with Pleasure Control.",
+      "Hosted by Fruit DJ from 8-10PM, this workshop will be given in English. In collaboration with Pleasure Control.",
   },
   {
     value: "De School, Amsterdam",
@@ -104,13 +104,13 @@ const workshops = [
     value: "C12, Brussels",
     label: "Dec 1 — C12, Brussels",
     additionalInfo:
-      "Hosted by TBC from 9-11PM, This workshop will be given in English. In collaboration with Kiosk Radio.",
+      "Hosted by Nathalie Seres from 9-11PM, this workshop will be given in English. In collaboration with Kiosk Radio.",
   },
   {
     value: "La Marbrerie, Paris",
     label: "Dec 2 — La Marbrerie, Paris",
     additionalInfo:
-      "Hosted by DJ Fart In The Club, time and language TBC. In collaboration with HORS-SOL.",
+      "Hosted by DJ Fart In The Club from 7-9PM, this workshop will be given in English. In collaboration with HORS-SOL.",
   },
   {
     value: "Oona Bar, Berlin",
