@@ -1,143 +1,92 @@
-import { useIntersectionObserver } from "@react-hookz/web";
-import useInterval from "@use-it/interval";
-import cn from "classnames";
-import {
-  Dispatch,
-  MutableRefObject,
-  RefObject,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import FeaturedEventPreview from "../../components/featuredEventPreview";
+import Pill from "../../components/pill";
+import Image from "next/image";
 import { EventInterface } from "../../types/shared";
-import { __SERVER__ } from "../../util";
-
-function useCarousel<T>(ref: RefObject<HTMLUListElement>, slides: T[]) {
-  const [activeId, setActiveId] = useState(1);
-
-  const intersection = useIntersectionObserver(ref, {
-    threshold: [0.35],
-  });
-
-  const advanceCarousel = useCallback(() => {
-    const isNotLastSlide = activeId < slides.length - 1;
-
-    if (isNotLastSlide) {
-      ref.current.scrollBy({
-        left: window.innerWidth * (activeId + 1),
-        behavior: "smooth",
-      });
-    } else {
-      ref.current.scrollBy({
-        left: -(window.innerWidth * slides.length),
-        behavior: "smooth",
-      });
-    }
-  }, [ref, activeId, slides]);
-
-  useInterval(() => {
-    if (intersection?.isIntersecting) {
-      advanceCarousel();
-    }
-  }, 5000);
-
-  return {
-    activeId,
-    setActiveId,
-  };
-}
-
-function FeaturedEventSlide({
-  index,
-  root,
-  setActiveId,
-  event,
-  priority,
-}: {
-  event: EventInterface;
-  setActiveId: Dispatch<SetStateAction<number>>;
-  index: number;
-  root: MutableRefObject<HTMLUListElement>;
-  priority?: boolean;
-}) {
-  const slide = useRef<HTMLLIElement>(null);
-
-  const intersection = useIntersectionObserver(slide, {
-    threshold: [1],
-    root,
-  });
-
-  useEffect(() => {
-    if (intersection?.isIntersecting) setActiveId(index);
-  }, [intersection?.isIntersecting, setActiveId, index]);
-
-  return (
-    <li ref={slide} id={String(index)}>
-      <FeaturedEventPreview {...event} priority={priority} />
-    </li>
-  );
-}
+import loaders from "../../lib/loaders";
+import Date from "../../components/date";
+import { EventBadge } from "../../components/badge";
+import { Splide, SplideSlide } from "@splidejs/react-splide";
+import "@splidejs/react-splide/css/core";
+import { EventLink } from "../../components/eventRow";
 
 export default function FeaturedEvents({
   events,
-  aboveTheFold,
 }: {
   events: EventInterface[];
-  aboveTheFold?: boolean;
 }) {
-  const carousel = useRef<HTMLUListElement>(null);
-
-  const { activeId, setActiveId } = useCarousel(carousel, events);
-
   return (
-    <section className="relative">
-      {/* Articles */}
-      <ul ref={carousel} className="carousel">
-        {events.map((event, index) => (
-          <FeaturedEventSlide
-            key={index}
-            event={event}
-            index={index}
-            root={carousel}
-            setActiveId={setActiveId}
-            priority={aboveTheFold}
-          />
-        ))}
-      </ul>
+    <section className="bg-blue border-t-2 border-b-2">
+      <div className="p-4 sm:p-8">
+        <Pill outline>
+          <h2>Featured Events</h2>
+        </Pill>
 
-      {/* Indicators */}
-      <ul className="absolute top-52 md:top-auto md:bottom-8 inset-x-0 flex justify-center space-x-3">
-        {events.map((_, idx) => {
-          const indicatorClassNames = cn(
-            "block h-6 w-6 rounded-full border-2 border-white focus:outline-none focus:ring-4",
-            idx === activeId ? "bg-white" : "bg-transparent "
-          );
+        <div className="h-5 sm:h-8" />
+        <Splide
+          aria-label="Featured events"
+          options={{
+            type: "slide",
+            height: "100%",
+            width: "100%",
+            gap: "2rem",
+            focus: 0,
+            autoWidth: true,
+            autoHeight: true,
+            lazyLoad: "nearby",
+            drag: true,
+            arrows: false,
+            pagination: true,
+          }}
+        >
+          {events.map((event, i) => (
+            <SplideSlide
+              className={`w-[calc(100vw-2rem)] max-w-[400px] ${
+                events.length < 4 ? "xl:max-w-[calc((100vw/3)-3.1rem)]" : null
+              }`}
+              key={i}
+            >
+              <EventLink event={event}>
+                <div className="flex flex-col md:w-auto md:h-auto">
+                  <Image
+                    key={event.coverImage.sys.id}
+                    src={event.coverImage.url}
+                    loader={loaders.contentful}
+                    width={600}
+                    height={600}
+                    alt={event.title}
+                    className="bg-black/10 object-cover object-center aspect-square w-full h-auto"
+                  />
+                </div>
 
-          const onClick = () => {
-            if (__SERVER__) {
-              return;
-            }
+                <div className="h-4" />
 
-            document.getElementById(String(idx)).scrollIntoView({
-              behavior: "smooth",
-              block: "nearest",
-            });
-          };
+                <div className="flex">
+                  <EventBadge
+                    eventType={event.eventType}
+                    cross
+                    text={event.eventType}
+                  />
+                </div>
 
-          return (
-            <li key={idx}>
-              <button
-                onClick={onClick}
-                aria-label={`Carousel Item ${idx + 1}`}
-                className={indicatorClassNames}
-              />
-            </li>
-          );
-        })}
-      </ul>
+                <div className="h-2" />
+
+                <h2
+                  id={`upcoming-${event.slug}`}
+                  className="text-base sm:text-base"
+                >
+                  {event.title}
+                </h2>
+
+                <div className="h-2" />
+
+                <p className="text-small">
+                  {" "}
+                  <Date dateString={event.date} />
+                </p>
+              </EventLink>
+            </SplideSlide>
+          ))}
+        </Splide>
+      </div>
     </section>
   );
 }

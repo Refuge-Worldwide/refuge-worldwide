@@ -10,8 +10,6 @@ import { EventBadge } from "../../components/badge";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import FeaturedEvents from "../../views/events/featuredEvents";
-import FeaturedEventsSBS from "../../views/events/featuredEventsSBS";
-import GameOfLife from "../../views/events/gameOfLife";
 import { Splide, SplideSlide, SplideTrack } from "@splidejs/react-splide";
 import { Chevron } from "../../icons/chevron";
 
@@ -115,7 +113,7 @@ export default function NewsPage({
     <Layout preview={preview}>
       <PageMeta title="Events | Refuge Worldwide" path="events/" />
       {/* <GameOfLife /> */}
-      <FeaturedEventsSBS events={featuredEvents} />
+      <FeaturedEvents events={featuredEvents} />
       <section className="p-4 sm:p-8 border-b-2">
         <div className="max-w-[1229px] mx-auto">
           <div className="lg:flex justify-between ">
