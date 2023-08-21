@@ -30,24 +30,29 @@ const showImages = [];
 
 // Append Function
 const appendToSpreadsheet = async (values) => {
+  // process guest images for sheet
   let guestImages = "";
-  let imagesToProcess = [];
-  if (values.image.length > 1) {
-    imagesToProcess = values.image.slice(1);
-  }
   if (values.hasExtraArtists) {
-    const extraArtistsImages = values.extraArtists.map((artist) => {
-      return artist.image;
+    values.extraArtists.forEach((e, index) => {
+      console.log(e);
+      if (index > 0) {
+        guestImages += " + ";
+      }
+      guestImages += e.image.url;
     });
-    imagesToProcess = imagesToProcess.concat(extraArtistsImages);
   }
-  imagesToProcess.forEach((e, index) => {
+  // process artist for sheet
+  let images = "";
+  values.image.forEach((e, index) => {
     console.log(e);
     if (index > 0) {
-      guestImages += " + ";
+      images += " + ";
     }
-    guestImages += e.url;
+    images += e.url;
   });
+
+  console.log(guestImages);
+  console.log(images);
 
   const newRow = {
     Timestamp: dayjs().tz("Europe/Berlin").format("DD/MM/YYYY HH:mm:ss"),
@@ -62,7 +67,7 @@ const appendToSpreadsheet = async (values) => {
       .map((s) => "@" + s)
       .join(" "),
     "Show / Host image - landscape format, ideally 1800x1450px or larger, 10MB max, no HEIC files. Please include show and host names in filename.":
-      values.image[0].url,
+      images,
     "Guest image  - landscape format, ideally 1800x1450px or larger, 10MB max, no HEIC files. Please include show and host names in filename.":
       guestImages,
     "Email address": values.email,
