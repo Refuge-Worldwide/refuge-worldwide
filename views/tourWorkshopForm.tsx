@@ -38,7 +38,7 @@ const workshops = [
     value: "Horoom, Bassiani, Tbilisi",
     label: "Sept 23 — Horoom, Bassiani, Tbilisi",
     additionalInfo:
-      "Hosted by HVL from 10-12PM, this workshop will be given in Georgian.",
+      "Hosted by TBC from 10-12PM, this workshop will be given in Georgian.",
   },
   {
     value: "Arkaoda, Berlin",
@@ -116,7 +116,7 @@ const workshops = [
     value: "Oona Bar, Berlin",
     label: "Dec 8 — Oona Bar, Berlin",
     additionalInfo:
-      "Hosted by TBC from 1-3PM, this workshop will be given in English.",
+      "Hosted by JADALAREIGN from 1-3PM, this workshop will be given in English.",
   },
 ];
 
