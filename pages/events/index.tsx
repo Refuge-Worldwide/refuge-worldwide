@@ -12,6 +12,8 @@ import { useRouter } from "next/router";
 import FeaturedEvents from "../../views/events/featuredEvents";
 import FeaturedEventsSBS from "../../views/events/featuredEventsSBS";
 import GameOfLife from "../../views/events/gameOfLife";
+import { Splide, SplideSlide, SplideTrack } from "@splidejs/react-splide";
+import { Chevron } from "../../icons/chevron";
 
 export async function getStaticProps({ preview = false }) {
   return {
@@ -121,25 +123,49 @@ export default function NewsPage({
               <h2>Upcoming {title}</h2>
             </Pill>
             <div className="h-5 lg:hidden" />
-            <div className="py-2 px-4 border-2 border-black rounded-full w-fit flex space-x-2 grow-1 relative max-w-full overflow-x-auto">
+            <div className="py-2 px-4 border-2 border-black rounded-full w-fit flex flex-nowrap items-center max-w-full overflow-hidden">
               <span className="text-tiny py-3 px-2 font-medium w-max">
                 FILTER
               </span>
-              {eventTypes.map((type) => (
-                <button
-                  key={type.value}
-                  onClick={updateFilter(type.value, type.label)}
-                  className="focus:outline-none focus:ring-4 rounded-full"
-                >
-                  <EventBadge
-                    eventType={type.value}
-                    cross
-                    filter
-                    invert={filter == type.value}
-                    text={type.label}
-                  />
-                </button>
-              ))}
+              <Splide
+                options={{
+                  pagination: false,
+                  autoWidth: true,
+                  autoHeight: true,
+                  gap: "0.5rem",
+                }}
+                hasTrack={false}
+                className="w-full pl-2 pr-16 md:pr-0 relative"
+                aria-label="Filter events by type"
+              >
+                <SplideTrack className="">
+                  {eventTypes.map((type) => (
+                    <SplideSlide className="w-min" key={type.value}>
+                      <button
+                        key={type.value}
+                        onClick={updateFilter(type.value, type.label)}
+                        className="focus:outline-none focus:ring-4 rounded-full"
+                      >
+                        <EventBadge
+                          eventType={type.value}
+                          cross
+                          filter
+                          invert={filter == type.value}
+                          text={type.label}
+                        />
+                      </button>
+                    </SplideSlide>
+                  ))}
+                </SplideTrack>
+                <div className="splide__arrows md:hidden">
+                  <button className="splide__arrow splide__arrow--prev disabled:hidden absolute -left-2 -top-0.5 h-[calc(100%+3px)] bg-gradient-to-r from-white via-white via-30% pl-2 pr-6">
+                    <Chevron className="rotate-90" />
+                  </button>
+                  <button className="splide__arrow splide__arrow--next disabled:hidden absolute right-12 -top-0.5 h-[calc(100%+3px)] bg-gradient-to-l from-white via-white via-30% pl-6 pr-2">
+                    <Chevron className="-rotate-90" />
+                  </button>
+                </div>
+              </Splide>
             </div>
           </div>
         </div>
