@@ -9,8 +9,6 @@ export default async function handler(
   }
 
   try {
-    const slug = JSON.parse(req.body)?.fields?.slug?.["en-US"];
-
     await res.revalidate(`/events`);
 
     return res.json({ revalidated: true });
