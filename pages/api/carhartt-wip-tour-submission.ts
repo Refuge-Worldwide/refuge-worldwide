@@ -40,6 +40,8 @@ const appendToSpreadsheet = async (values) => {
     });
     // loads document properties and worksheets
     await doc.loadInfo();
+    const allSheet = doc.sheetsByTitle["ALL SUBMISSIONS"];
+    await allSheet.addRow(newRow);
 
     const sheet = doc.sheetsByTitle[values.workshop.value];
     await sheet.addRow(newRow);
