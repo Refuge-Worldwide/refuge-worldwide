@@ -39,8 +39,8 @@ export default function FeaturedEvents({
         >
           {events.map((event, i) => (
             <SplideSlide
-              className={`w-[calc(100vw-2rem)] max-w-[400px] ${
-                events.length < 4 ? "xl:max-w-[calc((100vw/3)-3.1rem)]" : null
+              className={`w-[calc(100vw-2rem)] max-w-[350px] ${
+                events.length < 4 ? "lg:max-w-[calc((100vw/3)-3.1rem)]" : null
               }`}
               key={i}
             >
