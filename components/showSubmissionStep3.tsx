@@ -47,8 +47,7 @@ export default function ShowSubmissionStep3({
 
         <CheckboxField
           name="hasExtraArtists"
-          label="Can't find your artist/guest/collective in the dropdown?"
-          size="small"
+          label="Can't find your artist/guest/collective in the dropdown above?"
         />
 
         {values.hasExtraArtists && (
@@ -160,7 +159,7 @@ export default function ShowSubmissionStep3({
           name="showName"
           type="text"
           label="Show title"
-          description="Without artist names."
+          description="WITHOUT artist names."
           required={true}
         />
         <ImageUploadField

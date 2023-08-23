@@ -17,7 +17,7 @@ export default function CheckboxField({
   return (
     <div
       className={`${
-        size == "small" ? "-mt-6" : ""
+        size == "small" ? "-mt-4" : ""
       } flex space-x-3 text-base mb-10 items-top`}
     >
       <input
@@ -30,7 +30,7 @@ export default function CheckboxField({
       <label
         htmlFor={props.name}
         className={`${
-          size == "small" ? "text-small" : "text-small sm:text-base"
+          size == "small" ? "text-small mt-1.5" : "text-small sm:text-base"
         } sm:leading-none checkbox-label`}
       >
         {label}
