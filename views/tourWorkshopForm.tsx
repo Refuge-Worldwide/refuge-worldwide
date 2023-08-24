@@ -53,8 +53,8 @@ const workshops = [
       "Hosted by LAANI from 8-10PM, This workshop will be given in English. In collaboration with Rhythm Section.",
   },
   {
-    value: "European Lab, Brussels",
-    label: "Oct 13 — European Lab, Brussels",
+    value: "Reset, Brussels",
+    label: "Oct 13 — Reset, Brussels",
     additionalInfo:
       "Hosted by Donia from 4-6pm, this workshop will be given in English.",
   },
