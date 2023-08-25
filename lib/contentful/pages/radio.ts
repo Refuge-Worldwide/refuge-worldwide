@@ -228,3 +228,46 @@ export async function getRelatedShows(
 
   return filteredShows;
 }
+
+export async function getUpcomingShowsByDate(day, preview) {
+  const start = day.startOf("day");
+  const end = start.add(1, "day");
+  const startISO = start.toISOString();
+  const endISO = end.toISOString();
+
+  const UpcomingShowsQuery = /* GraphQL */ `
+    query scheduleQuery($start: DateTime, $end: DateTime, $preview: boolean) {
+      showCollection(
+        order: date_ASC
+        where: { date_gt: $start, dateEnd_lte: $end, dateEnd_exists: true }
+        preview: $preview
+      ) {
+        items {
+          title
+          date
+          dateEnd
+          slug
+          coverImage {
+            sys {
+              id
+            }
+            url
+          }
+          artistsCollection(limit: 9) {
+            items {
+              name
+              slug
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  const res = await graphql(UpcomingShowsQuery, {
+    variables: { startISO, endISO, preview },
+    preview,
+  });
+
+  return extractCollection<ShowInterface>(res, "showCollection");
+}
