@@ -112,7 +112,6 @@ export default async function handler(
           entry.fields.dateEnd["en-US"] = endDateTime;
           if (values.showName) {
             entry.fields.title["en-US"] = values.showName;
-            entry.fields.internal["en-US"] = values.showName;
           }
           if (values.artists) {
             entry.fields.artists["en-US"] = artists;
