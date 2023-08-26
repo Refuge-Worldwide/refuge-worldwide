@@ -25,7 +25,7 @@ export default function NewsPage({
   preview,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const router = useRouter();
-  const now = dayjs();
+  const now = dayjs().startOf("day");
   const [filter, setFilter] = useState<string>("");
   const [title, setTitle] = useState<string>("events");
   const [upcomingEvents, setUpcomingEvents] = useState([]);
