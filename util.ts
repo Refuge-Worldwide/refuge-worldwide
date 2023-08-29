@@ -157,7 +157,6 @@ export const delay = (time = 1500) => {
 export const parseGenres = (genresCollection: { items: GenreInterface[] }) =>
   genresCollection.items
     .filter((genre) => Boolean(genre?.name))
-    .map((genre) => genre.name)
-    .sort(sort.alpha);
+    .map((genre) => genre.name);
 
 export const uniq = <T>(arr: T[]) => Array.from(new Set(arr));

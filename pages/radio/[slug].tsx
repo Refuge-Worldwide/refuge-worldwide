@@ -21,6 +21,9 @@ export default function Show({
         objectPosition={show.coverImagePosition}
         backPath="/radio"
       >
+        <pre className="text-white bg-black">
+          {JSON.stringify(show, null, 2)}
+        </pre>
         <ShowBody {...show} />
       </SinglePage>
 
