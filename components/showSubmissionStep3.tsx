@@ -47,7 +47,7 @@ export default function ShowSubmissionStep3({
 
         <CheckboxField
           name="hasExtraArtists"
-          label="Can't find your artist/guest/collective in the dropdown above?"
+          label="Click here to add any artists/guests/collectives not found above."
         />
 
         {values.hasExtraArtists && (
