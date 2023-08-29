@@ -63,10 +63,10 @@ export default async function handler(
         const entry = await environment.createEntry(showContentTypeId, {
           fields: {
             title: {
-              "en-US": values.showName,
+              "en-US": values.title,
             },
             internal: {
-              "en-US": values.showName,
+              "en-US": values.title,
             },
             date: {
               "en-US": startDateTime,
@@ -100,18 +100,18 @@ export default async function handler(
       if (values.artists) {
         artists = createReferencesArray(values.artists);
       }
-      //fetch entry using contentfulID
+      //fetch entry using id
       client
         .getSpace(spaceId)
         .then((space) => space.getEnvironment(environmentId))
-        .then((environment) => environment.getEntry(values.contentfulId))
+        .then((environment) => environment.getEntry(values.id))
         //update fields with values from form
         .then((entry) => {
           console.log(entry);
           entry.fields.date["en-US"] = startDateTime;
           entry.fields.dateEnd["en-US"] = endDateTime;
-          if (values.showName) {
-            entry.fields.title["en-US"] = values.showName;
+          if (values.title) {
+            entry.fields.title["en-US"] = values.title;
           }
           if (values.artists) {
             entry.fields.artists["en-US"] = artists;
@@ -133,7 +133,16 @@ export default async function handler(
       //Update the resource by passing the changed resource along with current version number.
       break;
     case "DELETE":
-      res.status(202).json({});
-      break;
+      console.log(values.id);
+      client
+        .getSpace(spaceId)
+        .then((space) => space.getEnvironment(environmentId))
+        .then((environment) => environment.getEntry(values.id))
+        .then((entry) => entry.archive())
+        .then((entry) => {
+          console.log(`Entry ${entry.sys.id} deleted.`);
+          res.status(202).json({});
+        })
+        .catch(console.error);
   }
 }

@@ -87,7 +87,8 @@ function Calendar() {
   }, []);
 
   const initialValues = {
-    showName: selectedShow?.title,
+    id: selectedShow?.id,
+    title: selectedShow?.title,
     start: selectedShow?.startStr,
     end: selectedShow?.endStr,
     artists: selectedShow?.extendedProps?.artists
@@ -111,7 +112,6 @@ function Calendar() {
         pronouns: "",
       },
     ],
-    contentfulId: selectedShow?.extendedProps?.contentfulId,
   };
 
   const _handleSubmit = async (values, actions) => {
@@ -122,7 +122,7 @@ function Calendar() {
     const endpoint = "/api/calendar";
     const options = {
       // The method is POST because we are sending data.
-      method: values.contentfulId ? "PATCH" : "POST",
+      method: values.id ? "PATCH" : "POST",
       // Tell the server we're sending JSON.
       headers: {
         "Content-Type": "application/json",
@@ -136,17 +136,49 @@ function Calendar() {
       actions.setSubmitting(false);
     } else if (response.ok) {
       // successful
-      console.log("form submitted successfully");
+      console.log("show added successfully");
       actions.setSubmitting(false);
       actions.setStatus("submitted");
       setShowDialogOpen(false);
-      //add / edit event
-      // .fullCalendar( ‘updateEvent’, event )
-      // calendar.addEvent( event [, source ] )
-      setTimeout(reloadCalendar, 3000);
+
+      // manually add show from full calendar
+      let calendarApi = calendarRef.current.getApi();
+      calendarApi.addEvent(values);
     } else {
       // unknown error
       actions.setSubmitting(false);
+    }
+    setCalendarLoading(false);
+  };
+
+  const _handleDelete = async (id) => {
+    setCalendarLoading(true);
+    const JSONData = JSON.stringify({
+      id: id,
+    });
+    const endpoint = "/api/calendar";
+    const options = {
+      // The method is POST because we are sending data.
+      method: "DELETE",
+      // Tell the server we're sending JSON.
+      headers: {
+        "Content-Type": "application/json",
+      },
+      // Body of the request is the JSON data we created above.
+      body: JSONData,
+    };
+    const response = await fetch(endpoint, options);
+    if (response.status === 400) {
+      // Validation error
+    } else if (response.ok) {
+      // successful
+      console.log("show deleted successfully");
+      setShowDialogOpen(false);
+      // manually delete show from full calendar
+      let calendarApi = calendarRef.current.getApi();
+      calendarApi.getEventById(id).remove();
+    } else {
+      // unknown error
     }
     setCalendarLoading(false);
   };
@@ -168,7 +200,7 @@ function Calendar() {
     setCalendarLoading(true);
     console.log("handle drop: " + eventInfo);
     const values = {
-      contentfulId: eventInfo.event.extendedProps.contentfulId,
+      id: eventInfo.event.id,
       start: eventInfo.event.startStr,
       end: eventInfo.event.endStr,
     };
@@ -177,7 +209,7 @@ function Calendar() {
     const endpoint = "/api/calendar";
     const options = {
       // The method is POST because we are sending data.
-      method: values.contentfulId ? "PATCH" : "POST",
+      method: values.id ? "PATCH" : "POST",
       // Tell the server we're sending JSON.
       headers: {
         "Content-Type": "application/json",
@@ -211,7 +243,6 @@ function Calendar() {
       {/* <pre className="text-white bg-black">
         {JSON.stringify(shows, null, 2)}
       </pre> */}
-      {/* <input type="date"/> */}
       <FullCalendar
         ref={calendarRef}
         plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin, listPlugin]}
@@ -325,10 +356,10 @@ function Calendar() {
               <Dialog.Title asChild className="mb-6 pb-3 border-b border-black">
                 <h5 className="font-sans font-medium">
                   {selectedShow?.title ? "Edit" : "New"} show
-                  {selectedShow?.extendedProps?.contentfulId && (
+                  {selectedShow?.id && (
                     <Link
                       target="_blank"
-                      href={`https://app.contentful.com/spaces/taoiy3h84mql/environments/master/entries/${selectedShow.extendedProps.contentfulId}`}
+                      href={`https://app.contentful.com/spaces/taoiy3h84mql/environments/master/entries/${selectedShow.id}`}
                     >
                       <RxExternalLink className="inline ml-2 mb-1" />
                     </Link>
@@ -346,9 +377,9 @@ function Calendar() {
               >
                 {({ values, isSubmitting }) => (
                   <Form id="calendarShow">
-                    <Field type="hidden" name="contentfulId" />
+                    <Field type="hidden" name="id" />
                     <InputField
-                      name="showName"
+                      name="title"
                       label="Show name"
                       required
                       type="text"
@@ -456,7 +487,14 @@ function Calendar() {
                         )}
                       </button>
                       {selectedShow?.title && (
-                        <button disabled className="cursor-not-allowed">
+                        <button
+                          type="button"
+                          className="cursor-pointer"
+                          value="delete"
+                          onClick={() => {
+                            _handleDelete(values.id);
+                          }}
+                        >
                           <RiDeleteBin7Line />
                         </button>
                       )}

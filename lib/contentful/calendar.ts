@@ -73,6 +73,7 @@ export async function getCalendarShows(preview: boolean, start, end) {
 
   const processed = shows.map((event) => {
     return {
+      id: event.sys.id,
       title: event.title,
       artists: event.artistsCollection.items.map((artists) => ({
         value: artists.sys.id,
@@ -98,7 +99,6 @@ export async function getCalendarShows(preview: boolean, start, end) {
           : event.status == "Submitted"
           ? "#B3DCC1"
           : "#B3DCC1",
-      contentfulId: event.sys.id,
       booker: event.booker ? event.booker : "George",
       mixcloudLink: event.mixcloudLink,
     };
