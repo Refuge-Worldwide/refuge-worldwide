@@ -33,7 +33,7 @@ export default function ImageUploadField({
   description?: string;
 }) {
   const [field, meta, helpers] = useField(props);
-  const { setFieldValue, values } = useFormikContext();
+  const { values, setFieldValue } = useFormikContext<any>();
 
   // const setFieldValue(field, value){
   const imageUploaded = (file) => {
@@ -51,7 +51,7 @@ export default function ImageUploadField({
     }
   };
 
-  const _reorderHandler = (files) => {
+  const _reorderDeleteHandler = (files) => {
     console.log(files);
     const processed = files.map((file) => {
       return {
@@ -87,7 +87,13 @@ export default function ImageUploadField({
         }}
         onreorderfiles={(files) => {
           if (multi) {
-            _reorderHandler(files);
+            _reorderDeleteHandler(files);
+          }
+        }}
+        onupdatefiles={(files) => {
+          // only fire handler when image is removed.
+          if (files.length < values.image.length) {
+            _reorderDeleteHandler(files);
           }
         }}
         allowReorder={multi}
