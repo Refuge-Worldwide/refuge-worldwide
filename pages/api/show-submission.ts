@@ -34,7 +34,6 @@ const appendToSpreadsheet = async (values) => {
   let guestImages = "";
   if (values.hasExtraArtists) {
     values.extraArtists.forEach((e, index) => {
-      console.log(e);
       if (index > 0) {
         guestImages += " + ";
       }
@@ -44,15 +43,11 @@ const appendToSpreadsheet = async (values) => {
   // process artist for sheet
   let images = "";
   values.image.forEach((e, index) => {
-    console.log(e);
     if (index > 0) {
       images += " + ";
     }
     images += e.url;
   });
-
-  console.log(guestImages);
-  console.log(images);
 
   const newRow = {
     Timestamp: dayjs().tz("Europe/Berlin").format("DD/MM/YYYY HH:mm:ss"),
@@ -167,7 +162,7 @@ const addArtist = async (artist) => {
     };
     return addedArtist;
   } catch (err) {
-    console.log(err);
+    console.error(err);
     throw 400;
   }
 };
@@ -212,7 +207,7 @@ const addGenre = async (genre) => {
     };
     return addedGenre;
   } catch (err) {
-    console.log(err);
+    console.error(err);
     throw 400;
   }
 };
@@ -234,8 +229,6 @@ const addShow = async (values) => {
     const endDateTime = dayjs(values.datetime + "Z")
       .add(parseInt(values.length), "hour")
       .toISOString();
-    console.log("start: " + startDateTime);
-    console.log("end: " + endDateTime);
     const entry = await environment.createEntry(showContentTypeId, {
       fields: {
         title: {
@@ -278,10 +271,9 @@ const addShow = async (values) => {
         },
       },
     });
-    console.log(entry);
     return entry;
   } catch (err) {
-    console.log(err);
+    console.error(err);
     throw 400;
   }
 };
@@ -307,11 +299,10 @@ const uploadImage = async (name, image) => {
     const processedAsset = await asset.processForAllLocales();
     await processedAsset.publish();
     const imageURL = "https:" + processedAsset.fields.file["en-US"].url;
-    console.log(imageURL);
     showImages.push(imageURL);
     return processedAsset.sys.id;
   } catch (err) {
-    console.log(err);
+    console.error(err);
     throw 400;
   }
 };
@@ -322,8 +313,6 @@ export default async function handler(
 ) {
   // Get data submitted in request's body.
   const values = req.body;
-  console.log(values);
-  console.log(dayjs().utcOffset());
   try {
     values.imageId = await uploadImage(values.showName, values.image[0]);
     // if (values.image.length > 1) {
@@ -354,9 +343,9 @@ export default async function handler(
     }
     await addShow(values);
     await appendToSpreadsheet(values);
-    console.log("form submitted successfully");
     res.status(200).json({ data: "successfully created show :)" });
   } catch (err) {
+    console.error(err);
     res.status(400).json({ data: "issue submitting form" });
   }
 }
