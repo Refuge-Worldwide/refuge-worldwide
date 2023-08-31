@@ -56,7 +56,7 @@ const workshops = [
     value: "Reset, Brussels",
     label: "Oct 13 — Reset, Brussels",
     additionalInfo:
-      "Hosted by Donia from 4-6pm, this workshop will be given in English.",
+      "Hosted by Blck Mamba from 4-6pm, this workshop will be given in Dutch and English.",
   },
   {
     value: "Motopol, Copenhagen",
