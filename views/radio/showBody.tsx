@@ -9,7 +9,7 @@ import Prose from "../../components/Prose";
 import { useGlobalStore } from "../../hooks/useStore";
 import PlayCircle from "../../icons/playCircle";
 import { ShowInterface } from "../../types/shared";
-import { getMixcloudKey, parseGenres } from "../../util";
+import { parseGenres } from "../../util";
 
 const ShareButton = dynamic(() => import("../../components/shareButton"));
 
@@ -46,9 +46,9 @@ export default function ShowBody({
     </Fragment>
   );
 
-  const showKeySet = useGlobalStore((state) => state.showKeySet);
+  const showUrlSet = useGlobalStore((state) => state.showUrlSet);
 
-  const onClick = () => showKeySet(getMixcloudKey(mixcloudLink));
+  const onClick = () => showUrlSet(mixcloudLink);
 
   return (
     <Fragment>
