@@ -86,7 +86,9 @@ export default async function handler(
           },
         });
         console.log(entry);
-        res.status(200).json("Show added successfully");
+        res.status(200).json({
+          id: entry.sys.id,
+        });
         break;
       } catch (err) {
         console.log(err);
@@ -126,7 +128,7 @@ export default async function handler(
         })
         .then((entry) => {
           console.log(`Entry ${entry.sys.id} updated.`);
-          res.status(200).json({});
+          res.status(200).json(`Entry ${entry.sys.id} updated.`);
         })
         .catch(console.error);
       // let show = getCalendarShow(value.id)

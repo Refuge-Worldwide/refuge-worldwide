@@ -71,36 +71,36 @@ export async function getCalendarShows(preview: boolean, start, end) {
 
   const shows = extractCollection<CalendarShow>(res, "showCollection");
 
-  const processed = shows.map((event) => {
+  const processed = shows.map((show) => {
     return {
-      id: event.sys.id,
-      title: event.title,
-      artists: event.artistsCollection.items.map((artists) => ({
+      id: show.sys.id,
+      title: show.title,
+      artists: show.artistsCollection.items.map((artists) => ({
         value: artists.sys.id,
         label: artists.name,
       })),
-      start: event.date.slice(0, -1),
-      end: event.dateEnd.slice(0, -1),
-      status: event.status ? event.status : "Submitted",
-      published: event.sys.publishedVersion ? true : false,
+      start: show.date.slice(0, -1),
+      end: show.dateEnd.slice(0, -1),
+      status: show.status ? show.status : "Submitted",
+      published: show.sys.publishedVersion ? true : false,
       backgroundColor:
-        event.status == "TBC"
+        show.status == "TBC"
           ? "#EDB8B4"
-          : event.status == "Confirmed"
+          : show.status == "Confirmed"
           ? "#F1E2AF"
-          : event.status == "Submitted"
+          : show.status == "Submitted"
           ? "#B3DCC1"
           : "#B3DCC1",
       borderColor:
-        event.status == "TBC"
+        show.status == "TBC"
           ? "#EDB8B4"
-          : event.status == "Confirmed"
+          : show.status == "Confirmed"
           ? "#F1E2AF"
-          : event.status == "Submitted"
+          : show.status == "Submitted"
           ? "#B3DCC1"
           : "#B3DCC1",
-      booker: event.booker ? event.booker : "George",
-      mixcloudLink: event.mixcloudLink,
+      booker: show.booker ? show.booker : "George",
+      mixcloudLink: show.mixcloudLink,
     };
   });
 

@@ -137,18 +137,51 @@ function Calendar() {
     } else if (response.ok) {
       // successful
       console.log("show added successfully");
+
+      // add id to values
+      const body = await response.json();
+      console.log(body);
+      // manually add show from full calendar
+      let calendarApi = calendarRef.current.getApi();
+      calendarApi.addEvent(transformEventForFullCalendar(values, body));
+
       actions.setSubmitting(false);
       actions.setStatus("submitted");
       setShowDialogOpen(false);
-
-      // manually add show from full calendar
-      let calendarApi = calendarRef.current.getApi();
-      calendarApi.addEvent(values);
     } else {
       // unknown error
       actions.setSubmitting(false);
     }
     setCalendarLoading(false);
+  };
+
+  const transformEventForFullCalendar = (values, id) => {
+    return {
+      id: id,
+      title: values.title,
+      artists: values.artists,
+      start: values.start,
+      end: values.end,
+      status: values.status[0].value,
+      published: false,
+      backgroundColor:
+        values.status == "TBC"
+          ? "#EDB8B4"
+          : values.status == "Confirmed"
+          ? "#F1E2AF"
+          : values.status == "Submitted"
+          ? "#B3DCC1"
+          : "#B3DCC1",
+      borderColor:
+        values.status == "TBC"
+          ? "#EDB8B4"
+          : values.status == "Confirmed"
+          ? "#F1E2AF"
+          : values.status == "Submitted"
+          ? "#B3DCC1"
+          : "#B3DCC1",
+      booker: values.booker ? values.booker : "George",
+    };
   };
 
   const _handleDelete = async (id) => {
@@ -302,9 +335,7 @@ function Calendar() {
       />
       <button className="absolute top-2.5 right-0" onClick={reloadCalendar}>
         <TfiReload
-          className={`animate-refresh animate-pulse ${
-            calendarLoadingIcon ? "" : "pause"
-          }
+          className={`animate-refresh ${calendarLoadingIcon ? "" : "pause"}
           }`}
         />
       </button>
