@@ -30,8 +30,15 @@ export default async function handler(
 
     const body = await response.json();
 
-    res.json(body.id);
+    if (response.status != 200) {
+      res
+        .status(response.status)
+        .json(body.statusText ? body.statusText : "Error");
+    }
+    res.status(200).json(body.id);
   } catch (error) {
     console.log(error);
+
+    res.status(400).json(error);
   }
 }
