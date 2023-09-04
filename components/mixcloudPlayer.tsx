@@ -11,11 +11,8 @@ export default function MixcloudPlayer() {
 
   const [showKey, setShowKey] = useState(null);
 
-  console.log(showKey);
-  console.log(showUrl);
-  console.log(ActivePlayer);
-
   useEffect(() => {
+    console.log("player changed");
     if (activePlayer === ActivePlayer.MIXCLOUD) {
       setShowKey(getMixcloudKey(showUrl));
     } else if (activePlayer === ActivePlayer.SOUNDCLOUD) {
@@ -27,7 +24,7 @@ export default function MixcloudPlayer() {
           setShowKey(data);
         });
     }
-  }, [showKey, activePlayer]);
+  }, [showUrl, activePlayer]);
 
   const handleIframeLoad = async (
     event: SyntheticEvent<HTMLIFrameElement, Event>
