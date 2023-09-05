@@ -90,6 +90,7 @@ export default function ShowSubmissionStep3({
                         />
                         <ImageUploadField
                           label="Image"
+                          description="No logos and no flyers. Minimum dimensions: 1000x1000px, maximum file size: 3MB."
                           required
                           name={`extraArtists.${index}.image`}
                         />
@@ -165,7 +166,7 @@ export default function ShowSubmissionStep3({
         <ImageUploadField
           label="Show image(s)"
           name="image"
-          description="Please upload your show / artist image(s) below, including any guest images. Minimum dimensions: 1000x1000px, maximum file size: 3MB."
+          description="Please upload your show / artist image(s) below, including any guest images. No logos and no flyers. Minimum dimensions: 1000x1000px, maximum file size: 3MB."
           required={true}
           multi={true}
         />

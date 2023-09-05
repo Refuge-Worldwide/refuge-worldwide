@@ -68,7 +68,7 @@ export default function ImageUploadField({
       <label htmlFor={props.name}>
         {label}
         {props.required && "*"}
-        <span className="label-description max-w-2xl">
+        <span className="label-description">
           {description
             ? description
             : "Minimum dimensions: 1000x1000px, maximum file size: 3MB."}
