@@ -7,6 +7,7 @@ import InputField from "./formFields/inputField";
 import TextareaField from "./formFields/textareaField";
 import CheckboxField from "./formFields/checkboxField";
 import { SubmissionFormValues } from "../types/shared";
+import * as RadioGroup from "@radix-ui/react-radio-group";
 
 export default function ShowSubmissionStep3({
   genres,
@@ -17,7 +18,7 @@ export default function ShowSubmissionStep3({
   const [mp3, setMp3] = useState<boolean>(false);
   const [oneHr, setOneHr] = useState<boolean>(false);
   const [micLevel, setMicLevel] = useState<boolean>(false);
-  const { values } = useFormikContext<SubmissionFormValues>();
+  const { values, setFieldValue } = useFormikContext<SubmissionFormValues>();
 
   return (
     <div>
@@ -122,38 +123,24 @@ export default function ShowSubmissionStep3({
         />
         <fieldset className="mb-10">
           <legend>Show length</legend>
-          <div className="flex">
-            <div className="w-1/2">
-              <Field
-                type="radio"
-                id="1hr"
-                name="length"
-                value="1"
-                className="peer hidden"
-              />
-              <label
-                htmlFor="1hr"
-                className="block cursor-pointer select-none pill-input rounded-tr-none rounded-br-none py-3 text-center peer-checked:bg-black peer-checked:text-white peer-checked:font-bold"
-              >
+          <RadioGroup.Root
+            className="flex"
+            name="Show length"
+            defaultValue="1"
+            onValueChange={(value: string) => setFieldValue("length", value)}
+          >
+            <RadioGroup.Item value="1" asChild>
+              <label className="data-[state=checked]:bg-black data-[state=checked]:text-white block cursor-pointer pill-input rounded-tr-none rounded-br-none py-3 text-center">
                 1hr
               </label>
-            </div>
-            <div className="w-1/2">
-              <Field
-                type="radio"
-                id="2hr"
-                name="length"
-                value="2"
-                className="peer hidden"
-              />
-              <label
-                htmlFor="2hr"
-                className="block cursor-pointer select-none pill-input rounded-tl-none rounded-bl-none py-3 text-center peer-checked:bg-black peer-checked:text-white peer-checked:font-bold"
-              >
-                2hrs
+            </RadioGroup.Item>
+
+            <RadioGroup.Item value="2" asChild>
+              <label className="data-[state=checked]:bg-black data-[state=checked]:text-white block cursor-pointer select-none pill-input rounded-tl-none rounded-bl-none py-3 text-center">
+                2hr
               </label>
-            </div>
-          </div>
+            </RadioGroup.Item>
+          </RadioGroup.Root>
           <ErrorMessage className="text-red" component="span" name="length" />
         </fieldset>
         <InputField
