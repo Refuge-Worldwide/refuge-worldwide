@@ -7,6 +7,7 @@ import InputField from "./formFields/inputField";
 import TextareaField from "./formFields/textareaField";
 import CheckboxField from "./formFields/checkboxField";
 import { SubmissionFormValues } from "../types/shared";
+import { AiOutlineInfoCircle } from "react-icons/ai";
 import * as RadioGroup from "@radix-ui/react-radio-group";
 
 export default function ShowSubmissionStep3({
@@ -95,6 +96,14 @@ export default function ShowSubmissionStep3({
                           required
                           name={`extraArtists.${index}.image`}
                         />
+                        <div className="flex gap-2 md:gap-3 items-center border border-black p-3 md:p-6 mb-10 bg-orange">
+                          <AiOutlineInfoCircle className="w-5 sm:w-6 md:w-8 h-full" />
+                          <span className="flex-1 text-small">
+                            PLEASE NOTE: If you would like this image featured
+                            on our social media and website please add it to
+                            Show image(s) field towards the end of this form.
+                          </span>
+                        </div>
                       </div>
                     ))}
                   <button
@@ -157,6 +166,15 @@ export default function ShowSubmissionStep3({
           required={true}
           multi={true}
         />
+        <div className="flex gap-2 md:gap-3 items-center border border-black p-3 md:p-6 mb-10 bg-orange">
+          <AiOutlineInfoCircle className="w-5 sm:w-6 md:w-8 h-full" />
+          <span className="flex-1 text-small">
+            PLEASE NOTE: Images submitted in this field are used for social
+            media artwork and your show page on our site. If you added a new
+            artist/guest/collective above, this may mean uploading the same
+            image(s) here.
+          </span>
+        </div>
         <TextareaField
           name="description"
           rows={4}
