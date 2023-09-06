@@ -22,9 +22,6 @@ export async function getScheduleData() {
     .add(endScheduleAdjustment, "day")
     .toISOString();
 
-  console.log(startSchedule);
-  console.log(endSchedule);
-
   const scheduleQuery = /* GraphQL */ `
     query scheduleQuery($startSchedule: DateTime, $endSchedule: DateTime) {
       showCollection(

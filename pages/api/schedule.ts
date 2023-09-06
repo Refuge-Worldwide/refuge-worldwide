@@ -31,6 +31,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  console.log("getting schedule!");
   try {
     const { data, duration } = await getScheduleData();
     const r = await fetch("https://public.radio.co/stations/s3699c5e49/status");
@@ -58,7 +59,10 @@ export default async function handler(
 
     res
       .setHeader("Server-Timing", `search;dur=${duration}`)
-      .setHeader("Cache-Control", "s-maxage=1, stale-while-revalidate=59")
+      .setHeader(
+        "Cache-Control",
+        "s-maxage=30, stale-while-revalidate=60, stale-if-error=600"
+      )
       .json(scheduleData);
   } catch (error) {
     assertError(error);
