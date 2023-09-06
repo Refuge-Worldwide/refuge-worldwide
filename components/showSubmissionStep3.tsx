@@ -100,8 +100,8 @@ export default function ShowSubmissionStep3({
                           <AiOutlineInfoCircle className="w-5 sm:w-6 md:w-8 h-full" />
                           <span className="flex-1 text-small">
                             PLEASE NOTE: If you would like this image featured
-                            on our social media and website please add it to
-                            Show image(s) field towards the end of this form.
+                            on our social media and website please also add it
+                            to Show image(s) field towards the end of this form.
                           </span>
                         </div>
                       </div>
