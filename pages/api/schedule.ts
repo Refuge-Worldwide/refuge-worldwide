@@ -58,7 +58,7 @@ export default async function handler(
     };
 
     res
-      .setHeader("Server-Timing", `search;dur=${duration}`)
+      .setHeader("Server-Timing", `schedule;dur=${duration}`)
       .setHeader(
         "Cache-Control",
         "s-maxage=30, stale-while-revalidate=60, stale-if-error=600"
