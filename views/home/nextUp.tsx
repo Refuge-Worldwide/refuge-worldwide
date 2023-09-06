@@ -6,14 +6,14 @@ import Marquee from "../../components/marquee";
 import { Cross } from "../../icons/cross";
 
 export default function NextUp() {
-  const { scheduleData, isLoading } = useSchedule();
+  const { scheduleData, isLoading, error } = useSchedule();
   // const shouldShowBanner = scheduleData.nextUp;
 
   const bgOptions = ["bg-orange", "bg-purple", "bg-pink", "bg-green", "bg-red"];
 
   const bgColour = bgOptions[Math.floor(Math.random() * bgOptions.length)];
 
-  if (!isLoading && !scheduleData.nextUp) return null;
+  if ((!isLoading && !scheduleData?.nextUp) || error) return null;
   else
     return (
       <section className={`${bgColour} border-t-2 border-b-2`}>
@@ -27,11 +27,9 @@ export default function NextUp() {
           </div>
           <div className="pt-2 pb-2 sm:pt-4 sm:pb-4 overflow-hidden">
             {isLoading ? (
-              <span className="h-10 flex items-center space-x-2 whitespace-nowrap px-2 ml-6 animate-pulse">
-                <p className="font-medium opacity-70" key="loading">
-                  Loading
-                </p>
-              </span>
+              <div className="h-6 sm:h-9 w-56 flex px-2 ml-6 bg-black/25">
+                <p className="hidden">Loading</p>
+              </div>
             ) : (
               <Marquee
                 speed={0.5}
