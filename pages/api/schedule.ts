@@ -31,7 +31,6 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  console.log("getting schedule!");
   try {
     const { data, duration } = await getScheduleData();
     const r = await fetch("https://public.radio.co/stations/s3699c5e49/status");
