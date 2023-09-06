@@ -96,12 +96,13 @@ export default function ShowSubmissionStep3({
                           required
                           name={`extraArtists.${index}.image`}
                         />
-                        <div className="flex gap-2 md:gap-3 items-center border border-black p-3 md:p-6 mb-10 bg-orange">
+                        <div className="flex gap-2 md:gap-3 items-center border border-black p-3 md:p-6 bg-orange">
                           <AiOutlineInfoCircle className="w-5 sm:w-6 md:w-8 h-full" />
                           <span className="flex-1 text-small">
-                            PLEASE NOTE: If you would like this image featured
-                            on our social media and website please also add it
-                            to Show image(s) field towards the end of this form.
+                            PLEASE NOTE: If you would like this image to be used
+                            for your show’s social media artwork please also add
+                            it to Show image(s) field towards the end of this
+                            form.
                           </span>
                         </div>
                       </div>
