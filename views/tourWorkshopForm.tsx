@@ -321,7 +321,7 @@ export default function TourWorkshopForm() {
               <TextareaField
                 rows={4}
                 name="experienceExplained"
-                label="As this workshop is for intermediate DJs, we would like to know a little bit more about your experience and why you want to join this workshop."
+                label="We would like to know a little bit more about your experience and why you want to join this workshop."
                 required={true}
               />
               <InputField
