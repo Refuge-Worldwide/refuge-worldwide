@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import InputField from "../components/formFields/inputField";
@@ -120,6 +120,8 @@ const workshops = [
   },
 ];
 
+const closed = ["Control Club, Bucharest", "Arkaoda, Berlin"];
+
 const validationSchema = Yup.object().shape({
   workshop: Yup.object().required("Please select a workshop"),
   name: Yup.string().required("Please provide your name"),
@@ -194,164 +196,186 @@ export default function TourWorkshopForm() {
                 options={workshops}
                 required={true}
               />
-              {values.workshop.additionalInfo && (
+              {closed.includes(values.workshop.value) && (
                 <div className="flex gap-2 md:gap-3 items-center border border-black p-3 md:p-6 mb-10 bg-orange">
                   <AiOutlineInfoCircle className="w-5 sm:w-6 md:w-8 h-full" />
-                  <p className="flex-1">{values.workshop.additionalInfo}</p>
+                  <p className="flex-1">
+                    Thank you for your interest. Unfortunately applications for
+                    this workshop are now closed.
+                  </p>
                 </div>
               )}
-              <InputField
-                name="name"
-                type="text"
-                label="Your name"
-                required={true}
-              />
-              <InputField
-                name="pronouns"
-                type="text"
-                label="Pronouns"
-                required={true}
-              />
-              <InputField
-                name="email"
-                type="email"
-                label="Email address"
-                required={true}
-              />
-              <InputField
-                name="number"
-                type="text"
-                label="Phone Number"
-                required={true}
-              />
-              <div className="border border-black p-6 mb-10">
-                <fieldset>
-                  <legend className="sm:mt-0.5 mb-4 text-small sm:text-base prose">
-                    <p>
-                      Priority will be given to those with refugee backgrounds,
-                      BIPoC, people from the LGBTQIA community, disabled people,
-                      women, trans and non-binary people, or anyone else who
-                      feels that due to their background, they face difficulties
-                      accessing music education.
-                    </p>
-                    <p>
-                      Do you identify as any of the above, or have another
-                      reason that you need help accessing music education? If
-                      you want to explain a bit more about your identity or
-                      background, you can select &ldquo;other&rdquo; and add
-                      some more details. This information will be treated
-                      confidentially.*
-                    </p>
-                  </legend>
-                  <div
-                    role="group"
-                    aria-labelledby="my-radio-group"
-                    className="flex flex-col"
-                  >
-                    {/* <RadioField name="background" label="Yes" value="Yes" /> */}
-                    <label className="space-x-3 text-base flex items-center">
-                      <Field
-                        className="h-6 w-6 rounded-full border-2 border-black text-black focus:ring-black"
-                        type="radio"
-                        name="background"
-                        value="Yes"
-                      />
-                      <span className="text-small sm:text-base">Yes</span>
-                    </label>
-                    <label className="space-x-3 text-base flex items-center">
-                      <Field
-                        className="h-6 w-6 rounded-full border-2 border-black text-black focus:ring-black"
-                        type="radio"
-                        name="background"
-                        value="No"
-                      />
-                      <span className="text-small sm:text-base">No</span>
-                    </label>
-                    <label className="space-x-3 text-base flex items-center">
-                      <Field
-                        className="h-6 w-6 rounded-full border-2 border-black text-black focus:ring-black"
-                        type="radio"
-                        name="background"
-                        value="Other"
-                      />
-                      <span className="text-small sm:text-base">Other</span>
-                    </label>
-                    {values.background == "Other" && (
-                      <TextareaField name="backgroundOther" rows={2} />
+              {values.workshop.additionalInfo &&
+                !closed.includes(values.workshop.value) && (
+                  <div className="flex gap-2 md:gap-3 items-center border border-black p-3 md:p-6 mb-10 bg-orange">
+                    <AiOutlineInfoCircle className="w-5 sm:w-6 md:w-8 h-full" />
+                    <p className="flex-1">{values.workshop.additionalInfo}</p>
+                  </div>
+                )}
+              {!closed.includes(values.workshop.value) &&
+                values.workshop.value && (
+                  <div>
+                    <InputField
+                      name="name"
+                      type="text"
+                      label="Your name"
+                      required={true}
+                    />
+                    <InputField
+                      name="pronouns"
+                      type="text"
+                      label="Pronouns"
+                      required={true}
+                    />
+                    <InputField
+                      name="email"
+                      type="email"
+                      label="Email address"
+                      required={true}
+                    />
+                    <InputField
+                      name="number"
+                      type="text"
+                      label="Phone Number"
+                      required={true}
+                    />
+                    <div className="border border-black p-6 mb-10">
+                      <fieldset>
+                        <legend className="sm:mt-0.5 mb-4 text-small sm:text-base prose">
+                          <p>
+                            Priority will be given to those with refugee
+                            backgrounds, BIPoC, people from the LGBTQIA
+                            community, disabled people, women, trans and
+                            non-binary people, or anyone else who feels that due
+                            to their background, they face difficulties
+                            accessing music education.
+                          </p>
+                          <p>
+                            Do you identify as any of the above, or have another
+                            reason that you need help accessing music education?
+                            If you want to explain a bit more about your
+                            identity or background, you can select
+                            &ldquo;other&rdquo; and add some more details. This
+                            information will be treated confidentially.*
+                          </p>
+                        </legend>
+                        <div
+                          role="group"
+                          aria-labelledby="my-radio-group"
+                          className="flex flex-col"
+                        >
+                          {/* <RadioField name="background" label="Yes" value="Yes" /> */}
+                          <label className="space-x-3 text-base flex items-center">
+                            <Field
+                              className="h-6 w-6 rounded-full border-2 border-black text-black focus:ring-black"
+                              type="radio"
+                              name="background"
+                              value="Yes"
+                            />
+                            <span className="text-small sm:text-base">Yes</span>
+                          </label>
+                          <label className="space-x-3 text-base flex items-center">
+                            <Field
+                              className="h-6 w-6 rounded-full border-2 border-black text-black focus:ring-black"
+                              type="radio"
+                              name="background"
+                              value="No"
+                            />
+                            <span className="text-small sm:text-base">No</span>
+                          </label>
+                          <label className="space-x-3 text-base flex items-center">
+                            <Field
+                              className="h-6 w-6 rounded-full border-2 border-black text-black focus:ring-black"
+                              type="radio"
+                              name="background"
+                              value="Other"
+                            />
+                            <span className="text-small sm:text-base">
+                              Other
+                            </span>
+                          </label>
+                          {values.background == "Other" && (
+                            <TextareaField name="backgroundOther" rows={2} />
+                          )}
+                        </div>
+                      </fieldset>
+                    </div>
+                    <div className="border border-black p-6 mb-10">
+                      <fieldset>
+                        <legend className="sm:mt-0.5 mb-4 text-small sm:text-base">
+                          Please note that this workshop is designed for people
+                          that already have some DJ experience.*
+                        </legend>
+                        <div
+                          role="group"
+                          aria-labelledby="my-radio-group"
+                          className="flex flex-col"
+                        >
+                          <label className="space-x-3 text-base flex items-center">
+                            <Field
+                              className="h-6 w-6 rounded-full border-2 border-black text-black focus:ring-black"
+                              type="radio"
+                              name="experience"
+                              value="Yes, I have some experience"
+                            />
+                            <span className="text-small sm:text-base">
+                              Yes, I have some experience
+                            </span>
+                          </label>
+                          <label className="space-x-3 text-base flex items-center">
+                            <Field
+                              className="h-6 w-6 rounded-full border-2 border-black text-black focus:ring-black"
+                              type="radio"
+                              name="experience"
+                              value="No, I am a beginner"
+                            />
+                            <span className="text-small sm:text-base">
+                              No, I am a beginner
+                            </span>
+                          </label>
+                        </div>
+                      </fieldset>
+                    </div>
+                    <TextareaField
+                      rows={4}
+                      name="experienceExplained"
+                      label="We would like to know a little bit more about your experience and why you want to join this workshop."
+                      required={true}
+                    />
+                    <InputField
+                      name="hear"
+                      type="text"
+                      label="How did you hear about these workshops?"
+                      required={true}
+                    />
+                    <GDPR />
+                    <div>
+                      <button
+                        disabled={isSubmitting}
+                        type="submit"
+                        className={`inline-flex items-center space-x-4 text-base font-medium mt-6 ${
+                          isSubmitting && "cursor-wait"
+                        }`}
+                      >
+                        <span className="underline">
+                          {isSubmitting ? "Submitting" : "Submit"}
+                        </span>
+                        {!isSubmitting && <Arrow />}
+                        {isSubmitting && (
+                          <AiOutlineLoading3Quarters className="animate-spin" />
+                        )}
+                      </button>
+                    </div>
+
+                    {submissionError && !isSubmitting && (
+                      <p className="text-red">
+                        Sorry there has been an error submitting this form,
+                        please try again and if this problem persists get in
+                        touch.
+                      </p>
                     )}
                   </div>
-                </fieldset>
-              </div>
-              <div className="border border-black p-6 mb-10">
-                <fieldset>
-                  <legend className="sm:mt-0.5 mb-4 text-small sm:text-base">
-                    Please note that this workshop is designed for people that
-                    already have some DJ experience.*
-                  </legend>
-                  <div
-                    role="group"
-                    aria-labelledby="my-radio-group"
-                    className="flex flex-col"
-                  >
-                    <label className="space-x-3 text-base flex items-center">
-                      <Field
-                        className="h-6 w-6 rounded-full border-2 border-black text-black focus:ring-black"
-                        type="radio"
-                        name="experience"
-                        value="Yes, I have some experience"
-                      />
-                      <span className="text-small sm:text-base">
-                        Yes, I have some experience
-                      </span>
-                    </label>
-                    <label className="space-x-3 text-base flex items-center">
-                      <Field
-                        className="h-6 w-6 rounded-full border-2 border-black text-black focus:ring-black"
-                        type="radio"
-                        name="experience"
-                        value="No, I am a beginner"
-                      />
-                      <span className="text-small sm:text-base">
-                        No, I am a beginner
-                      </span>
-                    </label>
-                  </div>
-                </fieldset>
-              </div>
-              <TextareaField
-                rows={4}
-                name="experienceExplained"
-                label="We would like to know a little bit more about your experience and why you want to join this workshop."
-                required={true}
-              />
-              <InputField
-                name="hear"
-                type="text"
-                label="How did you hear about these workshops?"
-                required={true}
-              />
-              <GDPR />
-              <div>
-                <button
-                  disabled={isSubmitting}
-                  type="submit"
-                  className="inline-flex items-center space-x-4 text-base font-medium mt-6"
-                >
-                  <span className="underline">
-                    {isSubmitting ? "Submitting" : "Submit"}
-                  </span>
-                  {!isSubmitting && <Arrow />}
-                  {isSubmitting && (
-                    <AiOutlineLoading3Quarters className="animate-spin" />
-                  )}
-                </button>
-              </div>
-              {submissionError && !isSubmitting && (
-                <p className="text-red">
-                  Sorry there has been an error submitting this form, please try
-                  again and if this problem persists get in touch.
-                </p>
-              )}
+                )}
             </Form>
           )}
         </div>
