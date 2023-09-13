@@ -2,7 +2,12 @@ import ShowSubmissionStep1 from "./showSubmissionStep1";
 import ShowSubmissionStep2 from "./showSubmissionStep2";
 import ShowSubmissionStep3 from "./showSubmissionStep3";
 import ShowSubmissionStep4 from "./showSubmissionStep4";
-import { SubmissionFormValues } from "../types/shared";
+import {
+  Dropdown,
+  ShowInterface,
+  SubmissionFormValues,
+  SubmissionImportantInfo,
+} from "../types/shared";
 import { Arrow } from "../icons/arrow";
 import { useState } from "react";
 import { Formik, Form } from "formik";
@@ -100,6 +105,12 @@ export default function ShowSubmissionForm({
   artists,
   uploadLink,
   importantInfo,
+}: {
+  initial?: ShowInterface;
+  genres: Dropdown;
+  artists: Dropdown;
+  uploadLink: string;
+  importantInfo: SubmissionImportantInfo;
 }) {
   const initialValues: SubmissionFormValues = {
     id: initial ? initial.sys.id : "",

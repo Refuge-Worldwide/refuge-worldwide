@@ -10,6 +10,11 @@ import { getAllGenres } from "../lib/contentful/pages/radio";
 import { getAllArtists } from "../lib/contentful/pages/submission";
 import { useSearchParams } from "next/navigation";
 import Loading from "../components/loading";
+import {
+  Dropdown,
+  ShowInterface,
+  SubmissionImportantInfo,
+} from "../types/shared";
 
 export async function getStaticProps({ preview = false }) {
   const genres = await getAllGenres();
@@ -92,6 +97,13 @@ function SubmissionForm({
   artists,
   uploadLink,
   importantInfo,
+}: {
+  isLoading: boolean;
+  data: ShowInterface;
+  genres: Dropdown;
+  artists: Dropdown;
+  uploadLink: string;
+  importantInfo: SubmissionImportantInfo;
 }) {
   if (isLoading) return <Loading />;
 

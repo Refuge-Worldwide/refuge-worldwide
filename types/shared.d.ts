@@ -67,6 +67,8 @@ export type DropdownArtistEntry = {
   name: string;
 };
 
+export type Dropdown = { value: string; label: string }[];
+
 export type ArtistFilterType = "All" | "Residents" | "Guests";
 
 export interface GenreInterface {
@@ -94,6 +96,7 @@ export interface ShowInterface {
     items: GenreInterface[];
   };
   content: Content;
+  status?: string;
 }
 
 export type ScheduleShow = {
@@ -232,4 +235,10 @@ export type SubmissionFormValues = {
     bio?: string;
     image?: string;
   }>;
+};
+
+export type SubmissionImportantInfo = {
+  liveShows: Content;
+  liveShows2: Content;
+  preRecords: Content;
 };
