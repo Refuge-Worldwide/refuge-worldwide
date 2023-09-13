@@ -156,3 +156,10 @@ export const parseGenres = (genresCollection: { items: GenreInterface[] }) =>
     .sort(sort.alpha);
 
 export const uniq = <T>(arr: T[]) => Array.from(new Set(arr));
+
+export const transformForDropdown = (array) => {
+  return array.map((item) => ({
+    value: item.sys.id,
+    label: item.name,
+  }));
+};

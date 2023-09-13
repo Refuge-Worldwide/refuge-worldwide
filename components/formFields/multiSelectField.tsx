@@ -19,7 +19,7 @@ export default function MultiSelectField({
   limit?: number;
 }) {
   const [ariaFocusMessage, setAriaFocusMessage] = useState("");
-  const [selectedOptions, SetSelectedOptions] = useState(value);
+  const [selectedOptions, SetSelectedOptions] = useState(value ? value : []);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [field, meta, helpers] = useField(props);
   const { setFieldValue } = useFormikContext();

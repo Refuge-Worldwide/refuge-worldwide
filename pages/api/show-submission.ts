@@ -10,6 +10,7 @@ import {
   formatArtistsForContenful,
   createReferencesArray,
 } from "../../lib/contentful/management";
+import { getShowById } from "../../lib/contentful/pages/submission";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -226,6 +227,71 @@ const addShow = async (values) => {
   }
 };
 
+const updateShow = async (values) => {
+  try {
+    const content = await richTextFromMarkdown(values.description);
+    const artists = createReferencesArray(values.artists);
+    const artistsForContentful = formatArtistsForContenful(
+      values.artists,
+      values.hasExtraArtists,
+      values.extraArtists
+    );
+    const dateFormatted = dayjs(values.datetime).format("DD MMM YYYY");
+    const genres = createReferencesArray(values.genres);
+    console.log(genres);
+    client
+      .getSpace(spaceId)
+      .then((space) => space.getEnvironment(environmentId))
+      .then((environment) => environment.getEntry(values.id))
+      //update fields with values from form
+      .then((entry) => {
+        entry.fields.title = {
+          "en-US": values.showName + " | " + artistsForContentful,
+        };
+        entry.fields.internal = {
+          "en-US":
+            values.showName +
+            " - " +
+            artistsForContentful +
+            " - " +
+            dateFormatted,
+        };
+        entry.fields.content = {
+          "en-US": content,
+        };
+        entry.fields.coverImage = {
+          "en-US": {
+            sys: {
+              type: "Link",
+              linkType: "Asset",
+              id: values.imageId,
+            },
+          },
+        };
+        entry.fields.coverImagePosition = {
+          "en-US": "center",
+        };
+        entry.fields.artists = {
+          "en-US": artists,
+        };
+        entry.fields.genres = {
+          "en-US": genres,
+        };
+        entry.fields.status = {
+          "en-US": "Submitted",
+        };
+        return entry.update();
+      })
+      .then((entry) => {
+        console.log(`Entry ${entry.sys.id} updated.`);
+        return entry;
+      });
+  } catch (err) {
+    console.log(err);
+    throw 400;
+  }
+};
+
 const uploadImage = async (name, image) => {
   try {
     const space = await client.getSpace(spaceId);
@@ -260,34 +326,92 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  // Get data submitted in request's body.
   const values = req.body;
-  console.log(values);
-  console.log(dayjs().utcOffset());
-  try {
-    values.imageId = await uploadImage(values.showName, values.image);
-    if (values.hasExtraArtists) {
-      for (const artist of values.extraArtists) {
-        // if ((artist.bio && artist.image) || (artist.bio !== "" && artist.image !== "")) {
-        console.log("adding artist to contentful: " + artist.name);
-        const contentfulNewArtist = await addArtist(artist);
-        console.log(contentfulNewArtist);
-        values.artists.push(contentfulNewArtist);
-        // }
+  console.log("REQUEST METHOD: " + req.method);
+  switch (req.method) {
+    case "GET":
+      //get show by id
+      try {
+        const { id } = req.query as typeof req.query & {
+          id: string;
+        };
+        console.log(id);
+
+        const show = await getShowById(id, true);
+        console.log(show);
+        if (!show) {
+          res.status(404).json({ message: "Show not found" });
+          break;
+        }
+        res.status(200).json(show);
+        break;
+      } catch (error) {
+        console.log(error);
+
+        res.status(400).json({ message: error.message });
       }
-    }
-    if (values.hasNewGenres) {
-      const genres = values.newGenres.split(", ");
-      for (const genre of genres) {
-        const contentfulNewGenre = await addGenre(genre);
-        values.genres.push(contentfulNewGenre);
+    case "PATCH":
+      //submit show update to contentful
+      // Get data submitted in request's body.
+      console.log(values);
+      console.log("UPDATING");
+      console.log(dayjs().utcOffset());
+      try {
+        values.imageId = await uploadImage(values.showName, values.image);
+        if (values.hasExtraArtists) {
+          for (const artist of values.extraArtists) {
+            // if ((artist.bio && artist.image) || (artist.bio !== "" && artist.image !== "")) {
+            console.log("adding artist to contentful: " + artist.name);
+            const contentfulNewArtist = await addArtist(artist);
+            console.log(contentfulNewArtist);
+            values.artists.push(contentfulNewArtist);
+            // }
+          }
+        }
+        if (values.hasNewGenres) {
+          const genres = values.newGenres.split(", ");
+          for (const genre of genres) {
+            const contentfulNewGenre = await addGenre(genre);
+            values.genres.push(contentfulNewGenre);
+          }
+        }
+        await updateShow(values);
+        await appendToSpreadsheet(values);
+        console.log("form submitted successfully");
+        res.status(200).json({ data: "successfully updated show :)" });
+      } catch (err) {
+        res.status(400).json({ data: "issue submitting form" });
       }
-    }
-    await addShow(values);
-    await appendToSpreadsheet(values);
-    console.log("form submitted successfully");
-    res.status(200).json({ data: "successfully created show :)" });
-  } catch (err) {
-    res.status(400).json({ data: "issue submitting form" });
+    // case "POST":
+    //   //submit show update to contentful
+    //   // Get data submitted in request's body.
+    //   console.log(values);
+    //   console.log(dayjs().utcOffset());
+    //   try {
+    //     values.imageId = await uploadImage(values.showName, values.image);
+    //     if (values.hasExtraArtists) {
+    //       for (const artist of values.extraArtists) {
+    //         // if ((artist.bio && artist.image) || (artist.bio !== "" && artist.image !== "")) {
+    //         console.log("adding artist to contentful: " + artist.name);
+    //         const contentfulNewArtist = await addArtist(artist);
+    //         console.log(contentfulNewArtist);
+    //         values.artists.push(contentfulNewArtist);
+    //         // }
+    //       }
+    //     }
+    //     if (values.hasNewGenres) {
+    //       const genres = values.newGenres.split(", ");
+    //       for (const genre of genres) {
+    //         const contentfulNewGenre = await addGenre(genre);
+    //         values.genres.push(contentfulNewGenre);
+    //       }
+    //     }
+    //     await addShow(values);
+    //     await appendToSpreadsheet(values);
+    //     console.log("form submitted successfully");
+    //     res.status(200).json({ data: "successfully created show :)" });
+    //   } catch (err) {
+    //     res.status(400).json({ data: "issue submitting form" });
+    //   }
   }
 }

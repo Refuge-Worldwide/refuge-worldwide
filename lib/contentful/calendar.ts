@@ -4,6 +4,7 @@ import next from "next";
 import { graphql } from ".";
 import { extractCollection } from "../../util";
 import { ArtistInterface } from "../../types/shared";
+import { transformForDropdown } from "../../util";
 dayjs.extend(utc);
 
 interface CalendarShow {
@@ -25,9 +26,9 @@ interface CalendarShow {
   live?: boolean;
 }
 
-export async function getCalendarShows(preview: boolean, start, end) {
+export async function getCalendarShows(start, end, preview: boolean) {
   const calendarQuery = /* GraphQL */ `
-    query calendarQuery($preview: Boolean, $start: DateTime, $end: DateTime) {
+    query calendarQuery($start: DateTime, $end: DateTime, $preview: Boolean) {
       showCollection(
         order: date_ASC
         where: { date_gte: $start, dateEnd_lte: $end, dateEnd_exists: true }
@@ -66,7 +67,8 @@ export async function getCalendarShows(preview: boolean, start, end) {
   `;
 
   const res = await graphql(calendarQuery, {
-    variables: { preview, start, end },
+    variables: { start, end, preview },
+    preview,
   });
 
   const shows = extractCollection<CalendarShow>(res, "showCollection");
@@ -75,10 +77,7 @@ export async function getCalendarShows(preview: boolean, start, end) {
     return {
       id: show.sys.id,
       title: show.title,
-      artists: show.artistsCollection.items.map((artists) => ({
-        value: artists.sys.id,
-        label: artists.name,
-      })),
+      artists: transformForDropdown(show.artistsCollection.items),
       start: show.date.slice(0, -1),
       end: show.dateEnd.slice(0, -1),
       status: show.status ? show.status : "Submitted",

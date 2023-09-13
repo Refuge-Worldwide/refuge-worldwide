@@ -25,24 +25,26 @@ interface EmailProps {
   showDateEnd: string;
   showType: "live" | "pre-record";
   severity: "initial" | "follow-up" | "late";
+  showId: string;
 }
 
 const baseUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
-  : "";
+  : "localhost:3001";
 
 export const ShowSubmissionEmail = ({
   userName = "No Plastic",
-  showDateStart = "September 7, 2023, 13:00",
-  showDateEnd = "September 7, 2023, 15:00",
+  showDateStart = "2023-10-02T15:00:00.000Z",
+  showDateEnd = "2023-10-02T17:00:00.000Z",
   showType = "live",
   severity = "late",
+  showId = "3mJ2xrYzyd4NOwMry3wJJQ",
 }: EmailProps) => {
   const startDate = dayjs(showDateStart);
   const formattedDate =
-    startDate.format("dddd Do MMMM, H:mm") +
+    startDate.format("dddd Do MMMM, HH:mm") +
     "-" +
-    dayjs(showDateEnd).format("H:mm");
+    dayjs(showDateEnd).format("HH:mm");
   const submissionDeadlineDate = startDate
     .subtract(4, "day")
     .format("dddd Do MMMM");
@@ -92,7 +94,12 @@ export const ShowSubmissionEmail = ({
                   <Link style={link}>this submission form</Link>{" "}
                   {severityText(severity, submissionDeadlineDate)}
                 </Text>
-                <Button href="" style={button} pY={9} pX={12}>
+                <Button
+                  href={baseUrl + "/new-submission?id=" + showId}
+                  style={button}
+                  pY={9}
+                  pX={12}
+                >
                   SHOW SUBMISSION FORM
                 </Button>
                 <Hr style={seperator} />

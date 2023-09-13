@@ -32,7 +32,7 @@ export default async function handler(
           end: string;
         };
 
-        const shows = await getCalendarShows(true, start, end);
+        const shows = await getCalendarShows(start, end, true);
 
         res
           .status(200)

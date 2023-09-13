@@ -80,7 +80,7 @@ function Calendar() {
       const artists = await getAllArtists();
       setArtists(artists);
     })();
-    const interval = setInterval(() => reloadCalendar(), 30000);
+    const interval = setInterval(() => reloadCalendar(), 60000);
     return () => {
       clearInterval(interval);
     };

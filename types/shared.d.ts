@@ -208,6 +208,7 @@ export type BookingsPageData = {
 };
 
 export type SubmissionFormValues = {
+  id?: string;
   showType: string;
   readInfo: Boolean;
   email: string;

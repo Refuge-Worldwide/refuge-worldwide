@@ -2,6 +2,7 @@ import { graphql } from "..";
 import { SubmissionPageData } from "../../../types/shared";
 import { extractPage, extractCollection } from "../../../util";
 import { DropdownArtistEntry } from "../../../types/shared";
+import { ShowInterface } from "../../../types/shared";
 
 export async function getSubmissionPage(preview: boolean) {
   const SubmissionPageQuery = /* GraphQL */ `
@@ -118,6 +119,43 @@ export async function getAllArtists() {
   }));
 
   return mappedArtists;
+}
+
+export async function getShowById(id, preview) {
+  const showByIdQuery = /* GraphQL */ `
+    query showByIdQuery($id: String!, $preview: Boolean) {
+      show(id: $id, preview: $preview) {
+        sys {
+          id
+        }
+        title
+        date
+        dateEnd
+        slug
+        status
+        coverImage {
+          sys {
+            id
+          }
+          url
+        }
+        artistsCollection(limit: 9) {
+          items {
+            name
+            sys {
+              id
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  const res = await graphql(showByIdQuery, {
+    variables: { id, preview },
+    preview,
+  });
+  return extractPage<ShowInterface>(res, "show");
 }
 
 // export async function getArtistsPage(
