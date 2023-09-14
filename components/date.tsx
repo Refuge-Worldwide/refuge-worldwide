@@ -8,6 +8,8 @@ export default function Date({
   formatString?: string;
 }) {
   return (
-    <time dateTime={dateString}>{dayjs(dateString).format(formatString)}</time>
+    <time dateTime={dateString}>
+      {dayjs(dateString.replace("Z", "")).format(formatString)}{" "}
+    </time>
   );
 }
