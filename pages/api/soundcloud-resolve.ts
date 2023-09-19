@@ -22,8 +22,8 @@ export default async function handler(
       const response = await fetch("https://api.soundcloud.com/oauth2/token", {
         method: "POST",
         body: new URLSearchParams({
-          client_id: "e13CLA6PxePeodWrLYfcBTg2UHLxD5Kw",
-          client_secret: "66lVVFsTBspxdCp4HJwvFhAkeFgZqVAo",
+          client_id: process.env.SC_CLIENT_ID,
+          client_secret: process.env.SC_CLIENT_SECRET,
           grant_type: "client_credentials",
         }),
       });
@@ -31,9 +31,6 @@ export default async function handler(
       const body = await response.json();
       //set new access token
       accessToken = body.access_token;
-      console.log(body);
-
-      console.log(now.add(body.expires_in - 30, "seconds").toISOString());
 
       //update supabase details
       const { error } = await supabase
