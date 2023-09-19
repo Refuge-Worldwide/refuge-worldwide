@@ -30,6 +30,7 @@
     "@radix-ui/react-dropdown-menu": "^2.0.1",
     "@react-hookz/web": "^20.0.3",
     "@splidejs/react-splide": "^0.7.12",
+    "@supabase/supabase-js": "^2.33.2",
     "@use-it/interval": "^1.0.0",
     "@widgetbot/crate": "^3.5.4",
     "@widgetbot/react-embed": "^1.7.0",
