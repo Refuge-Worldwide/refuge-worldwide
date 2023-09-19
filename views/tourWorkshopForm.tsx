@@ -120,7 +120,12 @@ const workshops = [
   },
 ];
 
-const closed = ["Control Club, Bucharest", "Arkaoda, Berlin"];
+const closed = [
+  "Control Club, Bucharest",
+  "Arkaoda, Berlin",
+  "Arkaoda, Istanbul",
+  "Horoom, Bassiani, Tbilisi",
+];
 
 const validationSchema = Yup.object().shape({
   workshop: Yup.object().required("Please select a workshop"),
