@@ -26,9 +26,9 @@ function ShowImageWithPlayer({
   alt,
   priority,
 }: ShowImageWithPlayerProps) {
-  const showKeySet = useGlobalStore((state) => state.showKeySet);
+  const showUrlSet = useGlobalStore((state) => state.showUrlSet);
 
-  const onClick = () => showKeySet(getMixcloudKey(mixcloudLink));
+  const onClick = () => showUrlSet(mixcloudLink);
 
   return (
     <button onClick={onClick} className="flex relative group">

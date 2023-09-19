@@ -3,6 +3,7 @@ import create from "zustand";
 export enum ActivePlayer {
   MIXCLOUD,
   RADIO_CO,
+  SOUNDCLOUD,
 }
 
 interface GlobalStore {
@@ -11,6 +12,9 @@ interface GlobalStore {
 
   showKey: string | undefined;
   showKeySet: (showKey: string) => void;
+
+  showUrl: string | undefined;
+  showUrlSet: (showKey: string) => void;
 }
 
 export const useGlobalStore = create<GlobalStore>()((set) => ({
@@ -22,5 +26,14 @@ export const useGlobalStore = create<GlobalStore>()((set) => ({
     set({
       activePlayer: ActivePlayer.MIXCLOUD,
       showKey,
+    }),
+
+  showUrl: undefined,
+  showUrlSet: (showUrl) =>
+    set({
+      activePlayer: showUrl.includes("soundcloud")
+        ? ActivePlayer.SOUNDCLOUD
+        : ActivePlayer.MIXCLOUD,
+      showUrl,
     }),
 }));
