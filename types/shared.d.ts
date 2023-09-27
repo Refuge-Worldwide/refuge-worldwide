@@ -41,6 +41,7 @@ export interface ArtistInterface {
   coverImagePosition: CoverImagePosition;
   isResident: boolean;
   content?: Content;
+  email?: string;
 }
 
 export type ArtistEntry = {
@@ -85,6 +86,7 @@ export interface ShowInterface {
   mixcloudLink: string;
   title: string;
   date: string;
+  dateEnd?: string;
   slug: string;
   coverImage: CoverImage;
   coverImagePosition: CoverImagePosition;

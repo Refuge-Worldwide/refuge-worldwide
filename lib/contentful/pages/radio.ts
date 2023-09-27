@@ -229,18 +229,26 @@ export async function getRelatedShows(
   return filteredShows;
 }
 
-export async function getUpcomingShowsByDate(day, preview) {
-  const start = day.startOf("day");
-  const end = start.add(1, "day");
-  const startISO = start.toISOString();
-  const endISO = end.toISOString();
+export async function getUpcomingShowsByDate(preview: boolean) {
+  // const start = day.startOf("day");
+  // const end = start.add(1, "day");
+  // const startISO = start.toISOString();
+  // const endISO = end.toISOString();
+
+  // console.log(startISO);
+  // console.log(endISO);
 
   const UpcomingShowsQuery = /* GraphQL */ `
-    query scheduleQuery($start: DateTime, $end: DateTime, $preview: boolean) {
+    query upcomingShowsByDate {
       showCollection(
         order: date_ASC
-        where: { date_gt: $start, dateEnd_lte: $end, dateEnd_exists: true }
-        preview: $preview
+        where: {
+          date_gt: "2023-10-07T00:00:00.000Z"
+          dateEnd_lte: "2023-10-08T00:00:00.000Z"
+          dateEnd_exists: true
+        }
+        preview: true
+        limit: 999
       ) {
         items {
           title
@@ -253,10 +261,14 @@ export async function getUpcomingShowsByDate(day, preview) {
             }
             url
           }
+          sys {
+            id
+          }
           artistsCollection(limit: 9) {
             items {
               name
               slug
+              email
             }
           }
         }
@@ -264,10 +276,7 @@ export async function getUpcomingShowsByDate(day, preview) {
     }
   `;
 
-  const res = await graphql(UpcomingShowsQuery, {
-    variables: { startISO, endISO, preview },
-    preview,
-  });
+  const res = await graphql(UpcomingShowsQuery, { preview });
 
   return extractCollection<ShowInterface>(res, "showCollection");
 }

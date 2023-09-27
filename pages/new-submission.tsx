@@ -121,8 +121,8 @@ function SubmissionForm({
     return (
       <div className="my-32">
         <p>
-          Show submission already completed. Please contact [email] if this
-          information is incorrect
+          Show submission already completed. Please contact
+          hello@refugeworldwide.com if this information is incorrect
         </p>
       </div>
     );

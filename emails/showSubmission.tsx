@@ -30,7 +30,7 @@ interface EmailProps {
 
 const baseUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
-  : "localhost:3001";
+  : "http://localhost:3000";
 
 export const ShowSubmissionEmail = ({
   userName = "No Plastic",

@@ -21,11 +21,11 @@ export async function graphql(
   query: string,
   { preview, variables }: GraphQLInterface = { preview: false, variables: {} }
 ) {
-  // if (process.env.NODE_ENV !== "production") {
-  //   const queryName = query.trimStart().substring(6, query.indexOf("Query"));
+  if (process.env.NODE_ENV !== "production") {
+    const queryName = query.trimStart().substring(6, query.indexOf("Query"));
 
-  //   console.log("[graphql]", queryName, variables);
-  // }
+    console.log("[graphql]", queryName, variables);
+  }
 
   const r = await fetch(ENDPOINT, {
     method: "POST",
