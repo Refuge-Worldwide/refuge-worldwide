@@ -23,6 +23,7 @@ import { AiOutlineLoading3Quarters, AiOutlineCalendar } from "react-icons/ai";
 import { RiDeleteBin7Line } from "react-icons/ri";
 import Link from "next/link";
 import dayjs from "dayjs";
+import useWindowSize from "../hooks/useWindowSize";
 
 export default function CalendarPage() {
   return (
@@ -45,6 +46,7 @@ function Calendar() {
   const calendarRef = useRef<any>();
   const formRef = useRef<any>();
   const datePicker = useRef<any>();
+  const windowSize = useWindowSize();
 
   useEffect(() => {
     if (formRef.current) {
@@ -281,293 +283,301 @@ function Calendar() {
     calendarApi.gotoDate(datePicker.current.value);
   };
 
-  return (
-    <div className="mt-2 lg:m-4 h-[calc(100vh-100px)] lg:h-[calc(100vh-125px)] relative">
-      {/* <pre className="text-white bg-black">
-        {JSON.stringify(shows, null, 2)}
-      </pre> */}
-      <FullCalendar
-        ref={calendarRef}
-        plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin, listPlugin]}
-        headerToolbar={{
-          left: "prev,next today",
-          center: "title",
-          right: "timeGridWeek,timeGridDay,listMonth",
-        }}
-        customButtons={{
-          addShow: {
-            text: "+ Show",
-            hint: "Add show",
-            click: () => {
-              setShowDialogOpen(true);
-            },
-          },
-        }}
-        expandRows={true}
-        height={"100%"}
-        hiddenDays={[0]}
-        allDaySlot={false}
-        scrollTime={"10:00:00"}
-        eventColor="#a1cfad"
-        eventTextColor="#000"
-        timeZone="Europe/Berlin"
-        slotLabelFormat={{
-          hour: "2-digit",
-          minute: "2-digit",
-          meridiem: false,
-          hour12: false,
-        }}
-        nextDayThreshold="09:00:00"
-        slotDuration="00:30:00"
-        slotMaxTime="26:00:00"
-        slotMinTime="10:00:00"
-        dayHeaderContent={(args) => {
-          return dayjs(args.date).format("ddd DD/MM");
-        }}
-        eventTimeFormat={{
-          hour: "2-digit",
-          minute: "2-digit",
-          meridiem: false,
-          hour12: false,
-        }}
-        eventClick={_handleEventClick}
-        eventDrop={_handleEventDrop}
-        eventResize={_handleEventDrop}
-        dateClick={handleDateClick}
-        eventAdd={handleEventAdd}
-        select={_handleSelect}
-        loading={(e) => setCalendarLoading(e)}
-        firstDay={1}
-        initialView="timeGridWeek"
-        nowIndicator={true}
-        editable={true}
-        selectable={true}
-        selectMirror={true}
-        events={getEvents}
-        eventContent={renderEventContent}
-      />
-      <input
-        type="date"
-        className="absolute top-12 left-2 lg:left-0 w-0 border-0 p-0 h-0"
-        ref={datePicker}
-        onChange={handleDatePickerChange}
-      ></input>
-      <button
-        className="absolute top-1 left-2 lg:left-0"
-        onClick={openDatePicker}
-      >
-        <AiOutlineCalendar size={25} />
-      </button>
-      <button
-        className="absolute top-1 lg:top-2 right-2 lg:right-0"
-        onClick={reloadCalendar}
-      >
-        <TfiReload
-          size={20}
-          className={`animate-refresh ${calendarLoadingIcon ? "" : "pause"}
-          }`}
-        />
-      </button>
-      <DropdownMenu.Root
-        open={addDropdownOpen}
-        onOpenChange={setAddDropdownOpen}
-      >
-        <DropdownMenu.Trigger asChild>
-          <button className="absolute bottom-2 right-2 p-4 z-40 border-black border-2 rounded-full bg-white shadow-lg">
-            <Cross className="rotate-45" />
-          </button>
-        </DropdownMenu.Trigger>
-        <DropdownMenu.Portal>
-          <DropdownMenu.Content
-            className="min-w-[220px] bg-white  p-[5px] shadow-2xl z-50 border-black border"
-            sideOffset={5}
-            align="end"
-          >
-            <DropdownMenu.Item
-              onSelect={() => {
-                setSelectedShow(null);
+  if (windowSize.width)
+    return (
+      <div className="mt-2 lg:m-4 h-[calc(100vh-100px)] lg:h-[calc(100vh-125px)] relative">
+        <FullCalendar
+          ref={calendarRef}
+          plugins={[
+            dayGridPlugin,
+            interactionPlugin,
+            timeGridPlugin,
+            listPlugin,
+          ]}
+          headerToolbar={{
+            left: "prev,next today",
+            center: "title",
+            right: "timeGridWeek,timeGridDay,listMonth",
+          }}
+          customButtons={{
+            addShow: {
+              text: "+ Show",
+              hint: "Add show",
+              click: () => {
                 setShowDialogOpen(true);
-                setAddDropdownOpen(false);
-              }}
-              className="group text-small leading-none text-violet11 flex items-center h-[25px] px-[5px] relative pl-[25px] select-none hover:bg-grey outline-none cursor-pointer"
+              },
+            },
+          }}
+          expandRows={true}
+          height={"100%"}
+          hiddenDays={[0]}
+          allDaySlot={false}
+          scrollTime={"10:00:00"}
+          eventColor="#a1cfad"
+          eventTextColor="#000"
+          timeZone="Europe/Berlin"
+          slotLabelFormat={{
+            hour: "2-digit",
+            minute: "2-digit",
+            meridiem: false,
+            hour12: false,
+          }}
+          nextDayThreshold="09:00:00"
+          slotDuration="00:30:00"
+          slotMaxTime="26:00:00"
+          slotMinTime="10:00:00"
+          dayHeaderContent={(args) => {
+            return dayjs(args.date).format("ddd DD/MM");
+          }}
+          eventTimeFormat={{
+            hour: "2-digit",
+            minute: "2-digit",
+            meridiem: false,
+            hour12: false,
+          }}
+          eventClick={_handleEventClick}
+          eventDrop={_handleEventDrop}
+          eventResize={_handleEventDrop}
+          dateClick={handleDateClick}
+          eventAdd={handleEventAdd}
+          select={_handleSelect}
+          loading={(e) => setCalendarLoading(e)}
+          firstDay={1}
+          initialView={windowSize.width < 765 ? "timeGridDay" : "timeGridWeek"}
+          nowIndicator={true}
+          editable={true}
+          selectable={true}
+          selectMirror={true}
+          events={getEvents}
+          eventContent={renderEventContent}
+        />
+        <input
+          type="date"
+          className="absolute top-12 left-2 lg:left-0 w-0 border-0 p-0 h-0"
+          ref={datePicker}
+          onChange={handleDatePickerChange}
+        ></input>
+        <button
+          className="absolute top-1 left-2 lg:left-0"
+          onClick={openDatePicker}
+        >
+          <AiOutlineCalendar size={25} />
+        </button>
+        <button
+          className="absolute top-1 lg:top-2 right-2 lg:right-0"
+          onClick={reloadCalendar}
+        >
+          <TfiReload
+            size={20}
+            className={`animate-refresh ${calendarLoadingIcon ? "" : "pause"}
+          }`}
+          />
+        </button>
+        <DropdownMenu.Root
+          open={addDropdownOpen}
+          onOpenChange={setAddDropdownOpen}
+        >
+          <DropdownMenu.Trigger asChild>
+            <button className="absolute bottom-2 right-2 p-4 z-40 border-black border-2 rounded-full bg-white shadow-lg">
+              <Cross className="rotate-45" />
+            </button>
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Portal>
+            <DropdownMenu.Content
+              className="min-w-[220px] bg-white  p-[5px] shadow-2xl z-50 border-black border"
+              sideOffset={5}
+              align="end"
             >
-              New Show
-            </DropdownMenu.Item>
-            <DropdownMenu.Item className="group text-small leading-none text-violet11 flex items-center h-[25px] px-[5px] relative pl-[25px] select-none cursor-not-allowed hover:bg-grey outline-none">
-              Download images
-            </DropdownMenu.Item>
-          </DropdownMenu.Content>
-        </DropdownMenu.Portal>
-      </DropdownMenu.Root>
+              <DropdownMenu.Item
+                onSelect={() => {
+                  setSelectedShow(null);
+                  setShowDialogOpen(true);
+                  setAddDropdownOpen(false);
+                }}
+                className="group text-small leading-none text-violet11 flex items-center h-[25px] px-[5px] relative pl-[25px] select-none hover:bg-grey outline-none cursor-pointer"
+              >
+                New Show
+              </DropdownMenu.Item>
+              <DropdownMenu.Item className="group text-small leading-none text-violet11 flex items-center h-[25px] px-[5px] relative pl-[25px] select-none cursor-not-allowed hover:bg-grey outline-none">
+                Download images
+              </DropdownMenu.Item>
+            </DropdownMenu.Content>
+          </DropdownMenu.Portal>
+        </DropdownMenu.Root>
 
-      <Dialog.Root
-        open={showDialogOpen}
-        onOpenChange={(showDialogOpen) => setShowDialogOpen(showDialogOpen)}
-      >
-        <Dialog.Portal>
-          <Dialog.Overlay className="w-screen h-screen fixed top-0 left-0 bg-black opacity-70 z-50" />
-          <Dialog.Content className="bg-white max-w-2xl fixed  top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 border-black border">
-            <div className="relative p-8 overflow-y-scroll max-h-[95vh]">
-              <Dialog.Close asChild>
-                <button className="float-right" aria-label="Close">
-                  <Cross />
-                </button>
-              </Dialog.Close>
-              <Dialog.Title asChild className="mb-6 pb-3 border-b border-black">
-                <h5 className="font-sans font-medium">
-                  {selectedShow?.title ? "Edit" : "New"} show
-                  {selectedShow?.id && (
-                    <Link
-                      target="_blank"
-                      href={`https://app.contentful.com/spaces/taoiy3h84mql/environments/master/entries/${selectedShow.id}`}
-                    >
-                      <RxExternalLink className="inline ml-2 mb-1" />
-                    </Link>
-                  )}
-                </h5>
-              </Dialog.Title>
-              {/* <Dialog.Description className=""></Dialog.Description> */}
-              {/* <pre className="text-white bg-black h-96 overflow-scroll">
+        <Dialog.Root
+          open={showDialogOpen}
+          onOpenChange={(showDialogOpen) => setShowDialogOpen(showDialogOpen)}
+        >
+          <Dialog.Portal>
+            <Dialog.Overlay className="w-screen h-screen fixed top-0 left-0 bg-black opacity-70 z-50" />
+            <Dialog.Content className="bg-white max-w-2xl fixed  top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 border-black border">
+              <div className="relative p-8 overflow-y-scroll max-h-[95vh]">
+                <Dialog.Close asChild>
+                  <button className="float-right" aria-label="Close">
+                    <Cross />
+                  </button>
+                </Dialog.Close>
+                <Dialog.Title
+                  asChild
+                  className="mb-6 pb-3 border-b border-black"
+                >
+                  <h5 className="font-sans font-medium">
+                    {selectedShow?.title ? "Edit" : "New"} show
+                    {selectedShow?.id && (
+                      <Link
+                        target="_blank"
+                        href={`https://app.contentful.com/spaces/taoiy3h84mql/environments/master/entries/${selectedShow.id}`}
+                      >
+                        <RxExternalLink className="inline ml-2 mb-1" />
+                      </Link>
+                    )}
+                  </h5>
+                </Dialog.Title>
+                {/* <Dialog.Description className=""></Dialog.Description> */}
+                {/* <pre className="text-white bg-black h-96 overflow-scroll">
                 {JSON.stringify(selectedShow.extendedProps, null, 2)}
               </pre> */}
-              <Formik
-                innerRef={formRef}
-                initialValues={initialValues}
-                onSubmit={_handleSubmit}
-              >
-                {({ values, isSubmitting }) => (
-                  <Form id="calendarShow">
-                    <Field type="hidden" name="id" />
-                    <InputField
-                      name="title"
-                      label="Show name"
-                      required
-                      type="text"
-                    />
-                    <MultiSelectField
-                      label="Artist(s)*"
-                      name="artists"
-                      options={artists}
-                      limit={10}
-                      value={initialValues.artists}
-                    />
-                    <CheckboxField
-                      name="hasExtraArtists"
-                      label="New artist?"
-                      size="small"
-                    />
+                <Formik
+                  innerRef={formRef}
+                  initialValues={initialValues}
+                  onSubmit={_handleSubmit}
+                >
+                  {({ values, isSubmitting }) => (
+                    <Form id="calendarShow">
+                      <Field type="hidden" name="id" />
+                      <InputField
+                        name="title"
+                        label="Show name"
+                        required
+                        type="text"
+                      />
+                      <MultiSelectField
+                        label="Artist(s)*"
+                        name="artists"
+                        options={artists}
+                        limit={10}
+                        value={initialValues.artists}
+                      />
+                      <CheckboxField
+                        name="hasExtraArtists"
+                        label="New artist?"
+                        size="small"
+                      />
 
-                    {values.hasExtraArtists && (
-                      <fieldset className=" mb-8">
-                        <legend className="mb-6">New artist(s)</legend>
-                        <FieldArray
-                          name="extraArtists"
-                          render={(arrayHelpers) => (
-                            <div>
-                              {values.extraArtists &&
-                                values.extraArtists.map(
-                                  (extraArtist, index) => (
-                                    <div
-                                      className="mb-8 border border-black p-8 relative"
-                                      key={"extraArtist" + index}
-                                    >
-                                      {index > 0 && (
-                                        <button
-                                          className="float-right"
-                                          onClick={() =>
-                                            arrayHelpers.remove(index)
-                                          }
-                                          type="button"
-                                        >
-                                          <Close size={24} />
-                                        </button>
-                                      )}
-                                      <InputField
-                                        name={`extraArtists.${index}.name`}
-                                        type="text"
-                                        label="Name"
-                                        required
-                                      />
-                                      <InputField
-                                        name={`extraArtists.${index}.pronouns`}
-                                        type="text"
-                                        label="Pronouns"
-                                      />
-                                    </div>
-                                  )
-                                )}
-                              <button
-                                className="underline"
-                                onClick={() => arrayHelpers.push("")}
-                                type="button"
-                              >
-                                Add another artist
-                              </button>
-                            </div>
-                          )}
-                        />
-                      </fieldset>
-                    )}
-                    <InputField
-                      name="start"
-                      label="Start"
-                      required
-                      type="datetime-local"
-                    />
-                    <InputField
-                      name="end"
-                      label="End"
-                      required
-                      type="datetime-local"
-                    />
-                    <MultiSelectField
-                      label="Status"
-                      name="status"
-                      options={statusOptions}
-                      limit={1}
-                      value={initialValues.status}
-                    />
-                    <InputField
-                      name="booker"
-                      label="Booker"
-                      required
-                      type="text"
-                    />
-                    <div className="flex justify-between items-center mt-6">
-                      <button
-                        type="submit"
-                        className="inline-flex items-center space-x-4 text-base font-medium"
-                      >
-                        <span className="underline">
-                          {selectedShow?.title ? "Edit" : "Add"} show{" "}
-                        </span>
-                        {!isSubmitting && <Arrow />}
-                        {isSubmitting && (
-                          <AiOutlineLoading3Quarters className="animate-spin" />
-                        )}
-                      </button>
-                      {selectedShow?.title && (
-                        <button
-                          type="button"
-                          className="cursor-pointer"
-                          value="delete"
-                          onClick={() => {
-                            _handleDelete(values.id);
-                          }}
-                        >
-                          <RiDeleteBin7Line />
-                        </button>
+                      {values.hasExtraArtists && (
+                        <fieldset className=" mb-8">
+                          <legend className="mb-6">New artist(s)</legend>
+                          <FieldArray
+                            name="extraArtists"
+                            render={(arrayHelpers) => (
+                              <div>
+                                {values.extraArtists &&
+                                  values.extraArtists.map(
+                                    (extraArtist, index) => (
+                                      <div
+                                        className="mb-8 border border-black p-8 relative"
+                                        key={"extraArtist" + index}
+                                      >
+                                        {index > 0 && (
+                                          <button
+                                            className="float-right"
+                                            onClick={() =>
+                                              arrayHelpers.remove(index)
+                                            }
+                                            type="button"
+                                          >
+                                            <Close size={24} />
+                                          </button>
+                                        )}
+                                        <InputField
+                                          name={`extraArtists.${index}.name`}
+                                          type="text"
+                                          label="Name"
+                                          required
+                                        />
+                                        <InputField
+                                          name={`extraArtists.${index}.pronouns`}
+                                          type="text"
+                                          label="Pronouns"
+                                        />
+                                      </div>
+                                    )
+                                  )}
+                                <button
+                                  className="underline"
+                                  onClick={() => arrayHelpers.push("")}
+                                  type="button"
+                                >
+                                  Add another artist
+                                </button>
+                              </div>
+                            )}
+                          />
+                        </fieldset>
                       )}
-                    </div>
-                  </Form>
-                )}
-              </Formik>
-            </div>
-          </Dialog.Content>
-        </Dialog.Portal>
-      </Dialog.Root>
-    </div>
-  );
+                      <InputField
+                        name="start"
+                        label="Start"
+                        required
+                        type="datetime-local"
+                      />
+                      <InputField
+                        name="end"
+                        label="End"
+                        required
+                        type="datetime-local"
+                      />
+                      <MultiSelectField
+                        label="Status"
+                        name="status"
+                        options={statusOptions}
+                        limit={1}
+                        value={initialValues.status}
+                      />
+                      <InputField
+                        name="booker"
+                        label="Booker"
+                        required
+                        type="text"
+                      />
+                      <div className="flex justify-between items-center mt-6">
+                        <button
+                          type="submit"
+                          className="inline-flex items-center space-x-4 text-base font-medium"
+                        >
+                          <span className="underline">
+                            {selectedShow?.title ? "Edit" : "Add"} show{" "}
+                          </span>
+                          {!isSubmitting && <Arrow />}
+                          {isSubmitting && (
+                            <AiOutlineLoading3Quarters className="animate-spin" />
+                          )}
+                        </button>
+                        {selectedShow?.title && (
+                          <button
+                            type="button"
+                            className="cursor-pointer"
+                            value="delete"
+                            onClick={() => {
+                              _handleDelete(values.id);
+                            }}
+                          >
+                            <RiDeleteBin7Line />
+                          </button>
+                        )}
+                      </div>
+                    </Form>
+                  )}
+                </Formik>
+              </div>
+            </Dialog.Content>
+          </Dialog.Portal>
+        </Dialog.Root>
+      </div>
+    );
+
+  return <Loading />;
 }
 
 function renderEventContent(eventInfo) {
