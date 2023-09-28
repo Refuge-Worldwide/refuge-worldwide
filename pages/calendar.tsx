@@ -19,7 +19,7 @@ import { Close } from "../icons/menu";
 import { TfiReload } from "react-icons/tfi";
 import { IoMdCheckmark, IoMdMusicalNote } from "react-icons/io";
 import { RxExternalLink } from "react-icons/rx";
-import { AiOutlineLoading3Quarters, AiOutlinePlus } from "react-icons/ai";
+import { AiOutlineLoading3Quarters, AiOutlineCalendar } from "react-icons/ai";
 import { RiDeleteBin7Line } from "react-icons/ri";
 import Link from "next/link";
 import dayjs from "dayjs";
@@ -44,6 +44,7 @@ function Calendar() {
     useState<boolean>(false);
   const calendarRef = useRef<any>();
   const formRef = useRef<any>();
+  const datePicker = useRef<any>();
 
   useEffect(() => {
     if (formRef.current) {
@@ -271,6 +272,15 @@ function Calendar() {
     calendarApi.refetchEvents();
   };
 
+  const openDatePicker = () => {
+    datePicker.current.showPicker();
+  };
+
+  const handleDatePickerChange = () => {
+    let calendarApi = calendarRef.current.getApi();
+    calendarApi.gotoDate(datePicker.current.value);
+  };
+
   return (
     <div className="m-8 h-[calc(100vh-151px)] relative">
       {/* <pre className="text-white bg-black">
@@ -336,8 +346,18 @@ function Calendar() {
         events={getEvents}
         eventContent={renderEventContent}
       />
+      <input
+        type="date"
+        className="absolute top-12 left-0 w-0 border-0 p-0 h-0"
+        ref={datePicker}
+        onChange={handleDatePickerChange}
+      ></input>
+      <button className="absolute top-2.5 left-0" onClick={openDatePicker}>
+        <AiOutlineCalendar size={25} />
+      </button>
       <button className="absolute top-2.5 right-0" onClick={reloadCalendar}>
         <TfiReload
+          size={25}
           className={`animate-refresh ${calendarLoadingIcon ? "" : "pause"}
           }`}
         />

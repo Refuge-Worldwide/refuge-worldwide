@@ -277,7 +277,7 @@
 }
 
 .fc .fc-toolbar.fc-header-toolbar {
-  @apply mr-11;
+  @apply mx-11;
 }
 
 .fc-day-today {
