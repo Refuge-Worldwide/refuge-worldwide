@@ -269,7 +269,7 @@
 }
 
 .fc .fc-toolbar.fc-header-toolbar {
-  margin-bottom: 1rem;
+  @apply mb-2 lg:mb-3;
 }
 
 .fc .fc-button {
