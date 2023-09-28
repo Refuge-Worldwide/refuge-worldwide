@@ -222,9 +222,11 @@ export function ArticleShowPreview({
     className
   );
 
-  const showKeySet = useGlobalStore((state) => state.showKeySet);
+  const showUrlSet = useGlobalStore((state) => state.showUrlSet);
 
-  const onClick = () => showKeySet(getMixcloudKey(mixcloudLink));
+  const onClick = () => {
+    showUrlSet(mixcloudLink);
+  };
 
   return (
     <div className={cachedClassNames}>
@@ -247,7 +249,6 @@ export function ArticleShowPreview({
             </button>
           )}
         </div>
-
         <Link
           href={`/radio/${slug}`}
           prefetch={false}
