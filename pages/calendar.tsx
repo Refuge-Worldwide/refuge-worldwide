@@ -282,7 +282,7 @@ function Calendar() {
   };
 
   return (
-    <div className="mt-2 lg:m-8 h-[calc(100vh-100px)] lg:h-[calc(100vh-151px)] relative">
+    <div className="mt-2 lg:m-4 h-[calc(100vh-100px)] lg:h-[calc(100vh-125px)] relative">
       {/* <pre className="text-white bg-black">
         {JSON.stringify(shows, null, 2)}
       </pre> */}
@@ -353,17 +353,17 @@ function Calendar() {
         onChange={handleDatePickerChange}
       ></input>
       <button
-        className="absolute top-1 lg:top-2.5 left-2 lg:left-0"
+        className="absolute top-1 left-2 lg:left-0"
         onClick={openDatePicker}
       >
         <AiOutlineCalendar size={25} />
       </button>
       <button
-        className="absolute top-1 lg:top-2.5 right-2 lg:right-0"
+        className="absolute top-1 lg:top-2 right-2 lg:right-0"
         onClick={reloadCalendar}
       >
         <TfiReload
-          size={25}
+          size={20}
           className={`animate-refresh ${calendarLoadingIcon ? "" : "pause"}
           }`}
         />
