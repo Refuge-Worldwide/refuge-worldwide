@@ -277,7 +277,7 @@
 }
 
 .fc .fc-toolbar.fc-header-toolbar {
-  @apply mx-11;
+  @apply mx-12 lg:mx-11;
 }
 
 .fc-day-today {
@@ -287,4 +287,13 @@
 
 .fc .fc-timegrid-now-indicator-line {
   border-width: 1px;
+}
+
+.fc-header-toolbar .fc-toolbar-chunk:nth-child(3),
+.fc-header-toolbar .fc-toolbar-chunk:nth-child(2) {
+  @apply hidden lg:block;
+}
+
+.fc .fc-button-primary {
+  @apply text-xxs;
 }
