@@ -125,6 +125,9 @@ const closed = [
   "Arkaoda, Berlin",
   "Arkaoda, Istanbul",
   "Horoom, Bassiani, Tbilisi",
+  "Corsica Studios, London",
+  "Reset, Brussels",
+  "Motopol, Copenhagen",
 ];
 
 const validationSchema = Yup.object().shape({
