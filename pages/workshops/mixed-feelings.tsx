@@ -47,6 +47,7 @@ export default function AboutPage({
               id="tally-js"
               src="https://tally.so/widgets/embed.js"
               onLoad={() => {
+                let Tally: any;
                 Tally.loadEmbeds();
               }}
             />
