@@ -15,6 +15,9 @@ export async function getRadioPageSingle(slug: string, preview: boolean) {
     query RadioPageSingleQuery($slug: String, $preview: Boolean) {
       showCollection(where: { slug: $slug }, limit: 1, preview: $preview) {
         items {
+          sys {
+            id
+          }
           title
           date
           slug

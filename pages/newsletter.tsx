@@ -22,7 +22,7 @@ export default function NewsletterPage({
   coverImage,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
-    <Layout preview={preview}>
+    <Layout preview={preview} pageId="7t2jOQoBCZ6sGK4HgBZZ42">
       <PageMeta title="Newsletter | Refuge Worldwide" path="newsletter/" />
 
       <SinglePage coverImage={coverImage}>

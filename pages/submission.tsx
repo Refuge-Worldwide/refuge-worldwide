@@ -41,7 +41,7 @@ export default function NewSubmissionPage({
   };
 
   return (
-    <Layout>
+    <Layout pageId="1eohijLMd2Q38BVq0D713p">
       <Head>
         <meta name="robots" content="noindex,nofollow" />
       </Head>
