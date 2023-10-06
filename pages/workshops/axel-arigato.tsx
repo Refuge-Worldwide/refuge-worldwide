@@ -26,7 +26,7 @@ export default function AboutPage({
   return (
     <Layout preview={preview}>
       <PageMeta
-        title="Axel Arigato DJ Workshops | Refuge Worldwide"
+        title="Axel Arigato DJ Academy | Refuge Worldwide"
         path="tour-workshop-signup/"
       />
       <SinglePage coverImage={coverImage} objectPosition="top">
