@@ -17,7 +17,7 @@ export default function Workshop({
   return (
     <Layout preview={preview}>
       <WorkshopMeta {...workshop} />
-      <SinglePage coverImage={workshop.coverImage} objectPosition="top">
+      <SinglePage coverImage={workshop.coverImage} objectPosition="center">
         <div className="container-md p-4 sm:p-8 bg-white">
           <h1 className="text-base sm:text-large text-center mb-12">
             {workshop.title}
@@ -30,15 +30,16 @@ export default function Workshop({
           </div>
           <div className="mt-16 max-w-[750px] mx-auto">
             <iframe
-              data-tally-src={tallyEmbed}
+              src={tallyEmbed}
               width="100%"
-              height="300"
+              height="1600"
               title={workshop.title + " form"}
               className="mb-24"
               loading="lazy"
             ></iframe>
 
-            <Script
+            {/* Add back in when tally works with router */}
+            {/* <Script
               id="tally-js"
               src="https://tally.so/widgets/embed.js"
               onReady={() => {
@@ -46,7 +47,7 @@ export default function Workshop({
                 let Tally: any;
                 Tally?.loadEmbeds();
               }}
-            />
+            /> */}
           </div>
         </div>
       </SinglePage>
