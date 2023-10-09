@@ -288,3 +288,14 @@ export interface EventInterface {
   linkText: string;
   article: Object<{ slug: string }>;
 }
+
+export interface WorkshopInterface {
+  title: string;
+  date: string;
+  slug: string;
+  coverImage?: CoverImage;
+  slug: string;
+  deadlineDate: string;
+  workshopSignupInfo: Content;
+  tallyForm: string;
+}

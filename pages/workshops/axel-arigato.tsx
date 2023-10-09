@@ -18,7 +18,7 @@ export async function getStaticProps({ preview = false }) {
   };
 }
 
-export default function AboutPage({
+export default function AxelArigato({
   preview,
   coverImage,
   content,
