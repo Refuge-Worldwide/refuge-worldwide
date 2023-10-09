@@ -9,18 +9,16 @@ export default function WorkshopMeta({
   workshopSignupInfo,
   slug,
 }: WorkshopInterface) {
-  const excerpt = workshopSignupInfo?.json?.content
-    ?.filter((el) => el?.nodeType === "paragraph")
-    ?.slice(0, 1)
-    ?.pop()
-    ?.content?.filter((el) => el?.nodeType === "text")
-    ?.slice(0, 1)
-    ?.pop();
+  // const excerpt = workshopSignupInfo?.json?.content
+  //   ?.filter((el) => el?.nodeType === "paragraph")
+  //   ?.slice(0, 1)
+  //   ?.pop()
+  //   ?.content?.filter((el) => el?.nodeType === "text")
+  //   ?.slice(0, 1)
+  //   ?.pop();
 
   // @ts-ignore
-  const description = workshopSignupInfo?.json?.content
-    ? excerpt.value
-    : SEO.DESCRIPTION;
+  const description = SEO.DESCRIPTION;
 
   const image = `${coverImage.url}?w=1200&h=630&fit=pad`;
 
