@@ -291,11 +291,8 @@ export interface EventInterface {
 
 export interface WorkshopInterface {
   title: string;
-  date: string;
   slug: string;
   coverImage?: CoverImage;
-  slug: string;
-  deadlineDate: string;
-  workshopSignupInfo: Content;
-  tallyForm: string;
+  content: Content;
+  tallyFormLink: string;
 }

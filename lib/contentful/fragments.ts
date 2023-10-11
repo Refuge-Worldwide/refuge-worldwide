@@ -111,7 +111,14 @@ export const EventFragment = /* GraphQL */ `
     ticketLink
     linkText
     article {
-      slug
+      ... on Article {
+        type: __typename
+        slug
+      }
+      ... on Workshop {
+        type: __typename
+        slug
+      }
     }
     coverImage {
       sys {
