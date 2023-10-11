@@ -8,6 +8,7 @@ import useFathom from "../hooks/useFathom";
 import JoinChat from "../components/join-chat";
 import useSmoothscrollPolyfill from "../hooks/useSmoothscrollPolyfill";
 import "../styles/globals.css";
+import MixedFeelingsPlayer from "../components/mixed-feelings-player";
 
 const MixcloudPlayer = dynamic(() => import("../components/mixcloudPlayer"), {
   ssr: false,
@@ -31,13 +32,14 @@ function RefugeApp({ Component, pageProps }: AppProps) {
       </header>
 
       <LivePlayer />
+      <MixedFeelingsPlayer />
 
       <Component {...pageProps} />
 
       <Footer />
 
       <MixcloudPlayer />
-      <JoinChat />
+      {/* <JoinChat /> */}
     </Fragment>
   );
 }
