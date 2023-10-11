@@ -4,9 +4,8 @@ import { WorkshopInterface } from "../../types/shared";
 
 export default function WorkshopMeta({
   title,
-  date,
   coverImage,
-  workshopSignupInfo,
+  content,
   slug,
 }: WorkshopInterface) {
   // const excerpt = workshopSignupInfo?.json?.content
@@ -38,7 +37,6 @@ export default function WorkshopMeta({
       <meta property="og:url" content={`${SEO.ROOT}/workshops/${slug}`} />
 
       <meta property="og:type" content="article" />
-      <meta property="article:published_time" content={date} />
 
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:site" content="@refugeworldwide" />
