@@ -97,12 +97,8 @@ export async function getShowPathsToPreRender() {
 
 export async function getWorkshopPathsToPreRender() {
   const WorkshopPathsToPreRenderQuery = /* GraphQL */ `
-    query ShowPathsToPreRenderQuery {
-      eventCollection(
-        where: { slug_exists: true, eventType: "Workshop", signUpForm: true }
-        limit: 100
-        order: date_DESC
-      ) {
+    query WorkshopPathsToPreRenderQuery {
+      workshopCollection(where: { slug_exists: true }, limit: 100) {
         items {
           slug
         }
@@ -114,7 +110,7 @@ export async function getWorkshopPathsToPreRender() {
 
   const collection = extractCollection<{ slug: string }>(
     data,
-    "eventCollection"
+    "workshopCollection"
   );
 
   const paths = collection.map((el) => ({
