@@ -112,7 +112,6 @@ export default function NewsPage({
   return (
     <Layout preview={preview}>
       <PageMeta title="Events | Refuge Worldwide" path="events/" />
-      {/* <GameOfLife /> */}
       <FeaturedEvents events={featuredEvents} />
       <section className="p-4 sm:p-8 border-b-2">
         <div className="max-w-[1229px] mx-auto">
