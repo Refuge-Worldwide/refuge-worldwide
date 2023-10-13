@@ -51,6 +51,7 @@ export const FeaturedArticleFragment = /* GraphQL */ `
         id
       }
       title
+      description
       url
     }
     date
@@ -72,6 +73,7 @@ export const ArticlePreviewFragment = /* GraphQL */ `
         id
       }
       title
+      description
       url
     }
     date
