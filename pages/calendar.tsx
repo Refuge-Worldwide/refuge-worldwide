@@ -413,9 +413,6 @@ function Calendar() {
                 >
                   {({ values, isSubmitting }) => (
                     <Form id="calendarShow">
-                      <pre className="text-white bg-black h-96 overflow-scroll">
-                        {JSON.stringify(values, null, 2)}
-                      </pre>
                       <Field type="hidden" name="id" />
                       <InputField
                         name="title"
