@@ -305,8 +305,6 @@ function Calendar() {
           eventClick={handleEventClick}
           eventDrop={handleEventDrop}
           eventResize={handleEventDrop}
-          dateClick={handleDateClick}
-          eventAdd={handleEventAdd}
           select={handleSelect}
           loading={(e) => setCalendarLoading(e)}
           firstDay={1}
@@ -624,16 +622,6 @@ function renderEventContent(eventInfo) {
       </div>
     </div>
   );
-}
-
-function handleDateClick(eventInfo) {
-  console.log("date clicked");
-  console.log(eventInfo);
-}
-
-function handleEventAdd(eventInfo) {
-  console.log("event added");
-  console.log(eventInfo);
 }
 
 async function getEvents(info: any) {
