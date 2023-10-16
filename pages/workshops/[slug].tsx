@@ -35,7 +35,7 @@ export default function Workshop({
               src={tallyEmbed}
               width="100%"
               height="1600"
-              title={workshop.title + " form"}
+              title="Application form"
               className="mb-24"
               loading="lazy"
             ></iframe>
