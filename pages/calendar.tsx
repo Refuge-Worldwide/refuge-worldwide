@@ -7,7 +7,7 @@ import listPlugin from "@fullcalendar/list";
 import Loading from "../components/loading";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import InputField from "../components/formFields/inputField";
 import MultiSelectField from "../components/formFields/multiSelectField";
 import { Formik, Form, FieldArray, Field } from "formik";
@@ -54,11 +54,39 @@ function Calendar() {
   const datePicker = useRef<any>();
   const windowSize = useWindowSize();
 
+  const handleKeyPress = useCallback((event) => {
+    const calendarApi = calendarRef.current.getApi();
+
+    if (event.key == "ArrowLeft") {
+      calendarApi.prev();
+    } else if (event.key == "ArrowRight") {
+      calendarApi.next();
+    } else if (event.key == "w") {
+      calendarApi.changeView("timeGridWeek");
+    } else if (event.key == "d") {
+      calendarApi.changeView("timeGridDay");
+    } else if (event.key == "a") {
+      calendarApi.changeView("listMonth");
+    } else if (event.key == "r") {
+      reloadCalendar();
+    }
+  }, []);
+
   useEffect(() => {
     if (formRef.current) {
       console.log(formRef);
     }
   }, [formRef]);
+
+  useEffect(() => {
+    // attach the event listener
+    document.addEventListener("keydown", handleKeyPress);
+
+    // remove the event listener
+    return () => {
+      document.removeEventListener("keydown", handleKeyPress);
+    };
+  }, [handleKeyPress]);
 
   const statusOptions = [
     {
