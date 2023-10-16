@@ -277,7 +277,7 @@
 }
 
 .fc .fc-toolbar.fc-header-toolbar {
-  @apply mx-12 lg:mx-11;
+  @apply mx-2 lg:mx-11;
 }
 
 .fc-day-today {

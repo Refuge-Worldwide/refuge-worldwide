@@ -14,8 +14,8 @@ export default function MultiSelectField({
   description?: string;
   name: string;
   required?: boolean;
-  value?: Array<{ value: string; label: string }>;
-  options: Array<{ value: string; label: string }>;
+  value?: Array<{ value: string; label: string; email?: [string] }>;
+  options: Array<{ value: string; label: string; email?: [string] }>;
   limit?: number;
 }) {
   const [ariaFocusMessage, setAriaFocusMessage] = useState("");

@@ -7,12 +7,19 @@ import listPlugin from "@fullcalendar/list";
 import Loading from "../components/loading";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import InputField from "../components/formFields/inputField";
 import MultiSelectField from "../components/formFields/multiSelectField";
-import { Formik, Form, FieldArray, Field, useFormikContext } from "formik";
+import { Formik, Form, FieldArray, Field } from "formik";
 import { Cross } from "../icons/cross";
-import { getAllArtists } from "../lib/contentful/pages/submission";
+import {
+  getAllArtists,
+  deleteCalendarShow,
+  createCalendarShow,
+  updateCalendarShow,
+  createArtist,
+  updateArtistEmail,
+} from "../lib/contentful/calendar";
 import { Arrow } from "../icons/arrow";
 import CheckboxField from "../components/formFields/checkboxField";
 import { Close } from "../icons/menu";
@@ -41,8 +48,7 @@ function Calendar() {
   const [addDropdownOpen, setAddDropdownOpen] = useState<boolean>(false);
   const [selectedShow, setSelectedShow] = useState(null);
   const [calendarLoading, setCalendarLoading] = useState<boolean>(false);
-  const [calendarLoadingIcon, setCalendarLoadingIcon] =
-    useState<boolean>(false);
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const calendarRef = useRef<any>();
   const formRef = useRef<any>();
   const datePicker = useRef<any>();
@@ -53,15 +59,6 @@ function Calendar() {
       console.log(formRef);
     }
   }, [formRef]);
-
-  useEffect(() => {
-    (async () => {
-      if (!calendarLoading) {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-      }
-      setCalendarLoadingIcon(calendarLoading);
-    })();
-  }, [calendarLoading]);
 
   const statusOptions = [
     {
@@ -117,45 +114,83 @@ function Calendar() {
     ],
   };
 
-  const _handleSubmit = async (values, actions) => {
+  const handleSubmit = async (values, actions) => {
+    const method = values.id ? "update" : "create";
+    let show = null;
     setCalendarLoading(true);
-    console.log("submitting the form");
-    console.log(values);
-    const JSONData = JSON.stringify(values);
-    const endpoint = "/api/calendar";
-    const options = {
-      // The method is POST because we are sending data.
-      method: values.id ? "PATCH" : "POST",
-      // Tell the server we're sending JSON.
-      headers: {
-        "Content-Type": "application/json",
-      },
-      // Body of the request is the JSON data we created above.
-      body: JSONData,
-    };
-    const response = await fetch(endpoint, options);
-    if (response.status === 400) {
-      // Validation error
-      actions.setSubmitting(false);
-    } else if (response.ok) {
-      // successful
-      console.log("show added successfully");
+    try {
+      if (values.hasExtraArtists) {
+        for (const artist of values.extraArtists) {
+          // if ((artist.bio && artist.image) || (artist.bio !== "" && artist.image !== "")) {
+          console.log("adding artist to contentful: " + artist.name);
+          const contentfulNewArtist = await createArtist(artist);
+          console.log(contentfulNewArtist);
+          values.artists.push(contentfulNewArtist);
+          // }
+        }
+      }
 
-      // add id to values
-      const body = await response.json();
-      console.log(body);
-      // manually add show from full calendar
-      let calendarApi = calendarRef.current.getApi();
-      calendarApi.addEvent(transformEventForFullCalendar(values, body));
+      // if (values.artistEmails) {
+      //   console.log(values.artistEmails);
+      //   for (const artist of values.artistEmails) {
+      //     await updateArtistEmail(artist.id, artist.email);
+      //   }
+      // }
 
+      if (method == "update") {
+        show = await updateCalendarShow(values);
+      } else {
+        show = await createCalendarShow(values);
+      }
+
+      // manually add show to full calendar
+      const calendarApi = calendarRef.current.getApi();
+      const fcEvent = transformEventForFullCalendar(values, show);
+      if (method == "update") {
+        calendarApi.getEventById(values.id).remove();
+      }
+      calendarApi.addEvent(fcEvent);
       actions.setSubmitting(false);
       actions.setStatus("submitted");
       setShowDialogOpen(false);
-    } else {
-      // unknown error
-      actions.setSubmitting(false);
+      setCalendarLoading(false);
+    } catch (error) {
+      console.log(error);
+      throw error;
     }
-    setCalendarLoading(false);
+  };
+
+  const handleEventDrop = async (eventInfo) => {
+    setCalendarLoading(true);
+    console.log("handle drop: " + eventInfo);
+    const values = {
+      id: eventInfo.event.id,
+      start: eventInfo.event.startStr,
+      end: eventInfo.event.endStr,
+    };
+    updateCalendarShow(values)
+      .then(() => {
+        setCalendarLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const handleDelete = async (id) => {
+    setCalendarLoading(true);
+    setIsDeleting(true);
+    deleteCalendarShow(id)
+      .then((entry) => {
+        let calendarApi = calendarRef.current.getApi();
+        calendarApi.getEventById(id).remove();
+        setShowDialogOpen(false);
+        setCalendarLoading(false);
+        setIsDeleting(false);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const transformEventForFullCalendar = (values, id) => {
@@ -187,86 +222,18 @@ function Calendar() {
     };
   };
 
-  const _handleDelete = async (id) => {
-    setCalendarLoading(true);
-    const JSONData = JSON.stringify({
-      id: id,
-    });
-    const endpoint = "/api/calendar";
-    const options = {
-      // The method is POST because we are sending data.
-      method: "DELETE",
-      // Tell the server we're sending JSON.
-      headers: {
-        "Content-Type": "application/json",
-      },
-      // Body of the request is the JSON data we created above.
-      body: JSONData,
-    };
-    const response = await fetch(endpoint, options);
-    if (response.status === 400) {
-      // Validation error
-    } else if (response.ok) {
-      // successful
-      console.log("show deleted successfully");
-      setShowDialogOpen(false);
-      // manually delete show from full calendar
-      let calendarApi = calendarRef.current.getApi();
-      calendarApi.getEventById(id).remove();
-    } else {
-      // unknown error
-    }
-    setCalendarLoading(false);
-  };
-
-  function _handleSelect(selectInfo) {
+  function handleSelect(selectInfo) {
     console.log("select info");
     setShowDialogOpen(true);
     setSelectedShow(selectInfo);
     console.log(selectInfo.startStr);
   }
 
-  function _handleEventClick(eventInfo) {
+  function handleEventClick(eventInfo) {
     // remove UTC timezone stamp
     setShowDialogOpen(true);
     setSelectedShow(eventInfo.event);
   }
-
-  const _handleEventDrop = async (eventInfo) => {
-    setCalendarLoading(true);
-    console.log("handle drop: " + eventInfo);
-    const values = {
-      id: eventInfo.event.id,
-      start: eventInfo.event.startStr,
-      end: eventInfo.event.endStr,
-    };
-    console.log(values);
-    const JSONData = JSON.stringify(values);
-    const endpoint = "/api/calendar";
-    const options = {
-      // The method is POST because we are sending data.
-      method: values.id ? "PATCH" : "POST",
-      // Tell the server we're sending JSON.
-      headers: {
-        "Content-Type": "application/json",
-      },
-      // Body of the request is the JSON data we created above.
-      body: JSONData,
-    };
-    console.log(options);
-    const response = await fetch(endpoint, options);
-    if (response.status === 400) {
-      // Validation error
-      reloadCalendar();
-    } else if (response.ok) {
-      // successful
-      console.log("form submitted successfully");
-    } else {
-      // unknown error
-      reloadCalendar();
-    }
-    setCalendarLoading(false);
-  };
 
   const reloadCalendar = () => {
     console.log("reloading calendar");
@@ -335,12 +302,12 @@ function Calendar() {
             meridiem: false,
             hour12: false,
           }}
-          eventClick={_handleEventClick}
-          eventDrop={_handleEventDrop}
-          eventResize={_handleEventDrop}
+          eventClick={handleEventClick}
+          eventDrop={handleEventDrop}
+          eventResize={handleEventDrop}
           dateClick={handleDateClick}
           eventAdd={handleEventAdd}
-          select={_handleSelect}
+          select={handleSelect}
           loading={(e) => setCalendarLoading(e)}
           firstDay={1}
           initialView={windowSize.width < 765 ? "timeGridDay" : "timeGridWeek"}
@@ -353,25 +320,26 @@ function Calendar() {
         />
         <input
           type="date"
-          className="absolute top-12 left-2 lg:left-0 w-0 border-0 p-0 h-0"
+          className="absolute top-0 lg:top-12 right-12 lg:left-0 p-0 h-9 w-32 lg:h-0 lg:w-0 z-10 bg-transparent border-black border-2 rounded-full"
           ref={datePicker}
           onChange={handleDatePickerChange}
         ></input>
         <button
-          className="absolute top-1 left-2 lg:left-0"
+          className="hidden lg:block absolute top-1 left-2 lg:left-0"
           onClick={openDatePicker}
         >
           <AiOutlineCalendar size={25} />
         </button>
         <button
-          className="absolute top-1 lg:top-2 right-2 lg:right-0"
+          className="absolute top-1 lg:top-2 right-2 lg:right-0 disabled:cursor-wait"
           onClick={reloadCalendar}
+          disabled={calendarLoading}
         >
-          <TfiReload
-            size={20}
-            className={`animate-refresh ${calendarLoadingIcon ? "" : "pause"}
-          }`}
-          />
+          {calendarLoading ? (
+            <AiOutlineLoading3Quarters size={20} className="animate-spin" />
+          ) : (
+            <TfiReload size={20} />
+          )}
         </button>
         <DropdownMenu.Root
           open={addDropdownOpen}
@@ -411,7 +379,7 @@ function Calendar() {
         >
           <Dialog.Portal>
             <Dialog.Overlay className="w-screen h-screen fixed top-0 left-0 bg-black opacity-70 z-50" />
-            <Dialog.Content className="bg-white max-w-2xl fixed  top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 border-black border">
+            <Dialog.Content className="bg-white w-full h-full lg:h-auto lg:max-w-3xl fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 border-black border">
               <div className="relative p-8 overflow-y-scroll max-h-[95vh]">
                 <Dialog.Close asChild>
                   <button className="float-right" aria-label="Close">
@@ -441,10 +409,13 @@ function Calendar() {
                 <Formik
                   innerRef={formRef}
                   initialValues={initialValues}
-                  onSubmit={_handleSubmit}
+                  onSubmit={handleSubmit}
                 >
                   {({ values, isSubmitting }) => (
                     <Form id="calendarShow">
+                      <pre className="text-white bg-black h-96 overflow-scroll">
+                        {JSON.stringify(values, null, 2)}
+                      </pre>
                       <Field type="hidden" name="id" />
                       <InputField
                         name="title"
@@ -459,11 +430,15 @@ function Calendar() {
                         limit={10}
                         value={initialValues.artists}
                       />
+
                       <CheckboxField
                         name="hasExtraArtists"
                         label="New artist?"
                         size="small"
                       />
+
+                      {/* watch for change on artist and if they don't have an email add another modal to add email for that artist */}
+                      {/* create a new view for this modal */}
 
                       {values.hasExtraArtists && (
                         <fieldset className=" mb-8">
@@ -501,6 +476,12 @@ function Calendar() {
                                           type="text"
                                           label="Pronouns"
                                         />
+                                        <InputField
+                                          name={`extraArtists.${index}.email`}
+                                          type="text"
+                                          label="Email"
+                                          required
+                                        />
                                       </div>
                                     )
                                   )}
@@ -516,6 +497,37 @@ function Calendar() {
                           />
                         </fieldset>
                       )}
+
+                      {/* <FieldArray
+                        name="artistEmails"
+                        render={() => (
+                          <div>
+                            {values.artists
+                              .filter((artist) => artist.email == null)
+                              .map((artist, index) => (
+                                <div key={"artistEmails" + index}>
+                                  <input
+                                    name={`artistEmails.${index}.name`}
+                                    type="text"
+                                    value={artist.label}
+                                  />
+                                  <input
+                                    name={`artistEmails.${index}.id`}
+                                    type="text"
+                                    value={artist.value}
+                                  />
+                                  <InputField
+                                    name={`artistEmails.${index}.email`}
+                                    type="text"
+                                    label={`Email for ${artist.label}`}
+                                    required
+                                  />
+                                </div>
+                              ))}
+                          </div>
+                        )}
+                      /> */}
+
                       <InputField
                         name="start"
                         label="Start"
@@ -544,26 +556,34 @@ function Calendar() {
                       <div className="flex justify-between items-center mt-6">
                         <button
                           type="submit"
-                          className="inline-flex items-center space-x-4 text-base font-medium"
+                          className="inline-flex items-center space-x-4 text-base font-medium disabled:cursor-not-allowed"
+                          disabled={isSubmitting}
                         >
                           <span className="underline">
-                            {selectedShow?.title ? "Edit" : "Add"} show{" "}
+                            {selectedShow?.title ? "Save" : "Add"}
                           </span>
-                          {!isSubmitting && <Arrow />}
-                          {isSubmitting && (
+                          {isSubmitting ? (
                             <AiOutlineLoading3Quarters className="animate-spin" />
+                          ) : (
+                            <Arrow />
                           )}
                         </button>
                         {selectedShow?.title && (
                           <button
                             type="button"
-                            className="cursor-pointer"
+                            className="cursor-pointer disabled:cursor-not-allowed"
                             value="delete"
                             onClick={() => {
-                              _handleDelete(values.id);
+                              handleDelete(values.id);
                             }}
+                            disabled={isDeleting}
                           >
-                            <RiDeleteBin7Line />
+                            {" "}
+                            {isDeleting ? (
+                              <AiOutlineLoading3Quarters className="animate-spin" />
+                            ) : (
+                              <RiDeleteBin7Line />
+                            )}
                           </button>
                         )}
                       </div>

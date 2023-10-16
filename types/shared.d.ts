@@ -68,6 +68,14 @@ export type DropdownArtistEntry = {
   name: string;
 };
 
+export type CalendarDropdownArtistEntry = {
+  sys: {
+    id: string;
+  };
+  name: string;
+  email: [string];
+};
+
 export type Dropdown = { value: string; label: string }[];
 
 export type ArtistFilterType = "All" | "Residents" | "Guests";
