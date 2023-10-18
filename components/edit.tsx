@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { AiOutlineEdit } from "react-icons/ai";
 import { usePathname } from "next/navigation";
+import { useUser } from "@supabase/auth-helpers-react";
 
 export default function Edit({ id }: { id?: string }) {
   const pathname = usePathname();
+  const user = useUser();
 
-  if (id)
+  if (id && user)
     return (
       <Link
         className={`absolute ${
