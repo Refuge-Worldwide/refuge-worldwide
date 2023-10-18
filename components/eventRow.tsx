@@ -77,7 +77,7 @@ export function EventLink({ event, children }) {
   if (event.article && event.article?.type == "Article")
     return <Link href={`/news/${event.article.slug}`}>{children}</Link>;
   if (event.article && event.article?.type == "Workshop")
-    return <Link href={`/workshops/${event.slug}`}>{children}</Link>;
+    return <Link href={`/workshops/${event.article.slug}`}>{children}</Link>;
   return (
     <a href={event.ticketLink} target="_blank">
       {children}
