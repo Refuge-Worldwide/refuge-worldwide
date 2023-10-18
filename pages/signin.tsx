@@ -26,6 +26,7 @@ const LoginPage = () => {
           </h1>
           {/* to do: custom sign in/sign up once https://supabase.com/docs/guides/auth/auth-helpers/nextjs?language=ts#client-side */}
           <Auth
+            view="magic_link"
             appearance={{
               theme: ThemeSupa,
               variables: {
