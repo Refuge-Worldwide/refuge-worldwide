@@ -140,6 +140,10 @@
   .prose li {
     @apply my-1 lg:my-2;
   }
+
+  .prose p {
+    white-space: pre-wrap;
+  }
 }
 
 @layer utilities {
