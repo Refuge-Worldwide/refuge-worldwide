@@ -79,14 +79,16 @@ function Calendar() {
   }, [formRef]);
 
   useEffect(() => {
-    // attach the event listener
-    document.addEventListener("keydown", handleKeyPress);
+    if (!showDialogOpen) {
+      // attach the event listener
+      document.addEventListener("keydown", handleKeyPress);
 
-    // remove the event listener
-    return () => {
-      document.removeEventListener("keydown", handleKeyPress);
-    };
-  }, [handleKeyPress]);
+      // remove the event listener
+      return () => {
+        document.removeEventListener("keydown", handleKeyPress);
+      };
+    }
+  }, [handleKeyPress, showDialogOpen]);
 
   const statusOptions = [
     {
