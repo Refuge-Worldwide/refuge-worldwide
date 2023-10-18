@@ -13,17 +13,18 @@ const LoginPage = () => {
 
   // if logged in then redirect to calendar
   if (user) {
-    router.push("/admin/calendar");
+    // router.push("/admin/calendar");
   }
 
   return (
     <Layout>
       <PageMeta title="Sign in | Refuge Worldwide" path="signin/" />
-      <div className="min-h-[75vh] ">
-        <div className="max-w-lg mx-auto my-12 lg:my-40 border-2 border-black p-6">
+      <div className="min-h-[75vh] p-4">
+        <div className="max-w-lg mx-auto my-32 lg:my-40 border-2 border-black p-6">
           <h1 className="font-sans font-medium text-center">
             Sign in to Refuge Worldwide
           </h1>
+          {/* to do: custom sign in/sign up once https://supabase.com/docs/guides/auth/auth-helpers/nextjs?language=ts#client-side */}
           <Auth
             appearance={{
               theme: ThemeSupa,
