@@ -22,7 +22,7 @@ export default function ValuesPage({
   content,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
-    <Layout preview={preview}>
+    <Layout preview={preview} pageId="3RTvgTjZucRIHWeLKceq9S">
       <PageMeta title="Values | Refuge Worldwide" path="values/" />
 
       <SinglePage coverImage={coverImage}>

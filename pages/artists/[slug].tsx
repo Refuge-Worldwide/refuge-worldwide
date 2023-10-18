@@ -15,7 +15,7 @@ type ArtistProps = {
 
 export default function Artist({ artist, relatedShows, preview }: ArtistProps) {
   return (
-    <Layout preview={preview}>
+    <Layout preview={preview} pageId={artist?.sys?.id}>
       <ArtistMeta {...artist} />
 
       <SinglePage

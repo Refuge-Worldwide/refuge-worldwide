@@ -136,6 +136,9 @@ export enum ArticleType {
 }
 
 export interface ArticleInterface {
+  sys: {
+    id: string;
+  };
   title: string;
   subtitle?: string;
   articleType: ArticleType;

@@ -22,7 +22,7 @@ export default function AboutPage({
   content,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
-    <Layout preview={preview}>
+    <Layout preview={preview} pageId="z1SsoA1K4SMJryGuYjzhK">
       <PageMeta title="About | Refuge Worldwide" path="about/" />
 
       <SinglePage coverImage={coverImage}>
