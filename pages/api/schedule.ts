@@ -45,8 +45,10 @@ export default async function handler(
     }
 
     const liveNow = {
-      title: radioCoData.current_track.title,
-      artwork: liveNowArtwork,
+      // title: radioCoData.current_track.title,
+      title: "GLOBAL STRIKE - FOR PALESTINE - FRIDAY 20 OCTOBER",
+      // artwork: liveNowArtwork,
+      artwork: radioCoData.current_track.artwork_url,
     };
 
     const scheduleData = {
