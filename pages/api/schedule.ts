@@ -45,8 +45,8 @@ export default async function handler(
     }
 
     const liveNowTitle = () => {
-      if (radioCoData.current_track.title.includes("OVERWRITE")) {
-        return radioCoData.current_track.title.replace("OVERWRITE", "");
+      if (radioCoData.current_track.title.includes("!OVERWRITE!")) {
+        return radioCoData.current_track.title.replace("!OVERWRITE!", "");
       } else if (liveNowContentful) {
         return liveNowContentful.title;
       } else {
