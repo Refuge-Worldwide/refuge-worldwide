@@ -44,10 +44,10 @@ function RefugeApp({ Component, pageProps }: AppProps) {
 
         <Component {...pageProps} />
 
-        {router.pathname != "/calendar" && <Footer />}
+        {router.pathname != "/admin/calendar" && <Footer />}
 
         <MixcloudPlayer />
-        {router.pathname != "/calendar" && <JoinChat />}
+        {router.pathname != "/admin/calendar" && <JoinChat />}
       </SessionContextProvider>
     </Fragment>
   );
