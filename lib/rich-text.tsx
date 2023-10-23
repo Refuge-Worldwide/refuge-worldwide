@@ -67,7 +67,7 @@ export function renderRichTextWithImages(content: Content) {
             return (
               <Image
                 src={asset.url}
-                alt={asset.title}
+                alt={asset.description}
                 width={820}
                 height={520}
                 className="object-contain object-center"

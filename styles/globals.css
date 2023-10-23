@@ -132,6 +132,18 @@
   .checkbox-label {
     @apply sm:mt-0.5 sm:leading-none text-small ml-2;
   }
+
+  .prose li p {
+    @apply my-0;
+  }
+
+  .prose li {
+    @apply my-1 lg:my-2;
+  }
+
+  .prose p {
+    white-space: pre-wrap;
+  }
 }
 
 @layer utilities {

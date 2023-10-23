@@ -65,16 +65,11 @@ export async function getWorkshopsPage(preview: boolean) {
 export async function getWorkshopPageSingle(slug: string, preview: boolean) {
   const WorkshopPageSingleQuery = /* GraphQL */ `
     query WorkshopPageSingleQuery($slug: String, $preview: Boolean) {
-      eventCollection(
-        where: { eventType: "Workshop", signUpForm: true, slug: $slug }
-        preview: $preview
-        limit: 1
-      ) {
+      workshopCollection(where: { slug: $slug }, limit: 1, preview: $preview) {
         items {
           title
-          date
           slug
-          tallyForm
+          tallyFormLink
           coverImage {
             sys {
               id
@@ -85,8 +80,7 @@ export async function getWorkshopPageSingle(slug: string, preview: boolean) {
             width
             height
           }
-          deadlineDate
-          workshopSignupInfo {
+          content {
             json
             links {
               assets {
@@ -116,7 +110,7 @@ export async function getWorkshopPageSingle(slug: string, preview: boolean) {
 
   const entry = extractCollectionItem<WorkshopInterface>(
     res,
-    "eventCollection"
+    "workshopCollection"
   );
 
   if (!entry) {

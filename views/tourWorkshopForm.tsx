@@ -86,7 +86,7 @@ const workshops = [
     value: "Jasna1, Warsaw",
     label: "Nov 4 — Jasna1, Warsaw",
     additionalInfo:
-      "Hosted by Mala Herba from 8-10PM, This workshop is about MUSIC PRODUCTION, not DJing, and will be given in Polish. In collaboration with Oramics.",
+      "Hosted by Zosia Hołubowska from 8-10PM, This workshop will be given in Polish. During this intermediate level workshop, sound artist, producer and founder of Sounds Queer, Zosia Hołubowska will share their practice of working with archival samples. They will share their sources and creative ways to process what can be found online. The artists will focus on creating evolving, emotive textures, using both native effects of Ableton Live, as well as artists-created plug-ins. As the meeting is designed as a hands-on workshop, it is advised to bring a laptop with installed Ableton Live and headphones. In collaboration with Oramics.",
   },
   {
     value: "Funke, Ghent",
@@ -128,6 +128,9 @@ const closed = [
   "Corsica Studios, London",
   "Reset, Brussels",
   "Motopol, Copenhagen",
+  "De School, Amsterdam",
+  "Gewölbe, Cologne",
+  "Bunker, Turin",
 ];
 
 const validationSchema = Yup.object().shape({

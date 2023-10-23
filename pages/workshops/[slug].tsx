@@ -12,28 +12,30 @@ export default function Workshop({
   workshop,
   preview,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const tallyID = workshop.tallyForm.split("/").pop();
+  const tallyID = workshop.tallyFormLink.split("/").pop();
   const tallyEmbed = `https://tally.so/embed/${tallyID}?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1`;
   return (
     <Layout preview={preview}>
       <WorkshopMeta {...workshop} />
-      <SinglePage coverImage={workshop.coverImage} objectPosition="center">
+      <SinglePage
+        coverImage={workshop.coverImage}
+        objectPosition="center"
+        backPath="/events"
+      >
         <div className="container-md p-4 sm:p-8 bg-white">
           <h1 className="text-base sm:text-large text-center mb-12">
             {workshop.title}
           </h1>
 
           <div>
-            <Prose>
-              {renderRichTextWithImages(workshop.workshopSignupInfo)}
-            </Prose>
+            <Prose>{renderRichTextWithImages(workshop.content)}</Prose>
           </div>
           <div className="mt-16 max-w-[750px] mx-auto">
             <iframe
               src={tallyEmbed}
               width="100%"
               height="1600"
-              title={workshop.title + " form"}
+              title="Application form"
               className="mb-24"
               loading="lazy"
             ></iframe>

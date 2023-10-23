@@ -32,7 +32,7 @@ export default function ArticlePreview({
             loader={loaders.contentful}
             width={590}
             height={369}
-            alt={title}
+            alt={coverImage.description ? coverImage.description : title}
             className="bg-black/10 object-cover object-center aspect-[16/10]"
           />
           {withType ? (

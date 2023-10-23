@@ -51,7 +51,7 @@ export default function RelatedArticlePreview({
             loader={loaders.contentful}
             width={590}
             height={369}
-            alt={title}
+            alt={coverImage.description ? coverImage.description : title}
             className="bg-black/10 object-cover object-center aspect-[16/10] w-full"
           />
           <div className="flex absolute bottom-4 left-4">
