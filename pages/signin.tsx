@@ -1,7 +1,5 @@
 import { Auth } from "@supabase/auth-ui-react";
-import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
-import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Layout from "../components/layout";
 import PageMeta from "../components/seo/page";
@@ -16,6 +14,18 @@ const LoginPage = () => {
     // router.push("/admin/calendar");
   }
 
+  const getURL = () => {
+    let url =
+      process?.env?.NEXT_PUBLIC_SITE_URL ?? // Set this to your site URL in production env.
+      process?.env?.NEXT_PUBLIC_VERCEL_URL ?? // Automatically set by Vercel.
+      "http://localhost:3000/";
+    // Make sure to include `https://` when not localhost.
+    url = url.includes("http") ? url : `https://${url}`;
+    // Make sure to include a trailing `/`.
+    url = url.charAt(url.length - 1) === "/" ? url : `${url}/`;
+    return url;
+  };
+
   return (
     <Layout>
       <PageMeta title="Sign in | Refuge Worldwide" path="signin/" />
@@ -27,8 +37,8 @@ const LoginPage = () => {
           {/* to do: custom sign in/sign up once https://supabase.com/docs/guides/auth/auth-helpers/nextjs?language=ts#client-side */}
           <Auth
             view="magic_link"
+            redirectTo={getURL()}
             appearance={{
-              theme: ThemeSupa,
               variables: {
                 default: {
                   colors: {
