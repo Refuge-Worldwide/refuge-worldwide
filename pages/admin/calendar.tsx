@@ -1,17 +1,18 @@
-import Layout from "../components/layout";
+import Layout from "../../components/layout";
+import PageMeta from "../../components/seo/page";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
-import Loading from "../components/loading";
+import Loading from "../../components/loading";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { useState, useEffect, useRef, useCallback } from "react";
-import InputField from "../components/formFields/inputField";
-import MultiSelectField from "../components/formFields/multiSelectField";
+import InputField from "../../components/formFields/inputField";
+import MultiSelectField from "../../components/formFields/multiSelectField";
 import { Formik, Form, FieldArray, Field } from "formik";
-import { Cross } from "../icons/cross";
+import { Cross } from "../../icons/cross";
 import {
   getAllArtists,
   deleteCalendarShow,
@@ -19,10 +20,10 @@ import {
   updateCalendarShow,
   createArtist,
   updateArtistEmail,
-} from "../lib/contentful/calendar";
-import { Arrow } from "../icons/arrow";
-import CheckboxField from "../components/formFields/checkboxField";
-import { Close } from "../icons/menu";
+} from "../../lib/contentful/calendar";
+import { Arrow } from "../../icons/arrow";
+import CheckboxField from "../../components/formFields/checkboxField";
+import { Close } from "../../icons/menu";
 import { TfiReload } from "react-icons/tfi";
 import { IoMdCheckmark, IoMdMusicalNote } from "react-icons/io";
 import { RxExternalLink } from "react-icons/rx";
@@ -30,7 +31,7 @@ import { AiOutlineLoading3Quarters, AiOutlineCalendar } from "react-icons/ai";
 import { RiDeleteBin7Line } from "react-icons/ri";
 import Link from "next/link";
 import dayjs from "dayjs";
-import useWindowSize from "../hooks/useWindowSize";
+import useWindowSize from "../../hooks/useWindowSize";
 
 export default function CalendarPage() {
   return (
@@ -283,6 +284,7 @@ function Calendar() {
   if (windowSize.width)
     return (
       <div className="mt-2 lg:m-4 h-[calc(100vh-100px)] lg:h-[calc(100vh-125px)] relative">
+        <PageMeta title="Calendar | Refuge Worldwide" path="signin/" />
         <FullCalendar
           ref={calendarRef}
           plugins={[
