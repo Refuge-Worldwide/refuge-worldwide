@@ -32,7 +32,6 @@ function RefugeApp({ Component, pageProps }: AppProps) {
       </header>
 
       <LivePlayer />
-      <MixedFeelingsPlayer />
 
       <Component {...pageProps} />
 

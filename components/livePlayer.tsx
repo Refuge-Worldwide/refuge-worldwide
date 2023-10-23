@@ -5,6 +5,7 @@ import useSchedule from "../hooks/useSchedule";
 import Pause from "../icons/pause";
 import Play from "../icons/play";
 import Marquee from "./marquee";
+import MixedFeelingsPlayer from "./mixedFeelingsPlayer";
 
 const BroadcastingIndicator = ({
   status,
@@ -65,6 +66,10 @@ export default function LivePlayer() {
   );
 
   useEffect(() => {
+    console.log(isPlaying);
+  }, [isPlaying]);
+
+  useEffect(() => {
     if ("mediaSession" in navigator && scheduleData?.liveNow) {
       navigator.mediaSession.metadata = new MediaMetadata({
         title: scheduleData.liveNow.title,
@@ -81,37 +86,43 @@ export default function LivePlayer() {
   }, [scheduleData]);
 
   return (
-    <section className={playerWrapperClassNames}>
-      <BroadcastingIndicator
-        status={scheduleData?.status}
-        isLoading={isLoading}
-        error={error}
-      />
-
-      {!isLoading && !error && scheduleData?.liveNow?.title && (
-        <Marquee
-          key={scheduleData?.liveNow.title}
-          text={<span className="pr-8">{scheduleData?.liveNow.title}</span>}
+    <>
+      <section className={playerWrapperClassNames}>
+        <BroadcastingIndicator
+          status={scheduleData?.status}
+          isLoading={isLoading}
+          error={error}
         />
-      )}
 
-      {isOnline && (
-        <button
-          className="grow-0 h-7 w-7 sm:h-9 sm:w-9 focus:outline-none focus:ring-4"
-          onClick={isPlaying ? pause : play}
-          aria-label={
-            isPlaying ? "Pause Live Broadcast" : "Play Live Broadcast"
-          }
-        >
-          {isPlaying ? <Pause /> : <Play />}
-        </button>
-      )}
+        {!isLoading && !error && scheduleData?.liveNow?.title && (
+          <Marquee
+            key={scheduleData?.liveNow.title}
+            text={<span className="pr-8">{scheduleData?.liveNow.title}</span>}
+          />
+        )}
 
-      <audio hidden id="refuge-live-player" preload="none" ref={player}>
-        <source ref={source} type="audio/mpeg" />
-        Your browser does not support the audio element.
-      </audio>
-    </section>
+        {isOnline && (
+          <button
+            className="grow-0 h-7 w-7 sm:h-9 sm:w-9 focus:outline-none focus:ring-4"
+            onClick={isPlaying ? pause : play}
+            aria-label={
+              isPlaying ? "Pause Live Broadcast" : "Play Live Broadcast"
+            }
+          >
+            {isPlaying ? <Pause /> : <Play />}
+          </button>
+        )}
+
+        <audio hidden id="refuge-live-player" preload="none" ref={player}>
+          <source ref={source} type="audio/mpeg" />
+          Your browser does not support the audio element.
+        </audio>
+      </section>
+      <MixedFeelingsPlayer
+        isPlaying={isPlaying}
+        onPlay={isPlaying ? pause : play}
+      />
+    </>
   );
 }
 
