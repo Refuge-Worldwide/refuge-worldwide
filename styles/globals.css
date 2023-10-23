@@ -297,3 +297,7 @@
 .fc .fc-button-primary {
   @apply text-xxs;
 }
+
+.fc-event {
+  cursor: pointer;
+}

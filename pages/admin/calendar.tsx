@@ -13,14 +13,15 @@ import InputField from "../../components/formFields/inputField";
 import MultiSelectField from "../../components/formFields/multiSelectField";
 import { Formik, Form, FieldArray, Field } from "formik";
 import { Cross } from "../../icons/cross";
-import {
-  getAllArtists,
-  deleteCalendarShow,
-  createCalendarShow,
-  updateCalendarShow,
-  createArtist,
-  updateArtistEmail,
-} from "../../lib/contentful/calendar";
+// Add back in for calendar v2
+// import {
+//   getAllArtists,
+//   deleteCalendarShow,
+//   createCalendarShow,
+//   updateCalendarShow,
+//   createArtist,
+//   updateArtistEmail,
+// } from "../../lib/contentful/calendar";
 import { Arrow } from "../../icons/arrow";
 import CheckboxField from "../../components/formFields/checkboxField";
 import { Close } from "../../icons/menu";
@@ -73,11 +74,13 @@ function Calendar() {
     }
   }, []);
 
-  useEffect(() => {
-    if (formRef.current) {
-      console.log(formRef);
-    }
-  }, [formRef]);
+  // Add back in for calendar v2
+
+  // useEffect(() => {
+  //   if (formRef.current) {
+  //     console.log(formRef);
+  //   }
+  // }, [formRef]);
 
   useEffect(() => {
     if (!showDialogOpen) {
@@ -91,179 +94,183 @@ function Calendar() {
     }
   }, [handleKeyPress, showDialogOpen]);
 
-  const statusOptions = [
-    {
-      value: "TBC",
-      label: "TBC",
-    },
-    {
-      value: "Confirmed",
-      label: "Confirmed",
-    },
-    {
-      value: "Submitted",
-      label: "Submitted",
-    },
-  ];
+  // Add back in for calendar v2
 
-  useEffect(() => {
-    (async () => {
-      const artists = await getAllArtists();
-      setArtists(artists);
-    })();
-    const interval = setInterval(() => reloadCalendar(), 60000);
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
+  // const statusOptions = [
+  //   {
+  //     value: "TBC",
+  //     label: "TBC",
+  //   },
+  //   {
+  //     value: "Confirmed",
+  //     label: "Confirmed",
+  //   },
+  //   {
+  //     value: "Submitted",
+  //     label: "Submitted",
+  //   },
+  // ];
 
-  const initialValues = {
-    id: selectedShow?.id,
-    title: selectedShow?.title,
-    start: selectedShow?.startStr,
-    end: selectedShow?.endStr,
-    artists: selectedShow?.extendedProps?.artists
-      ? selectedShow?.extendedProps?.artists
-      : [],
-    status: [
-      {
-        value: selectedShow?.extendedProps?.status
-          ? selectedShow?.extendedProps?.status
-          : "TBC",
-        label: selectedShow?.extendedProps?.status
-          ? selectedShow?.extendedProps?.status
-          : "TBC",
-      },
-    ],
-    booker: selectedShow?.extendedProps?.booker,
-    hasExtraArtists: false,
-    extraArtists: [
-      {
-        name: "",
-        pronouns: "",
-      },
-    ],
-  };
+  // useEffect(() => {
+  //   (async () => {
+  //     const artists = await getAllArtists();
+  //     setArtists(artists);
+  //   })();
+  //   const interval = setInterval(() => reloadCalendar(), 60000);
+  //   return () => {
+  //     clearInterval(interval);
+  //   };
+  // }, []);
 
-  const handleSubmit = async (values, actions) => {
-    const method = values.id ? "update" : "create";
-    let show = null;
-    setCalendarLoading(true);
-    try {
-      if (values.hasExtraArtists) {
-        for (const artist of values.extraArtists) {
-          // if ((artist.bio && artist.image) || (artist.bio !== "" && artist.image !== "")) {
-          console.log("adding artist to contentful: " + artist.name);
-          const contentfulNewArtist = await createArtist(artist);
-          console.log(contentfulNewArtist);
-          values.artists.push(contentfulNewArtist);
-          // }
-        }
-      }
+  // const initialValues = {
+  //   id: selectedShow?.id,
+  //   title: selectedShow?.title,
+  //   start: selectedShow?.startStr,
+  //   end: selectedShow?.endStr,
+  //   artists: selectedShow?.extendedProps?.artists
+  //     ? selectedShow?.extendedProps?.artists
+  //     : [],
+  //   status: [
+  //     {
+  //       value: selectedShow?.extendedProps?.status
+  //         ? selectedShow?.extendedProps?.status
+  //         : "TBC",
+  //       label: selectedShow?.extendedProps?.status
+  //         ? selectedShow?.extendedProps?.status
+  //         : "TBC",
+  //     },
+  //   ],
+  //   booker: selectedShow?.extendedProps?.booker,
+  //   hasExtraArtists: false,
+  //   extraArtists: [
+  //     {
+  //       name: "",
+  //       pronouns: "",
+  //     },
+  //   ],
+  // };
 
-      // if (values.artistEmails) {
-      //   console.log(values.artistEmails);
-      //   for (const artist of values.artistEmails) {
-      //     await updateArtistEmail(artist.id, artist.email);
-      //   }
-      // }
+  // const handleSubmit = async (values, actions) => {
+  //   const method = values.id ? "update" : "create";
+  //   let show = null;
+  //   setCalendarLoading(true);
+  //   try {
+  //     if (values.hasExtraArtists) {
+  //       for (const artist of values.extraArtists) {
+  //         // if ((artist.bio && artist.image) || (artist.bio !== "" && artist.image !== "")) {
+  //         console.log("adding artist to contentful: " + artist.name);
+  //         const contentfulNewArtist = await createArtist(artist);
+  //         console.log(contentfulNewArtist);
+  //         values.artists.push(contentfulNewArtist);
+  //         // }
+  //       }
+  //     }
 
-      if (method == "update") {
-        show = await updateCalendarShow(values);
-      } else {
-        show = await createCalendarShow(values);
-      }
+  //     // if (values.artistEmails) {
+  //     //   console.log(values.artistEmails);
+  //     //   for (const artist of values.artistEmails) {
+  //     //     await updateArtistEmail(artist.id, artist.email);
+  //     //   }
+  //     // }
 
-      // manually add show to full calendar
-      const calendarApi = calendarRef.current.getApi();
-      const fcEvent = transformEventForFullCalendar(values, show);
-      if (method == "update") {
-        calendarApi.getEventById(values.id).remove();
-      }
-      calendarApi.addEvent(fcEvent);
-      actions.setSubmitting(false);
-      actions.setStatus("submitted");
-      setShowDialogOpen(false);
-      setCalendarLoading(false);
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
-  };
+  //     if (method == "update") {
+  //       show = await updateCalendarShow(values);
+  //     } else {
+  //       show = await createCalendarShow(values);
+  //     }
 
-  const handleEventDrop = async (eventInfo) => {
-    setCalendarLoading(true);
-    console.log("handle drop: " + eventInfo);
-    const values = {
-      id: eventInfo.event.id,
-      start: eventInfo.event.startStr,
-      end: eventInfo.event.endStr,
-    };
-    updateCalendarShow(values)
-      .then(() => {
-        setCalendarLoading(false);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+  //     // manually add show to full calendar
+  //     const calendarApi = calendarRef.current.getApi();
+  //     const fcEvent = transformEventForFullCalendar(values, show);
+  //     if (method == "update") {
+  //       calendarApi.getEventById(values.id).remove();
+  //     }
+  //     calendarApi.addEvent(fcEvent);
+  //     actions.setSubmitting(false);
+  //     actions.setStatus("submitted");
+  //     setShowDialogOpen(false);
+  //     setCalendarLoading(false);
+  //   } catch (error) {
+  //     console.log(error);
+  //     throw error;
+  //   }
+  // };
 
-  const handleDelete = async (id) => {
-    setCalendarLoading(true);
-    setIsDeleting(true);
-    deleteCalendarShow(id)
-      .then((entry) => {
-        let calendarApi = calendarRef.current.getApi();
-        calendarApi.getEventById(id).remove();
-        setShowDialogOpen(false);
-        setCalendarLoading(false);
-        setIsDeleting(false);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+  // const handleEventDrop = async (eventInfo) => {
+  //   setCalendarLoading(true);
+  //   console.log("handle drop: " + eventInfo);
+  //   const values = {
+  //     id: eventInfo.event.id,
+  //     start: eventInfo.event.startStr,
+  //     end: eventInfo.event.endStr,
+  //   };
+  //   updateCalendarShow(values)
+  //     .then(() => {
+  //       setCalendarLoading(false);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
 
-  const transformEventForFullCalendar = (values, id) => {
-    return {
-      id: id,
-      title: values.title,
-      artists: values.artists,
-      start: values.start,
-      end: values.end,
-      status: values.status[0].value,
-      published: false,
-      backgroundColor:
-        values.status == "TBC"
-          ? "#EDB8B4"
-          : values.status == "Confirmed"
-          ? "#F1E2AF"
-          : values.status == "Submitted"
-          ? "#B3DCC1"
-          : "#B3DCC1",
-      borderColor:
-        values.status == "TBC"
-          ? "#EDB8B4"
-          : values.status == "Confirmed"
-          ? "#F1E2AF"
-          : values.status == "Submitted"
-          ? "#B3DCC1"
-          : "#B3DCC1",
-      booker: values.booker ? values.booker : "George",
-    };
-  };
+  // const handleDelete = async (id) => {
+  //   setCalendarLoading(true);
+  //   setIsDeleting(true);
+  //   deleteCalendarShow(id)
+  //     .then((entry) => {
+  //       let calendarApi = calendarRef.current.getApi();
+  //       calendarApi.getEventById(id).remove();
+  //       setShowDialogOpen(false);
+  //       setCalendarLoading(false);
+  //       setIsDeleting(false);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
 
-  function handleSelect(selectInfo) {
-    console.log("select info");
-    setShowDialogOpen(true);
-    setSelectedShow(selectInfo);
-    console.log(selectInfo.startStr);
-  }
+  // const transformEventForFullCalendar = (values, id) => {
+  //   return {
+  //     id: id,
+  //     title: values.title,
+  //     artists: values.artists,
+  //     start: values.start,
+  //     end: values.end,
+  //     status: values.status[0].value,
+  //     published: false,
+  //     backgroundColor:
+  //       values.status == "TBC"
+  //         ? "#EDB8B4"
+  //         : values.status == "Confirmed"
+  //         ? "#F1E2AF"
+  //         : values.status == "Submitted"
+  //         ? "#B3DCC1"
+  //         : "#B3DCC1",
+  //     borderColor:
+  //       values.status == "TBC"
+  //         ? "#EDB8B4"
+  //         : values.status == "Confirmed"
+  //         ? "#F1E2AF"
+  //         : values.status == "Submitted"
+  //         ? "#B3DCC1"
+  //         : "#B3DCC1",
+  //     booker: values.booker ? values.booker : "George",
+  //   };
+  // };
+
+  // function handleSelect(selectInfo) {
+  //   console.log("select info");
+  //   setShowDialogOpen(true);
+  //   setSelectedShow(selectInfo);
+  //   console.log(selectInfo.startStr);
+  // }
 
   function handleEventClick(eventInfo) {
     // remove UTC timezone stamp
-    setShowDialogOpen(true);
-    setSelectedShow(eventInfo.event);
+    // setShowDialogOpen(true);
+    // setSelectedShow(eventInfo.event);
+    const url = `https://app.contentful.com/spaces/taoiy3h84mql/environments/master/entries/${eventInfo.id}`;
+    window.open(url, "_blank");
   }
 
   const reloadCalendar = () => {
@@ -335,15 +342,17 @@ function Calendar() {
             hour12: false,
           }}
           eventClick={handleEventClick}
-          eventDrop={handleEventDrop}
-          eventResize={handleEventDrop}
-          select={handleSelect}
+          // Add back in for calendar v2
+          // eventDrop={handleEventDrop}
+          // eventResize={handleEventDrop}
+          // select={handleSelect}
           loading={(e) => setCalendarLoading(e)}
           firstDay={1}
           initialView={windowSize.width < 765 ? "timeGridDay" : "timeGridWeek"}
           nowIndicator={true}
-          editable={true}
-          selectable={true}
+          // Add back in for calendar v2
+          // editable={true}
+          // selectable={true}
           selectMirror={true}
           events={getEvents}
           eventContent={renderEventContent}
@@ -371,7 +380,8 @@ function Calendar() {
             <TfiReload size={20} />
           )}
         </button>
-        <DropdownMenu.Root
+        {/* Add back in for calendar v2 */}
+        {/* <DropdownMenu.Root
           open={addDropdownOpen}
           onOpenChange={setAddDropdownOpen}
         >
@@ -401,9 +411,10 @@ function Calendar() {
               </DropdownMenu.Item>
             </DropdownMenu.Content>
           </DropdownMenu.Portal>
-        </DropdownMenu.Root>
+        </DropdownMenu.Root> */}
 
-        <Dialog.Root
+        {/* Add back in for calendar v2 */}
+        {/* <Dialog.Root
           open={showDialogOpen}
           onOpenChange={(showDialogOpen) => setShowDialogOpen(showDialogOpen)}
         >
@@ -432,10 +443,6 @@ function Calendar() {
                     )}
                   </h5>
                 </Dialog.Title>
-                {/* <Dialog.Description className=""></Dialog.Description> */}
-                {/* <pre className="text-white bg-black h-96 overflow-scroll">
-                {JSON.stringify(selectedShow.extendedProps, null, 2)}
-              </pre> */}
                 <Formik
                   innerRef={formRef}
                   initialValues={initialValues}
@@ -464,8 +471,6 @@ function Calendar() {
                         size="small"
                       />
 
-                      {/* watch for change on artist and if they don't have an email add another modal to add email for that artist */}
-                      {/* create a new view for this modal */}
 
                       {values.hasExtraArtists && (
                         <fieldset className=" mb-8">
@@ -525,7 +530,7 @@ function Calendar() {
                         </fieldset>
                       )}
 
-                      {/* <FieldArray
+                      <FieldArray
                         name="artistEmails"
                         render={() => (
                           <div>
@@ -553,7 +558,7 @@ function Calendar() {
                               ))}
                           </div>
                         )}
-                      /> */}
+                      />
 
                       <InputField
                         name="start"
@@ -620,7 +625,7 @@ function Calendar() {
               </div>
             </Dialog.Content>
           </Dialog.Portal>
-        </Dialog.Root>
+        </Dialog.Root> */}
       </div>
     );
 
