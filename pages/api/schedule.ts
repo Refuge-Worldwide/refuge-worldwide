@@ -48,7 +48,7 @@ export default async function handler(
       if (radioCoData.current_track.title.includes("OVERWRITE")) {
         return radioCoData.current_track.title.replace("OVERWRITE", "");
       } else if (liveNowContentful) {
-        return liveNowContentful.title + "contentful";
+        return liveNowContentful.title;
       } else {
         return radioCoData.current_track.title;
       }
