@@ -26,6 +26,9 @@ const LoginPage = () => {
     return url;
   };
 
+  console.log("vercel url: " + process.env.NEXT_PUBLIC_VERCEL_URL);
+  console.log("url: " + getURL());
+
   return (
     <Layout>
       <PageMeta title="Sign in | Refuge Worldwide" path="signin/" />
