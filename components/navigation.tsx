@@ -9,6 +9,8 @@ import { Menu } from "../icons/menu";
 import MessageSquare from "../icons/message-square";
 import Search from "../icons/search";
 import NavigationLink from "./navigationLink";
+import { useUser } from "@supabase/auth-helpers-react";
+import { AiOutlineCalendar } from "react-icons/ai";
 
 export default function Navigation() {
   const [isOpen, isOpenSet] = useState(false);
@@ -20,6 +22,8 @@ export default function Navigation() {
 
     window.open("/chat", "refugechatwindow", chatOptions);
   }, []);
+
+  const user = useUser();
 
   return (
     <Dialog.Root open={isOpen} onOpenChange={(open) => isOpenSet(open)}>
@@ -144,13 +148,19 @@ export default function Navigation() {
                       </a>
                     </li>
                     <li>
-                      <a
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        href={INSTAGRAM_URL}
-                      >
-                        <Instagram />
-                      </a>
+                      {user ? (
+                        <Link href="/admin/calendar">
+                          <AiOutlineCalendar />
+                        </Link>
+                      ) : (
+                        <a
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          href={INSTAGRAM_URL}
+                        >
+                          <Instagram />
+                        </a>
+                      )}
                     </li>
                   </ul>
                 </li>

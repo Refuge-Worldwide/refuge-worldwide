@@ -20,7 +20,7 @@ const LoginPage = () => {
     <Layout>
       <PageMeta title="Sign in | Refuge Worldwide" path="signin/" />
       <div className="min-h-[75vh] p-4">
-        <div className="max-w-lg mx-auto my-32 lg:my-40 border-2 border-black p-6">
+        <div className="max-w-xl mx-auto my-32 lg:my-40 border-2 border-black p-6">
           <h1 className="font-sans font-medium text-center">
             Sign in to Refuge Worldwide
           </h1>
@@ -36,6 +36,14 @@ const LoginPage = () => {
                     brandAccent: "#4d7cff",
                   },
                 },
+              },
+              extend: false,
+              className: {
+                input: "pill-input mb-6",
+                button: "pill-input mt-6 hover:bg-black hover:text-white",
+                container: "mt-12",
+                message:
+                  "message bg-orange border border-black w-full p-4 block mt-6 text-center text-small",
               },
             }}
             supabaseClient={supabaseClient}
