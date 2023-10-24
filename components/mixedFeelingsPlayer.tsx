@@ -38,7 +38,7 @@ export default function MixedFeelingsPlayer({
     return (
       <div
         ref={ref}
-        className={`flex flex-col lg:flex-row items-stretch bg-black text-white`}
+        className={`flex flex-col lg:flex-row items-stretch bg-black text-white border-b-2 border-black`}
       >
         <div
           className={`${
@@ -102,7 +102,7 @@ export default function MixedFeelingsPlayer({
         <div
           className={`${
             !isHomePage && "lg:hidden"
-          } px-6 py-4  max-w-2xl flex flex-col justify-between lg:w-2/5`}
+          } px-6 py-4  max-w-2xl flex flex-col justify-between lg:w-2/5 border-l-2 border-black`}
         >
           <div className="hidden lg:block">
             <p>
