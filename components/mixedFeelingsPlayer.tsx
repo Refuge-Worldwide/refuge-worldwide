@@ -38,7 +38,7 @@ export default function MixedFeelingsPlayer({
     return (
       <div
         ref={ref}
-        className={`flex flex-col lg:flex-row items-stretch bg-black text-white border-b-2 border-black`}
+        className={`flex flex-col lg:flex-row items-stretch bg-[#94B5FA] text-black border-b-2 border-black`}
       >
         <div
           className={`${
@@ -102,7 +102,7 @@ export default function MixedFeelingsPlayer({
         <div
           className={`${
             !isHomePage && "lg:hidden"
-          } p-4 lg:p-8  max-w-2xl flex flex-col justify-between`}
+          } p-4 lg:p-8  max-w-2xl flex flex-col justify-between lg:w-2/5 lg:border-l-2`}
         >
           <div className="hidden lg:block">
             <p>
@@ -119,7 +119,7 @@ export default function MixedFeelingsPlayer({
               className="flex items-center gap-4 grow justify-center lg:justify-start"
             >
               <span>More info</span>
-              <Arrow colour="white" />
+              <Arrow colour="black" />
             </Link>
           </div>
         </div>
