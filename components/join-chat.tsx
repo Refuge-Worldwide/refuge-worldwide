@@ -7,7 +7,7 @@ import DiscordEmbed from "./DiscordEmbed";
 
 export default function JoinChat() {
   return (
-    <div className="fixed bottom-4 right-4 hidden sm:block z-50">
+    <div className="fixed bottom-5 right-4 hidden sm:block z-30">
       <ChatRoom />
     </div>
   );

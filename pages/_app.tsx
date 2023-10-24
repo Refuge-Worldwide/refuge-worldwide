@@ -38,7 +38,7 @@ function RefugeApp({ Component, pageProps }: AppProps) {
       <Footer />
 
       <MixcloudPlayer />
-      {/* <JoinChat /> */}
+      <JoinChat />
     </Fragment>
   );
 }
