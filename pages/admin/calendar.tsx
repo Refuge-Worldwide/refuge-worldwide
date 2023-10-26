@@ -6,13 +6,13 @@ import interactionPlugin from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
 import Loading from "../../components/loading";
-import * as Dialog from "@radix-ui/react-dialog";
-import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+// import * as Dialog from "@radix-ui/react-dialog";
+// import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { useState, useEffect, useRef, useCallback } from "react";
-import InputField from "../../components/formFields/inputField";
-import MultiSelectField from "../../components/formFields/multiSelectField";
-import { Formik, Form, FieldArray, Field } from "formik";
-import { Cross } from "../../icons/cross";
+// import InputField from "../../components/formFields/inputField";
+// import MultiSelectField from "../../components/formFields/multiSelectField";
+// import { Formik, Form, FieldArray, Field } from "formik";
+// import { Cross } from "../../icons/cross";
 // Add back in for calendar v2
 // import {
 //   getAllArtists,
