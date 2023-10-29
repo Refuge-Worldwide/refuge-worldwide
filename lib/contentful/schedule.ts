@@ -7,7 +7,7 @@ import { extractCollection } from "../../util";
 dayjs.extend(utc);
 
 export async function getScheduleData() {
-  const cetAdjustment = 2;
+  const cetAdjustment = 1;
   let endScheduleAdjustment = 2;
   const start = Date.now();
   const nowUTC = dayjs.utc();
