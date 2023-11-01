@@ -2,17 +2,11 @@ import ShowSubmissionStep1 from "./showSubmissionStep1";
 import ShowSubmissionStep2 from "./showSubmissionStep2";
 import ShowSubmissionStep3 from "./showSubmissionStep3";
 import ShowSubmissionStep4 from "./showSubmissionStep4";
-import {
-  Dropdown,
-  ShowInterface,
-  SubmissionFormValues,
-  SubmissionImportantInfo,
-} from "../types/shared";
+import { SubmissionFormValues } from "../types/shared";
 import { Arrow } from "../icons/arrow";
 import { useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { transformForDropdown } from "../util";
 
 const today = new Date();
 const instaReg = /^([\w.\s]+, )*([\w.\s]+){1}$/;
@@ -67,7 +61,7 @@ const validationSchema = [
       instaReg,
       "Incorrect format. Should be a comma seperated list with space and NOT including the @ symbol."
     ),
-    image: Yup.object().required("Please add a show image"),
+    image: Yup.array().required("Please add a show image"),
     hasExtraArtists: Yup.boolean(),
     artists: Yup.array().when("hasExtraArtists", {
       is: false,
@@ -99,48 +93,39 @@ const validationSchema = [
   }),
 ];
 
+const initialValues: SubmissionFormValues = {
+  showType: "",
+  readInfo: false,
+  email: "",
+  number: "",
+  showName: "",
+  datetime: "",
+  length: "1",
+  genres: [],
+  hasNewGenres: false,
+  newGenres: "",
+  description: "",
+  instagram: "",
+  image: [],
+  artists: [],
+  hasExtraArtists: false,
+  extraArtists: [
+    {
+      name: "",
+      pronouns: "",
+      bio: "",
+      image: "",
+    },
+  ],
+};
+
 export default function ShowSubmissionForm({
-  initial,
   genres,
   artists,
   uploadLink,
   importantInfo,
-}: {
-  initial?: ShowInterface;
-  genres: Dropdown;
-  artists: Dropdown;
-  uploadLink: string;
-  importantInfo: SubmissionImportantInfo;
 }) {
-  const initialValues: SubmissionFormValues = {
-    id: initial ? initial.sys.id : "",
-    showType: "",
-    readInfo: false,
-    email: "",
-    number: "",
-    showName: "",
-    datetime: initial ? initial.date : "",
-    length: "1",
-    genres: [],
-    hasNewGenres: false,
-    newGenres: "",
-    description: "",
-    instagram: "",
-    image: {},
-    artists: initial
-      ? transformForDropdown(initial.artistsCollection.items)
-      : [],
-    hasExtraArtists: false,
-    extraArtists: [
-      {
-        name: "",
-        pronouns: "",
-        bio: "",
-        image: "",
-      },
-    ],
-  };
-  const [currentStep, setCurrentStep] = useState<number>(1);
+  const [currentStep, setCurrentStep] = useState<number>(0);
   const isLastStep = currentStep === 2;
   const currentValidationSchema = validationSchema[currentStep];
   const [submissionError, setSubmissionError] = useState<boolean>(false);
@@ -171,7 +156,7 @@ export default function ShowSubmissionForm({
     const endpoint = "/api/show-submission";
     const options = {
       // The method is POST because we are sending data.
-      method: initial ? "PATCH" : "POST",
+      method: "POST",
       // Tell the server we're sending JSON.
       headers: {
         "Content-Type": "application/json",
@@ -212,7 +197,6 @@ export default function ShowSubmissionForm({
       case 2:
         return (
           <ShowSubmissionStep3
-            initial={initial}
             showType={values.showType}
             genres={genres}
             artists={artists}
@@ -228,35 +212,32 @@ export default function ShowSubmissionForm({
 
   return (
     <div id="submission-form" className="min-h-1/2">
-      <pre className="text-white bg-black">
-        {JSON.stringify(initial, null, 2)}
-      </pre>
       {currentStep != 3 && (
         <div className="flex flex-col md:flex-row text-center items-center justify-center space-y sm:space-y-2 md:space-y-0 md:space-x-4">
-          {/* <button
+          <button
             onClick={() => setCurrentStep(0)}
             disabled={currentStep == 0}
             className={currentStep == 0 ? "font-medium" : ""}
           >
-            1. Live / Pre-record
+            1. Live / Pre-recorded
           </button>
-          <Arrow className="hidden md:block" /> */}
+          <Arrow className="hidden md:block" />
           <button
             onClick={() => setCurrentStep(1)}
             disabled={currentStep <= 1}
             className={currentStep == 1 ? "font-medium" : ""}
           >
-            1. Important info
+            2. Important info
           </button>
           <Arrow className="hidden md:block" />
           <span className={currentStep == 2 ? "font-medium" : ""}>
-            2. Submission
+            3. Submission
           </span>
         </div>
       )}
       <Formik
         initialValues={initialValues}
-        // validationSchema={currentValidationSchema}
+        validationSchema={currentValidationSchema}
         onSubmit={_handleSubmit}
       >
         {({ values, isSubmitting }) => (
@@ -265,7 +246,7 @@ export default function ShowSubmissionForm({
             {currentStep != 3 && (
               <div>
                 <div className="flex space-x-6 mt-6">
-                  {currentStep > 1 && (
+                  {currentStep !== 0 && (
                     <button
                       onClick={_handleBack}
                       type="button"
