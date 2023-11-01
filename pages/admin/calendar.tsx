@@ -6,13 +6,13 @@ import interactionPlugin from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
 import Loading from "../../components/loading";
-import * as Dialog from "@radix-ui/react-dialog";
-import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+// import * as Dialog from "@radix-ui/react-dialog";
+// import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { useState, useEffect, useRef, useCallback } from "react";
-import InputField from "../../components/formFields/inputField";
-import MultiSelectField from "../../components/formFields/multiSelectField";
-import { Formik, Form, FieldArray, Field } from "formik";
-import { Cross } from "../../icons/cross";
+// import InputField from "../../components/formFields/inputField";
+// import MultiSelectField from "../../components/formFields/multiSelectField";
+// import { Formik, Form, FieldArray, Field } from "formik";
+// import { Cross } from "../../icons/cross";
 // Add back in for calendar v2
 // import {
 //   getAllArtists,
@@ -22,15 +22,15 @@ import { Cross } from "../../icons/cross";
 //   createArtist,
 //   updateArtistEmail,
 // } from "../../lib/contentful/calendar";
-import { Arrow } from "../../icons/arrow";
-import CheckboxField from "../../components/formFields/checkboxField";
-import { Close } from "../../icons/menu";
+// import { Arrow } from "../../icons/arrow";
+// import CheckboxField from "../../components/formFields/checkboxField";
+// import { Close } from "../../icons/menu";
 import { TfiReload } from "react-icons/tfi";
 import { IoMdCheckmark, IoMdMusicalNote } from "react-icons/io";
-import { RxExternalLink } from "react-icons/rx";
+// import { RxExternalLink } from "react-icons/rx";
 import { AiOutlineLoading3Quarters, AiOutlineCalendar } from "react-icons/ai";
-import { RiDeleteBin7Line } from "react-icons/ri";
-import Link from "next/link";
+// import { RiDeleteBin7Line } from "react-icons/ri";
+// import Link from "next/link";
 import dayjs from "dayjs";
 import useWindowSize from "../../hooks/useWindowSize";
 
@@ -45,14 +45,14 @@ export default function CalendarPage() {
 }
 
 function Calendar() {
-  const [artists, setArtists] = useState(null);
+  // const [artists, setArtists] = useState(null);
   const [showDialogOpen, setShowDialogOpen] = useState<boolean>(false);
-  const [addDropdownOpen, setAddDropdownOpen] = useState<boolean>(false);
-  const [selectedShow, setSelectedShow] = useState(null);
+  // const [addDropdownOpen, setAddDropdownOpen] = useState<boolean>(false);
+  // const [selectedShow, setSelectedShow] = useState(null);
   const [calendarLoading, setCalendarLoading] = useState<boolean>(false);
-  const [isDeleting, setIsDeleting] = useState<boolean>(false);
+  // const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const calendarRef = useRef<any>();
-  const formRef = useRef<any>();
+  // const formRef = useRef<any>();
   const datePicker = useRef<any>();
   const windowSize = useWindowSize();
 
@@ -269,7 +269,8 @@ function Calendar() {
     // remove UTC timezone stamp
     // setShowDialogOpen(true);
     // setSelectedShow(eventInfo.event);
-    const url = `https://app.contentful.com/spaces/taoiy3h84mql/environments/master/entries/${eventInfo.id}`;
+    console.log(eventInfo.event.id);
+    const url = `https://app.contentful.com/spaces/taoiy3h84mql/environments/master/entries/${eventInfo.event.id}`;
     window.open(url, "_blank");
   }
 
