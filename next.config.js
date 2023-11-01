@@ -8,4 +8,5 @@ module.exports = {
   images: {
     domains: ["images.ctfassets.net"],
   },
+  transpilePackages: ["@radix-ui/react-roving-focus"],
 };
