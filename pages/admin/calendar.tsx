@@ -668,5 +668,5 @@ async function getEvents(info: any) {
     `/api/calendar?start=${info.startStr}&end=${info.endStr}`
   );
   const shows = await response.json();
-  return shows.processed;
+  return shows;
 }
