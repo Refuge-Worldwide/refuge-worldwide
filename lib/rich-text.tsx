@@ -34,6 +34,21 @@ export function renderRichTextWithImages(content: Content) {
             return <iframe width="100%" height="120" src={uri} />;
           }
 
+          if (uri.includes("youtube-nocookie.com/embed")) {
+            return (
+              <div className="aspect-video">
+                <iframe
+                  title={children.toString()}
+                  src={uri}
+                  allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  width="100%"
+                  height="100%"
+                ></iframe>
+              </div>
+            );
+          }
+
           if (uri.includes("refugeworldwide.com")) {
             return (
               <Link href={uri.replace("https://refugeworldwide.com", "")}>
