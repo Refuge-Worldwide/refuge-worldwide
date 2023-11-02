@@ -49,7 +49,7 @@ export default function MixedFeelingsPlayer({
             <div
               className={`${
                 inView && isHomePage && "lg:hidden"
-              } hidden lg:flex bg-black px-4 py-3 items-center justify-between gap-4`}
+              } hidden lg:flex bg-black px-4 py-3 items-center justify-between gap-4 text-white`}
             >
               <div className="w-4 h-4 rounded-full bg-red animate-pulse"></div>
               <Link
