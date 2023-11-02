@@ -19,7 +19,7 @@ export default function Article({
   relatedArticles,
 }: ArticleProps) {
   return (
-    <Layout preview={preview}>
+    <Layout preview={preview} pageId={article?.sys?.id}>
       <ArticleMeta {...article} />
 
       <SinglePage

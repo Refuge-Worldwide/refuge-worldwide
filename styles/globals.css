@@ -154,6 +154,9 @@
   .hide-scrollbar::-webkit-scrollbar {
     display: none;
   }
+  .pause {
+    animation-play-state: paused;
+  }
 }
 
 /* Filepond / image upload field */
@@ -271,4 +274,61 @@
 
 .splide__pagination__page.is-active {
   @apply bg-white;
+}
+
+.fc .fc-button-primary {
+  @apply uppercase font-medium text-small border-1.5 rounded-full whitespace-nowrap focus:outline-none focus:ring-4 space-x-2 bg-transparent text-black border-black;
+}
+
+.fc .fc-toolbar-title {
+  @apply font-sans font-medium text-base;
+}
+
+.fc table {
+  @apply font-sans font-light text-small;
+}
+
+.fc .fc-timegrid-slot {
+  @apply py-2;
+}
+
+.fc .slot-title {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.fc .fc-toolbar.fc-header-toolbar {
+  @apply mb-2 lg:mb-3;
+}
+
+.fc .fc-button {
+  @apply px-3 py-2;
+}
+
+.fc .fc-toolbar.fc-header-toolbar {
+  @apply mx-2 lg:mx-11;
+}
+
+.fc-day-today {
+  @apply bg-grey;
+  border: none !important;
+}
+
+.fc .fc-timegrid-now-indicator-line {
+  border-width: 1px;
+}
+
+.fc-header-toolbar .fc-toolbar-chunk:nth-child(3),
+.fc-header-toolbar .fc-toolbar-chunk:nth-child(2) {
+  @apply hidden lg:block;
+}
+
+.fc .fc-button-primary {
+  @apply text-xxs;
+}
+
+.fc-event {
+  cursor: pointer;
 }

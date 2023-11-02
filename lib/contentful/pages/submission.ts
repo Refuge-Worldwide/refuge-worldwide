@@ -2,6 +2,7 @@ import { graphql } from "..";
 import { SubmissionPageData } from "../../../types/shared";
 import { extractPage, extractCollection } from "../../../util";
 import { DropdownArtistEntry } from "../../../types/shared";
+import { ShowInterface } from "../../../types/shared";
 
 export async function getSubmissionPage(preview: boolean) {
   const SubmissionPageQuery = /* GraphQL */ `
@@ -84,7 +85,7 @@ export async function getSubmissionPage(preview: boolean) {
   return extractPage<SubmissionPageData>(data, "pageSubmission");
 }
 
-export async function getAllArtists(limit: number, skip: number) {
+export async function getArtists(limit: number, skip: number) {
   const AllArtistsQuery = /* GraphQL */ `
     query AllArtistsQuery($limit: Int, $skip: Int) {
       artistCollection(order: name_ASC, limit: $limit, skip: $skip) {
@@ -103,6 +104,58 @@ export async function getAllArtists(limit: number, skip: number) {
   });
 
   return extractCollection<DropdownArtistEntry>(data, "artistCollection");
+}
+
+export async function getAllArtists() {
+  const artists = await getArtists(1000, 0);
+  const artistsTwo = await getArtists(1000, 1000);
+  const artistsThree = await getArtists(1000, 2000);
+
+  const allArtists = artists.concat(artistsTwo.concat(artistsThree));
+
+  const mappedArtists = allArtists.map((artists) => ({
+    value: artists.sys.id,
+    label: artists.name,
+  }));
+
+  return mappedArtists;
+}
+
+export async function getShowById(id, preview) {
+  const showByIdQuery = /* GraphQL */ `
+    query showByIdQuery($id: String!, $preview: Boolean) {
+      show(id: $id, preview: $preview) {
+        sys {
+          id
+        }
+        title
+        date
+        dateEnd
+        slug
+        status
+        coverImage {
+          sys {
+            id
+          }
+          url
+        }
+        artistsCollection(limit: 9) {
+          items {
+            name
+            sys {
+              id
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  const res = await graphql(showByIdQuery, {
+    variables: { id, preview },
+    preview,
+  });
+  return extractPage<ShowInterface>(res, "show");
 }
 
 // export async function getArtistsPage(

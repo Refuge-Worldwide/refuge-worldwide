@@ -25,38 +25,6 @@ export default function ShowSubmissionStep1() {
             </label>
           </RadioGroup.Item>
         </RadioGroup.Root>
-        {/* <div className="flex">
-          <div className="w-1/2">
-            <Field
-              type="radio"
-              id="live"
-              name="showType"
-              value="live"
-              className="peer hidden"
-            />
-            <label
-              htmlFor="live"
-              className="block cursor-pointer select-none pill-input rounded-tr-none rounded-br-none py-3 text-center peer-checked:bg-orange peer-checked:font-bold"
-            >
-              Live
-            </label>
-          </div>
-          <div className="w-1/2">
-            <Field
-              type="radio"
-              id="preRecord"
-              name="showType"
-              value="preRecord"
-              className="peer hidden"
-            />
-            <label
-              htmlFor="preRecord"
-              className="block cursor-pointer select-none pill-input rounded-tl-none rounded-bl-none py-3 text-center peer-checked:bg-blue peer-checked:font-bold"
-            >
-              Pre-recorded
-            </label>
-          </div>
-        </div> */}
         <ErrorMessage className="text-red" component="span" name="showType" />
       </fieldset>
     </div>

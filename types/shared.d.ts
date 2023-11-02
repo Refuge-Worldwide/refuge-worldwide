@@ -55,6 +55,7 @@ export interface ArtistInterface {
   coverImagePosition: CoverImagePosition;
   isResident: boolean;
   content?: Content;
+  email?: string;
 }
 
 export type ArtistEntry = {
@@ -81,6 +82,16 @@ export type DropdownArtistEntry = {
   name: string;
 };
 
+export type CalendarDropdownArtistEntry = {
+  sys: {
+    id: string;
+  };
+  name: string;
+  email: [string];
+};
+
+export type Dropdown = { value: string; label: string }[];
+
 export type ArtistFilterType = "All" | "Residents" | "Guests";
 
 export interface GenreInterface {
@@ -97,6 +108,7 @@ export interface ShowInterface {
   mixcloudLink: string;
   title: string;
   date: string;
+  dateEnd?: string;
   slug: string;
   coverImage: CoverImage;
   coverImagePosition: CoverImagePosition;
@@ -108,6 +120,7 @@ export interface ShowInterface {
     items: GenreInterface[];
   };
   content: Content;
+  status?: string;
 }
 
 export type PastShowSchema = {
@@ -155,6 +168,9 @@ export enum EventType {
 }
 
 export interface ArticleInterface {
+  sys: {
+    id: string;
+  };
   title: string;
   subtitle?: string;
   articleType: ArticleType;
@@ -251,6 +267,7 @@ export type BookingsPageData = {
 };
 
 export type SubmissionFormValues = {
+  id?: string;
   showType: string;
   readInfo: Boolean;
   email: string;
@@ -296,3 +313,9 @@ export interface WorkshopInterface {
   content: Content;
   tallyFormLink: string;
 }
+
+export type SubmissionImportantInfo = {
+  liveShows: Content;
+  liveShows2: Content;
+  preRecords: Content;
+};

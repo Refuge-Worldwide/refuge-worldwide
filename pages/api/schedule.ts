@@ -44,8 +44,18 @@ export default async function handler(
       liveNowArtwork = liveNowContentful.coverImage.url;
     }
 
+    const liveNowTitle = () => {
+      if (radioCoData.current_track.title.includes("!OVERWRITE!")) {
+        return radioCoData.current_track.title.replace("!OVERWRITE!", "");
+      } else if (liveNowContentful) {
+        return liveNowContentful.title;
+      } else {
+        return radioCoData.current_track.title;
+      }
+    };
+
     const liveNow = {
-      title: radioCoData.current_track.title,
+      title: liveNowTitle(),
       artwork: liveNowArtwork,
     };
 

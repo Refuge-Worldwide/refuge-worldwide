@@ -13,7 +13,7 @@ export default function Show({
   preview,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
-    <Layout preview={preview}>
+    <Layout preview={preview} pageId={show?.sys?.id}>
       <ShowMeta {...show} />
 
       <SinglePage

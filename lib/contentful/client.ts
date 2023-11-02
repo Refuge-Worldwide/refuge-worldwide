@@ -18,6 +18,11 @@ export const previewClient = createClient({
   host: "preview.contentful.com",
 });
 
+export const managementClient = createClient({
+  accessToken: process.env.CONTENTFUL_MANAGEMENT_ACCESS_TOKEN,
+  space: process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID,
+});
+
 export const getClient = (preview?: boolean) =>
   preview ? previewClient : client;
 

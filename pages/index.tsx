@@ -21,7 +21,7 @@ export default function HomePage({
   nextUp,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
-    <Layout>
+    <Layout pageId="3xN3mbIMb4CwtrZqlRbYyu">
       <Head>
         <meta
           name="google-site-verification"
