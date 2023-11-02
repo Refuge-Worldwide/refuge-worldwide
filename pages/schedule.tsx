@@ -42,9 +42,8 @@ export default function SchedulePage() {
 
 function Schedule() {
   const { scheduleData, isLoading, error } = useSchedule();
-  console.log(scheduleData);
   if (isLoading) return <Loading />;
-  if (error) return <div>Fail to Load Schedule</div>;
+  if (error) return <div>Failed to Load Schedule</div>;
   return (
     <ScheduleByDay
       schedule={scheduleData.schedule}
@@ -64,7 +63,10 @@ function ScheduleByDay({
 
   schedule.forEach((show) => {
     const utc = dayjs(show.date).utc();
-    const local = utc.local();
+    let local = utc.local();
+    if (dayjs().utcOffset() < 300 && dayjs().utcOffset() > -240) {
+      local = local.subtract(5, "hour");
+    }
     const day = local.format("ddd DD MMM");
     if (scheduleByDate[day]) {
       scheduleByDate[day].push(show);

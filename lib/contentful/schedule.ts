@@ -12,7 +12,7 @@ export async function getScheduleData() {
   const start = Date.now();
   const nowUTC = dayjs.utc();
   const nowCET = nowUTC.add(cetAdjustment, "hours");
-  const startOfDay = nowCET.startOf("day");
+  const startOfDay = nowCET.startOf("day").add(5, "hour");
   const startSchedule = startOfDay.toISOString();
   const dayOfWeek = startOfDay.day();
   // if (dayOfWeek == 6 || dayOfWeek == 0) {
