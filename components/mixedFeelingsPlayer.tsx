@@ -102,7 +102,7 @@ export default function MixedFeelingsPlayer({
         <div
           className={`${
             !isHomePage && "lg:hidden"
-          } p-4 lg:p-8  max-w-2xl flex flex-col justify-between lg:w-2/5 lg:border-l-2`}
+          } p-4 lg:p-8  lg:max-w-2xl flex flex-col justify-between lg:w-2/5 lg:border-l-2`}
         >
           <div className="hidden lg:block">
             <p>
