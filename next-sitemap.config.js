@@ -21,6 +21,13 @@ module.exports = {
   exclude: ["/server-sitemap.xml"],
   robotsTxtOptions: {
     additionalSitemaps: ["https://refugeworldwide.com/server-sitemap.xml"],
+    policies: [
+      {
+        userAgent: "*",
+        allow: "/",
+        disallow: ["/admin/", "/admin/calendar", "/signin", "/submission"],
+      },
+    ],
   },
   transform: (config, path) => {
     if (isServerSidePath(path)) {
