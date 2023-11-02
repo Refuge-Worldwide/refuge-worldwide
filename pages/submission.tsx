@@ -11,21 +11,14 @@ import { getAllArtists } from "../lib/contentful/pages/submission";
 
 export async function getStaticProps({ preview = false }) {
   const genres = await getAllGenres();
-  const artists = await getAllArtists(1000, 0);
-  const artistsTwo = await getAllArtists(1000, 1000);
-  const artistsThree = await getAllArtists(1000, 2000);
-
-  const AllArtists = artists.concat(artistsTwo.concat(artistsThree));
+  const AllArtists = await getAllArtists();
   return {
     props: {
       genres: genres.map((genre) => ({
         value: genre.sys.id,
         label: genre.name,
       })),
-      artists: AllArtists.map((artists) => ({
-        value: artists.sys.id,
-        label: artists.name,
-      })),
+      artists: AllArtists,
       preview,
       ...(await getSubmissionPage(preview)),
     },
@@ -48,7 +41,7 @@ export default function NewSubmissionPage({
   };
 
   return (
-    <Layout>
+    <Layout pageId="1eohijLMd2Q38BVq0D713p">
       <Head>
         <meta name="robots" content="noindex,nofollow" />
       </Head>

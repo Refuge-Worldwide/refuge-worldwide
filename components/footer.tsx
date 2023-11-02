@@ -10,10 +10,14 @@ import { Arrow } from "../icons/arrow";
 import Mixcloud from "../icons/mixcloud";
 import Soundcloud from "../icons/soundcloud";
 import Telegram from "../icons/telegram";
+import { useUser } from "@supabase/auth-helpers-react";
+import SignOut from "./signOut";
 
 export default function Footer() {
   const handleGoToTop = () =>
     window?.scroll({ top: 0, left: 0, behavior: "smooth" });
+
+  const user = useUser();
 
   return (
     <footer className="bg-black text-white">
@@ -48,7 +52,7 @@ export default function Footer() {
       <div className="px-4 md:px-8 border-t border-white py-4 md:py-6">
         <div className="grid lg:grid-cols-3 gap-8 lg:gap-12 text-small font-medium">
           {/* Spacer */}
-          <div className="hidden lg:block" />
+          {user ? <SignOut /> : <div className="hidden lg:block" />}
 
           <div className="flex justify-center">
             <button
@@ -56,9 +60,9 @@ export default function Footer() {
               className="focus:outline-none inline-flex items-center space-x-4"
             >
               <span>Go up</span>
-              <span className="mt-1">
+              {/* <span className="mt-1">
                 <Arrow className="-rotate-90" size={24} />
-              </span>
+              </span> */}
             </button>
           </div>
 

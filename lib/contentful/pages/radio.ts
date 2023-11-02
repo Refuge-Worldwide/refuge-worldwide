@@ -19,6 +19,9 @@ export async function getRadioPageSingle(slug: string, preview: boolean) {
     query RadioPageSingleQuery($slug: String, $preview: Boolean) {
       showCollection(where: { slug: $slug }, limit: 1, preview: $preview) {
         items {
+          sys {
+            id
+          }
           title
           date
           slug
@@ -253,4 +256,56 @@ export async function getRelatedShows(
     .slice(0, 6);
 
   return filteredShows;
+}
+
+export async function getUpcomingShowsByDate(preview: boolean) {
+  // const start = day.startOf("day");
+  // const end = start.add(1, "day");
+  // const startISO = start.toISOString();
+  // const endISO = end.toISOString();
+
+  // console.log(startISO);
+  // console.log(endISO);
+
+  const UpcomingShowsQuery = /* GraphQL */ `
+    query upcomingShowsByDate {
+      showCollection(
+        order: date_ASC
+        where: {
+          date_gt: "2023-10-07T00:00:00.000Z"
+          dateEnd_lte: "2023-10-08T00:00:00.000Z"
+          dateEnd_exists: true
+        }
+        preview: true
+        limit: 999
+      ) {
+        items {
+          title
+          date
+          dateEnd
+          slug
+          coverImage {
+            sys {
+              id
+            }
+            url
+          }
+          sys {
+            id
+          }
+          artistsCollection(limit: 9) {
+            items {
+              name
+              slug
+              email
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  const res = await graphql(UpcomingShowsQuery, { preview });
+
+  return extractCollection<ShowInterface>(res, "showCollection");
 }

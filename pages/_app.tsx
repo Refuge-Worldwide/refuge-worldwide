@@ -7,6 +7,10 @@ import Navigation from "../components/navigation";
 import useFathom from "../hooks/useFathom";
 import JoinChat from "../components/join-chat";
 import useSmoothscrollPolyfill from "../hooks/useSmoothscrollPolyfill";
+import { useRouter } from "next/router";
+import { createPagesBrowserClient } from "@supabase/auth-helpers-nextjs";
+import { SessionContextProvider, Session } from "@supabase/auth-helpers-react";
+import { useState } from "react";
 import "../styles/globals.css";
 
 const MixcloudPlayer = dynamic(() => import("../components/mixcloudPlayer"), {
@@ -21,23 +25,30 @@ const LivePlayer = dynamic(() => import("../components/livePlayer"), {
 function RefugeApp({ Component, pageProps }: AppProps) {
   useSmoothscrollPolyfill();
   useFathom();
+  const router = useRouter();
+  const [supabaseClient] = useState(() => createPagesBrowserClient());
 
   if ((Component as any).noLayout) return <Component {...pageProps} />;
 
   return (
     <Fragment>
-      <header>
-        <Navigation />
-      </header>
+      <SessionContextProvider
+        supabaseClient={supabaseClient}
+        initialSession={pageProps.initialSession}
+      >
+        <header>
+          <Navigation />
+        </header>
 
-      <LivePlayer />
+        <LivePlayer />
 
-      <Component {...pageProps} />
+        <Component {...pageProps} />
 
-      <Footer />
+        {router.pathname != "/admin/calendar" && <Footer />}
 
-      <MixcloudPlayer />
-      <JoinChat />
+        <MixcloudPlayer />
+        {router.pathname != "/admin/calendar" && <JoinChat />}
+      </SessionContextProvider>
     </Fragment>
   );
 }

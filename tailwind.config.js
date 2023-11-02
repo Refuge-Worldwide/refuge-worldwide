@@ -56,6 +56,7 @@ module.exports = {
       red: "#ff0000",
       black: "#000",
       white: "#fff",
+      grey: "#ececec",
       transparent: "transparent",
       social: {
         telegram: "#26A5E4",
@@ -178,6 +179,15 @@ module.exports = {
           },
         },
       }),
+      keyframes: {
+        refresh: {
+          from: { transform: "rotate(0deg)" },
+          to: { transform: "rotate(-360deg)" },
+        },
+      },
+      animation: {
+        refresh: "refresh 1.25s ease-in-out infinite forwards",
+      },
     },
   },
   corePlugins: {

@@ -11,4 +11,5 @@ module.exports = {
   experimental: {
     scrollRestoration: true,
   },
+  transpilePackages: ["@radix-ui"],
 };

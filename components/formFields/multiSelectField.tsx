@@ -7,17 +7,19 @@ export default function MultiSelectField({
   description,
   options,
   limit,
+  value,
   ...props
 }: {
   label: string;
   description?: string;
   name: string;
   required?: boolean;
-  options: Array<{ value: string; label: string }>;
+  value?: Array<{ value: string; label: string; email?: [string] }>;
+  options: Array<{ value: string; label: string; email?: [string] }>;
   limit?: number;
 }) {
   const [ariaFocusMessage, setAriaFocusMessage] = useState("");
-  const [selectedOptions, SetSelectedOptions] = useState([]);
+  const [selectedOptions, SetSelectedOptions] = useState(value ? value : []);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [field, meta, helpers] = useField(props);
   const { setFieldValue } = useFormikContext();
@@ -55,7 +57,7 @@ export default function MultiSelectField({
         className="basic-multi-select pill-input mb-2 p-2"
         value={selectedOptions}
         onChange={(o) => onSetSelectedOptions(o)}
-        isOptionDisabled={() => selectedOptions.length >= limit}
+        isOptionDisabled={() => selectedOptions.length >= limit && limit != 1}
         name={props.name}
         id={props.name}
         classNamePrefix="select"

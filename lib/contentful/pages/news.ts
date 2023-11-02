@@ -80,6 +80,9 @@ export async function getNewsPageSingle(slug: string, preview: boolean) {
         preview: $preview
       ) {
         items {
+          sys {
+            id
+          }
           title
           subtitle
           articleType

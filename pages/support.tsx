@@ -22,7 +22,7 @@ export default function SupportPage({
   coverImage,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
-    <Layout preview={preview}>
+    <Layout preview={preview} pageId="Aa4GRMf6fuDtkH0UhkX19">
       <PageMeta title="Support | Refuge Worldwide" path="support/" />
 
       <SinglePage coverImage={coverImage}>

@@ -160,3 +160,10 @@ export const parseGenres = (genresCollection: { items: GenreInterface[] }) =>
     .map((genre) => genre.name);
 
 export const uniq = <T>(arr: T[]) => Array.from(new Set(arr));
+
+export const transformForDropdown = (array) => {
+  return array.map((item) => ({
+    value: item.sys.id,
+    label: item.name,
+  }));
+};
