@@ -101,7 +101,7 @@
   }
 
   .pill-input {
-    @apply px-6 pt-4 pb-3 w-full rounded-full border-2 border-black bg-white shadow-pill-black text-small sm:text-base text-black font-light focus:outline-none outline-none focus:border-blue focus:ring-0 focus:shadow-blue;
+    @apply px-6 pt-4 pb-3 w-full rounded-full border-2 border-black bg-white shadow-pill-black text-small sm:text-base text-black font-light;
   }
 
   .pill-input-transparent {
@@ -132,6 +132,18 @@
   .checkbox-label {
     @apply sm:mt-0.5 sm:leading-none text-small ml-2;
   }
+
+  .prose li p {
+    @apply my-0;
+  }
+
+  .prose li {
+    @apply my-1 lg:my-2;
+  }
+
+  .prose p {
+    white-space: pre-wrap;
+  }
 }
 
 @layer utilities {
@@ -150,6 +162,10 @@
 /* Filepond / image upload field */
 .filepond--root .filepond--drop-label {
   min-height: 9rem !important;
+}
+
+.multi .filepond--item {
+  width: calc(50% - 0.5em);
 }
 /* GENRE SIDEBAR */
 
@@ -243,6 +259,21 @@
 /* Handle on hover */
 .genre-sidebar::-webkit-scrollbar-thumb:hover {
   @apply bg-black;
+}
+
+/* splide carousel */
+
+/* pagination dots */
+.splide__pagination {
+  @apply space-x-3;
+}
+
+.splide__pagination__page {
+  @apply block h-6 w-6 rounded-full border-2 border-white focus:outline-none focus:ring-4 bg-transparent;
+}
+
+.splide__pagination__page.is-active {
+  @apply bg-white;
 }
 
 .fc .fc-button-primary {

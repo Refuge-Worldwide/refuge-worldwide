@@ -3,13 +3,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { useGlobalStore } from "../hooks/useStore";
 import PlayLarge from "../icons/playLarge";
-import { PastShowSchema } from "../lib/contentful/client";
+import { PastShowSchema } from "../types/shared";
 import loaders from "../lib/loaders";
 import { TypeShow } from "../types/contentful";
-import type { ShowPreviewEntry } from "../types/shared";
+import type { ShowPreviewEntry, CoverImage } from "../types/shared";
 import { getMixcloudKey, parseGenres } from "../util";
 import Badge from "./badge";
 import Date from "./date";
+import PlayCircle from "../icons/playCircle";
+import Play from "../icons/play";
 
 type ShowImageWithPlayerProps = {
   mixcloudLink: string;
@@ -24,9 +26,9 @@ function ShowImageWithPlayer({
   alt,
   priority,
 }: ShowImageWithPlayerProps) {
-  const showKeySet = useGlobalStore((state) => state.showKeySet);
+  const showUrlSet = useGlobalStore((state) => state.showUrlSet);
 
-  const onClick = () => showKeySet(getMixcloudKey(mixcloudLink));
+  const onClick = () => showUrlSet(mixcloudLink);
 
   return (
     <button onClick={onClick} className="flex relative group">
@@ -90,7 +92,7 @@ export default function ShowPreview({
         <ul className="w-full flex flex-wrap gap-2">
           {genres.map((genre, i) => (
             <li key={i}>
-              <Badge small text={genre} />
+              <Badge invert={className == "text-white"} small text={genre} />
             </li>
           ))}
         </ul>
@@ -194,5 +196,70 @@ export function FeaturedShowPreview({
         </ul>
       </Link>
     </article>
+  );
+}
+
+type ArticlePreviewProps = {
+  date: string;
+  id: string;
+  title: string;
+  slug: string;
+  coverImage: CoverImage;
+  mixcloudLink: string;
+  className?: string;
+};
+
+export function ArticleShowPreview({
+  slug,
+  title,
+  coverImage,
+  date,
+  mixcloudLink,
+  className = "",
+}: ArticlePreviewProps) {
+  const cachedClassNames = classNames(
+    "sm:grid grid-cols-12 items-center justify-between gap-4 sm:gap-8 border border-black not-prose",
+    className
+  );
+
+  const showUrlSet = useGlobalStore((state) => state.showUrlSet);
+
+  const onClick = () => {
+    showUrlSet(mixcloudLink);
+  };
+
+  return (
+    <div className={cachedClassNames}>
+      <Image
+        src={coverImage.url}
+        loader={loaders.contentful}
+        width={266}
+        height={150}
+        alt={title}
+        className="sm:col-span-4 sm:order-last bg-black/10 object-cover object-center aspect-video h-full w-full"
+      />
+      <div className="sm:col-span-8 sm:order-first flex items-center pl-4 pt-4 pb-4 sm:pl-8 sm:pt-8 sm:pb-8 gap-4 sm:gap-8">
+        <div className="flex">
+          {mixcloudLink && (
+            <button
+              className="w-20 h-20 sm:w-28 sm:h-28 rounded-full focus:outline-none focus:ring-4"
+              onClick={onClick}
+            >
+              <PlayCircle />
+            </button>
+          )}
+        </div>
+        <Link
+          href={`/radio/${slug}`}
+          prefetch={false}
+          aria-labelledby={`show-${slug}`}
+        >
+          <p id={`show-${slug}`} className="font-sans font-medium ">
+            {title}
+          </p>
+          <Date dateString={date} />
+        </Link>
+      </div>
+    </div>
   );
 }

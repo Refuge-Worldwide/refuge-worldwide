@@ -4,7 +4,7 @@ import { extractLinkedFromCollection, extractCollection } from "../../util";
 import { ShowPreviewFragment } from "./fragments";
 import dayjs from "dayjs";
 import type { TypeShow, TypeShowFields } from "../../types/contentful";
-import type { ShowInterface } from "../../types/shared";
+import type { ShowInterface, PastShowSchema } from "../../types/shared";
 import { sort } from "../../util";
 
 export const client = createClient({
@@ -51,16 +51,6 @@ export async function getAllEntries<Fields>(
 
   return entries.flat() as Entry<Fields>[];
 }
-
-export type PastShowSchema = {
-  date: string;
-  id: string;
-  title: string;
-  slug: string;
-  coverImage: string;
-  mixcloudLink: string;
-  genres: string[];
-};
 
 export const createPastShowSchema = (show: TypeShow): PastShowSchema => ({
   id: show.sys.id,

@@ -1,5 +1,5 @@
 import useSWRInfinite from "swr/infinite";
-import { PastShowSchema } from "../lib/contentful/client";
+import { PastShowSchema } from "../types/shared";
 import { RADIO_SHOWS_PAGE_SIZE } from "../lib/contentful/pages/radio";
 
 export default function useRadioShows(

@@ -51,6 +51,7 @@ export const FeaturedArticleFragment = /* GraphQL */ `
         id
       }
       title
+      description
       url
     }
     date
@@ -72,6 +73,7 @@ export const ArticlePreviewFragment = /* GraphQL */ `
         id
       }
       title
+      description
       url
     }
     date
@@ -97,5 +99,38 @@ export const RelatedArticleFragment = /* GraphQL */ `
     slug
     title
     subtitle
+  }
+`;
+
+export const EventFragment = /* GraphQL */ `
+  fragment EventFragment on Event {
+    title
+    eventType
+    date
+    endDate
+    slug
+    location
+    ticketLink
+    linkText
+    article {
+      ... on Article {
+        type: __typename
+        slug
+      }
+      ... on Workshop {
+        type: __typename
+        slug
+      }
+    }
+    coverImage {
+      sys {
+        id
+      }
+      title
+      description
+      url
+      width
+      height
+    }
   }
 `;

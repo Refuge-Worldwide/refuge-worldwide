@@ -22,9 +22,23 @@ export interface Asset {
   height: number;
 }
 
+export interface Entry {
+  sys: { id: string };
+  __typename: string;
+  date: string;
+  id: string;
+  title: string;
+  slug: string;
+  coverImage: CoverImage;
+  mixcloudLink: string;
+}
+
 export interface Links {
   assets: {
     block: Asset[];
+  };
+  entries?: {
+    block: Entry[];
   };
 }
 
@@ -109,6 +123,16 @@ export interface ShowInterface {
   status?: string;
 }
 
+export type PastShowSchema = {
+  date: string;
+  id: string;
+  title: string;
+  slug: string;
+  coverImage: string;
+  mixcloudLink: string;
+  genres: string[];
+};
+
 export type ScheduleShow = {
   sys: {
     id: string;
@@ -133,6 +157,14 @@ export enum ArticleType {
   Event = "Event",
   Interview = "Interview",
   Workshop = "Workshop",
+}
+
+export enum EventType {
+  Project = "Workshop",
+  Blog = "Party",
+  News = "Fundraiser",
+  Event = "Hang Out",
+  Interview = "Exhibition",
 }
 
 export interface ArticleInterface {
@@ -172,6 +204,12 @@ export type HomePageData = {
   };
 };
 
+export type EventPageData = {
+  featuredEventsCollection: {
+    items: Array<EventInterface>;
+  };
+};
+
 type ShowPreviewEntry = {
   coverImage: CoverImage;
   date: string;
@@ -189,6 +227,11 @@ export interface NewsletterPageData {
 }
 
 export interface SupportPageData {
+  coverImage: CoverImage;
+  content: Content;
+}
+
+export interface TourPageData {
   coverImage: CoverImage;
   content: Content;
 }
@@ -237,7 +280,7 @@ export type SubmissionFormValues = {
   newGenres: string;
   description: string;
   instagram: string;
-  image: object;
+  image: Array;
   additionalEq?: boolean;
   additionalEqDesc?: string;
   artists?: Array<{ value: string; label: string }>;
@@ -249,6 +292,27 @@ export type SubmissionFormValues = {
     image?: string;
   }>;
 };
+
+export interface EventInterface {
+  title: string;
+  coverImage?: CoverImage;
+  eventType: EventType;
+  date: string;
+  endDate?: string;
+  slug: string;
+  location: string;
+  ticketLink: string;
+  linkText: string;
+  article: Object<{ slug: string }>;
+}
+
+export interface WorkshopInterface {
+  title: string;
+  slug: string;
+  coverImage?: CoverImage;
+  content: Content;
+  tallyFormLink: string;
+}
 
 export type SubmissionImportantInfo = {
   liveShows: Content;

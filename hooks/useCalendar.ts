@@ -1,5 +1,5 @@
 import useSWR from "swr";
-import { PastShowSchema } from "../lib/contentful/client";
+import { PastShowSchema } from "../types/shared";
 import { RADIO_SHOWS_PAGE_SIZE } from "../lib/contentful/pages/radio";
 
 async function getShows(url: URL) {

@@ -1,12 +1,30 @@
 import Script from "next/script";
 import { SyntheticEvent } from "react";
 import { ActivePlayer, useGlobalStore } from "../hooks/useStore";
+import { useState, useEffect } from "react";
+import { getMixcloudKey } from "../util";
 
 export default function MixcloudPlayer() {
-  const showKey = useGlobalStore((state) => state.showKey);
-
+  const showUrl = useGlobalStore((state) => state.showUrl);
   const activePlayer = useGlobalStore((state) => state.activePlayer);
   const activePlayerSet = useGlobalStore((state) => state.activePlayerSet);
+
+  const [showKey, setShowKey] = useState(null);
+
+  useEffect(() => {
+    console.log("player changed");
+    if (activePlayer === ActivePlayer.MIXCLOUD) {
+      setShowKey(getMixcloudKey(showUrl));
+    } else if (activePlayer === ActivePlayer.SOUNDCLOUD) {
+      const encodedShowUrl = encodeURI(showUrl);
+      const scResolveUrl = "/api/soundcloud-resolve?url=" + encodedShowUrl;
+      fetch(scResolveUrl)
+        .then((res) => res.json())
+        .then((data) => {
+          setShowKey(data);
+        });
+    }
+  }, [showUrl, activePlayer]);
 
   const handleIframeLoad = async (
     event: SyntheticEvent<HTMLIFrameElement, Event>
@@ -43,7 +61,26 @@ export default function MixcloudPlayer() {
           }
         />
       )}
-
+      {activePlayer === ActivePlayer.SOUNDCLOUD && showKey && (
+        <iframe
+          width="100%"
+          height={120}
+          allow="autoplay"
+          className="fixed bottom-0 left-0 w-full md:w-2/3 lg:w-1/2"
+          src={
+            `https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/` +
+            `${showKey}&` +
+            `auto_play=true&` +
+            `buying=false&` +
+            `sharing=false&` +
+            `download=false&` +
+            `show_artwork=true&` +
+            `show_playcount=false&` +
+            `show_user=false&` +
+            `color=000000`
+          }
+        ></iframe>
+      )}
       <Script src="https://widget.mixcloud.com/media/js/widgetApi.js" />
     </>
   );

@@ -105,6 +105,33 @@ export async function getNewsPageSingle(slug: string, preview: boolean) {
           content {
             json
             links {
+              entries {
+                block {
+                  sys {
+                    id
+                  }
+                  __typename
+                  ... on Show {
+                    coverImage {
+                      sys {
+                        id
+                      }
+                      title
+                      description
+                      url
+                      width
+                      height
+                    }
+                    date
+                    mixcloudLink
+                    slug
+                    title
+                    sys {
+                      id
+                    }
+                  }
+                }
+              }
               assets {
                 block {
                   sys {

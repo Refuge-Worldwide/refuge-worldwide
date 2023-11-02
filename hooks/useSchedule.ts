@@ -23,7 +23,7 @@ export default function useSchedule() {
     "/api/schedule",
     getSchedule,
     {
-      refreshInterval: 10 * 60 * 1000,
+      refreshInterval: 30 * 1000,
     }
   );
 

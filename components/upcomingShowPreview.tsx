@@ -40,6 +40,7 @@ export default function UpcomingShowPreview({
           <Pill size="small">
             <span className="font-serif text-tiny sm:text-small">
               <Date dateString={date} formatString="DD MMM" />
+              {/* {date} */}
             </span>
           </Pill>
         </div>

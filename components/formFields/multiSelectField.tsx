@@ -53,7 +53,7 @@ export default function MultiSelectField({
           onFocus,
         }}
         options={options}
-        isMulti={limit != 1}
+        isMulti={!limit || limit > 1}
         className="basic-multi-select pill-input mb-2 p-2"
         value={selectedOptions}
         onChange={(o) => onSetSelectedOptions(o)}

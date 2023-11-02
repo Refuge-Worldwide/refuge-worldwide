@@ -25,7 +25,7 @@ export default function Show({
       </SinglePage>
 
       {relatedShows?.length > 0 && (
-        <RelatedShows title="More Episodes" shows={relatedShows} />
+        <RelatedShows title="Related Shows" shows={relatedShows} />
       )}
     </Layout>
   );

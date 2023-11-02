@@ -1,6 +1,10 @@
 import dayjs from "dayjs";
 import { graphql } from "..";
-import { GenreInterface, ShowInterface } from "../../../types/shared";
+import {
+  GenreInterface,
+  ShowInterface,
+  PastShowSchema,
+} from "../../../types/shared";
 import {
   extractCollection,
   extractCollectionItem,
@@ -81,7 +85,7 @@ export async function getRadioPageSingle(slug: string, preview: boolean) {
 
   const genres = entry.genresCollection.items.map((genre) => genre.name);
 
-  const relatedShows = await getRelatedShows(slug, genres, 3, 0);
+  const relatedShows = await getRelatedShows(slug, genres, 7, 0);
 
   return {
     show: entry,
@@ -170,7 +174,13 @@ export async function getAllGenres() {
 
 export type RelatedShowsType = Pick<
   ShowInterface,
-  "slug" | "title" | "coverImage" | "date" | "genresCollection" | "mixcloudLink"
+  | "sys"
+  | "slug"
+  | "title"
+  | "coverImage"
+  | "date"
+  | "genresCollection"
+  | "mixcloudLink"
 >;
 
 export async function getRelatedShows(
@@ -196,10 +206,13 @@ export async function getRelatedShows(
                   }
                   url
                 }
-                genresCollection(limit: 2) {
+                genresCollection(limit: 3) {
                   items {
                     name
                   }
+                }
+                sys {
+                  id
                 }
               }
             }
@@ -219,15 +232,28 @@ export async function getRelatedShows(
     "showCollection"
   );
 
-  const filteredShows = linkedFromShows
+  // find a nicer way to process
+  const processed = linkedFromShows.map((show) => ({
+    id: show.sys.id,
+    title: show.title,
+    date: show.date,
+    slug: show.slug,
+    mixcloudLink: show.mixcloudLink,
+    coverImage: show.coverImage.url,
+    genres: show.genresCollection.items.map((genre) => genre.name),
+  }));
+
+  // filter should only take first 2 genres.
+  const filteredShows = processed
     .filter(
       (show, index) =>
         show.slug !== slug &&
-        index === linkedFromShows.findIndex((t) => t.slug === show.slug) &&
+        index === processed.findIndex((t) => t.slug === show.slug) &&
         show.mixcloudLink
     )
     .filter((show) => dayjs(show.date).isBefore(dayjs()))
-    .sort(sort.date_DESC);
+    .sort(sort.date_DESC)
+    .slice(0, 6);
 
   return filteredShows;
 }

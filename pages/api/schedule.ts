@@ -44,8 +44,18 @@ export default async function handler(
       liveNowArtwork = liveNowContentful.coverImage.url;
     }
 
+    const liveNowTitle = () => {
+      if (radioCoData.current_track.title.includes("!OVERWRITE!")) {
+        return radioCoData.current_track.title.replace("!OVERWRITE!", "");
+      } else if (liveNowContentful) {
+        return liveNowContentful.title;
+      } else {
+        return radioCoData.current_track.title;
+      }
+    };
+
     const liveNow = {
-      title: radioCoData.current_track.title,
+      title: liveNowTitle(),
       artwork: liveNowArtwork,
     };
 
@@ -57,8 +67,11 @@ export default async function handler(
     };
 
     res
-      .setHeader("Server-Timing", `search;dur=${duration}`)
-      .setHeader("Cache-Control", "s-maxage=1, stale-while-revalidate=59")
+      .setHeader("Server-Timing", `schedule;dur=${duration}`)
+      .setHeader(
+        "Cache-Control",
+        "s-maxage=30, stale-while-revalidate=60, stale-if-error=600"
+      )
       .json(scheduleData);
   } catch (error) {
     assertError(error);

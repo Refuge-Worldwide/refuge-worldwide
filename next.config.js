@@ -8,5 +8,8 @@ module.exports = {
   images: {
     domains: ["images.ctfassets.net"],
   },
+  experimental: {
+    scrollRestoration: true,
+  },
   transpilePackages: ["@radix-ui"],
 };

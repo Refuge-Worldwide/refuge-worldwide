@@ -76,7 +76,7 @@ export default function FeaturedArticlePreview({
             className="object-cover object-center"
             key={coverImage.sys.id}
             draggable="false"
-            alt={coverImage.title}
+            alt={coverImage.description ? coverImage.description : title}
             src={coverImage.url}
             loader={loaders.contentful}
             priority={priority}

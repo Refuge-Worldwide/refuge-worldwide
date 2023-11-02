@@ -95,6 +95,31 @@ export async function getShowPathsToPreRender() {
   return paths;
 }
 
+export async function getWorkshopPathsToPreRender() {
+  const WorkshopPathsToPreRenderQuery = /* GraphQL */ `
+    query WorkshopPathsToPreRenderQuery {
+      workshopCollection(where: { slug_exists: true }, limit: 100) {
+        items {
+          slug
+        }
+      }
+    }
+  `;
+
+  const data = await graphql(WorkshopPathsToPreRenderQuery);
+
+  const collection = extractCollection<{ slug: string }>(
+    data,
+    "workshopCollection"
+  );
+
+  const paths = collection.map((el) => ({
+    params: { slug: el.slug },
+  }));
+
+  return paths;
+}
+
 const createSlug = (slug: string, base: "artists" | "radio" | "news") =>
   `https://refugeworldwide.com/${base}/${slug}`;
 

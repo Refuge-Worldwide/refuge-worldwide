@@ -1,16 +1,13 @@
 import Pill from "../../components/pill";
-import RelatedShowPreview from "../../components/relatedShowPreview";
-import { RelatedShowsType } from "../../lib/contentful/pages/radio";
+import ShowPreview from "../../components/showPreview";
+import { PastShowSchema } from "../../types/shared";
 
 type Props = {
-  shows: RelatedShowsType[];
+  shows: PastShowSchema[];
   title?: string;
 };
 
-export default function RelatedShows({
-  shows,
-  title = "Related Shows",
-}: Props) {
+export default function RelatedShows({ shows, title = "Shows" }: Props) {
   return (
     <section className="border-b-2 border-white bg-black">
       <div className="p-4 sm:p-8">
@@ -23,7 +20,7 @@ export default function RelatedShows({
         <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
           {shows.map((show, i) => (
             <li key={i}>
-              <RelatedShowPreview {...show} />
+              <ShowPreview className="text-white" {...show} />
             </li>
           ))}
         </ul>

@@ -9,9 +9,11 @@ import Marquee from "./marquee";
 const BroadcastingIndicator = ({
   status,
   isLoading,
+  error,
 }: {
   status: "online" | "offline";
   isLoading: boolean;
+  error: Error;
 }) => {
   if (status === "online")
     return (
@@ -23,10 +25,9 @@ const BroadcastingIndicator = ({
   else if (isLoading)
     return (
       <div className="grow-0 flex items-center space-x-6 opacity-70">
-        <div className="shrink-0 w-7 h-7 sm:h-10 sm:w-10 rounded-full bg-red" />
-        <p className="hidden md:block leading-none mt-1 animate-pulse">
-          Loading
-        </p>
+        <div className="shrink-0 w-7 h-7 sm:h-10 sm:w-10 rounded-full bg-white/25" />
+        <div className="h-6 sm:h-9 w-56 flex items-center space-x-2 whitespace-nowrap px-2 ml-6 bg-white opacity-25"></div>
+        <p className="hidden leading-none mt-1 animate-pulse">Loading</p>
       </div>
     );
 
@@ -43,7 +44,7 @@ export default function LivePlayer() {
 
   const AUDIO_SRC = `https://streaming.radio.co/${REFUGE_WORLDWIDE}/listen`;
 
-  const { scheduleData, isLoading } = useSchedule();
+  const { scheduleData, isLoading, error } = useSchedule();
 
   const isOnline = scheduleData?.status === "online";
 
@@ -84,9 +85,10 @@ export default function LivePlayer() {
       <BroadcastingIndicator
         status={scheduleData?.status}
         isLoading={isLoading}
+        error={error}
       />
 
-      {!isLoading && (
+      {!isLoading && !error && scheduleData?.liveNow?.title && (
         <Marquee
           key={scheduleData?.liveNow.title}
           text={<span className="pr-8">{scheduleData?.liveNow.title}</span>}
@@ -118,7 +120,8 @@ export function LivePlayerLoading() {
     <section className="bg-black text-white h-12 sm:h-16 px-4 sm:px-8 flex items-center">
       <div className="grow-0 flex items-center space-x-6">
         <div className="shrink-0 w-7 h-7 sm:h-10 sm:w-10 rounded-full bg-white/25" />
-        <p className="hidden md:block leading-none mt-1">Loading Broadcast</p>
+        <div className="h-6 sm:h-9 w-56 flex items-center space-x-2 whitespace-nowrap px-2 ml-6 bg-white/25"></div>
+        <p className="hidden leading-none mt-1">Loading</p>
       </div>
     </section>
   );

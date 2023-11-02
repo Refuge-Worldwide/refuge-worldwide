@@ -23,7 +23,13 @@ export default function InputField({
         )}
       </label>
 
-      <input {...field} {...props} className="pill-input" />
+      <input
+        {...field}
+        {...props}
+        className={`pill-input ${
+          meta.touched && meta.error ? "border-red shadow-red" : ""
+        }`}
+      />
 
       {meta.touched && meta.error ? (
         <span className="text-red mt-2 text-small">{meta.error}</span>

@@ -1,9 +1,9 @@
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import { Block, BLOCKS, INLINES, Inline } from "@contentful/rich-text-types";
 import Image from "next/image";
-import { Asset, Content } from "../types/shared";
+import { Asset, Entry, Content } from "../types/shared";
 import Link from "next/link";
-
+import { ArticleShowPreview } from "../components/showPreview";
 interface EmbeddedAssetBlock extends Block {
   data: {
     target: {
@@ -17,9 +17,13 @@ interface EmbeddedAssetBlock extends Block {
 const getAssetById = (id: string, assets: Asset[]) =>
   assets.filter((asset) => asset.sys.id === id).pop();
 
+const getEntryById = (id: string, assets: Entry[]) =>
+  assets.filter((asset) => asset.sys.id === id).pop();
+
 export function renderRichTextWithImages(content: Content) {
   if (content.links) {
     const blockAssets = content.links.assets.block;
+    const blockEntries = content.links?.entries?.block;
 
     return documentToReactComponents(content.json, {
       renderNode: {
@@ -40,6 +44,18 @@ export function renderRichTextWithImages(content: Content) {
 
           return <a href={uri}>{children}</a>;
         },
+        [BLOCKS.EMBEDDED_ENTRY]: (node, children) => {
+          // find the entry in the entryMap by ID
+          const id = node.data.target.sys.id;
+
+          const entry = getEntryById(id, blockEntries);
+
+          // render the entries as needed by looking at the __typename
+          // referenced in the GraphQL query
+          if (entry.__typename === "Show") {
+            return <ArticleShowPreview {...entry} />;
+          }
+        },
         [BLOCKS.EMBEDDED_ASSET]: function EmbeddedAsset(
           node: EmbeddedAssetBlock
         ) {
@@ -51,7 +67,7 @@ export function renderRichTextWithImages(content: Content) {
             return (
               <Image
                 src={asset.url}
-                alt={asset.title}
+                alt={asset.description}
                 width={820}
                 height={520}
                 className="object-contain object-center"
