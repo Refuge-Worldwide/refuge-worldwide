@@ -381,6 +381,7 @@ function Calendar() {
             <TfiReload size={20} />
           )}
         </button>
+
         {/* Add back in for calendar v2 */}
         {/* <DropdownMenu.Root
           open={addDropdownOpen}
