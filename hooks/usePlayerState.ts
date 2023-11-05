@@ -61,7 +61,10 @@ export default function usePlayerState({
   }, [audioRef]);
 
   useEffect(() => {
-    if (activePlayer === ActivePlayer.MIXCLOUD) {
+    if (
+      activePlayer === ActivePlayer.MIXCLOUD ||
+      activePlayer === ActivePlayer.SOUNDCLOUD
+    ) {
       pause();
     }
   }, [activePlayer]);
