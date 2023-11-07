@@ -9,6 +9,7 @@ import { ActivePlayer, useGlobalStore } from "../hooks/useStore";
 import cn from "classnames";
 import Image from "next/image";
 import PlayLarge from "../icons/playLarge";
+import ReactPlayer from "react-player";
 
 export default function MixedFeelingsPlayer({
   isPlaying,
@@ -56,7 +57,7 @@ export default function MixedFeelingsPlayer({
                 href="/news/mixed-feelings"
                 className="flex items-center gap-4 grow"
               >
-                <span>Mixed feelings</span>
+                <span>Mixed Feelings</span>
                 <Arrow colour="white" />
               </Link>
               <Link href="/chat" target="_blank">
@@ -64,14 +65,15 @@ export default function MixedFeelingsPlayer({
               </Link>
             </div>
             <div className="relative">
-              <iframe
-                className="aspect-video w-screen md:w-full inline-block top-0 left-0 z-10"
+              <ReactPlayer
+                playing={isPlaying}
                 width="100%"
                 height="auto"
-                src="https://www.youtube.com/embed/gMNHvXSW4iE?si=Uurr0Qin5XqUep8T"
-                title="YouTube video player"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-              ></iframe>
+                controls={true}
+                muted={true}
+                className="aspect-video w-screen md:w-full"
+                url="https://www.youtube-nocookie.com/embed/gMNHvXSW4iE?si=CTMz9a-J-rwXjjnQ"
+              />
               <div
                 className={`absolute top-0 left-0 z-20 aspect-video w-screen md:w-full transition duration-300 ${
                   isPlaying && "opacity-0 pointer-events-none"
