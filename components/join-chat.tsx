@@ -4,13 +4,18 @@ import { Cross } from "../icons/cross";
 import { Arrow } from "../icons/arrow";
 import { DISCORD_INVITE_URL } from "../constants";
 import DiscordEmbed from "./DiscordEmbed";
+import useSchedule from "../hooks/useSchedule";
 
 export default function JoinChat() {
-  return (
-    <div className="fixed bottom-5 right-4 hidden sm:block z-30">
-      <ChatRoom />
-    </div>
-  );
+  const { scheduleData, isLoading, error } = useSchedule();
+
+  if (scheduleData?.liveNow.isMixedFeelings) return null;
+  else
+    return (
+      <div className="fixed bottom-5 right-4 hidden sm:block z-30">
+        <ChatRoom />
+      </div>
+    );
 }
 
 const ChatRoom = () => {

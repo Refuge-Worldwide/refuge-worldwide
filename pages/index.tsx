@@ -30,7 +30,7 @@ export default function HomePage({
       </Head>
       <PageMeta title="Refuge Worldwide" path="/" />
 
-      {/* <NextUp /> */}
+      <NextUp />
 
       <FeaturedShows shows={featuredShows} />
 

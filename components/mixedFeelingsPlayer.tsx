@@ -14,26 +14,19 @@ import ReactPlayer from "react-player";
 export default function MixedFeelingsPlayer({
   isPlaying,
   onPlay,
+  slug,
 }: {
   isPlaying: boolean;
   onPlay: React.MouseEventHandler<HTMLButtonElement>;
+  slug: string;
 }) {
   const { pathname } = useRouter();
   const isHomePage = pathname === "/";
 
-  const [openVideo, setOpenVideo] = useState<boolean>(true);
-
   const { ref, inView, entry } = useInView({
     /* Optional options */
-    threshold: 0,
+    threshold: 0.1,
   });
-
-  const onClick = () => {};
-
-  const playerClassName = cn(
-    ((!inView && isHomePage && isPlaying) || (!isHomePage && isPlaying)) &&
-      "lg:fixed lg:bottom-4 lg:right-4 z-50 w-full lg:w-1/3 lg:max-w-2xl min-w-md"
-  );
 
   if (isHomePage || (!isHomePage && isPlaying)) {
     return (
@@ -46,7 +39,13 @@ export default function MixedFeelingsPlayer({
             isHomePage ? "aspect-video lg:grow" : "aspect-video grow lg:grow-0"
           } `}
         >
-          <div className={playerClassName}>
+          <div
+            className={
+              ((!inView && isHomePage && isPlaying) ||
+                (!isHomePage && isPlaying)) &&
+              "lg:fixed lg:bottom-4 lg:right-4 z-50 w-full lg:w-1/3 lg:max-w-2xl min-w-md motion-safe:animate-slide-in"
+            }
+          >
             <div
               className={`${
                 inView && isHomePage && "lg:hidden"
@@ -78,10 +77,14 @@ export default function MixedFeelingsPlayer({
                 className={`absolute top-0 left-0 z-20 aspect-video w-screen md:w-full transition duration-300 ${
                   isPlaying && "opacity-0 pointer-events-none"
                 }`}
+                aria-hidden
               >
                 <button
                   onClick={onPlay}
                   className="relative top-0 left-0 flex group w-full"
+                  aria-label={
+                    isPlaying ? "Pause Live Broadcast" : "Play Live Broadcast"
+                  }
                 >
                   <Image
                     src="/images/mixed-feelings.jpg"
@@ -117,7 +120,7 @@ export default function MixedFeelingsPlayer({
           </div>
           <div>
             <Link
-              href="/news/mixed-feelings"
+              href={"/radio/" + slug}
               className="flex items-center gap-4 grow justify-center lg:justify-start"
             >
               <span>More info</span>
