@@ -91,7 +91,7 @@ export default function SearchPage({
 
               <div className="h-5" />
 
-              <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-y-10 sm:gap-8">
+              <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-y-10 sm:gap-8">
                 {data.shows.map((show) => (
                   <li key={show.fields.slug}>
                     <ShowPreviewWithoutPlayer {...show} />
@@ -111,7 +111,7 @@ export default function SearchPage({
 
               <div className="h-5" />
 
-              <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-y-10 sm:gap-8">
+              <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-y-10 sm:gap-8">
                 {data.articles.map((article) => (
                   <li key={article.fields.slug}>
                     <ArticlePreviewForSearch {...article} />
@@ -131,7 +131,7 @@ export default function SearchPage({
 
               <div className="h-5" />
 
-              <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-y-6 sm:gap-8">
+              <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-y-6 sm:gap-8">
                 {data.artists.map((artist) => {
                   return (
                     <li key={artist.fields.slug}>
