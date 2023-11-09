@@ -98,7 +98,7 @@ const workshops = [
     value: "Lux, Lisbon",
     label: "Nov 25 — Lux, Lisbon",
     additionalInfo:
-      "Hosted by Yen Sung from 9-11PM, this workshop will be given in Portuguese.",
+      "Hosted by Yen Sung from 10-12PM, this workshop will be given in Portuguese.",
   },
   {
     value: "C12, Brussels",
@@ -131,6 +131,7 @@ const closed = [
   "De School, Amsterdam",
   "Gewölbe, Cologne",
   "Bunker, Turin",
+  "Jasna1, Warsaw",
 ];
 
 const validationSchema = Yup.object().shape({
