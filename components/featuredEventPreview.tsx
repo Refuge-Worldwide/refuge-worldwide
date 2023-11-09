@@ -13,7 +13,7 @@ function getEventBackgroundColor(type: EventType) {
   if (type === "Workshop") bg = "bg-orange";
   if (type === "Party") bg = "bg-blue";
   if (type === "Fundraiser") bg = "bg-pink";
-  if (type === "Hang Out") bg = "bg-red";
+  if (type === "Hang out") bg = "bg-red";
   if (type === "Exhibition") bg = "bg-green";
 
   return bg;

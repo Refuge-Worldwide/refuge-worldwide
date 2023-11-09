@@ -285,17 +285,18 @@ export type SubmissionFormValues = {
   }>;
 };
 
+export type EventType =
+  | "Workshop"
+  | "Party"
+  | "Fundraiser"
+  | "Hang out"
+  | "Exhibition"
+  | "Festival"
+  | "Concert";
 export interface EventInterface {
   title: string;
   coverImage?: CoverImage;
-  eventType:
-    | "Workshop"
-    | "Party"
-    | "Fundraiser"
-    | "Hang out"
-    | "Exhibition"
-    | "Festival"
-    | "Concert";
+  eventType: EventType;
   date: string;
   endDate?: string;
   slug: string;
