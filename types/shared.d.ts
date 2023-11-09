@@ -159,14 +159,6 @@ export enum ArticleType {
   Workshop = "Workshop",
 }
 
-export enum EventType {
-  Project = "Workshop",
-  Blog = "Party",
-  News = "Fundraiser",
-  Event = "Hang Out",
-  Interview = "Exhibition",
-}
-
 export interface ArticleInterface {
   sys: {
     id: string;
@@ -296,7 +288,14 @@ export type SubmissionFormValues = {
 export interface EventInterface {
   title: string;
   coverImage?: CoverImage;
-  eventType: EventType;
+  eventType:
+    | "Workshop"
+    | "Party"
+    | "Fundraiser"
+    | "Hang out"
+    | "Exhibition"
+    | "Festival"
+    | "Concert";
   date: string;
   endDate?: string;
   slug: string;

@@ -52,6 +52,14 @@ export default function NewsPage({
       label: "Exhibitions",
       value: "Exhibition",
     },
+    {
+      label: "Festivals",
+      value: "Festival",
+    },
+    {
+      label: "Concerts",
+      value: "Concert",
+    },
   ];
 
   const updateFilter = (value: string, label) => () => {
@@ -131,9 +139,16 @@ export default function NewsPage({
                   autoWidth: true,
                   autoHeight: true,
                   gap: "0.5rem",
+                  wheel: true,
+                  perMove: 4,
+                  breakpoints: {
+                    640: {
+                      perMove: 2,
+                    },
+                  },
                 }}
                 hasTrack={false}
-                className="w-full pl-2 pr-16 md:pr-0 md:-mr-2 relative"
+                className="w-full max-w-lg pl-2 pr-16 md:pr-0 md:-mr-2 relative"
                 aria-label="Filter events by type"
               >
                 <SplideTrack className="">
@@ -155,11 +170,11 @@ export default function NewsPage({
                     </SplideSlide>
                   ))}
                 </SplideTrack>
-                <div className="splide__arrows md:hidden">
+                <div className="splide__arrows">
                   <button className="splide__arrow splide__arrow--prev disabled:hidden absolute -left-2 -top-0.5 h-[calc(100%+3px)] bg-gradient-to-r from-white via-white via-30% pl-2 pr-6">
                     <Chevron className="rotate-90" />
                   </button>
-                  <button className="splide__arrow splide__arrow--next disabled:hidden absolute right-12 -top-0.5 h-[calc(100%+3px)] bg-gradient-to-l from-white via-white via-30% pl-6 pr-2">
+                  <button className="splide__arrow splide__arrow--next disabled:hidden absolute right-12 md:right-0 -top-0.5 h-[calc(100%+3px)] bg-gradient-to-l from-white via-white via-30% pl-6 pr-2">
                     <Chevron className="-rotate-90" />
                   </button>
                 </div>
