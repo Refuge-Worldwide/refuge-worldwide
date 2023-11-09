@@ -7,20 +7,7 @@ import {
   createReferencesArray,
 } from "../../lib/contentful/management";
 import dayjs from "dayjs";
-const { google } = require("googleapis");
-const GOOGLE_SERVICE_PRIVATE_KEY = process.env.GOOGLE_SERVICE_PRIVATE_KEY;
-const GOOGLE_CLIENT_EMAIL = process.env.GOOGLE_CLIENT_EMAIL;
-const SCOPES = "https://www.googleapis.com/auth/calendar";
-
-var auth = new google.auth.JWT(
-  GOOGLE_CLIENT_EMAIL,
-  null,
-  GOOGLE_SERVICE_PRIVATE_KEY.replace(/\\n/g, "\n"),
-  SCOPES,
-  GOOGLE_CLIENT_EMAIL
-);
-
-const calendar = google.calendar({ version: "v3", auth });
+import { getGCalShows } from "../../lib/google-calendar/calendar";
 
 const accesstoken = process.env.CONTENTFUL_MANAGEMENT_ACCESS_TOKEN;
 const spaceId = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID;
@@ -46,31 +33,7 @@ export default async function handler(
           end: string;
         };
 
-        const calendarShows = await calendar.events.list({
-          calendarId:
-            "cfee9cd1122cae221b475541f725f87aa2ce04f4d9330e655feba8f212561a84@group.calendar.google.com",
-          timeMin: start + "+01:00",
-          timeMax: end + "+01:00",
-          singleEvents: true,
-          orderBy: "startTime",
-        });
-
-        const processed = calendarShows.data.items.map((show) => {
-          return {
-            id: show.id,
-            title: show.summary,
-            start: show.start.dateTime,
-            end: show.end.dateTime,
-            status: "Submitted",
-            published: true,
-            backgroundColor: "#B3DCC1",
-            borderColor: "#B3DCC1",
-            booker: "",
-          };
-        });
-        console.log(calendarShows.data.items);
-        console.log(processed);
-
+        const gCalShows = await getGCalShows(start, end);
         const shows = await getCalendarShows(start, end, true);
 
         // remove any shows from contentful that have g cal id.
@@ -83,7 +46,7 @@ export default async function handler(
         //   }
         // });
 
-        processed.forEach((gCalShow) => {
+        gCalShows.forEach((gCalShow) => {
           const index = shows.findIndex(
             (show) => show.id == gCalShow.gCalEventId
           );
@@ -94,7 +57,7 @@ export default async function handler(
 
         // add shows from contentful but show a warning next to them as unlinked to gcal.
 
-        const combined = shows.concat(processed);
+        const combined = shows.concat(gCalShows);
 
         res
           .status(200)
