@@ -34,6 +34,7 @@ interface CalendarShow {
   slug: string;
   booker: string;
   mixcloudLink: string;
+  gCalEventId: string;
   artistsCollection: {
     items: ArtistInterface[];
   };
@@ -61,6 +62,7 @@ export async function getCalendarShows(start, end, preview: boolean) {
           }
           status
           mixcloudLink
+          gCalEventId
           coverImage {
             sys {
               id
@@ -114,12 +116,11 @@ export async function getCalendarShows(start, end, preview: boolean) {
           : "#B3DCC1",
       booker: show.booker ? show.booker : "",
       mixcloudLink: show.mixcloudLink,
+      gCalEventId: show.gCalEventId,
     };
   });
 
-  return {
-    processed,
-  };
+  return processed;
 }
 
 // Add back in for calendar v2

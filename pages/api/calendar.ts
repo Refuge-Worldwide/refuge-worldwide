@@ -68,10 +68,33 @@ export default async function handler(
             booker: "",
           };
         });
+        console.log(calendarShows.data.items);
+        console.log(processed);
 
         const shows = await getCalendarShows(start, end, true);
 
-        const combined = shows.processed.concat(processed);
+        // remove any shows from contentful that have g cal id.
+        // shows.forEach(show => {
+        //   if (show.gCalEventId) {
+        //     console.log('found show with g cal id')
+        //     console.log(show)
+        //     const index = processed.findIndex((event) => event.id == show.gCalEventId)
+        //     processed.splice(index, 1)
+        //   }
+        // });
+
+        processed.forEach((gCalShow) => {
+          const index = shows.findIndex(
+            (show) => show.id == gCalShow.gCalEventId
+          );
+          //remove shows from shows array
+          shows.splice(index, 1);
+          //update gcal show accordingly with: contentful id, artists, title
+        });
+
+        // add shows from contentful but show a warning next to them as unlinked to gcal.
+
+        const combined = shows.concat(processed);
 
         res
           .status(200)
