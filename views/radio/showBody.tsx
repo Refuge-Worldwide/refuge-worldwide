@@ -60,6 +60,7 @@ export default function ShowBody({
                 <button
                   className="w-20 h-20 sm:w-28 sm:h-28 rounded-full focus:outline-none focus:ring-4"
                   onClick={onClick}
+                  aria-label={`Play '${title}'`}
                 >
                   <PlayCircle />
                 </button>
