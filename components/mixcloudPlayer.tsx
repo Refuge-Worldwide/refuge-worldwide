@@ -52,7 +52,7 @@ export default function MixcloudPlayer() {
           height={60}
           className="fixed bottom-0 left-0 w-full md:w-2/3 lg:w-1/2"
           src={
-            `https://www.mixcloud.com/widget/iframe/?` +
+            `https://player-widget.mixcloud.com/widget/iframe/?` +
             `hide_cover=1&` +
             `autoplay=1&` +
             `light=1&` +
