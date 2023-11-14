@@ -18,6 +18,7 @@ type ShowImageWithPlayerProps = {
   src: string;
   alt: string;
   priority?: boolean;
+  title: string;
 };
 
 function ShowImageWithPlayer({
@@ -25,13 +26,18 @@ function ShowImageWithPlayer({
   src,
   alt,
   priority,
+  title,
 }: ShowImageWithPlayerProps) {
   const showUrlSet = useGlobalStore((state) => state.showUrlSet);
 
   const onClick = () => showUrlSet(mixcloudLink);
 
   return (
-    <button onClick={onClick} className="flex relative group">
+    <button
+      onClick={onClick}
+      className="flex relative group"
+      aria-label={`Play '${title}'`}
+    >
       <Image
         src={src}
         loader={loaders.contentful}
@@ -70,6 +76,7 @@ export default function ShowPreview({
         src={coverImage}
         alt={title}
         mixcloudLink={mixcloudLink}
+        title={title}
       />
 
       <div className="h-2" />
@@ -171,6 +178,7 @@ export function FeaturedShowPreview({
         alt={title}
         mixcloudLink={mixcloudLink}
         priority={priority}
+        title={title}
       />
 
       <div className="h-2" />
