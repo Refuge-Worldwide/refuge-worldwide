@@ -35,7 +35,10 @@ export function renderRichTextWithImages(content: Content) {
             return <iframe width="100%" height="120" src={uri} />;
           }
 
-          if (uri.includes("youtube-nocookie.com/embed")) {
+          if (
+            uri.includes("youtube-nocookie.com/embed") ||
+            uri.includes("youtube.com/embed")
+          ) {
             return (
               <div className="aspect-video">
                 <iframe
@@ -64,8 +67,7 @@ export function renderRichTextWithImages(content: Content) {
                     title="Application form"
                     src={uri}
                     width="100%"
-                    height="1600"
-                    className="mb-24"
+                    height="1650"
                     loading="lazy"
                   ></iframe>
                 </div>
