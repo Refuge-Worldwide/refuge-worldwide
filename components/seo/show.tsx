@@ -1,6 +1,7 @@
 import Head from "next/head";
 import { SEO } from "../../constants";
 import { ShowInterface } from "../../types/shared";
+import type { Block } from "@contentful/rich-text-types";
 
 export default function ShowMeta({
   title,
@@ -9,7 +10,8 @@ export default function ShowMeta({
   content,
   slug,
 }: ShowInterface) {
-  const excerpt = content?.json?.content
+  // to do: change excerpt to proper type
+  const excerpt: any = content?.json?.content
     ?.filter((el) => el?.nodeType === "paragraph")
     ?.slice(0, 1)
     ?.pop()
@@ -18,7 +20,8 @@ export default function ShowMeta({
     ?.pop();
 
   // @ts-ignore
-  const description = content?.json?.content ? excerpt.value : SEO.DESCRIPTION;
+  const description =
+    content?.json?.content && excerpt?.value ? excerpt.value : SEO.DESCRIPTION;
 
   const image = `${coverImage.url}?w=1200&h=630&fit=pad`;
 
