@@ -71,8 +71,13 @@ export default function LivePlayer() {
         artist: "Refuge Worldwide",
         artwork: [
           {
-            src: scheduleData.liveNow.artwork,
-            sizes: "1024x1024",
+            src: scheduleData.liveNow.artwork + "?w=384&h=384&fit=fill&f=faces",
+            sizes: "384x384",
+            type: "image/png",
+          },
+          {
+            src: scheduleData.liveNow.artwork + "?w=512&h=512&fit=fill&f=faces",
+            sizes: "512x512",
             type: "image/png",
           },
         ],
