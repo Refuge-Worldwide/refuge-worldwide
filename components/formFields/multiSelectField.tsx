@@ -18,19 +18,11 @@ export default function MultiSelectField({
   options: Array<{ value: string; label: string; email?: [string] }>;
   limit?: number;
 }) {
-  const [ariaFocusMessage, setAriaFocusMessage] = useState("");
+  // const [ariaFocusMessage, setAriaFocusMessage] = useState("");
   const [selectedOptions, SetSelectedOptions] = useState(value ? value : []);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [field, meta, helpers] = useField(props);
   const { setFieldValue } = useFormikContext();
-
-  const onFocus = ({ focused, isDisabled }) => {
-    const msg = `You are currently focused on option ${focused.label}${
-      isDisabled ? ", disabled" : ""
-    }.`;
-    setAriaFocusMessage(msg);
-    return msg;
-  };
 
   const onSetSelectedOptions = (options) => {
     setFieldValue(props.name, options);
@@ -48,10 +40,8 @@ export default function MultiSelectField({
         <span className="label-description">{description}</span>
       </label>
       <Select
-        aria-labelledby="aria-label"
-        ariaLiveMessages={{
-          onFocus,
-        }}
+        aria-label={label}
+        aria-description={description}
         options={options}
         isMulti={!limit || limit > 1}
         className="basic-multi-select pill-input mb-2 p-2"

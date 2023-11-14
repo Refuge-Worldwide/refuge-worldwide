@@ -10,6 +10,8 @@ import { SubmissionFormValues } from "../types/shared";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import * as RadioGroup from "@radix-ui/react-radio-group";
 
+const env = process.env.NODE_ENV;
+
 export default function ShowSubmissionStep3({
   genres,
   artists,
@@ -23,9 +25,11 @@ export default function ShowSubmissionStep3({
 
   return (
     <div>
-      {/* <pre className="text-white bg-black">
-        {JSON.stringify(values, null, 2)}
-      </pre> */}
+      {env == "development" && (
+        <pre className="text-white bg-black">
+          {JSON.stringify(values, null, 2)}
+        </pre>
+      )}
       <fieldset className="mt-16">
         <InputField
           name="email"
@@ -37,7 +41,6 @@ export default function ShowSubmissionStep3({
           <InputField name="number" type="tel" label="Contact number" />
         )}
       </fieldset>
-
       <fieldset>
         <MultiSelectField
           label="Artist(s)*"
