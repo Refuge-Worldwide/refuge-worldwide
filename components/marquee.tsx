@@ -3,6 +3,10 @@ import useMarquee from "../hooks/useMarquee";
 
 export default function Marquee({ text, speed = 0.25, ...rest }) {
   const ref = useRef<HTMLDivElement>();
+  const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+  if (query.matches) {
+    speed = 0;
+  }
   useMarquee(ref, { speed: speed });
 
   return (
