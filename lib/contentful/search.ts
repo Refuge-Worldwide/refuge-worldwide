@@ -15,14 +15,18 @@ export interface SearchData {
   artists: TypeArtist[];
 }
 
-export async function getSearchData(query: string, limit = 5) {
+export async function getSearchData(
+  query: string,
+  limit = 20,
+  noQueryLimit = 4
+) {
   const start = Date.now();
 
   const [showsCollection, articlesCollection, artistsCollection] =
     await Promise.all([
       client.getEntries<TypeShowFields>({
         content_type: "show",
-        limit: limit,
+        limit: query ? limit : noQueryLimit,
         order: "-fields.date,fields.title",
 
         "fields.mixcloudLink[exists]": true,
@@ -41,7 +45,7 @@ export async function getSearchData(query: string, limit = 5) {
       }),
       client.getEntries<TypeArticleFields>({
         content_type: "article",
-        limit: limit,
+        limit: query ? limit : noQueryLimit,
         order: "-fields.date",
 
         "fields.articleType[exists]": true,
@@ -58,7 +62,7 @@ export async function getSearchData(query: string, limit = 5) {
       }),
       client.getEntries<TypeArtistFields>({
         content_type: "artist",
-        limit: limit,
+        limit: query ? limit : noQueryLimit,
         order: "fields.name",
 
         "fields.name[match]": query,

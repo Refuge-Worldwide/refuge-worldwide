@@ -73,6 +73,7 @@
     "smoothscroll-polyfill": "^0.4.4",
     "swr": "^2.1.1",
     "ts-extras": "^0.11.0",
+    "use-debounce": "^10.0.0",
     "yup": "^0.32.11",
     "zustand": "^4.1.5"
   },
