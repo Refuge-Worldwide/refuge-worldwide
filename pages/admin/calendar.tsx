@@ -6,31 +6,31 @@ import interactionPlugin from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
 import Loading from "../../components/loading";
-// import * as Dialog from "@radix-ui/react-dialog";
-// import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import * as Dialog from "@radix-ui/react-dialog";
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { useState, useEffect, useRef, useCallback } from "react";
-// import InputField from "../../components/formFields/inputField";
-// import MultiSelectField from "../../components/formFields/multiSelectField";
-// import { Formik, Form, FieldArray, Field } from "formik";
-// import { Cross } from "../../icons/cross";
+import InputField from "../../components/formFields/inputField";
+import MultiSelectField from "../../components/formFields/multiSelectField";
+import { Formik, Form, FieldArray, Field } from "formik";
+import { Cross } from "../../icons/cross";
 // Add back in for calendar v2
-// import {
-//   getAllArtists,
-//   deleteCalendarShow,
-//   createCalendarShow,
-//   updateCalendarShow,
-//   createArtist,
-//   updateArtistEmail,
-// } from "../../lib/contentful/calendar";
-// import { Arrow } from "../../icons/arrow";
-// import CheckboxField from "../../components/formFields/checkboxField";
-// import { Close } from "../../icons/menu";
+import {
+  getAllArtists,
+  deleteCalendarShow,
+  createCalendarShow,
+  updateCalendarShow,
+  createArtist,
+  updateArtistEmail,
+} from "../../lib/contentful/calendar";
+import { Arrow } from "../../icons/arrow";
+import CheckboxField from "../../components/formFields/checkboxField";
+import { Close } from "../../icons/menu";
 import { TfiReload } from "react-icons/tfi";
 import { IoMdCheckmark, IoMdMusicalNote } from "react-icons/io";
-// import { RxExternalLink } from "react-icons/rx";
+import { RxExternalLink } from "react-icons/rx";
 import { AiOutlineLoading3Quarters, AiOutlineCalendar } from "react-icons/ai";
-// import { RiDeleteBin7Line } from "react-icons/ri";
-// import Link from "next/link";
+import { RiDeleteBin7Line } from "react-icons/ri";
+import Link from "next/link";
 import dayjs from "dayjs";
 import useWindowSize from "../../hooks/useWindowSize";
 
@@ -45,14 +45,14 @@ export default function CalendarPage() {
 }
 
 function Calendar() {
-  // const [artists, setArtists] = useState(null);
+  const [artists, setArtists] = useState(null);
   const [showDialogOpen, setShowDialogOpen] = useState<boolean>(false);
-  // const [addDropdownOpen, setAddDropdownOpen] = useState<boolean>(false);
-  // const [selectedShow, setSelectedShow] = useState(null);
+  const [addDropdownOpen, setAddDropdownOpen] = useState<boolean>(false);
+  const [selectedShow, setSelectedShow] = useState(null);
   const [calendarLoading, setCalendarLoading] = useState<boolean>(false);
-  // const [isDeleting, setIsDeleting] = useState<boolean>(false);
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const calendarRef = useRef<any>();
-  // const formRef = useRef<any>();
+  const formRef = useRef<any>();
   const datePicker = useRef<any>();
   const windowSize = useWindowSize();
 
@@ -76,11 +76,11 @@ function Calendar() {
 
   // Add back in for calendar v2
 
-  // useEffect(() => {
-  //   if (formRef.current) {
-  //     console.log(formRef);
-  //   }
-  // }, [formRef]);
+  useEffect(() => {
+    if (formRef.current) {
+      console.log(formRef);
+    }
+  }, [formRef]);
 
   useEffect(() => {
     if (!showDialogOpen) {
@@ -96,182 +96,183 @@ function Calendar() {
 
   // Add back in for calendar v2
 
-  // const statusOptions = [
-  //   {
-  //     value: "TBC",
-  //     label: "TBC",
-  //   },
-  //   {
-  //     value: "Confirmed",
-  //     label: "Confirmed",
-  //   },
-  //   {
-  //     value: "Submitted",
-  //     label: "Submitted",
-  //   },
-  // ];
+  const statusOptions = [
+    {
+      value: "TBC",
+      label: "TBC",
+    },
+    {
+      value: "Confirmed",
+      label: "Confirmed",
+    },
+    {
+      value: "Submitted",
+      label: "Submitted",
+    },
+  ];
 
-  // useEffect(() => {
-  //   (async () => {
-  //     const artists = await getAllArtists();
-  //     setArtists(artists);
-  //   })();
-  //   const interval = setInterval(() => reloadCalendar(), 60000);
-  //   return () => {
-  //     clearInterval(interval);
-  //   };
-  // }, []);
+  useEffect(() => {
+    (async () => {
+      const artists = await getAllArtists();
+      setArtists(artists);
+    })();
+    const interval = setInterval(() => reloadCalendar(), 60000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
 
-  // const initialValues = {
-  //   id: selectedShow?.id,
-  //   title: selectedShow?.title,
-  //   start: selectedShow?.startStr,
-  //   end: selectedShow?.endStr,
-  //   artists: selectedShow?.extendedProps?.artists
-  //     ? selectedShow?.extendedProps?.artists
-  //     : [],
-  //   status: [
-  //     {
-  //       value: selectedShow?.extendedProps?.status
-  //         ? selectedShow?.extendedProps?.status
-  //         : "TBC",
-  //       label: selectedShow?.extendedProps?.status
-  //         ? selectedShow?.extendedProps?.status
-  //         : "TBC",
-  //     },
-  //   ],
-  //   booker: selectedShow?.extendedProps?.booker,
-  //   hasExtraArtists: false,
-  //   extraArtists: [
-  //     {
-  //       name: "",
-  //       pronouns: "",
-  //     },
-  //   ],
-  // };
+  const initialValues = {
+    id: selectedShow?.id,
+    title: selectedShow?.title,
+    start: selectedShow?.startStr,
+    end: selectedShow?.endStr,
+    artists: selectedShow?.extendedProps?.artists
+      ? selectedShow?.extendedProps?.artists
+      : [],
+    status: [
+      {
+        value: selectedShow?.extendedProps?.status
+          ? selectedShow?.extendedProps?.status
+          : "TBC",
+        label: selectedShow?.extendedProps?.status
+          ? selectedShow?.extendedProps?.status
+          : "TBC",
+      },
+    ],
+    booker: selectedShow?.extendedProps?.booker,
+    hasExtraArtists: false,
+    extraArtists: [
+      {
+        name: "",
+        pronouns: "",
+      },
+    ],
+  };
 
-  // const handleSubmit = async (values, actions) => {
-  //   const method = values.id ? "update" : "create";
-  //   let show = null;
-  //   setCalendarLoading(true);
-  //   try {
-  //     if (values.hasExtraArtists) {
-  //       for (const artist of values.extraArtists) {
-  //         // if ((artist.bio && artist.image) || (artist.bio !== "" && artist.image !== "")) {
-  //         console.log("adding artist to contentful: " + artist.name);
-  //         const contentfulNewArtist = await createArtist(artist);
-  //         console.log(contentfulNewArtist);
-  //         values.artists.push(contentfulNewArtist);
-  //         // }
-  //       }
-  //     }
+  const handleSubmit = async (values, actions) => {
+    const method = values.id ? "update" : "create";
+    let show = null;
+    setCalendarLoading(true);
+    try {
+      if (values.hasExtraArtists) {
+        for (const artist of values.extraArtists) {
+          // if ((artist.bio && artist.image) || (artist.bio !== "" && artist.image !== "")) {
+          console.log("adding artist to contentful: " + artist.name);
+          const contentfulNewArtist = await createArtist(artist);
+          console.log(contentfulNewArtist);
+          values.artists.push(contentfulNewArtist);
+          // }
+        }
+      }
 
-  //     // if (values.artistEmails) {
-  //     //   console.log(values.artistEmails);
-  //     //   for (const artist of values.artistEmails) {
-  //     //     await updateArtistEmail(artist.id, artist.email);
-  //     //   }
-  //     // }
+      // if (values.artistEmails) {
+      //   console.log(values.artistEmails);
+      //   for (const artist of values.artistEmails) {
+      //     await updateArtistEmail(artist.id, artist.email);
+      //   }
+      // }
 
-  //     if (method == "update") {
-  //       show = await updateCalendarShow(values);
-  //     } else {
-  //       show = await createCalendarShow(values);
-  //     }
+      if (method == "update") {
+        show = await updateCalendarShow(values);
+      } else {
+        show = await createCalendarShow(values);
+      }
 
-  //     // manually add show to full calendar
-  //     const calendarApi = calendarRef.current.getApi();
-  //     const fcEvent = transformEventForFullCalendar(values, show);
-  //     if (method == "update") {
-  //       calendarApi.getEventById(values.id).remove();
-  //     }
-  //     calendarApi.addEvent(fcEvent);
-  //     actions.setSubmitting(false);
-  //     actions.setStatus("submitted");
-  //     setShowDialogOpen(false);
-  //     setCalendarLoading(false);
-  //   } catch (error) {
-  //     console.log(error);
-  //     throw error;
-  //   }
-  // };
+      // manually add show to full calendar
+      const calendarApi = calendarRef.current.getApi();
+      console.log(values);
+      const fcEvent = transformEventForFullCalendar(values, show.sys.id);
+      if (method == "update") {
+        calendarApi.getEventById(values.id).remove();
+      }
+      calendarApi.addEvent(fcEvent, []);
+      actions.setSubmitting(false);
+      actions.setStatus("submitted");
+      setShowDialogOpen(false);
+      setCalendarLoading(false);
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
 
-  // const handleEventDrop = async (eventInfo) => {
-  //   setCalendarLoading(true);
-  //   console.log("handle drop: " + eventInfo);
-  //   const values = {
-  //     id: eventInfo.event.id,
-  //     start: eventInfo.event.startStr,
-  //     end: eventInfo.event.endStr,
-  //   };
-  //   updateCalendarShow(values)
-  //     .then(() => {
-  //       setCalendarLoading(false);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
+  const handleEventDrop = async (eventInfo) => {
+    setCalendarLoading(true);
+    console.log("handle drop: " + eventInfo);
+    const values = {
+      id: eventInfo.event.id,
+      start: eventInfo.event.startStr,
+      end: eventInfo.event.endStr,
+    };
+    updateCalendarShow(values)
+      .then(() => {
+        setCalendarLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
-  // const handleDelete = async (id) => {
-  //   setCalendarLoading(true);
-  //   setIsDeleting(true);
-  //   deleteCalendarShow(id)
-  //     .then((entry) => {
-  //       let calendarApi = calendarRef.current.getApi();
-  //       calendarApi.getEventById(id).remove();
-  //       setShowDialogOpen(false);
-  //       setCalendarLoading(false);
-  //       setIsDeleting(false);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
+  const handleDelete = async (id) => {
+    setCalendarLoading(true);
+    setIsDeleting(true);
+    deleteCalendarShow(id)
+      .then((entry) => {
+        let calendarApi = calendarRef.current.getApi();
+        calendarApi.getEventById(id).remove();
+        setShowDialogOpen(false);
+        setCalendarLoading(false);
+        setIsDeleting(false);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
-  // const transformEventForFullCalendar = (values, id) => {
-  //   return {
-  //     id: id,
-  //     title: values.title,
-  //     artists: values.artists,
-  //     start: values.start,
-  //     end: values.end,
-  //     status: values.status[0].value,
-  //     published: false,
-  //     backgroundColor:
-  //       values.status == "TBC"
-  //         ? "#EDB8B4"
-  //         : values.status == "Confirmed"
-  //         ? "#F1E2AF"
-  //         : values.status == "Submitted"
-  //         ? "#B3DCC1"
-  //         : "#B3DCC1",
-  //     borderColor:
-  //       values.status == "TBC"
-  //         ? "#EDB8B4"
-  //         : values.status == "Confirmed"
-  //         ? "#F1E2AF"
-  //         : values.status == "Submitted"
-  //         ? "#B3DCC1"
-  //         : "#B3DCC1",
-  //     booker: values.booker ? values.booker : "George",
-  //   };
-  // };
+  const transformEventForFullCalendar = (values, id) => {
+    return {
+      id: id,
+      title: values.title,
+      artists: values.artists,
+      start: values.start,
+      end: values.end,
+      status: values.status[0].value,
+      published: false,
+      backgroundColor:
+        values.status == "TBC"
+          ? "#EDB8B4"
+          : values.status == "Confirmed"
+          ? "#F1E2AF"
+          : values.status == "Submitted"
+          ? "#B3DCC1"
+          : "#B3DCC1",
+      borderColor:
+        values.status == "TBC"
+          ? "#EDB8B4"
+          : values.status == "Confirmed"
+          ? "#F1E2AF"
+          : values.status == "Submitted"
+          ? "#B3DCC1"
+          : "#B3DCC1",
+      booker: values.booker ? values.booker : "George",
+    };
+  };
 
-  // function handleSelect(selectInfo) {
-  //   console.log("select info");
-  //   setShowDialogOpen(true);
-  //   setSelectedShow(selectInfo);
-  //   console.log(selectInfo.startStr);
-  // }
+  function handleSelect(selectInfo) {
+    console.log("select info");
+    setShowDialogOpen(true);
+    setSelectedShow(selectInfo);
+    console.log(selectInfo.startStr);
+  }
 
   function handleEventClick(eventInfo) {
     // remove UTC timezone stamp
-    // setShowDialogOpen(true);
-    // setSelectedShow(eventInfo.event);
-    console.log(eventInfo.event.id);
-    const url = `https://app.contentful.com/spaces/taoiy3h84mql/environments/master/entries/${eventInfo.event.id}`;
-    window.open(url, "_blank");
+    setShowDialogOpen(true);
+    setSelectedShow(eventInfo.event);
+    // console.log(eventInfo.event.id);
+    // const url = `https://app.contentful.com/spaces/taoiy3h84mql/environments/master/entries/${eventInfo.event.id}`;
+    // window.open(url, "_blank");
   }
 
   const reloadCalendar = () => {
@@ -344,18 +345,18 @@ function Calendar() {
           }}
           eventClick={handleEventClick}
           // Add back in for calendar v2
-          // eventDrop={handleEventDrop}
-          // eventResize={handleEventDrop}
-          // select={handleSelect}
+          eventDrop={handleEventDrop}
+          eventResize={handleEventDrop}
+          select={handleSelect}
+          editable={true}
+          selectable={true}
           loading={(e) => setCalendarLoading(e)}
           firstDay={1}
           initialView={windowSize.width < 765 ? "timeGridDay" : "timeGridWeek"}
           nowIndicator={true}
-          // Add back in for calendar v2
-          // editable={true}
-          // selectable={true}
           selectMirror={true}
           events={getEvents}
+          // eventSources={[getEvents, []]}
           eventContent={renderEventContent}
         />
         <input
@@ -383,7 +384,7 @@ function Calendar() {
         </button>
 
         {/* Add back in for calendar v2 */}
-        {/* <DropdownMenu.Root
+        <DropdownMenu.Root
           open={addDropdownOpen}
           onOpenChange={setAddDropdownOpen}
         >
@@ -413,10 +414,10 @@ function Calendar() {
               </DropdownMenu.Item>
             </DropdownMenu.Content>
           </DropdownMenu.Portal>
-        </DropdownMenu.Root> */}
+        </DropdownMenu.Root>
 
         {/* Add back in for calendar v2 */}
-        {/* <Dialog.Root
+        <Dialog.Root
           open={showDialogOpen}
           onOpenChange={(showDialogOpen) => setShowDialogOpen(showDialogOpen)}
         >
@@ -472,7 +473,6 @@ function Calendar() {
                         label="New artist?"
                         size="small"
                       />
-
 
                       {values.hasExtraArtists && (
                         <fieldset className=" mb-8">
@@ -532,7 +532,7 @@ function Calendar() {
                         </fieldset>
                       )}
 
-                      <FieldArray
+                      {/* <FieldArray
                         name="artistEmails"
                         render={() => (
                           <div>
@@ -560,7 +560,7 @@ function Calendar() {
                               ))}
                           </div>
                         )}
-                      />
+                      /> */}
 
                       <InputField
                         name="start"
@@ -627,7 +627,7 @@ function Calendar() {
               </div>
             </Dialog.Content>
           </Dialog.Portal>
-        </Dialog.Root> */}
+        </Dialog.Root>
       </div>
     );
 
