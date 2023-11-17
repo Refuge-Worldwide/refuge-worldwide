@@ -66,6 +66,7 @@
     "react-dom": "^18.2.0",
     "react-email": "1.9.4",
     "react-filepond": "^7.1.2",
+    "react-hot-toast": "^2.4.1",
     "react-icons": "^4.10.1",
     "react-select": "^5.6.1",
     "resend": "^1.0.0",

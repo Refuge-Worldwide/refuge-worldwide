@@ -332,3 +332,41 @@
 .fc-event {
   cursor: pointer;
 }
+
+@keyframes expandIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-5%);
+  }
+}
+
+@keyframes expandOut {
+  from {
+    opacity: 1;
+    transform: translateY(-5%);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-5%);
+  }
+}
+
+.animated-dialog-overlay[data-state="open"] {
+  animation: fadeIn 150ms ease-out;
+}
+
+.animated-dialog-overlay[data-state="closed"] {
+  animation: fadeOut 150ms ease-out;
+}
+
+.animated-dialog-content[data-state="open"] {
+  animation: expandIn 150ms ease-out;
+}
+
+.animated-dialog-content[data-state="closed"] {
+  animation: expandOut 150ms ease-out;
+}

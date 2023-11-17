@@ -33,6 +33,10 @@ import { RiDeleteBin7Line } from "react-icons/ri";
 import Link from "next/link";
 import dayjs from "dayjs";
 import useWindowSize from "../../hooks/useWindowSize";
+import toast, { Toaster } from "react-hot-toast";
+import { useUser } from "@supabase/auth-helpers-react";
+import { useRouter } from "next/router";
+import { start } from "repl";
 
 export default function CalendarPage() {
   return (
@@ -55,6 +59,11 @@ function Calendar() {
   const formRef = useRef<any>();
   const datePicker = useRef<any>();
   const windowSize = useWindowSize();
+  const user = useUser();
+  let username = null;
+  username = user.email.split("@")[0];
+  username = username.charAt(0).toUpperCase() + username.slice(1);
+  const router = useRouter();
 
   const handleKeyPress = useCallback((event) => {
     const calendarApi = calendarRef.current.getApi();
@@ -116,10 +125,10 @@ function Calendar() {
       const artists = await getAllArtists();
       setArtists(artists);
     })();
-    const interval = setInterval(() => reloadCalendar(), 60000);
-    return () => {
-      clearInterval(interval);
-    };
+    // const interval = setInterval(() => reloadCalendar(), 60000);
+    // return () => {
+    //   clearInterval(interval);
+    // };
   }, []);
 
   const initialValues = {
@@ -140,7 +149,9 @@ function Calendar() {
           : "TBC",
       },
     ],
-    booker: selectedShow?.extendedProps?.booker,
+    booker: selectedShow?.extendedProps?.booker
+      ? selectedShow?.extendedProps?.booker
+      : username,
     hasExtraArtists: false,
     extraArtists: [
       {
@@ -189,10 +200,14 @@ function Calendar() {
       calendarApi.addEvent(fcEvent, []);
       actions.setSubmitting(false);
       actions.setStatus("submitted");
-      setShowDialogOpen(false);
       setCalendarLoading(false);
+      setShowDialogOpen(false);
+      toast.success(method == "update" ? "Show updated" : "Show created");
     } catch (error) {
       console.log(error);
+      toast.error(
+        method == "update" ? "Error updating show" : "Error creating show"
+      );
       throw error;
     }
   };
@@ -208,9 +223,11 @@ function Calendar() {
     updateCalendarShow(values)
       .then(() => {
         setCalendarLoading(false);
+        toast.success("Show updated");
       })
       .catch((error) => {
         console.log(error);
+        toast.error("Error moving show");
       });
   };
 
@@ -224,9 +241,11 @@ function Calendar() {
         setShowDialogOpen(false);
         setCalendarLoading(false);
         setIsDeleting(false);
+        toast.success("Show deleted");
       })
       .catch((error) => {
         console.log(error);
+        toast.error("Error deleting show");
       });
   };
 
@@ -290,10 +309,29 @@ function Calendar() {
     calendarApi.gotoDate(datePicker.current.value);
   };
 
+  const handleDatesSet = (dateInfo) => {
+    console.log("new dates set");
+    console.log(dateInfo);
+    // router.replace(
+    //   {
+    //     query: {
+    //       startStr: dateInfo.startStr,
+    //       endStr: dateInfo.endStr,
+    //       view: dateInfo.view.type,
+    //     },
+    //   },
+    //   undefined,
+    //   { shallow: true }
+    // );
+  };
+
   if (windowSize.width)
     return (
       <div className="mt-2 lg:m-4 h-[calc(100vh-100px)] lg:h-[calc(100vh-125px)] relative">
         <PageMeta title="Calendar | Refuge Worldwide" path="signin/" />
+        <div>
+          <Toaster position="bottom-center" />
+        </div>
         <FullCalendar
           ref={calendarRef}
           plugins={[
@@ -355,8 +393,8 @@ function Calendar() {
           initialView={windowSize.width < 765 ? "timeGridDay" : "timeGridWeek"}
           nowIndicator={true}
           selectMirror={true}
+          datesSet={handleDatesSet}
           events={getEvents}
-          // eventSources={[getEvents, []]}
           eventContent={renderEventContent}
         />
         <input
@@ -422,30 +460,29 @@ function Calendar() {
           onOpenChange={(showDialogOpen) => setShowDialogOpen(showDialogOpen)}
         >
           <Dialog.Portal>
-            <Dialog.Overlay className="w-screen h-screen fixed top-0 left-0 bg-black opacity-70 z-50" />
-            <Dialog.Content className="bg-white w-full h-full lg:h-auto lg:max-w-3xl fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 border-black border">
-              <div className="relative p-8 overflow-y-scroll max-h-[95vh]">
-                <Dialog.Close asChild>
-                  <button className="float-right" aria-label="Close">
-                    <Cross />
-                  </button>
-                </Dialog.Close>
-                <Dialog.Title
-                  asChild
-                  className="mb-6 pb-3 border-b border-black"
-                >
-                  <h5 className="font-sans font-medium">
-                    {selectedShow?.title ? "Edit" : "New"} show
-                    {selectedShow?.id && (
-                      <Link
-                        target="_blank"
-                        href={`https://app.contentful.com/spaces/taoiy3h84mql/environments/master/entries/${selectedShow.id}`}
-                      >
-                        <RxExternalLink className="inline ml-2 mb-1" />
-                      </Link>
-                    )}
-                  </h5>
-                </Dialog.Title>
+            <Dialog.Overlay className="data-[state=open]:animate-overlayShow  w-screen h-screen fixed top-0 left-0 bg-black/50 z-50" />
+            <Dialog.Content className="data-[state=open]:animate-contentShow bg-white w-full h-full lg:h-auto lg:max-w-3xl fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 border-black border">
+              <div className="relative overflow-y-auto max-h-[95vh]">
+                <div className="px-8 py-4 sticky top-0 bg-white border-b border-black flex justify-between items-center">
+                  <Dialog.Title asChild className="">
+                    <h5 className="font-sans font-medium">
+                      {selectedShow?.title ? "Edit" : "New"} show
+                      {selectedShow?.id && (
+                        <Link
+                          target="_blank"
+                          href={`https://app.contentful.com/spaces/taoiy3h84mql/environments/master/entries/${selectedShow.id}`}
+                        >
+                          <RxExternalLink className="inline ml-2 mb-1" />
+                        </Link>
+                      )}
+                    </h5>
+                  </Dialog.Title>
+                  <Dialog.Close asChild>
+                    <button aria-label="Close">
+                      <Cross />
+                    </button>
+                  </Dialog.Close>
+                </div>
                 <Formik
                   innerRef={formRef}
                   initialValues={initialValues}
@@ -453,141 +490,155 @@ function Calendar() {
                 >
                   {({ values, isSubmitting }) => (
                     <Form id="calendarShow">
-                      <Field type="hidden" name="id" />
-                      <InputField
-                        name="title"
-                        label="Show name"
-                        required
-                        type="text"
-                      />
-                      <MultiSelectField
-                        label="Artist(s)*"
-                        name="artists"
-                        options={artists}
-                        limit={10}
-                        value={initialValues.artists}
-                      />
+                      <div className="p-8">
+                        <pre className="text-white bg-black">
+                          {JSON.stringify(values, null, 2)}
+                        </pre>
+                        <Field type="hidden" name="id" />
+                        <InputField
+                          name="title"
+                          label="Show name"
+                          required
+                          type="text"
+                        />
+                        <MultiSelectField
+                          label="Artist(s)*"
+                          name="artists"
+                          options={artists}
+                          limit={10}
+                          value={initialValues.artists}
+                        />
 
-                      <CheckboxField
-                        name="hasExtraArtists"
-                        label="New artist?"
-                        size="small"
-                      />
+                        <CheckboxField
+                          name="hasExtraArtists"
+                          label="New artist?"
+                          size="small"
+                        />
 
-                      {values.hasExtraArtists && (
-                        <fieldset className=" mb-8">
-                          <legend className="mb-6">New artist(s)</legend>
-                          <FieldArray
-                            name="extraArtists"
-                            render={(arrayHelpers) => (
-                              <div>
-                                {values.extraArtists &&
-                                  values.extraArtists.map(
-                                    (extraArtist, index) => (
-                                      <div
-                                        className="mb-8 border border-black p-8 relative"
-                                        key={"extraArtist" + index}
-                                      >
-                                        {index > 0 && (
-                                          <button
-                                            className="float-right"
-                                            onClick={() =>
-                                              arrayHelpers.remove(index)
-                                            }
-                                            type="button"
-                                          >
-                                            <Close size={24} />
-                                          </button>
-                                        )}
-                                        <InputField
-                                          name={`extraArtists.${index}.name`}
-                                          type="text"
-                                          label="Name"
-                                          required
-                                        />
-                                        <InputField
-                                          name={`extraArtists.${index}.pronouns`}
-                                          type="text"
-                                          label="Pronouns"
-                                        />
-                                        <InputField
-                                          name={`extraArtists.${index}.email`}
-                                          type="text"
-                                          label="Email"
-                                          required
-                                        />
-                                      </div>
-                                    )
-                                  )}
-                                <button
-                                  className="underline"
-                                  onClick={() => arrayHelpers.push("")}
-                                  type="button"
-                                >
-                                  Add another artist
-                                </button>
-                              </div>
-                            )}
-                          />
-                        </fieldset>
-                      )}
-
-                      {/* <FieldArray
-                        name="artistEmails"
-                        render={() => (
-                          <div>
-                            {values.artists
-                              .filter((artist) => artist.email == null)
-                              .map((artist, index) => (
-                                <div key={"artistEmails" + index}>
-                                  <input
-                                    name={`artistEmails.${index}.name`}
-                                    type="text"
-                                    value={artist.label}
-                                  />
-                                  <input
-                                    name={`artistEmails.${index}.id`}
-                                    type="text"
-                                    value={artist.value}
-                                  />
-                                  <InputField
-                                    name={`artistEmails.${index}.email`}
-                                    type="text"
-                                    label={`Email for ${artist.label}`}
-                                    required
-                                  />
+                        {values.hasExtraArtists && (
+                          <fieldset className=" mb-8">
+                            <legend className="mb-6">New artist(s)</legend>
+                            <FieldArray
+                              name="extraArtists"
+                              render={(arrayHelpers) => (
+                                <div>
+                                  {values.extraArtists &&
+                                    values.extraArtists.map(
+                                      (extraArtist, index) => (
+                                        <div
+                                          className="mb-8 border border-black p-8 relative"
+                                          key={"extraArtist" + index}
+                                        >
+                                          {index > 0 && (
+                                            <button
+                                              className="float-right"
+                                              onClick={() =>
+                                                arrayHelpers.remove(index)
+                                              }
+                                              type="button"
+                                            >
+                                              <Close size={24} />
+                                            </button>
+                                          )}
+                                          <InputField
+                                            name={`extraArtists.${index}.name`}
+                                            type="text"
+                                            label="Name"
+                                            required
+                                          />
+                                          <InputField
+                                            name={`extraArtists.${index}.pronouns`}
+                                            type="text"
+                                            label="Pronouns"
+                                          />
+                                          <InputField
+                                            name={`extraArtists.${index}.email`}
+                                            type="text"
+                                            label="Email"
+                                            required
+                                          />
+                                        </div>
+                                      )
+                                    )}
+                                  <button
+                                    className="underline"
+                                    onClick={() => arrayHelpers.push("")}
+                                    type="button"
+                                  >
+                                    Add another artist
+                                  </button>
                                 </div>
-                              ))}
-                          </div>
+                              )}
+                            />
+                          </fieldset>
                         )}
-                      /> */}
 
-                      <InputField
-                        name="start"
-                        label="Start"
-                        required
-                        type="datetime-local"
-                      />
-                      <InputField
-                        name="end"
-                        label="End"
-                        required
-                        type="datetime-local"
-                      />
-                      <MultiSelectField
-                        label="Status"
-                        name="status"
-                        options={statusOptions}
-                        limit={1}
-                        value={initialValues.status}
-                      />
-                      <InputField
-                        name="booker"
-                        label="Booker"
-                        required
-                        type="text"
-                      />
-                      <div className="flex justify-between items-center mt-6">
+                        <FieldArray
+                          name="artistEmails"
+                          render={() => (
+                            <div>
+                              {values.artists
+                                .filter((artist) => artist.email == null)
+                                .map((artist, index) => (
+                                  <div key={"artistEmails" + index}>
+                                    {/* <input
+                                      name={`artistEmails.${index}.id`}
+                                      type="text"
+                                      value={artist.value}
+                                    /> */}
+                                    {/* <InputField
+                                      name={`artistEmails.${index}.id`}
+                                      type="text"
+                                      label={`Email for ${artist.label}`}
+                                      required
+                                      value={artist.value}
+                                      hidden
+                                    /> */}
+                                    <Field
+                                      hidden
+                                      type="text"
+                                      name={`artistEmails.${index}.id`}
+                                      value={artist.value}
+                                    />
+                                    <InputField
+                                      name={`artistEmails.${index}.email`}
+                                      type="text"
+                                      label={`Email for ${artist.label}`}
+                                      required
+                                    />
+                                  </div>
+                                ))}
+                            </div>
+                          )}
+                        />
+
+                        <InputField
+                          name="start"
+                          label="Start"
+                          required
+                          type="datetime-local"
+                        />
+                        <InputField
+                          name="end"
+                          label="End"
+                          required
+                          type="datetime-local"
+                        />
+                        <MultiSelectField
+                          label="Status"
+                          name="status"
+                          options={statusOptions}
+                          limit={1}
+                          value={initialValues.status}
+                        />
+                        <InputField
+                          name="booker"
+                          label="Booker"
+                          required
+                          type="text"
+                        />
+                      </div>
+                      <div className="flex justify-between items-center sticky bottom-0 bg-white py-4 px-8 border-t border-black">
                         <button
                           type="submit"
                           className="inline-flex items-center space-x-4 text-base font-medium disabled:cursor-not-allowed"
