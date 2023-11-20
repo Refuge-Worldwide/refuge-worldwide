@@ -132,6 +132,8 @@ const closed = [
   "Gewölbe, Cologne",
   "Bunker, Turin",
   "Jasna1, Warsaw",
+  "Funke, Ghent",
+  "Lux, Lisbon",
 ];
 
 const validationSchema = Yup.object().shape({
