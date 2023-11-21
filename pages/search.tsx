@@ -56,6 +56,12 @@ export default function SearchPage({
     resultsHeader.current.focus();
   };
 
+  const resultsHeaderText = () => {
+    if (isDataEmpty)
+      return 'No results for "' + router.query.query?.toString() + '"';
+    else return 'Results for "' + router.query.query?.toString() + '"';
+  };
+
   return (
     <Layout>
       <PageMeta title="Search | Refuge Worldwide" path="search/" />
@@ -75,11 +81,11 @@ export default function SearchPage({
                 onChange={(e) => {
                   handleSearch(e.target.value);
                 }}
-                aria-describedby="info"
+                aria-describedby="search-description"
                 placeholder="Search shows, news and artists..."
                 defaultValue={router.query.query?.toString()}
               />
-              <div id="info" className="sr-only">
+              <div id="search-description" className="sr-only">
                 Results will update as you type.
               </div>
             </form>
@@ -111,10 +117,7 @@ export default function SearchPage({
           {router.query.query && (
             <div className={`${isDataEmpty && "container-md"} p-4 sm:p-8`}>
               <h2 className="font-sans" ref={resultsHeader} tabIndex={-1}>
-                {isDataEmpty ? "No results" : "Results"} for
-                <span className="font-medium">
-                  {` ${router.query.query?.toString()}`}
-                </span>
+                {resultsHeaderText()}
               </h2>
             </div>
           )}
