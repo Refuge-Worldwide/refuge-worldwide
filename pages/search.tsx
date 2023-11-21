@@ -11,6 +11,7 @@ import useSearchData from "../hooks/useSearch";
 import { getSearchData } from "../lib/contentful/search";
 import { useRouter } from "next/router";
 import Loading from "../components/loading";
+import { useRef } from "react";
 
 export async function getStaticProps() {
   const { data } = await getSearchData("");
@@ -26,6 +27,7 @@ export default function SearchPage({
   fallbackData,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const router = useRouter();
+  const resultsHeader = useRef(null);
 
   const handleSearch = useDebouncedCallback((term) => {
     console.log(`Searching... ${term}`);
@@ -48,6 +50,12 @@ export default function SearchPage({
     ...data.artists,
   ]);
 
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    console.log(resultsHeader.current);
+    resultsHeader.current.focus();
+  };
+
   return (
     <Layout>
       <PageMeta title="Search | Refuge Worldwide" path="search/" />
@@ -55,20 +63,33 @@ export default function SearchPage({
       <section className="bg-black">
         <div className="container-md p-4 sm:p-8">
           <div className="pb-3 sm:pb-6">
-            <input
-              autoCapitalize="off"
-              autoComplete="off"
-              autoCorrect="off"
-              autoFocus
-              className="pill-input-invert placeholder-white/80"
-              id="search"
-              name="search"
-              onChange={(e) => {
-                handleSearch(e.target.value);
-              }}
-              placeholder="Search shows, news and artists..."
-              defaultValue={router.query.query?.toString()}
-            />
+            <form onSubmit={handleSubmit}>
+              <input
+                autoCapitalize="off"
+                autoComplete="off"
+                autoCorrect="off"
+                autoFocus
+                className="pill-input-invert placeholder-white/90"
+                id="search"
+                name="search"
+                onChange={(e) => {
+                  handleSearch(e.target.value);
+                }}
+                aria-describedby="info"
+                placeholder="Search shows, news and artists..."
+                defaultValue={router.query.query?.toString()}
+              />
+              <div id="info" className="sr-only">
+                Results will update as you type.
+              </div>
+            </form>
+            <div aria-live="assertive" aria-atomic="true" className="sr-only">
+              {isDataEmpty && (
+                <span>
+                  No results found for {router.query.query?.toString()}
+                </span>
+              )}
+            </div>
           </div>
         </div>
       </section>
@@ -89,17 +110,19 @@ export default function SearchPage({
         <div className="divide-y-2">
           {router.query.query && (
             <div className={`${isDataEmpty && "container-md"} p-4 sm:p-8`}>
-              <p>
-                {isDataEmpty ? "No results" : "Results"} for{" "}
-                <span className="font-medium">{`${router.query.query?.toString()}`}</span>
-              </p>
+              <h2 className="font-sans" ref={resultsHeader} tabIndex={-1}>
+                {isDataEmpty ? "No results" : "Results"} for
+                <span className="font-medium">
+                  {` ${router.query.query?.toString()}`}
+                </span>
+              </h2>
             </div>
           )}
           {!isEmpty(data.shows) && (
             <section>
               <div className="p-4 sm:p-8">
                 <Pill>
-                  <h2>Shows</h2>
+                  <h3>Shows</h3>
                 </Pill>
 
                 <div className="h-5" />
@@ -119,7 +142,7 @@ export default function SearchPage({
             <section>
               <div className="p-4 sm:p-8">
                 <Pill>
-                  <h2>News</h2>
+                  <h3>News</h3>
                 </Pill>
 
                 <div className="h-5" />
@@ -139,7 +162,7 @@ export default function SearchPage({
             <section>
               <div className="p-4 sm:p-8">
                 <Pill>
-                  <h2>Artists</h2>
+                  <h3>Artists</h3>
                 </Pill>
 
                 <div className="h-5" />
