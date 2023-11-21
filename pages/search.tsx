@@ -37,7 +37,7 @@ export default function SearchPage({
     });
   }, 500);
 
-  const { data, isValidating } = useSearchData(
+  const { data, isLoading } = useSearchData(
     router.query.query ? router.query.query.toString() : "",
     {
       fallbackData,
@@ -100,19 +100,17 @@ export default function SearchPage({
         </div>
       </section>
 
-      {isValidating && (
+      {isLoading && (
         <section className="border-b-2 min-h-screen">
           <div className="container-md p-4 pb-[calc(1rem-2px)] sm:p-8 sm:pb-[calc(2rem-2px)]">
             <div className="pt-10 pb-10">
-              <p>
-                <Loading />
-              </p>
+              <Loading />
             </div>
           </div>
         </section>
       )}
 
-      {!isValidating && (
+      {!isLoading && (
         <div className="divide-y-2">
           {router.query.query && (
             <div className={`${isDataEmpty && "container-md"} p-4 sm:p-8`}>
