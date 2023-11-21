@@ -144,6 +144,14 @@
   .prose p {
     white-space: pre-wrap;
   }
+
+  .news .prose {
+    @apply dark:text-white;
+  }
+
+  .news .prose a {
+    @apply dark:text-white;
+  }
 }
 
 @layer utilities {
