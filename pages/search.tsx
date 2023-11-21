@@ -85,21 +85,16 @@ export default function SearchPage({
         </section>
       )}
 
-      {isDataEmpty && (
-        <section>
-          <div className="container-md p-4 sm:p-8">
-            <div className="pt-10">
-              <p>
-                No results for{" "}
-                <span className="font-medium">{`"${router.query.query?.toString()}"`}</span>
-              </p>
-            </div>
-          </div>
-        </section>
-      )}
-
       {!isValidating && (
         <div className="divide-y-2">
+          {router.query.query && (
+            <div className={`${isDataEmpty && "container-md"} p-4 sm:p-8`}>
+              <p>
+                {isDataEmpty ? "No results" : "Results"} for{" "}
+                <span className="font-medium">{`${router.query.query?.toString()}`}</span>
+              </p>
+            </div>
+          )}
           {!isEmpty(data.shows) && (
             <section>
               <div className="p-4 sm:p-8">
