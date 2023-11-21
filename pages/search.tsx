@@ -60,13 +60,13 @@ export default function SearchPage({
               autoComplete="off"
               autoCorrect="off"
               autoFocus
-              className="pill-input-invert"
+              className="pill-input-invert placeholder-white/80"
               id="search"
               name="search"
               onChange={(e) => {
                 handleSearch(e.target.value);
               }}
-              placeholder="New Search"
+              placeholder="Search shows, news and artists..."
               defaultValue={router.query.query?.toString()}
             />
           </div>
