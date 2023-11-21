@@ -5,6 +5,8 @@ import useSchedule from "../hooks/useSchedule";
 import Pause from "../icons/pause";
 import Play from "../icons/play";
 import Marquee from "./marquee";
+import Link from "next/link";
+import { Cross } from "../icons/cross";
 
 const BroadcastingIndicator = ({
   status,
@@ -58,7 +60,7 @@ export default function LivePlayer() {
   });
 
   const playerWrapperClassNames = cn(
-    "bg-black text-white h-12 sm:h-16 px-4 sm:px-8 flex items-center space-x-3 sm:space-x-9",
+    "bg-black text-white h-12 sm:h-16 pl-4 sm:pl-8 flex items-center space-x-3 sm:space-x-9",
     {
       "sticky top-0 z-50": isOnline,
     }
@@ -87,19 +89,6 @@ export default function LivePlayer() {
 
   return (
     <section className={playerWrapperClassNames}>
-      <BroadcastingIndicator
-        status={scheduleData?.status}
-        isLoading={isLoading}
-        error={error}
-      />
-
-      {!isLoading && !error && scheduleData?.liveNow?.title && (
-        <Marquee
-          key={scheduleData?.liveNow.title}
-          text={<span className="pr-8">{scheduleData?.liveNow.title}</span>}
-        />
-      )}
-
       {isOnline && (
         <button
           className="grow-0 h-7 w-7 sm:h-9 sm:w-9 focus:outline-none focus:ring-4"
@@ -110,6 +99,31 @@ export default function LivePlayer() {
         >
           {isPlaying ? <Pause /> : <Play />}
         </button>
+      )}
+      <BroadcastingIndicator
+        status={scheduleData?.status}
+        isLoading={isLoading}
+        error={error}
+      />
+
+      {!isLoading && !error && scheduleData?.liveNow?.title && (
+        <Marquee
+          key={scheduleData?.liveNow.title}
+          text={<span>{scheduleData?.liveNow.title}</span>}
+        />
+      )}
+
+      {!isLoading && (
+        <Link
+          className="pt-2 pb-2 sm:pt-4 sm:pb-4 px-4 md:px-8 !ml-0 border-l-2 self-stretch items-center flex"
+          href="/schedule"
+        >
+          <h2 className="hidden lg:block whitespace-nowrap underline font-sans font-medium py-1.5">
+            Schedule
+          </h2>
+          <span className="sr-only lg:hidden">Schedule</span>
+          <Cross className="rotate-45 lg:hidden" strokeWidth="3" size={15} />
+        </Link>
       )}
 
       <audio hidden id="refuge-live-player" preload="none" ref={player}>

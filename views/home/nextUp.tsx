@@ -47,21 +47,6 @@ export default function NextUp() {
               ></Marquee>
             )}
           </div>
-          {!isLoading && (
-            <div className="pt-2 pb-2 sm:pt-4 sm:pb-4 px-4 md:px-8 border-l-2 self-stretch items-center flex">
-              <Link href="/schedule">
-                <h2 className="hidden lg:block whitespace-nowrap underline font-sans font-medium py-1.5">
-                  Schedule
-                </h2>
-                <span className="sr-only lg:hidden">Schedule</span>
-                <Cross
-                  className="rotate-45 lg:hidden"
-                  strokeWidth="3"
-                  size={15}
-                />
-              </Link>
-            </div>
-          )}
         </div>
       </section>
     );
