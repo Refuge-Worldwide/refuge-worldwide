@@ -37,7 +37,7 @@ function RefugeApp({ Component, pageProps }: AppProps) {
         supabaseClient={supabaseClient}
         initialSession={pageProps.initialSession}
       >
-        <CookieBanner />
+        {/* <CookieBanner /> */}
         <header>
           <Navigation />
         </header>

@@ -53,7 +53,7 @@ export default function MixedFeelingsPlayer({
             >
               <div className="w-4 h-4 rounded-full bg-red animate-pulse"></div>
               <Link
-                href="/news/mixed-feelings"
+                href={"/radio/" + slug}
                 className="flex items-center gap-4 grow"
               >
                 <span>Mixed Feelings</span>
@@ -71,7 +71,7 @@ export default function MixedFeelingsPlayer({
                 controls={true}
                 muted={true}
                 className="aspect-video w-screen md:w-full"
-                url="https://www.youtube-nocookie.com/embed/gMNHvXSW4iE?si=CTMz9a-J-rwXjjnQ"
+                url="https://www.youtube-nocookie.com/embed/G1aOPg7R59g?si=52_i1kZGz3ceXbBu"
               />
               <div
                 className={`absolute top-0 left-0 z-20 aspect-video w-screen md:w-full transition duration-300 ${
