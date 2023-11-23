@@ -36,7 +36,6 @@ import useWindowSize from "../../hooks/useWindowSize";
 import toast, { Toaster } from "react-hot-toast";
 import { useUser } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/router";
-import { start } from "repl";
 
 export default function CalendarPage() {
   return (
@@ -60,9 +59,7 @@ function Calendar() {
   const datePicker = useRef<any>();
   const windowSize = useWindowSize();
   const user = useUser();
-  let username = null;
-  username = user.email.split("@")[0];
-  username = username.charAt(0).toUpperCase() + username.slice(1);
+  const [username, setUsername] = useState<string>("");
   const router = useRouter();
 
   const handleKeyPress = useCallback((event) => {
@@ -90,6 +87,14 @@ function Calendar() {
       console.log(formRef);
     }
   }, [formRef]);
+
+  useEffect(() => {
+    if (user?.email) {
+      let username = user.email.split("@")[0];
+      username = username.charAt(0).toUpperCase() + username.slice(1);
+      setUsername(username);
+    }
+  }, [user]);
 
   useEffect(() => {
     if (!showDialogOpen) {
@@ -595,7 +600,6 @@ function Calendar() {
                                       hidden
                                     /> */}
                                     <Field
-                                      hidden
                                       type="text"
                                       name={`artistEmails.${index}.id`}
                                       value={artist.value}
