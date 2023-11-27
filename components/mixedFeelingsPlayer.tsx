@@ -77,7 +77,7 @@ export default function MixedFeelingsPlayer({
                 }}
               /> */}
               <iframe
-                src="https://lvpr.tv?v=a643duatfcmq9w8j"
+                src="https://lvpr.tv?v=a643duatfcmq9w8j&lowLatency=true&autoplay=true&muted=true"
                 width="100%"
                 height="auto"
                 frameBorder="0"
