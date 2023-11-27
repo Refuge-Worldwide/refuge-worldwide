@@ -2,14 +2,11 @@ import { useRouter } from "next/router";
 import { useInView } from "react-intersection-observer";
 import Link from "next/link";
 import { Arrow } from "../icons/arrow";
-import { Cross } from "../icons/cross";
 import MessageSquare from "../icons/message-square";
-import { useState, useEffect } from "react";
-import { ActivePlayer, useGlobalStore } from "../hooks/useStore";
-import cn from "classnames";
 import Image from "next/image";
 import PlayLarge from "../icons/playLarge";
-import ReactPlayer from "react-player";
+// import { Player } from "@livepeer/react";
+import { AiOutlineCalendar } from "react-icons/ai";
 
 export default function MixedFeelingsPlayer({
   isPlaying,
@@ -64,15 +61,31 @@ export default function MixedFeelingsPlayer({
               </Link>
             </div>
             <div className="relative">
-              <ReactPlayer
-                playing={isPlaying}
+              {/* <Player
+                title="Waterfalls"
+                playbackId={playbackId}
+                showPipButton
+                showTitle={false}
+                aspectRatio="16to9"
+                poster="/images/mixed-feelings.jpg"
+                controls={{
+                  autohide: 3000,
+                }}
+                theme={{
+                  borderStyles: { containerBorderStyle: "hidden" },
+                  radii: { containerBorderRadius: "10px" },
+                }}
+              /> */}
+              <iframe
+                src="https://lvpr.tv?v=a643duatfcmq9w8j"
+                frameborder="0"
                 width="100%"
                 height="auto"
-                controls={true}
-                muted={true}
+                allowfullscreen
                 className="aspect-video w-screen md:w-full"
-                url="https://www.youtube-nocookie.com/embed/G1aOPg7R59g?si=52_i1kZGz3ceXbBu"
-              />
+                allow="autoplay; encrypted-media; picture-in-picture"
+                sandbox="allow-same-origin allow-scripts"
+              ></iframe>
               <div
                 className={`absolute top-0 left-0 z-20 aspect-video w-screen md:w-full transition duration-300 ${
                   isPlaying && "opacity-0 pointer-events-none"
@@ -110,21 +123,25 @@ export default function MixedFeelingsPlayer({
           } p-4 lg:p-8  lg:max-w-2xl flex flex-col justify-between lg:w-2/5 lg:border-l-2`}
         >
           <div className="hidden lg:block">
-            <p>
+            <p className="lg:text-[1.7rem] xl:text-base">
               Mixed Feelings is expanding the radio experience. Refuge Worldwide
-              is proud to begin a new series of radio shows embracing the
+              is proud to present a new series of radio shows embracing the
               diverse talents and stories of artists from the disabled
-              community. Duis aute irure dolor in reprehenderit in voluptate
-              velit esse cillum dolore eu fugiat nulla pariatur.
+              community. This episode hosted by Dana Cermane in German Sign
+              Language, features an interview with Maxelle Taguet.
             </p>
           </div>
-          <div>
+          <div className="flex justify-between items-center">
             <Link
               href={"/radio/" + slug}
-              className="flex items-center gap-4 grow justify-center lg:justify-start"
+              className="flex items-center gap-4 grow justify-center lg:justify-start underline"
             >
               <span>More info</span>
               <Arrow colour="black" />
+            </Link>
+            <Link href="/schedule">
+              <AiOutlineCalendar />
+              <span className="sr-only">Schedule</span>
             </Link>
           </div>
         </div>

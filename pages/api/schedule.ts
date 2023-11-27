@@ -58,8 +58,7 @@ export default async function handler(
       title: liveNowTitle(),
       artwork: liveNowArtwork,
       slug: liveNowContentful.slug,
-      isMixedFeelings: true,
-      // isMixedFeelings: liveNowTitle().includes("Mixed Feelings"),
+      isMixedFeelings: liveNowTitle().includes("Dana Cermane"),
     };
 
     const scheduleData = {
