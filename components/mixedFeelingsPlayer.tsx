@@ -78,10 +78,10 @@ export default function MixedFeelingsPlayer({
               /> */}
               <iframe
                 src="https://lvpr.tv?v=a643duatfcmq9w8j"
-                frameborder="0"
                 width="100%"
                 height="auto"
-                allowfullscreen
+                frameBorder="0"
+                allowFullScreen
                 className="aspect-video w-screen md:w-full"
                 allow="autoplay; encrypted-media; picture-in-picture"
                 sandbox="allow-same-origin allow-scripts"
