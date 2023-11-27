@@ -127,14 +127,14 @@ export default function MixedFeelingsPlayer({
               Mixed Feelings is expanding the radio experience. Refuge Worldwide
               is proud to present a new series of radio shows embracing the
               diverse talents and stories of artists from the disabled
-              community. This episode hosted by Dana Cermane in German Sign
-              Language, features an interview with Maxelle Taguet.
+              community. This episode is hosted by Dana Cermane in German Sign
+              Language and features an interview with Maxelle Taguet.
             </p>
           </div>
           <div className="flex justify-between items-center">
             <Link
               href={"/radio/" + slug}
-              className="flex items-center gap-4 grow justify-center lg:justify-start underline"
+              className="flex items-center gap-4 grow justify-center lg:justify-start underline lg:text-[1.7rem] xl:text-base"
             >
               <span>More info</span>
               <Arrow colour="black" />
