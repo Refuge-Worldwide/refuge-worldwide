@@ -12,7 +12,6 @@ import { createPagesBrowserClient } from "@supabase/auth-helpers-nextjs";
 import { SessionContextProvider, Session } from "@supabase/auth-helpers-react";
 import { useState } from "react";
 import "../styles/globals.css";
-import CookieBanner from "../components/cookieBanner";
 
 const MixcloudPlayer = dynamic(() => import("../components/mixcloudPlayer"), {
   ssr: false,
@@ -37,7 +36,6 @@ function RefugeApp({ Component, pageProps }: AppProps) {
         supabaseClient={supabaseClient}
         initialSession={pageProps.initialSession}
       >
-        {/* <CookieBanner /> */}
         <header>
           <Navigation />
         </header>
