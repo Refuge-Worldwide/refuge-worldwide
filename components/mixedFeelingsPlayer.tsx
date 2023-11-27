@@ -63,7 +63,7 @@ export default function MixedFeelingsPlayer({
                 <MessageSquare />
               </Link>
             </div>
-            <div className="relative">
+            <div className="relative bg-black">
               {/* <Player
                 title="Waterfalls"
                 playbackId={playbackId}
