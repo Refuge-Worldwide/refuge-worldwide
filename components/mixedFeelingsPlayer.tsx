@@ -19,6 +19,7 @@ export default function MixedFeelingsPlayer({
 }) {
   const { pathname } = useRouter();
   const isHomePage = pathname === "/";
+  const isChatroom = pathname === "/chat";
 
   const { ref, inView, entry } = useInView({
     /* Optional options */
@@ -29,7 +30,9 @@ export default function MixedFeelingsPlayer({
     return (
       <div
         ref={ref}
-        className={`flex flex-col lg:flex-row items-stretch bg-[#94B5FA] text-black border-b-2 border-black`}
+        className={`flex flex-col lg:flex-row items-stretch bg-[#94B5FA] text-black border-b-2 border-black ${
+          isChatroom && "hidden lg:flex"
+        }`}
       >
         <div
           className={`${
