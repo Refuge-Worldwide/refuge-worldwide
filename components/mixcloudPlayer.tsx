@@ -3,10 +3,6 @@ import { SyntheticEvent } from "react";
 import { ActivePlayer, useGlobalStore } from "../hooks/useStore";
 import { useState, useEffect } from "react";
 import { getMixcloudKey } from "../util";
-import useCookieConsent from "../hooks/useCookieConsent";
-import Cookies from "js-cookie";
-
-const USER_CONSENT_COOKIE_KEY = "cookie_consent";
 
 export default function MixcloudPlayer() {
   const showUrl = useGlobalStore((state) => state.showUrl);
@@ -14,8 +10,6 @@ export default function MixcloudPlayer() {
   const activePlayerSet = useGlobalStore((state) => state.activePlayerSet);
 
   const [showKey, setShowKey] = useState(null);
-
-  const cookieConsent = Cookies.get(USER_CONSENT_COOKIE_KEY) ? true : false;
 
   useEffect(() => {
     console.log("player changed");
@@ -47,13 +41,6 @@ export default function MixcloudPlayer() {
       console.error(error);
     }
   };
-
-  if (!cookieConsent && showKey)
-    return (
-      <section className="fixed bottom-0 left-0 w-full md:w-2/3 lg:w-1/2 h-[100px] bg-black text-white text-small z-40">
-        You need to accept cookies to listen to our archive. read more.
-      </section>
-    );
 
   return (
     <>
