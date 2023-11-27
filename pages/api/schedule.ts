@@ -57,6 +57,8 @@ export default async function handler(
     const liveNow = {
       title: liveNowTitle(),
       artwork: liveNowArtwork,
+      slug: liveNowContentful.slug,
+      isMixedFeelings: liveNowTitle().includes("Dana Cermane"),
     };
 
     const scheduleData = {

@@ -184,9 +184,14 @@ module.exports = {
           from: { transform: "rotate(0deg)" },
           to: { transform: "rotate(-360deg)" },
         },
+        "slide-in": {
+          "0%": { transform: "translateY(100%)" },
+          "100%": { transform: "translateY(0)" },
+        },
       },
       animation: {
         refresh: "refresh 1.25s ease-in-out infinite forwards",
+        "slide-in": "slide-in 0.25s ease-out forwards",
       },
     },
   },
