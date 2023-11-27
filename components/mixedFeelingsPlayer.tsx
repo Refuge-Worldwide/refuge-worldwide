@@ -82,6 +82,7 @@ export default function MixedFeelingsPlayer({
                 height="auto"
                 frameBorder="0"
                 allowFullScreen
+                title="Live video stream"
                 className="aspect-video w-screen md:w-full"
                 allow="autoplay; encrypted-media; picture-in-picture"
                 sandbox="allow-same-origin allow-scripts"
