@@ -5,6 +5,7 @@ import Pill from "../../components/pill";
 import Prose from "../../components/Prose";
 import { renderRichTextWithImages } from "../../lib/rich-text";
 import { ArticleInterface } from "../../types/shared";
+import { useState, useEffect } from "react";
 
 const ShareButton = dynamic(() => import("../../components/shareButton"));
 
@@ -19,10 +20,10 @@ export default function ArticleBody({
 }: ArticleInterface) {
   return (
     <Fragment>
-      <section className="news  dark:bg-black dark:text-white dark:border-b-2 dark:border-white dark:lg:mt-24">
+      <section className="news dark:bg-black dark:text-white dark:border-b-2 dark:border-white dark:lg:mt-24">
         <div className="container-md p-4 sm:p-8 bg-white dark:bg-black dark:text-white dark:lg:-top-24 dark:relative dark:lg:-mb-24">
           <div className="flex flex-wrap md:flex-nowrap md:space-x-8 lg:space-x-12 justify-between">
-            <Pill>
+            <Pill invertInDarkMode={true}>
               <span className="font-serif">{articleType}</span>
             </Pill>
 

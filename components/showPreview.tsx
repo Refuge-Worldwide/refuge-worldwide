@@ -226,7 +226,7 @@ export function ArticleShowPreview({
   className = "",
 }: ArticlePreviewProps) {
   const cachedClassNames = classNames(
-    "sm:grid grid-cols-12 items-center justify-between gap-4 sm:gap-8 border border-black not-prose",
+    "sm:grid grid-cols-12 items-center justify-between gap-4 sm:gap-8 border border-black dark:border-white not-prose",
     className
   );
 

@@ -3,11 +3,13 @@ import cn from "classnames";
 export default function Pill({
   children,
   invert = false,
+  invertInDarkMode = false,
   outline = false,
   size = "large",
 }: {
   children: React.ReactNode;
   invert?: boolean;
+  invertInDarkMode?: boolean;
   outline?: boolean;
   size?: "small" | "medium" | "large";
 }) {
@@ -21,7 +23,10 @@ export default function Pill({
       "pill-small": size === "small",
       "pill-medium": size === "medium",
       "pill-large": size === "large",
-    }
+    },
+    invertInDarkMode
+      ? "dark:text-white dark:border-white dark:shadow-pill-white dark:bg-black"
+      : ""
   );
 
   return <div className={className}>{children}</div>;
