@@ -9,7 +9,7 @@ import useSchedule from "../hooks/useSchedule";
 export default function JoinChat() {
   const { scheduleData, isLoading, error } = useSchedule();
 
-  if (scheduleData?.liveNow.isMixedFeelings) return null;
+  if (scheduleData?.liveNow?.isMixedFeelings) return null;
   else
     return (
       <div className="fixed bottom-5 right-4 hidden sm:block z-30">

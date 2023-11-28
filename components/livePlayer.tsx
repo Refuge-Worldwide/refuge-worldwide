@@ -123,7 +123,7 @@ export default function LivePlayer() {
           Your browser does not support the audio element.
         </audio>
       </section>
-      {scheduleData?.liveNow.isMixedFeelings && (
+      {scheduleData?.liveNow?.isMixedFeelings && (
         <MixedFeelingsPlayer
           isPlaying={isPlaying}
           onPlay={isPlaying ? pause : play}
