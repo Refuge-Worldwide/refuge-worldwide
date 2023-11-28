@@ -7,21 +7,26 @@ import Play from "../icons/play";
 import Marquee from "./marquee";
 import Link from "next/link";
 import { Cross } from "../icons/cross";
+import Image from "next/image";
 
 const BroadcastingIndicator = ({
   status,
   isLoading,
   error,
+  liveNow,
 }: {
   status: "online" | "offline";
   isLoading: boolean;
   error: Error;
+  liveNow: any;
 }) => {
   if (status === "online")
     return (
-      <div className="grow-0 flex items-center space-x-6">
-        <div className="shrink-0 w-7 h-7 sm:h-10 sm:w-10 rounded-full bg-red animate-pulse" />
-        <p className="hidden md:block leading-none mt-1">Live</p>
+      <div className="grow-0 flex items-center space-x-2 bg-white/25 px-2 py-1 rounded-md">
+        <div className="shrink-0 w-7 h-7 sm:h-3 sm:w-3 rounded-full bg-red animate-pulse mt-1" />
+        <p className="hidden md:block leading-none mt-1 text-tiny uppercase">
+          Live
+        </p>
       </div>
     );
   else if (isLoading)
@@ -29,14 +34,16 @@ const BroadcastingIndicator = ({
       <div className="grow-0 flex items-center space-x-6 opacity-70">
         <div className="shrink-0 w-7 h-7 sm:h-10 sm:w-10 rounded-full bg-white/25" />
         <div className="h-6 sm:h-9 w-56 flex items-center space-x-2 whitespace-nowrap px-2 ml-6 bg-white opacity-25"></div>
-        <p className="hidden leading-none mt-1 animate-pulse">Loading</p>
+        <p className="hidden leading-none mt-1 animate-pulse uppercase">
+          Loading
+        </p>
       </div>
     );
 
   return (
     <div className="grow-0 flex items-center space-x-6">
       <div className="shrink-0 w-7 h-7 sm:h-10 sm:w-10 rounded-full bg-white/25" />
-      <p className="leading-none mt-1">Offline</p>
+      <p className="leading-none mt-1 uppercase">Offline</p>
     </div>
   );
 };
@@ -60,7 +67,7 @@ export default function LivePlayer() {
   });
 
   const playerWrapperClassNames = cn(
-    "bg-black text-white h-12 sm:h-16 pl-4 sm:pl-8 flex items-center space-x-3 sm:space-x-9",
+    "bg-black text-white h-12 sm:h-16 pl-4 sm:pl-8 flex items-center space-x-3 sm:space-x-6",
     {
       "sticky top-0 z-50": isOnline,
     }
@@ -90,37 +97,38 @@ export default function LivePlayer() {
   return (
     <section className={playerWrapperClassNames}>
       {isOnline && (
-        <button
-          className="grow-0 h-7 w-7 sm:h-9 sm:w-9 focus:outline-none focus:ring-4"
-          onClick={isPlaying ? pause : play}
-          aria-label={
-            isPlaying ? "Pause Live Broadcast" : "Play Live Broadcast"
-          }
-        >
-          {isPlaying ? <Pause /> : <Play />}
-        </button>
+        <>
+          <button
+            className="grow-0 h-7 w-7 sm:h-8 sm:w-8 focus:outline-none focus:ring-4"
+            onClick={isPlaying ? pause : play}
+            aria-label={
+              isPlaying ? "Pause Live Broadcast" : "Play Live Broadcast"
+            }
+          >
+            {isPlaying ? <Pause /> : <Play />}
+          </button>
+        </>
       )}
       <BroadcastingIndicator
         status={scheduleData?.status}
         isLoading={isLoading}
         error={error}
+        liveNow={scheduleData?.liveNow}
       />
 
       {!isLoading && !error && scheduleData?.liveNow?.title && (
         <Marquee
           key={scheduleData?.liveNow.title}
-          text={<span>{scheduleData?.liveNow.title}</span>}
+          text={<span className="pr-8">{scheduleData?.liveNow.title}</span>}
         />
       )}
 
       {!isLoading && (
         <Link
-          className="pt-2 pb-2 sm:pt-4 sm:pb-4 px-4 md:px-8 !ml-0 border-l-2 self-stretch items-center flex"
+          className="pt-2 pb-2 sm:pt-4 sm:pb-4 px-4 md:px-8 !ml-0 self-stretch items-center flex bg-black border-white border-l-2 border-r-0 text-white"
           href="/schedule"
         >
-          <h2 className="hidden lg:block whitespace-nowrap underline font-sans font-medium py-1.5">
-            Schedule
-          </h2>
+          Schedule
           <span className="sr-only lg:hidden">Schedule</span>
           <Cross className="rotate-45 lg:hidden" strokeWidth="3" size={15} />
         </Link>

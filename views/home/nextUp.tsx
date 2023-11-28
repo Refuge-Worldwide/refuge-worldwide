@@ -16,7 +16,7 @@ export default function NextUp() {
   if ((!isLoading && !scheduleData?.nextUp) || error) return null;
   else
     return (
-      <section className={`${bgColour} border-t-2 border-b-2`}>
+      <section className={`${bgColour} border-b-2`}>
         <div className="flex items-center">
           <div className="pt-2 pb-2 sm:pt-4 sm:pb-4 px-4 md:px-8 border-r-2">
             <Pill outline={true} size="medium">
