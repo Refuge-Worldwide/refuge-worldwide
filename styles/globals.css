@@ -308,7 +308,7 @@
 }
 
 .fc .fc-toolbar.fc-header-toolbar {
-  @apply mx-2 lg:mx-11;
+  @apply mx-2 lg:mr-20 lg:ml-12;
 }
 
 .fc-day-today {
@@ -330,7 +330,19 @@
 }
 
 .fc-event {
-  cursor: pointer;
+  @apply cursor-pointer rounded-none transition-all;
+}
+
+.fc-highlighted-event {
+  outline: 3px #ff0000 solid;
+  animation: blink 0.5s;
+  animation-iteration-count: 3;
+}
+
+@keyframes blink {
+  to {
+    outline-color: #fff;
+  }
 }
 
 @keyframes expandIn {

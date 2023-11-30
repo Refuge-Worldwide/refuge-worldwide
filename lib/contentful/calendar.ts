@@ -40,6 +40,20 @@ interface CalendarShow {
   live?: boolean;
 }
 
+interface fcCalendarShow {
+  id: string;
+  title: string;
+  artists: Array<{ value: string; label: string }>;
+  start: string;
+  end: string;
+  status: string;
+  published: string;
+  backgroundColor: string;
+  borderColor: string;
+  booker: string;
+  mixcloudLink: string;
+}
+
 export async function getCalendarShows(start, end, preview: boolean) {
   const calendarQuery = /* GraphQL */ `
     query calendarQuery($start: DateTime, $end: DateTime, $preview: Boolean) {
@@ -69,10 +83,11 @@ export async function getCalendarShows(start, end, preview: boolean) {
           }
           artistsCollection(limit: 9) {
             items {
-              name
               sys {
                 id
               }
+              name
+              email
             }
           }
         }
@@ -92,8 +107,8 @@ export async function getCalendarShows(start, end, preview: boolean) {
       id: show.sys.id,
       title: show.title,
       artists: transformForDropdown(show.artistsCollection.items),
-      start: show.date.slice(0, -1),
-      end: show.dateEnd.slice(0, -1),
+      start: show.date ? show.date.slice(0, -1) : null,
+      end: show.dateEnd ? show.dateEnd.slice(0, -1) : null,
       status: show.status ? show.status : "Submitted",
       published: show.sys.publishedVersion ? true : false,
       backgroundColor:
@@ -114,6 +129,66 @@ export async function getCalendarShows(start, end, preview: boolean) {
           : "#B3DCC1",
       booker: show.booker ? show.booker : "",
       mixcloudLink: show.mixcloudLink,
+    };
+  });
+
+  return {
+    processed,
+  };
+}
+
+export async function searchCalendarShows(query, preview: boolean) {
+  const calendarQuery = /* GraphQL */ `
+    query calendarQuery($query: String, $preview: Boolean) {
+      showCollection(
+        order: date_DESC
+        where: { title_contains: $query }
+        preview: $preview
+        limit: 100
+      ) {
+        items {
+          title
+          date
+          dateEnd
+          slug
+          booker
+          sys {
+            publishedVersion
+            id
+          }
+          status
+          artistsCollection(limit: 9) {
+            items {
+              sys {
+                id
+              }
+              name
+              email
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  const res = await graphql(calendarQuery, {
+    variables: { query, preview },
+    preview,
+  });
+
+  const shows = extractCollection<CalendarShow>(res, "showCollection");
+
+  const processed = shows.map((show) => {
+    return {
+      id: show.sys.id,
+      title: show.title,
+      start: show.date ? show.date.split(".000Z")[0] : null,
+      end: show.dateEnd ? show.dateEnd.split(".000Z")[0] : null,
+      mixcloudLink: show.mixcloudLink,
+      status: show.status ? show.status : "Submitted",
+      published: show.sys.publishedVersion ? true : false,
+      artists: transformForDropdown(show.artistsCollection.items),
+      booker: show.booker ? show.booker : "",
     };
   });
 

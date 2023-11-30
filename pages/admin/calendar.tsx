@@ -8,6 +8,7 @@ import listPlugin from "@fullcalendar/list";
 import Loading from "../../components/loading";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import * as Popover from "@radix-ui/react-popover";
 import { useState, useEffect, useRef, useCallback } from "react";
 import InputField from "../../components/formFields/inputField";
 import MultiSelectField from "../../components/formFields/multiSelectField";
@@ -27,15 +28,16 @@ import CheckboxField from "../../components/formFields/checkboxField";
 import { Close } from "../../icons/menu";
 import { TfiReload } from "react-icons/tfi";
 import { IoMdCheckmark, IoMdMusicalNote } from "react-icons/io";
-import { RxExternalLink } from "react-icons/rx";
+import { RxExternalLink, RxCopy, RxDotsVertical } from "react-icons/rx";
 import { AiOutlineLoading3Quarters, AiOutlineCalendar } from "react-icons/ai";
-import { RiDeleteBin7Line } from "react-icons/ri";
+import { RiDeleteBin7Line, RiFileCopyLine } from "react-icons/ri";
 import Link from "next/link";
 import dayjs from "dayjs";
 import useWindowSize from "../../hooks/useWindowSize";
 import toast, { Toaster } from "react-hot-toast";
 import { useUser } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/router";
+import CalendarSearch from "../../views/admin/calendarSearch";
 
 export default function CalendarPage() {
   return (
@@ -54,6 +56,7 @@ function Calendar() {
   const [selectedShow, setSelectedShow] = useState(null);
   const [calendarLoading, setCalendarLoading] = useState<boolean>(false);
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
+  const [highlightedShow, setHighlightedShow] = useState<string>(null);
   const calendarRef = useRef<any>();
   const formRef = useRef<any>();
   const datePicker = useRef<any>();
@@ -315,8 +318,6 @@ function Calendar() {
   };
 
   const handleDatesSet = (dateInfo) => {
-    console.log("new dates set");
-    console.log(dateInfo);
     // router.replace(
     //   {
     //     query: {
@@ -328,6 +329,55 @@ function Calendar() {
     //   undefined,
     //   { shallow: true }
     // );
+    if (!calendarLoading && highlightedShow) {
+      highlightShow();
+    }
+  };
+
+  const goToHighlightedShow = (date, showId) => {
+    let calendarApi = calendarRef.current.getApi();
+    calendarApi.gotoDate(date);
+    // calendarApi.scrollToTime(date);
+    setHighlightedShow(showId);
+    // to do: check if date of select show is outside of current daterange of calendar
+  };
+
+  const handleCalendarLoading = (e) => {
+    setCalendarLoading(e);
+    if (!e && highlightedShow) {
+      highlightShow();
+    }
+  };
+
+  const highlightShow = () => {
+    setTimeout(() => {
+      const showEl = document.getElementById(highlightedShow).parentElement;
+      // to do: scroll event into view
+      showEl.scrollIntoView({
+        block: "center",
+        behavior: "smooth",
+      });
+      console.log(showEl);
+      showEl.classList.add("fc-highlighted-event");
+      setHighlightedShow(null);
+      setTimeout(() => {
+        if (showEl) {
+          showEl.classList.remove("fc-highlighted-event");
+        }
+      }, 10000);
+    }, 100);
+  };
+
+  const handleCopyFormLink = (showId) => {
+    const showFormLink = "https://refugeworldwide.com/submission?id=" + showId;
+    navigator.clipboard.writeText(showFormLink).then(
+      () => {
+        toast.success("Submission link copied to clipboard");
+      },
+      () => {
+        toast.error("Issue copying to clipboard");
+      }
+    );
   };
 
   if (windowSize.width)
@@ -335,7 +385,17 @@ function Calendar() {
       <div className="mt-2 lg:m-4 h-[calc(100vh-100px)] lg:h-[calc(100vh-125px)] relative">
         <PageMeta title="Calendar | Refuge Worldwide" path="signin/" />
         <div>
-          <Toaster position="bottom-center" />
+          <Toaster
+            position="bottom-center"
+            toastOptions={{
+              style: {
+                border: "1px solid black",
+                padding: "16px",
+                color: "black",
+                borderRadius: "0px",
+              },
+            }}
+          />
         </div>
         <FullCalendar
           ref={calendarRef}
@@ -393,7 +453,7 @@ function Calendar() {
           select={handleSelect}
           editable={true}
           selectable={true}
-          loading={(e) => setCalendarLoading(e)}
+          loading={(e) => handleCalendarLoading(e)}
           firstDay={1}
           initialView={windowSize.width < 765 ? "timeGridDay" : "timeGridWeek"}
           nowIndicator={true}
@@ -401,6 +461,7 @@ function Calendar() {
           datesSet={handleDatesSet}
           events={getEvents}
           eventContent={renderEventContent}
+          scrollTimeReset={false}
         />
         <input
           type="date"
@@ -414,6 +475,10 @@ function Calendar() {
         >
           <AiOutlineCalendar size={25} />
         </button>
+        <CalendarSearch
+          onView={goToHighlightedShow}
+          onEdit={handleEventClick}
+        />
         <button
           className="absolute top-1 lg:top-2 right-2 lg:right-0 disabled:cursor-wait"
           onClick={reloadCalendar}
@@ -465,40 +530,78 @@ function Calendar() {
           onOpenChange={(showDialogOpen) => setShowDialogOpen(showDialogOpen)}
         >
           <Dialog.Portal>
-            <Dialog.Overlay className="data-[state=open]:animate-overlayShow  w-screen h-screen fixed top-0 left-0 bg-black/50 z-50" />
+            <Dialog.Overlay className="data-[state=open]:animate-overlayShow  w-screen h-screen fixed top-0 left-0 bg-black/50 z-50 backdrop-blur-sm" />
             <Dialog.Content className="data-[state=open]:animate-contentShow bg-white w-full h-full lg:h-auto lg:max-w-3xl fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 border-black border">
-              <div className="relative overflow-y-auto max-h-[95vh]">
-                <div className="px-8 py-4 sticky top-0 bg-white border-b border-black flex justify-between items-center">
-                  <Dialog.Title asChild className="">
-                    <h5 className="font-sans font-medium">
-                      {selectedShow?.title ? "Edit" : "New"} show
-                      {selectedShow?.id && (
-                        <Link
-                          target="_blank"
-                          href={`https://app.contentful.com/spaces/taoiy3h84mql/environments/master/entries/${selectedShow.id}`}
-                        >
-                          <RxExternalLink className="inline ml-2 mb-1" />
-                        </Link>
+              <Formik
+                innerRef={formRef}
+                initialValues={initialValues}
+                onSubmit={handleSubmit}
+              >
+                {({ values, isSubmitting, dirty, setFieldValue }) => (
+                  <div className="relative overflow-y-auto max-h-[95vh]">
+                    <div className="px-8 py-4 sticky top-0 bg-white border-b border-black flex justify-between gap-4 items-center z-20">
+                      <Dialog.Title asChild className="grow">
+                        <h5 className="font-sans font-medium">
+                          {selectedShow?.title ? "Edit" : "New"} show
+                        </h5>
+                      </Dialog.Title>
+                      {values?.id && (
+                        <Popover.Root>
+                          <Popover.Trigger asChild>
+                            <button className="hover:bg-black/10 p-1 rounded-lg">
+                              <RxDotsVertical />
+                            </button>
+                          </Popover.Trigger>
+                          <Popover.Content
+                            align="end"
+                            sideOffset={8}
+                            className="border border-black p-2 bg-white shadow-md text-small flex flex-col items-start"
+                          >
+                            <Link
+                              className="hover:bg-black/10 px-2 py-1 rounded-lg"
+                              target="_blank"
+                              href={`https://app.contentful.com/spaces/taoiy3h84mql/environments/master/entries/${selectedShow.id}`}
+                            >
+                              Open in Contentful
+                            </Link>
+                            <button
+                              type="button"
+                              className="hover:bg-black/10 px-2 py-1 rounded-lg"
+                              onClick={() => {
+                                setFieldValue("id", undefined);
+                                toast.success(
+                                  "Show duplicated. Please change necessary fields and hit the add button."
+                                );
+                              }}
+                            >
+                              Duplicate (shallow)
+                            </button>
+                            <button
+                              onClick={() => handleCopyFormLink(values.id)}
+                              className="hover:bg-black/10 px-2 py-1 rounded-lg"
+                            >
+                              Copy form link
+                            </button>
+                            <button className="hover:bg-black/10 px-2 py-1 rounded-lg">
+                              Download images
+                            </button>
+                          </Popover.Content>
+                        </Popover.Root>
                       )}
-                    </h5>
-                  </Dialog.Title>
-                  <Dialog.Close asChild>
-                    <button aria-label="Close">
-                      <Cross />
-                    </button>
-                  </Dialog.Close>
-                </div>
-                <Formik
-                  innerRef={formRef}
-                  initialValues={initialValues}
-                  onSubmit={handleSubmit}
-                >
-                  {({ values, isSubmitting }) => (
+                      <Dialog.Close asChild>
+                        <button aria-label="Close" className="lg:hidden">
+                          <Cross />
+                        </button>
+                      </Dialog.Close>
+                    </div>
                     <Form id="calendarShow">
                       <div className="p-8">
-                        <pre className="text-white bg-black">
+                        {/* <pre className="text-white bg-black">
                           {JSON.stringify(values, null, 2)}
                         </pre>
+                        <pre className="text-white bg-black">
+                          {JSON.stringify(selectedShow, null, 2)}
+                        </pre> */}
                         <Field type="hidden" name="id" />
                         <InputField
                           name="title"
@@ -578,7 +681,7 @@ function Calendar() {
                           </fieldset>
                         )}
 
-                        <FieldArray
+                        {/* <FieldArray
                           name="artistEmails"
                           render={() => (
                             <div>
@@ -586,19 +689,19 @@ function Calendar() {
                                 .filter((artist) => artist.email == null)
                                 .map((artist, index) => (
                                   <div key={"artistEmails" + index}>
-                                    {/* <input
+                                    <input
                                       name={`artistEmails.${index}.id`}
                                       type="text"
                                       value={artist.value}
-                                    /> */}
-                                    {/* <InputField
+                                    />
+                                    <InputField
                                       name={`artistEmails.${index}.id`}
                                       type="text"
                                       label={`Email for ${artist.label}`}
                                       required
                                       value={artist.value}
                                       hidden
-                                    /> */}
+                                    />
                                     <Field
                                       type="text"
                                       name={`artistEmails.${index}.id`}
@@ -614,7 +717,7 @@ function Calendar() {
                                 ))}
                             </div>
                           )}
-                        />
+                        /> */}
 
                         <InputField
                           name="start"
@@ -649,7 +752,7 @@ function Calendar() {
                           disabled={isSubmitting}
                         >
                           <span className="underline">
-                            {selectedShow?.title ? "Save" : "Add"}
+                            {values?.id ? "Save" : "Add"}
                           </span>
                           {isSubmitting ? (
                             <AiOutlineLoading3Quarters className="animate-spin" />
@@ -657,29 +760,31 @@ function Calendar() {
                             <Arrow />
                           )}
                         </button>
-                        {selectedShow?.title && (
-                          <button
-                            type="button"
-                            className="cursor-pointer disabled:cursor-not-allowed"
-                            value="delete"
-                            onClick={() => {
-                              handleDelete(values.id);
-                            }}
-                            disabled={isDeleting}
-                          >
-                            {" "}
-                            {isDeleting ? (
-                              <AiOutlineLoading3Quarters className="animate-spin" />
-                            ) : (
-                              <RiDeleteBin7Line />
-                            )}
-                          </button>
+                        {values?.id && (
+                          <div className="flex gap-6 items-center">
+                            <button
+                              type="button"
+                              className="cursor-pointer disabled:cursor-not-allowed"
+                              value="delete"
+                              onClick={() => {
+                                handleDelete(values.id);
+                              }}
+                              disabled={isDeleting}
+                            >
+                              {" "}
+                              {isDeleting ? (
+                                <AiOutlineLoading3Quarters className="animate-spin" />
+                              ) : (
+                                <RiDeleteBin7Line />
+                              )}
+                            </button>
+                          </div>
                         )}
                       </div>
                     </Form>
-                  )}
-                </Formik>
-              </div>
+                  </div>
+                )}
+              </Formik>
             </Dialog.Content>
           </Dialog.Portal>
         </Dialog.Root>
@@ -691,7 +796,7 @@ function Calendar() {
 
 function renderEventContent(eventInfo) {
   return (
-    <div className="p-1">
+    <div className="p-1" id={eventInfo.event.id}>
       <div className="mt-1 flex justify-between">
         <p className="text-xxs font-medium">{eventInfo.timeText} </p>
         <p className="text-xxs italic">

@@ -8,7 +8,7 @@ import type {
   TypeShowFields,
 } from "../../types/contentful";
 import { client } from "./client";
-
+import { previewClient } from "./client";
 export interface SearchData {
   shows: TypeShow[];
   articles: TypeArticle[];
@@ -79,6 +79,38 @@ export async function getSearchData(
 
   return {
     data: { shows, articles, artists } as SearchData,
+    duration: end - start,
+  };
+}
+
+export async function getCalendarSearchData(query: string, limit = 100) {
+  const start = Date.now();
+
+  const [showsCollection] = await Promise.all([
+    previewClient.getEntries<TypeShowFields>({
+      content_type: "show",
+      limit: limit,
+      order: "-fields.date,fields.title",
+      query: query,
+      select: [
+        "sys.id",
+        "fields.title",
+        "fields.slug",
+        "fields.date",
+        "fields.dateEnd",
+        "fields.artists",
+        "fields.genres",
+        "fields.coverImage",
+      ],
+    }),
+  ]);
+
+  const end = Date.now();
+
+  const { items: shows } = showsCollection;
+
+  return {
+    data: { shows },
     duration: end - start,
   };
 }
