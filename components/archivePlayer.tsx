@@ -4,7 +4,7 @@ import { ActivePlayer, useGlobalStore } from "../hooks/useStore";
 import { useState, useEffect } from "react";
 import { getMixcloudKey } from "../util";
 
-export default function MixcloudPlayer() {
+export default function ArchivePlayer() {
   const showUrl = useGlobalStore((state) => state.showUrl);
   const activePlayer = useGlobalStore((state) => state.activePlayer);
   const activePlayerSet = useGlobalStore((state) => state.activePlayerSet);
@@ -23,6 +23,14 @@ export default function MixcloudPlayer() {
         .then((data) => {
           setShowKey(data);
         });
+    } else if (activePlayer === ActivePlayer.YOUTUBE) {
+      var video_id = showUrl.split("v=")[1];
+      var ampersandPosition = video_id.indexOf("&");
+      if (ampersandPosition != -1) {
+        video_id = video_id.substring(0, ampersandPosition);
+      }
+      console.log(video_id);
+      setShowKey(video_id);
     }
   }, [showUrl, activePlayer]);
 
@@ -80,6 +88,16 @@ export default function MixcloudPlayer() {
             `color=000000`
           }
         ></iframe>
+      )}
+      {activePlayer === ActivePlayer.YOUTUBE && showKey && (
+        <div className="fixed bottom-0 left-0 w-full md:w-1/3 aspect-video">
+          <iframe
+            width="100%"
+            height="100%"
+            allow="autoplay"
+            src={"https://www.youtube.com/embed/" + showKey + "?autoplay=1"}
+          ></iframe>
+        </div>
       )}
       <Script src="https://widget.mixcloud.com/media/js/widgetApi.js" />
     </>
