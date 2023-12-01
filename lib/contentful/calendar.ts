@@ -28,6 +28,7 @@ interface CalendarShow {
   };
   status: string;
   title: string;
+  type: string;
   localStartTime?: string;
   date: string;
   dateEnd: string;
@@ -37,7 +38,7 @@ interface CalendarShow {
   artistsCollection: {
     items: ArtistInterface[];
   };
-  live?: boolean;
+  email: boolean;
 }
 
 interface fcCalendarShow {
@@ -65,6 +66,7 @@ export async function getCalendarShows(start, end, preview: boolean) {
       ) {
         items {
           title
+          type
           date
           dateEnd
           slug
@@ -74,13 +76,8 @@ export async function getCalendarShows(start, end, preview: boolean) {
             id
           }
           status
+          email
           mixcloudLink
-          coverImage {
-            sys {
-              id
-            }
-            url
-          }
           artistsCollection(limit: 9) {
             items {
               sys {
@@ -106,11 +103,13 @@ export async function getCalendarShows(start, end, preview: boolean) {
     return {
       id: show.sys.id,
       title: show.title,
+      type: show.type,
       artists: transformForDropdown(show.artistsCollection.items),
       start: show.date ? show.date.slice(0, -1) : null,
       end: show.dateEnd ? show.dateEnd.slice(0, -1) : null,
       status: show.status ? show.status : "Submitted",
       published: show.sys.publishedVersion ? true : false,
+      email: show.email,
       backgroundColor:
         show.status == "TBC"
           ? "#EDB8B4"
@@ -148,6 +147,7 @@ export async function searchCalendarShows(query, preview: boolean) {
       ) {
         items {
           title
+          type
           date
           dateEnd
           slug
@@ -157,6 +157,7 @@ export async function searchCalendarShows(query, preview: boolean) {
             id
           }
           status
+          email
           artistsCollection(limit: 9) {
             items {
               sys {

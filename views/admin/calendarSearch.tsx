@@ -31,6 +31,8 @@ export default function CalendarSearch({ onView, onEdit }) {
         published: show.published,
         artists: show.artists,
         booker: show.booker ? show.booker : "",
+        email: show.email ? show.email : true,
+        type: show.type ? show.type : "live",
       },
     };
   };

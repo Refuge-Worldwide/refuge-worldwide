@@ -9,6 +9,7 @@ import Loading from "../../components/loading";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as Popover from "@radix-ui/react-popover";
+import * as RadioGroup from "@radix-ui/react-radio-group";
 import { useState, useEffect, useRef, useCallback } from "react";
 import InputField from "../../components/formFields/inputField";
 import MultiSelectField from "../../components/formFields/multiSelectField";
@@ -142,6 +143,7 @@ function Calendar() {
   const initialValues = {
     id: selectedShow?.id,
     title: selectedShow?.title,
+    type: selectedShow?.extendedProps?.type,
     start: selectedShow?.startStr,
     end: selectedShow?.endStr,
     artists: selectedShow?.extendedProps?.artists
@@ -160,6 +162,9 @@ function Calendar() {
     booker: selectedShow?.extendedProps?.booker
       ? selectedShow?.extendedProps?.booker
       : username,
+    email: selectedShow?.extendedProps?.email
+      ? selectedShow?.extendedProps?.email
+      : true,
     hasExtraArtists: false,
     extraArtists: [
       {
@@ -261,6 +266,7 @@ function Calendar() {
     return {
       id: id,
       title: values.title,
+      type: values.type ? values.type : "Live",
       artists: values.artists,
       start: values.start,
       end: values.end,
@@ -596,13 +602,36 @@ function Calendar() {
                     </div>
                     <Form id="calendarShow">
                       <div className="p-8">
-                        {/* <pre className="text-white bg-black">
+                        <pre className="text-white bg-black">
                           {JSON.stringify(values, null, 2)}
                         </pre>
                         <pre className="text-white bg-black">
                           {JSON.stringify(selectedShow, null, 2)}
-                        </pre> */}
+                        </pre>
                         <Field type="hidden" name="id" />
+                        <div className="mb-8">
+                          <RadioGroup.Root
+                            className="flex"
+                            name="Type of show"
+                            onValueChange={(value: string) =>
+                              setFieldValue("type", value)
+                            }
+                            defaultValue="live"
+                            value={values.type}
+                          >
+                            <RadioGroup.Item value="Live" asChild>
+                              <label className="data-[state=checked]:bg-black data-[state=checked]:text-white block cursor-pointer pill-input rounded-tr-none rounded-br-none py-3 text-center">
+                                Live
+                              </label>
+                            </RadioGroup.Item>
+
+                            <RadioGroup.Item value="Pre-record" asChild>
+                              <label className="data-[state=checked]:bg-black data-[state=checked]:text-white block cursor-pointer select-none pill-input rounded-tl-none rounded-bl-none py-3 text-center">
+                                Pre-record
+                              </label>
+                            </RadioGroup.Item>
+                          </RadioGroup.Root>
+                        </div>
                         <InputField
                           name="title"
                           label="Show name"
@@ -616,13 +645,18 @@ function Calendar() {
                           limit={10}
                           value={initialValues.artists}
                         />
-
+                        <div className="-mb-8">
+                          <CheckboxField
+                            name="email"
+                            label="Email"
+                            size="small"
+                          />
+                        </div>
                         <CheckboxField
                           name="hasExtraArtists"
                           label="New artist?"
                           size="small"
                         />
-
                         {values.hasExtraArtists && (
                           <fieldset className=" mb-8">
                             <legend className="mb-6">New artist(s)</legend>
@@ -718,32 +752,36 @@ function Calendar() {
                             </div>
                           )}
                         /> */}
+                        <div className="lg:grid lg:grid-cols-2 gap-4">
+                          <InputField
+                            name="start"
+                            label="Start"
+                            required
+                            type="datetime-local"
+                          />
+                          <InputField
+                            name="end"
+                            label="End"
+                            required
+                            type="datetime-local"
+                          />
+                        </div>
+                        <div className="lg:grid lg:grid-cols-2 items-center lg:gap-4">
+                          <MultiSelectField
+                            label="Status"
+                            name="status"
+                            options={statusOptions}
+                            limit={1}
+                            value={initialValues.status}
+                          />
 
-                        <InputField
-                          name="start"
-                          label="Start"
-                          required
-                          type="datetime-local"
-                        />
-                        <InputField
-                          name="end"
-                          label="End"
-                          required
-                          type="datetime-local"
-                        />
-                        <MultiSelectField
-                          label="Status"
-                          name="status"
-                          options={statusOptions}
-                          limit={1}
-                          value={initialValues.status}
-                        />
-                        <InputField
-                          name="booker"
-                          label="Booker"
-                          required
-                          type="text"
-                        />
+                          <InputField
+                            name="booker"
+                            label="Booker"
+                            required
+                            type="text"
+                          />
+                        </div>
                       </div>
                       <div className="flex justify-between items-center sticky bottom-0 bg-white py-4 px-8 border-t border-black">
                         <button
