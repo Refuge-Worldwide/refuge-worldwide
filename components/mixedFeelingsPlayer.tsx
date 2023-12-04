@@ -132,7 +132,7 @@ export default function MixedFeelingsPlayer({
               is proud to present a new series of radio shows embracing the
               diverse talents and stories of artists from the disabled
               community. This episode is hosted by Dana Cermane in German Sign
-              Language and features an interview with Max Taguet.
+              Language and features an interview with Alicia Sort Leal.
             </p>
           </div>
           <div className="flex justify-between items-center">
