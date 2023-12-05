@@ -39,6 +39,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { useUser } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/router";
 import CalendarSearch from "../../views/admin/calendarSearch";
+import EmailModal from "../../views/admin/emailModal";
 
 export default function CalendarPage() {
   return (
@@ -134,10 +135,10 @@ function Calendar() {
       const artists = await getAllArtists();
       setArtists(artists);
     })();
-    // const interval = setInterval(() => reloadCalendar(), 60000);
-    // return () => {
-    //   clearInterval(interval);
-    // };
+    const interval = setInterval(() => reloadCalendar(), 60000);
+    return () => {
+      clearInterval(interval);
+    };
   }, []);
 
   const initialValues = {
@@ -291,21 +292,21 @@ function Calendar() {
     };
   };
 
-  function handleSelect(selectInfo) {
+  const handleSelect = (selectInfo) => {
     console.log("select info");
     setShowDialogOpen(true);
     setSelectedShow(selectInfo);
     console.log(selectInfo.startStr);
-  }
+  };
 
-  function handleEventClick(eventInfo) {
+  const handleEventClick = (eventInfo) => {
     // remove UTC timezone stamp
     setShowDialogOpen(true);
     setSelectedShow(eventInfo.event);
     // console.log(eventInfo.event.id);
     // const url = `https://app.contentful.com/spaces/taoiy3h84mql/environments/master/entries/${eventInfo.event.id}`;
     // window.open(url, "_blank");
-  }
+  };
 
   const reloadCalendar = () => {
     console.log("reloading calendar");
@@ -323,17 +324,16 @@ function Calendar() {
   };
 
   const handleDatesSet = (dateInfo) => {
-    // router.replace(
-    //   {
-    //     query: {
-    //       startStr: dateInfo.startStr,
-    //       endStr: dateInfo.endStr,
-    //       view: dateInfo.view.type,
-    //     },
-    //   },
-    //   undefined,
-    //   { shallow: true }
-    // );
+    router.replace(
+      {
+        query: {
+          start: dateInfo.startStr.split("T")[0],
+          view: dateInfo.view.type,
+        },
+      },
+      undefined,
+      { shallow: true }
+    );
     if (!calendarLoading && highlightedShow) {
       highlightShow();
     }
@@ -386,7 +386,17 @@ function Calendar() {
     );
   };
 
-  if (windowSize.width)
+  const getInitialView = () => {
+    if (windowSize.width < 765) {
+      return "timeGridDay";
+    } else {
+      if (router.query?.view) {
+        return router.query.view.toString();
+      } else return "timeGridWeek";
+    }
+  };
+
+  if (windowSize.width && router.isReady)
     return (
       <div className="mt-2 lg:m-4 h-[calc(100vh-100px)] lg:h-[calc(100vh-125px)] relative">
         <PageMeta title="Calendar | Refuge Worldwide" path="signin/" />
@@ -405,6 +415,7 @@ function Calendar() {
         </div>
         <FullCalendar
           ref={calendarRef}
+          initialDate={router.query?.start?.toString()}
           plugins={[
             dayGridPlugin,
             interactionPlugin,
@@ -453,7 +464,6 @@ function Calendar() {
             hour12: false,
           }}
           eventClick={handleEventClick}
-          // Add back in for calendar v2
           eventDrop={handleEventDrop}
           eventResize={handleEventDrop}
           select={handleSelect}
@@ -461,7 +471,7 @@ function Calendar() {
           selectable={true}
           loading={(e) => handleCalendarLoading(e)}
           firstDay={1}
-          initialView={windowSize.width < 765 ? "timeGridDay" : "timeGridWeek"}
+          initialView={getInitialView()}
           nowIndicator={true}
           selectMirror={true}
           datesSet={handleDatesSet}
@@ -645,18 +655,13 @@ function Calendar() {
                           limit={10}
                           value={initialValues.artists}
                         />
-                        {/* <div className="-mb-8">
-                          <CheckboxField
-                            name="email"
-                            label="Email"
-                            size="small"
-                          />
-                        </div> */}
+                        <EmailModal artists={values.artists} />
                         <CheckboxField
                           name="hasExtraArtists"
                           label="New artist?"
                           size="small"
                         />
+
                         {values.hasExtraArtists && (
                           <fieldset className=" mb-8">
                             <legend className="mb-6">New artist(s)</legend>
@@ -752,6 +757,7 @@ function Calendar() {
                             </div>
                           )}
                         /> */}
+
                         <div className="lg:grid lg:grid-cols-2 gap-4">
                           <InputField
                             name="start"

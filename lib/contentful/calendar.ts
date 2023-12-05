@@ -154,7 +154,6 @@ export async function searchCalendarShows(query, preview: boolean) {
             id
           }
           status
-          email
           artistsCollection(limit: 9) {
             items {
               sys {
