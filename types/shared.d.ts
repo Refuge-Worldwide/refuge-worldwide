@@ -109,6 +109,7 @@ export interface ShowInterface {
   title: string;
   date: string;
   dateEnd?: string;
+  type?: string;
   slug: string;
   coverImage: CoverImage;
   coverImagePosition: CoverImagePosition;
