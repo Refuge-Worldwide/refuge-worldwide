@@ -4,7 +4,7 @@ import { Field, ErrorMessage } from "formik";
 
 export default function ShowSubmissionStep2({ importantInfo, showType }) {
   const importantInfoToShow = () => {
-    if (showType == "live") {
+    if (showType == "Live") {
       return (
         <div>
           <div className="border-black border p-8 bg-orange mb-6">

@@ -143,7 +143,9 @@ function Calendar() {
   const initialValues = {
     id: selectedShow?.id,
     title: selectedShow?.title,
-    type: selectedShow?.extendedProps?.type,
+    type: selectedShow?.extendedProps?.type
+      ? selectedShow?.extendedProps?.type
+      : "Live",
     start: selectedShow?.startStr,
     end: selectedShow?.endStr,
     artists: selectedShow?.extendedProps?.artists
@@ -162,9 +164,6 @@ function Calendar() {
     booker: selectedShow?.extendedProps?.booker
       ? selectedShow?.extendedProps?.booker
       : username,
-    email: selectedShow?.extendedProps?.email
-      ? selectedShow?.extendedProps?.email
-      : true,
     hasExtraArtists: false,
     extraArtists: [
       {
@@ -375,7 +374,8 @@ function Calendar() {
   };
 
   const handleCopyFormLink = (showId) => {
-    const showFormLink = "https://refugeworldwide.com/submission?id=" + showId;
+    const showFormLink =
+      "https://refugeworldwide.com/submission-v2?id=" + showId;
     navigator.clipboard.writeText(showFormLink).then(
       () => {
         toast.success("Submission link copied to clipboard");
@@ -602,12 +602,12 @@ function Calendar() {
                     </div>
                     <Form id="calendarShow">
                       <div className="p-8">
-                        <pre className="text-white bg-black">
+                        {/* <pre className="text-white bg-black">
                           {JSON.stringify(values, null, 2)}
-                        </pre>
-                        <pre className="text-white bg-black">
+                        </pre> */}
+                        {/* <pre className="text-white bg-black">
                           {JSON.stringify(selectedShow, null, 2)}
-                        </pre>
+                        </pre> */}
                         <Field type="hidden" name="id" />
                         <div className="mb-8">
                           <RadioGroup.Root
@@ -645,13 +645,13 @@ function Calendar() {
                           limit={10}
                           value={initialValues.artists}
                         />
-                        <div className="-mb-8">
+                        {/* <div className="-mb-8">
                           <CheckboxField
                             name="email"
                             label="Email"
                             size="small"
                           />
-                        </div>
+                        </div> */}
                         <CheckboxField
                           name="hasExtraArtists"
                           label="New artist?"

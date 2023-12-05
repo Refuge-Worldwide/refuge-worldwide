@@ -38,7 +38,6 @@ interface CalendarShow {
   artistsCollection: {
     items: ArtistInterface[];
   };
-  email: boolean;
 }
 
 interface fcCalendarShow {
@@ -76,7 +75,6 @@ export async function getCalendarShows(start, end, preview: boolean) {
             id
           }
           status
-          email
           mixcloudLink
           artistsCollection(limit: 9) {
             items {
@@ -109,7 +107,6 @@ export async function getCalendarShows(start, end, preview: boolean) {
       end: show.dateEnd ? show.dateEnd.slice(0, -1) : null,
       status: show.status ? show.status : "Submitted",
       published: show.sys.publishedVersion ? true : false,
-      email: show.email,
       backgroundColor:
         show.status == "TBC"
           ? "#EDB8B4"

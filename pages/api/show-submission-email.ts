@@ -61,20 +61,26 @@ async function sendEmails(
       await Promise.all(
         show.artistsCollection.items.map(async (artist) => {
           if (artist.email) {
-            const data = await resend.sendEmail({
-              from: "Refuge Worldwide <noreply@mail.refugeworldwide.com>",
-              to: artist.email,
-              subject: subject(severity),
-              reply_to: "hello@refugeworldwide.com",
-              react: ShowSubmissionEmail({
-                userName: artist.name,
-                showDateStart: show.date,
-                showDateEnd: show.dateEnd,
-                showType: "live",
-                severity: severity,
-                showId: show.sys.id,
-              }),
-            });
+            try {
+              const data = await resend.sendEmail({
+                from: "Refuge Worldwide <noreply@mail.refugeworldwide.com>",
+                to: artist.email,
+                subject: subject(severity),
+                reply_to: "hello@refugeworldwide.com",
+                react: ShowSubmissionEmail({
+                  userName: artist.name,
+                  showDateStart: show.date,
+                  showDateEnd: show.dateEnd,
+                  showType: "live",
+                  severity: severity,
+                  showId: show.sys.id,
+                }),
+              });
+            } catch (err) {
+              // send message to slack saying there was an issue sending the email
+              // https://dev.to/hrishikeshps/send-slack-notifications-via-nodejs-3ddn
+              console.log(err);
+            }
           } else {
             // send message to slack saying artist does not have email address assigned to them.
             console.log(artist.name + " does not have email");
