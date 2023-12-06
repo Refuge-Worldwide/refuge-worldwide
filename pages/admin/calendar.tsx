@@ -15,7 +15,6 @@ import InputField from "../../components/formFields/inputField";
 import MultiSelectField from "../../components/formFields/multiSelectField";
 import { Formik, Form, FieldArray, Field } from "formik";
 import { Cross } from "../../icons/cross";
-// Add back in for calendar v2
 import {
   getAllArtists,
   deleteCalendarShow,
@@ -86,8 +85,6 @@ function Calendar() {
     }
   }, []);
 
-  // Add back in for calendar v2
-
   useEffect(() => {
     if (formRef.current) {
       console.log(formRef);
@@ -102,19 +99,17 @@ function Calendar() {
     }
   }, [user]);
 
-  // useEffect(() => {
-  //   if (!showDialogOpen && !searchDialogOpen) {
-  //     // attach the event listener
-  //     document.addEventListener("keydown", handleKeyPress);
+  useEffect(() => {
+    if (!showDialogOpen && !searchDialogOpen) {
+      // attach the event listener
+      document.addEventListener("keydown", handleKeyPress);
 
-  //     // remove the event listener
-  //     return () => {
-  //       document.removeEventListener("keydown", handleKeyPress);
-  //     };
-  //   }
-  // }, [handleKeyPress, showDialogOpen, searchDialogOpen]);
-
-  // Add back in for calendar v2
+      // remove the event listener
+      return () => {
+        document.removeEventListener("keydown", handleKeyPress);
+      };
+    }
+  }, [handleKeyPress, showDialogOpen, searchDialogOpen]);
 
   const statusOptions = [
     {
@@ -521,7 +516,6 @@ function Calendar() {
           )}
         </button>
 
-        {/* Add back in for calendar v2 */}
         <DropdownMenu.Root
           open={addDropdownOpen}
           onOpenChange={setAddDropdownOpen}
