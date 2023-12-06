@@ -71,7 +71,7 @@ async function sendEmails(
                   userName: artist.name,
                   showDateStart: show.date,
                   showDateEnd: show.dateEnd,
-                  showType: "live",
+                  showType: show.type,
                   severity: severity,
                   showId: show.sys.id,
                 }),

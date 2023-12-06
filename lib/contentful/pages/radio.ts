@@ -281,6 +281,7 @@ export async function getUpcomingShowsByDate(preview: boolean) {
       ) {
         items {
           title
+          type
           date
           dateEnd
           slug
