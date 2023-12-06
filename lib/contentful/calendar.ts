@@ -390,6 +390,7 @@ export async function createArtist(artist) {
 }
 
 export async function updateArtistEmail(id, email) {
+  console.log(id);
   return (
     client
       .getSpace(spaceId)
@@ -398,7 +399,9 @@ export async function updateArtistEmail(id, email) {
       //update fields with values from form
       .then((entry) => {
         console.log(entry);
-        entry.fields.email["en-US"] = email;
+        entry.fields.email = {
+          "en-US": [email],
+        };
         return entry.update();
       })
       .then((entry) => entry.publish())

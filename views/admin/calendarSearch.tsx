@@ -12,12 +12,16 @@ import { RxExternalLink } from "react-icons/rx";
 import Date from "../../components/date";
 import Link from "next/link";
 
-export default function CalendarSearch({ onView, onEdit }) {
+export default function CalendarSearch({ onView, onEdit, onToggle }) {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
   const [query, querySet] = useDebouncedState("", 500);
 
   const { data, isValidating } = useCalendarSearchData(query);
+
+  useEffect(() => {
+    onToggle(dialogOpen);
+  }, [dialogOpen]);
 
   const transformShowToFullCalendarFormat = (show) => {
     return {
@@ -101,14 +105,14 @@ export default function CalendarSearch({ onView, onEdit }) {
                 </thead>
                 <tbody className="space-y-2 divide-y">
                   {data.map((show) => (
-                    <tr className="my-2 border-black/20" key={show.slug}>
+                    <tr className="my-2 border-black/20" key={show.id}>
                       <td className="py-3">
                         <p className="line-clamp-2">{show.title}</p>
                       </td>
                       <td className="py-3">
                         {show.artists &&
                           show.artists.map((artist, i) => (
-                            <span key={i}>
+                            <span key={artist.value}>
                               {i > 0 && ", "}
                               {artist.label}
                             </span>

@@ -10,32 +10,39 @@ import { updateArtistEmail } from "../../lib/contentful/calendar";
 
 export default function EmailModal({ artists }) {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const [artistLength, setArtistLength] = useState<number>(0);
+  const [artistLength, setArtistLength] = useState<number>(artists.length);
   const [artist, setArtist] = useState<any>(null);
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [isSubmittingEmail, setIsSubmittingEmail] = useState<boolean>(false);
 
-  // useEffect(() => {
-  //   if (artists.length > artistLength) {
-  //     // setDialogOpen(true);
-  //   }
+  useEffect(() => {
+    if (artists.length > artistLength && !artists[artists.length - 1].email) {
+      // setModalOpen(true);
+      console.log("new artist added");
+      setArtist(artists[artists.length - 1]);
+      setModalOpen(true);
+    }
 
-  //   setArtistLength(artists.length);
+    setArtistLength(artists.length);
 
-  //   // if we have added to the array and new artist doesn't have an email then show the modal
-  // }, [artists]);
+    // if we have added to the array and new artist doesn't have an email then show the modal
+  }, [artists]);
 
   const handleOpenModal = (artist) => {
     setArtist(artist);
     setModalOpen(true);
   };
 
-  const handleSubmit = async (values) => {
-    try {
-      // artist = await updateCalendarShow(values);
+  const handleEmailSubmit = async (values) => {
+    setIsSubmittingEmail(true);
+    console.log(values);
 
+    try {
+      await updateArtistEmail(values.id, values.email);
+      setIsSubmittingEmail(false);
       setModalOpen(false);
       // toast.success(method == "update" ? "Show updated" : "Show created");
     } catch (error) {
+      setIsSubmittingEmail(true);
       console.log(error);
       // toast.error(
       //   method == "update" ? "Error updating show" : "Error creating show"
@@ -45,8 +52,8 @@ export default function EmailModal({ artists }) {
   };
 
   const initialValues = {
-    id: artist?.value ? artist?.value : null,
-    email: null,
+    id: artist?.value ? artist?.value : undefined,
+    email: artist?.email,
   };
 
   return (
@@ -54,16 +61,14 @@ export default function EmailModal({ artists }) {
       <div className="flex items-center gap-2">
         {artists.map((artist) => (
           <div key={artist.value}>
-            {!artist.email && (
-              <button
-                type="button"
-                className="text-small border-black/75 hover:bg-black hover:text-white border px-2 py-1 rounded-lg flex items-center gap-1"
-                onClick={() => handleOpenModal(artist)}
-              >
-                <AiOutlineMail />
-                {artist.label}
-              </button>
-            )}
+            <button
+              type="button"
+              className="text-tiny border-black/75 hover:bg-black hover:text-white border px-2 py-1 rounded-lg flex items-center gap-1"
+              onClick={() => handleOpenModal(artist)}
+            >
+              <AiOutlineMail />
+              {artist.label}
+            </button>
           </div>
         ))}
       </div>
@@ -74,34 +79,36 @@ export default function EmailModal({ artists }) {
         <Dialog.Portal>
           <Dialog.Overlay className="data-[state=open]:animate-overlayShow  w-screen h-screen fixed top-0 left-0 bg-black/50 z-50 backdrop-blur-sm" />
           <Dialog.Content className="data-[state=open]:animate-contentShow bg-white w-full h-full lg:h-auto lg:max-w-3xl fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 border-black border">
-            <div className="relative p-8 overflow-y-scroll max-h-[95vh]">
+            <div className="p-8 max-h-[95vh]">
               <Dialog.Close asChild>
-                <button className="float-right" aria-label="Close">
+                <button className="float-right lg:hidden" aria-label="Close">
                   <Cross />
                 </button>
               </Dialog.Close>
 
               <p></p>
-              <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-                {({ values, isSubmitting, dirty, setFieldValue }) => (
+              <Formik
+                form="artistEmailForm"
+                initialValues={initialValues}
+                onSubmit={handleEmailSubmit}
+              >
+                {({ values }) => (
                   <form id="artist-email">
                     <Field type="hidden" name="id" />
                     <InputField
                       name={`email`}
                       type="email"
-                      label={`Add email for ${artist.label}`}
+                      label={`Email for ${artist.label}`}
                       required
                     />
                     <button
-                      type="submit"
-                      // onClick={() => handleSubmit(values)}
+                      type="button"
+                      onClick={() => handleEmailSubmit(values)}
                       className="inline-flex items-center space-x-4 text-base font-medium disabled:cursor-not-allowed"
-                      disabled={isSubmitting}
+                      disabled={isSubmittingEmail}
                     >
-                      <span className="underline">
-                        {values?.id ? "Save" : "Add"}
-                      </span>
-                      {isSubmitting ? (
+                      <span className="underline">Save</span>
+                      {isSubmittingEmail ? (
                         <AiOutlineLoading3Quarters className="animate-spin" />
                       ) : (
                         <Arrow />

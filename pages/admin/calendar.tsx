@@ -22,7 +22,6 @@ import {
   createCalendarShow,
   updateCalendarShow,
   createArtist,
-  updateArtistEmail,
 } from "../../lib/contentful/calendar";
 import { Arrow } from "../../icons/arrow";
 import CheckboxField from "../../components/formFields/checkboxField";
@@ -40,6 +39,7 @@ import { useUser } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/router";
 import CalendarSearch from "../../views/admin/calendarSearch";
 import EmailModal from "../../views/admin/emailModal";
+const HIDDEN_DAYS = [0];
 
 export default function CalendarPage() {
   return (
@@ -54,6 +54,7 @@ export default function CalendarPage() {
 function Calendar() {
   const [artists, setArtists] = useState(null);
   const [showDialogOpen, setShowDialogOpen] = useState<boolean>(false);
+  const [searchDialogOpen, setSearchDialogOpen] = useState<boolean>(false);
   const [addDropdownOpen, setAddDropdownOpen] = useState<boolean>(false);
   const [selectedShow, setSelectedShow] = useState(null);
   const [calendarLoading, setCalendarLoading] = useState<boolean>(false);
@@ -101,17 +102,17 @@ function Calendar() {
     }
   }, [user]);
 
-  useEffect(() => {
-    if (!showDialogOpen) {
-      // attach the event listener
-      document.addEventListener("keydown", handleKeyPress);
+  // useEffect(() => {
+  //   if (!showDialogOpen && !searchDialogOpen) {
+  //     // attach the event listener
+  //     document.addEventListener("keydown", handleKeyPress);
 
-      // remove the event listener
-      return () => {
-        document.removeEventListener("keydown", handleKeyPress);
-      };
-    }
-  }, [handleKeyPress, showDialogOpen]);
+  //     // remove the event listener
+  //     return () => {
+  //       document.removeEventListener("keydown", handleKeyPress);
+  //     };
+  //   }
+  // }, [handleKeyPress, showDialogOpen, searchDialogOpen]);
 
   // Add back in for calendar v2
 
@@ -135,11 +136,20 @@ function Calendar() {
       const artists = await getAllArtists();
       setArtists(artists);
     })();
-    const interval = setInterval(() => reloadCalendar(), 60000);
-    return () => {
-      clearInterval(interval);
-    };
+    // const interval = setInterval(() => reloadCalendar(), 60000);
+    // return () => {
+    //   clearInterval(interval);
+    // };
   }, []);
+
+  const calculateBooker = () => {
+    if (selectedShow?.extendedProps?.booker) {
+      return selectedShow?.extendedProps?.booker;
+    } else if (!selectedShow?.id) {
+      return username;
+    }
+    return undefined;
+  };
 
   const initialValues = {
     id: selectedShow?.id,
@@ -162,9 +172,7 @@ function Calendar() {
           : "TBC",
       },
     ],
-    booker: selectedShow?.extendedProps?.booker
-      ? selectedShow?.extendedProps?.booker
-      : username,
+    booker: calculateBooker(),
     hasExtraArtists: false,
     extraArtists: [
       {
@@ -172,6 +180,7 @@ function Calendar() {
         pronouns: "",
       },
     ],
+    artistEmails: [{}],
   };
 
   const handleSubmit = async (values, actions) => {
@@ -319,8 +328,8 @@ function Calendar() {
   };
 
   const handleDatePickerChange = () => {
-    let calendarApi = calendarRef.current.getApi();
-    calendarApi.gotoDate(datePicker.current.value);
+    // let calendarApi = calendarRef.current.getApi();
+    // calendarApi.gotoDate(datePicker.current.value);
   };
 
   const handleDatesSet = (dateInfo) => {
@@ -371,6 +380,10 @@ function Calendar() {
         }
       }, 10000);
     }, 100);
+  };
+
+  const handleSearchDialogToggle = (open) => {
+    setSearchDialogOpen(open);
   };
 
   const handleCopyFormLink = (showId) => {
@@ -438,7 +451,7 @@ function Calendar() {
           }}
           expandRows={true}
           height={"100%"}
-          hiddenDays={[0]}
+          hiddenDays={HIDDEN_DAYS}
           allDaySlot={false}
           scrollTime={"10:00:00"}
           eventColor="#a1cfad"
@@ -494,6 +507,7 @@ function Calendar() {
         <CalendarSearch
           onView={goToHighlightedShow}
           onEdit={handleEventClick}
+          onToggle={handleSearchDialogToggle}
         />
         <button
           className="absolute top-1 lg:top-2 right-2 lg:right-0 disabled:cursor-wait"
@@ -540,18 +554,18 @@ function Calendar() {
           </DropdownMenu.Portal>
         </DropdownMenu.Root>
 
-        {/* Add back in for calendar v2 */}
         <Dialog.Root
           open={showDialogOpen}
           onOpenChange={(showDialogOpen) => setShowDialogOpen(showDialogOpen)}
         >
           <Dialog.Portal>
             <Dialog.Overlay className="data-[state=open]:animate-overlayShow  w-screen h-screen fixed top-0 left-0 bg-black/50 z-50 backdrop-blur-sm" />
-            <Dialog.Content className="data-[state=open]:animate-contentShow bg-white w-full h-full lg:h-auto lg:max-w-3xl fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 border-black border">
+            <Dialog.Content className="data-[state=open]:animate-contentShow bg-white w-full h-full lg:h-auto lg:max-w-4xl fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 border-black border">
               <Formik
                 innerRef={formRef}
                 initialValues={initialValues}
                 onSubmit={handleSubmit}
+                form="showForm"
               >
                 {({ values, isSubmitting, dirty, setFieldValue }) => (
                   <div className="relative overflow-y-auto max-h-[95vh]">
@@ -656,6 +670,45 @@ function Calendar() {
                           value={initialValues.artists}
                         />
                         <EmailModal artists={values.artists} />
+
+                        {/* <details className="-mt-6 mb-8" open={!values.id}>
+                          <summary className="text-small">Emails</summary>
+                          <FieldArray
+                            name="artistEmails"
+                            render={() => (
+                              <div>
+                                {values.artists.map((artist, index) => (
+                                  <div key={"artistEmails" + index}>
+                                    <input
+                                      name={`artistEmails.${index}.id`}
+                                      type="text"
+                                      value={artist.value}
+                                    />
+                                    <InputField
+                                      name={`artistEmails.${index}.id`}
+                                      type="text"
+                                      label={`Email for ${artist.label}`}
+                                      required
+                                      value={artist.value}
+                                      hidden
+                                    />
+                                    <Field
+                                      type="text"
+                                      name={`artistEmails.${index}.id`}
+                                      value={artist.value}
+                                      hidden
+                                    />
+                                    <InputField
+                                      name={`artistEmails.${index}.email`}
+                                      type="text"
+                                      label={`Email for ${artist.label}`}
+                                    />
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          />
+                        </details> */}
                         <CheckboxField
                           name="hasExtraArtists"
                           label="New artist?"
@@ -720,44 +773,6 @@ function Calendar() {
                           </fieldset>
                         )}
 
-                        {/* <FieldArray
-                          name="artistEmails"
-                          render={() => (
-                            <div>
-                              {values.artists
-                                .filter((artist) => artist.email == null)
-                                .map((artist, index) => (
-                                  <div key={"artistEmails" + index}>
-                                    <input
-                                      name={`artistEmails.${index}.id`}
-                                      type="text"
-                                      value={artist.value}
-                                    />
-                                    <InputField
-                                      name={`artistEmails.${index}.id`}
-                                      type="text"
-                                      label={`Email for ${artist.label}`}
-                                      required
-                                      value={artist.value}
-                                      hidden
-                                    />
-                                    <Field
-                                      type="text"
-                                      name={`artistEmails.${index}.id`}
-                                      value={artist.value}
-                                    />
-                                    <InputField
-                                      name={`artistEmails.${index}.email`}
-                                      type="text"
-                                      label={`Email for ${artist.label}`}
-                                      required
-                                    />
-                                  </div>
-                                ))}
-                            </div>
-                          )}
-                        /> */}
-
                         <div className="lg:grid lg:grid-cols-2 gap-4">
                           <InputField
                             name="start"
@@ -789,7 +804,7 @@ function Calendar() {
                           />
                         </div>
                       </div>
-                      <div className="flex justify-between items-center sticky bottom-0 bg-white py-4 px-8 border-t border-black">
+                      <div className="flex justify-between items-center lg:sticky lg:bottom-0 lg:bg-white py-4 px-8 border-t border-black">
                         <button
                           type="submit"
                           className="inline-flex items-center space-x-4 text-base font-medium disabled:cursor-not-allowed"
