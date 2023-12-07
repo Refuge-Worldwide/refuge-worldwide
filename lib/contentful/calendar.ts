@@ -38,6 +38,10 @@ interface CalendarShow {
   artistsCollection: {
     items: ArtistInterface[];
   };
+  coverImage: {
+    url: string;
+  };
+  additionalImages: Array<string>;
 }
 
 interface fcCalendarShow {
@@ -52,6 +56,7 @@ interface fcCalendarShow {
   borderColor: string;
   booker: string;
   mixcloudLink: string;
+  images: Array<string>;
 }
 
 export async function getCalendarShows(start, end, preview: boolean) {
@@ -85,6 +90,10 @@ export async function getCalendarShows(start, end, preview: boolean) {
               email
             }
           }
+          coverImage: coverImage {
+            url
+          }
+          additionalImages
         }
       }
     }
@@ -125,6 +134,10 @@ export async function getCalendarShows(start, end, preview: boolean) {
           : "#B3DCC1",
       booker: show.booker ? show.booker : "",
       mixcloudLink: show.mixcloudLink,
+      images: [
+        show.coverImage?.url,
+        ...(show.additionalImages ? show.additionalImages : []),
+      ],
     };
   });
 
@@ -163,6 +176,10 @@ export async function searchCalendarShows(query, preview: boolean) {
               email
             }
           }
+          coverImage {
+            url
+          }
+          additionalImages
         }
       }
     }
@@ -186,6 +203,7 @@ export async function searchCalendarShows(query, preview: boolean) {
       published: show.sys.publishedVersion ? true : false,
       artists: transformForDropdown(show.artistsCollection.items),
       booker: show.booker ? show.booker : "",
+      images: [show.coverImage.url, ...show.additionalImages],
     };
   });
 

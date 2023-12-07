@@ -404,6 +404,33 @@ function Calendar() {
     }
   };
 
+  async function downloadImages() {
+    console.log(selectedShow.extendedProps.images);
+    if (selectedShow.extendedProps.images[0]) {
+      for (
+        let index = 0;
+        index < selectedShow.extendedProps.images.length;
+        index++
+      ) {
+        // for each image of the show
+        // define what we want in the ZIP
+        const url = selectedShow.extendedProps.images[index];
+
+        // get the ZIP stream in a Blob
+        let blob = await fetch(url).then((r) => r.blob());
+
+        // make and click a temporary link to download the Blob
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = selectedShow.title + " (" + (index + 1) + ")";
+        link.click();
+        link.remove();
+      }
+    } else {
+      toast.error("Show has no images");
+    }
+  }
+
   if (windowSize.width && router.isReady)
     return (
       <div className="mt-2 lg:m-4 h-[calc(100vh-100px)] lg:h-[calc(100vh-125px)] relative">
@@ -461,7 +488,7 @@ function Calendar() {
           nextDayThreshold="09:00:00"
           slotDuration="00:30:00"
           slotMaxTime="26:00:00"
-          slotMinTime="10:00:00"
+          slotMinTime="08:00:00"
           dayHeaderContent={(args) => {
             return dayjs(args.date).format("ddd DD/MM");
           }}
@@ -606,7 +633,10 @@ function Calendar() {
                             >
                               Copy form link
                             </button>
-                            <button className="hover:bg-black/10 px-2 py-1 rounded-lg">
+                            <button
+                              onClick={() => downloadImages()}
+                              className="hover:bg-black/10 px-2 py-1 rounded-lg"
+                            >
                               Download images
                             </button>
                           </Popover.Content>
