@@ -332,7 +332,7 @@ function Calendar() {
           nextDayThreshold="09:00:00"
           slotDuration="00:30:00"
           slotMaxTime="26:00:00"
-          slotMinTime="10:00:00"
+          slotMinTime="08:00:00"
           dayHeaderContent={(args) => {
             return dayjs(args.date).format("ddd DD/MM");
           }}
