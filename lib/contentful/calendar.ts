@@ -203,7 +203,10 @@ export async function searchCalendarShows(query, preview: boolean) {
       published: show.sys.publishedVersion ? true : false,
       artists: transformForDropdown(show.artistsCollection.items),
       booker: show.booker ? show.booker : "",
-      images: [show.coverImage.url, ...show.additionalImages],
+      images: [
+        show.coverImage?.url,
+        ...(show.additionalImages ? show.additionalImages : []),
+      ],
     };
   });
 
@@ -286,6 +289,9 @@ export async function createCalendarShow(values) {
           booker: {
             "en-US": values.booker,
           },
+          type: {
+            "en-US": values.type,
+          },
         },
       })
     )
@@ -306,6 +312,7 @@ export async function updateCalendarShow(values) {
   if (values.artists) {
     artists = createReferencesArray(values.artists);
   }
+  console.log(values);
   //fetch entry using id
   return (
     client
@@ -328,6 +335,9 @@ export async function updateCalendarShow(values) {
         }
         if (values.booker & entry.fields.booker) {
           entry.fields.booker["en-US"] = values.booker;
+        }
+        if (entry.fields.type) {
+          entry.fields.type["en-US"] = values.type;
         }
         return entry.update();
       })

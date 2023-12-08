@@ -337,6 +337,7 @@
   outline: 3px #ff0000 solid;
   animation: blink 0.5s;
   animation-iteration-count: 3;
+  outline-offset: -2px;
 }
 
 @keyframes blink {

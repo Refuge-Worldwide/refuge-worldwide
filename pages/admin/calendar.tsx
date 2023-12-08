@@ -27,7 +27,12 @@ import CheckboxField from "../../components/formFields/checkboxField";
 import { Close } from "../../icons/menu";
 import { TfiReload } from "react-icons/tfi";
 import { IoMdCheckmark, IoMdMusicalNote } from "react-icons/io";
-import { RxExternalLink, RxCopy, RxDotsVertical } from "react-icons/rx";
+import {
+  RxExternalLink,
+  RxDownload,
+  RxCopy,
+  RxDotsVertical,
+} from "react-icons/rx";
 import { AiOutlineLoading3Quarters, AiOutlineCalendar } from "react-icons/ai";
 import { RiDeleteBin7Line, RiFileCopyLine } from "react-icons/ri";
 import Link from "next/link";
@@ -274,22 +279,22 @@ function Calendar() {
       artists: values.artists,
       start: values.start,
       end: values.end,
-      status: values.status[0].value,
+      status: values.status.value,
       published: false,
       backgroundColor:
-        values.status == "TBC"
+        values.status.value == "TBC"
           ? "#EDB8B4"
-          : values.status == "Confirmed"
+          : values.status.value == "Confirmed"
           ? "#F1E2AF"
-          : values.status == "Submitted"
+          : values.status.value == "Submitted"
           ? "#B3DCC1"
           : "#B3DCC1",
       borderColor:
-        values.status == "TBC"
+        values.status.value == "TBC"
           ? "#EDB8B4"
-          : values.status == "Confirmed"
+          : values.status.value == "Confirmed"
           ? "#F1E2AF"
-          : values.status == "Submitted"
+          : values.status.value == "Submitted"
           ? "#B3DCC1"
           : "#B3DCC1",
       booker: values.booker ? values.booker : "George",
@@ -338,9 +343,6 @@ function Calendar() {
       undefined,
       { shallow: true }
     );
-    if (!calendarLoading && highlightedShow) {
-      highlightShow();
-    }
   };
 
   const goToHighlightedShow = (date, showId) => {
@@ -349,18 +351,23 @@ function Calendar() {
     // calendarApi.scrollToTime(date);
     setHighlightedShow(showId);
     // to do: check if date of select show is outside of current daterange of calendar
+    setTimeout(() => {
+      if (!calendarLoading) {
+        highlightShow(showId);
+      }
+    }, 300);
   };
 
   const handleCalendarLoading = (e) => {
     setCalendarLoading(e);
     if (!e && highlightedShow) {
-      highlightShow();
+      highlightShow(highlightedShow);
     }
   };
 
-  const highlightShow = () => {
+  const highlightShow = (showId) => {
     setTimeout(() => {
-      const showEl = document.getElementById(highlightedShow).parentElement;
+      const showEl = document.getElementById(showId).parentElement;
       // to do: scroll event into view
       showEl.scrollIntoView({
         block: "center",
@@ -382,8 +389,7 @@ function Calendar() {
   };
 
   const handleCopyFormLink = (showId) => {
-    const showFormLink =
-      "https://refugeworldwide.com/submission-v2?id=" + showId;
+    const showFormLink = "http://localhost:3000/submission-v2?id=" + showId;
     navigator.clipboard.writeText(showFormLink).then(
       () => {
         toast.success("Submission link copied to clipboard");
@@ -597,50 +603,70 @@ function Calendar() {
                         </h5>
                       </Dialog.Title>
                       {values?.id && (
-                        <Popover.Root>
-                          <Popover.Trigger asChild>
-                            <button className="hover:bg-black/10 p-1 rounded-lg">
-                              <RxDotsVertical />
-                            </button>
-                          </Popover.Trigger>
-                          <Popover.Content
-                            align="end"
-                            sideOffset={8}
-                            className="border border-black p-2 bg-white shadow-md text-small flex flex-col items-start"
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => downloadImages()}
+                            className="hover:bg-black/10 p-2 rounded-lg"
                           >
-                            <Link
-                              className="hover:bg-black/10 px-2 py-1 rounded-lg"
-                              target="_blank"
-                              href={`https://app.contentful.com/spaces/taoiy3h84mql/environments/master/entries/${selectedShow.id}`}
+                            <RxDownload />
+                          </button>
+                          <button
+                            type="button"
+                            className="hover:bg-black/10 p-2 rounded-lg hidden lg:block"
+                            onClick={() => {
+                              setFieldValue("id", undefined);
+                              toast.success(
+                                "Show duplicated. Please change necessary fields and hit the add button."
+                              );
+                            }}
+                          >
+                            <RxCopy />
+                          </button>
+                          <Popover.Root>
+                            <Popover.Trigger asChild>
+                              <button className="hover:bg-black/10 p-2 rounded-lg">
+                                <RxDotsVertical />
+                              </button>
+                            </Popover.Trigger>
+                            <Popover.Content
+                              align="end"
+                              sideOffset={8}
+                              className="border border-black p-2 bg-white shadow-md text-small flex flex-col items-start"
                             >
-                              Open in Contentful
-                            </Link>
-                            <button
-                              type="button"
-                              className="hover:bg-black/10 px-2 py-1 rounded-lg"
-                              onClick={() => {
-                                setFieldValue("id", undefined);
-                                toast.success(
-                                  "Show duplicated. Please change necessary fields and hit the add button."
-                                );
-                              }}
-                            >
-                              Duplicate (shallow)
-                            </button>
-                            <button
-                              onClick={() => handleCopyFormLink(values.id)}
-                              className="hover:bg-black/10 px-2 py-1 rounded-lg"
-                            >
-                              Copy form link
-                            </button>
-                            <button
-                              onClick={() => downloadImages()}
-                              className="hover:bg-black/10 px-2 py-1 rounded-lg"
-                            >
-                              Download images
-                            </button>
-                          </Popover.Content>
-                        </Popover.Root>
+                              <Link
+                                className="hover:bg-black/10 px-2 py-1 rounded-lg"
+                                target="_blank"
+                                href={`https://app.contentful.com/spaces/taoiy3h84mql/environments/master/entries/${selectedShow.id}`}
+                              >
+                                Open in Contentful
+                              </Link>
+                              <button
+                                type="button"
+                                className="hover:bg-black/10 px-2 py-1 rounded-lg"
+                                onClick={() => {
+                                  setFieldValue("id", undefined);
+                                  toast.success(
+                                    "Show duplicated. Please change necessary fields and hit the add button."
+                                  );
+                                }}
+                              >
+                                Duplicate (shallow)
+                              </button>
+                              <button
+                                onClick={() => handleCopyFormLink(values.id)}
+                                className="hover:bg-black/10 px-2 py-1 rounded-lg"
+                              >
+                                Copy form link
+                              </button>
+                              <button
+                                onClick={() => downloadImages()}
+                                className="hover:bg-black/10 px-2 py-1 rounded-lg"
+                              >
+                                Download images
+                              </button>
+                            </Popover.Content>
+                          </Popover.Root>
+                        </div>
                       )}
                       <Dialog.Close asChild>
                         <button aria-label="Close" className="lg:hidden">
@@ -831,7 +857,7 @@ function Calendar() {
                       <div className="flex justify-between items-center lg:sticky lg:bottom-0 lg:bg-white py-4 px-8 border-t border-black">
                         <button
                           type="submit"
-                          className="inline-flex items-center space-x-4 text-base font-medium disabled:cursor-not-allowed"
+                          className="hover:bg-black/10 py-2 px-4 rounded-lg inline-flex items-center space-x-4 text-base font-medium disabled:cursor-not-allowed"
                           disabled={isSubmitting}
                         >
                           <span className="underline">
@@ -847,7 +873,7 @@ function Calendar() {
                           <div className="flex gap-6 items-center">
                             <button
                               type="button"
-                              className="cursor-pointer disabled:cursor-not-allowed"
+                              className="hover:bg-black/10 p-2 rounded-lg cursor-pointer disabled:cursor-not-allowed"
                               value="delete"
                               onClick={() => {
                                 handleDelete(values.id);
