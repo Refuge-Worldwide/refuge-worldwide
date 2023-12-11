@@ -131,8 +131,7 @@ export default function MixedFeelingsPlayer({
               Mixed Feelings is expanding the radio experience. Refuge Worldwide
               is proud to present a new series of radio shows embracing the
               diverse talents and stories of artists from the disabled
-              community. This episode is hosted by Dana Cermane in German Sign
-              Language and features an interview with Alicia Sort Leal.
+              community.
             </p>
           </div>
           <div className="flex justify-between items-center">
