@@ -61,7 +61,6 @@ export default async function handler(
         liveNowContentful && liveNowContentful.slug
           ? liveNowContentful.slug
           : null,
-      isMixedFeelings: liveNowTitle().includes("mixed feelings"),
     };
 
     const scheduleData = {

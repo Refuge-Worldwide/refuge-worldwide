@@ -5,7 +5,6 @@ import useSchedule from "../hooks/useSchedule";
 import Pause from "../icons/pause";
 import Play from "../icons/play";
 import Marquee from "./marquee";
-import MixedFeelingsPlayer from "./mixedFeelingsPlayer";
 
 const BroadcastingIndicator = ({
   status,
@@ -123,13 +122,6 @@ export default function LivePlayer() {
           Your browser does not support the audio element.
         </audio>
       </section>
-      {scheduleData?.liveNow?.isMixedFeelings && (
-        <MixedFeelingsPlayer
-          isPlaying={isPlaying}
-          onPlay={isPlaying ? pause : play}
-          slug={scheduleData?.liveNow.slug}
-        />
-      )}
     </>
   );
 }
