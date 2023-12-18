@@ -274,6 +274,11 @@ export default function ShowSubmissionStep3({
           />
         )}
       </fieldset>
+      <CheckboxField
+        name="imagesRights"
+        required
+        label="I confirm that I am the creator of the submitted images and / or have the usage rights thereof. Should there be any copyright infringement issues resulting from this upload, I accept full legal and financial responsibility."
+      />
     </div>
   );
 }
