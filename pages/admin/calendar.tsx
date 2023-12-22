@@ -317,7 +317,6 @@ function Calendar() {
           }}
           expandRows={true}
           height={"100%"}
-          hiddenDays={[0]}
           allDaySlot={false}
           scrollTime={"10:00:00"}
           eventColor="#a1cfad"
