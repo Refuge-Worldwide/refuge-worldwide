@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Asset, Entry, Content } from "../types/shared";
 import Link from "next/link";
 import { ArticleShowPreview } from "../components/showPreview";
+import Pill from "../components/pill";
 interface EmbeddedAssetBlock extends Block {
   data: {
     target: {
@@ -32,6 +33,39 @@ export function renderRichTextWithImages(content: Content) {
 
           if (uri.includes("mixcloud.com/widget")) {
             return <iframe width="100%" height="120" src={uri} />;
+          }
+
+          if (
+            uri.includes("youtube-nocookie.com/embed") ||
+            uri.includes("youtube.com/embed")
+          ) {
+            return (
+              <div className="aspect-video">
+                <iframe
+                  title={children.toString()}
+                  src={uri}
+                  allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  width="100%"
+                  height="100%"
+                  loading="lazy"
+                ></iframe>
+              </div>
+            );
+          }
+
+          if (uri.includes("tally.so/embed")) {
+            return (
+              <div className="max-w-[750px] mx-auto">
+                <iframe
+                  title="Application form"
+                  src={uri}
+                  width="100%"
+                  height="1650"
+                  loading="lazy"
+                ></iframe>
+              </div>
+            );
           }
 
           if (uri.includes("refugeworldwide.com")) {

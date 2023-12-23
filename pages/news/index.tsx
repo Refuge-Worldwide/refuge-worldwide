@@ -6,7 +6,7 @@ import { getNewsPage } from "../../lib/contentful/pages/news";
 import AllArticles from "../../views/news/allArticles";
 import FeaturedArticles from "../../views/news/featuredArticles";
 
-export async function getStaticProps({ preview = false }) {
+export async function getStaticProps({ preview = true }) {
   return {
     props: { preview, ...(await getNewsPage(preview)) },
   };
