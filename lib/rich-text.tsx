@@ -56,21 +56,14 @@ export function renderRichTextWithImages(content: Content) {
 
           if (uri.includes("tally.so/embed")) {
             return (
-              <div className="md:border md:p-8">
-                <div className="max-w-[750px] mx-auto">
-                  <Pill>
-                    <h3 className="!text-small sm:!text-base !mt-0 !mb-0">
-                      {children}
-                    </h3>
-                  </Pill>
-                  <iframe
-                    title="Application form"
-                    src={uri}
-                    width="100%"
-                    height="1650"
-                    loading="lazy"
-                  ></iframe>
-                </div>
+              <div className="max-w-[750px] mx-auto">
+                <iframe
+                  title="Application form"
+                  src={uri}
+                  width="100%"
+                  height="1650"
+                  loading="lazy"
+                ></iframe>
               </div>
             );
           }
