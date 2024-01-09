@@ -11,44 +11,34 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { method } = req;
+  const now = dayjs();
 
-  switch (method) {
-    case "GET": {
-      const now = dayjs();
+  const initialEmailDate = now.add(10, "days");
+  const initialShowsToEmail = await getUpcomingShowsByDate(
+    initialEmailDate,
+    true
+  );
 
-      const initialEmailDate = now.add(10, "days");
-      const initialShowsToEmail = await getUpcomingShowsByDate(true);
-      console.log(initialShowsToEmail);
-      await sendEmails(initialShowsToEmail, "initial");
+  await sendEmails(initialShowsToEmail, "initial");
 
-      // const followUpEmailDate = now.add(4, "days");
-      // const followUpShows = await getUpcomingShowsByDate(
-      //   followUpEmailDate,
-      //   true
-      // );
-      // await sendEmails(followUpShows, 'follow-up')
+  const followUpEmailDate = now.add(4, "days");
+  const followUpShows = await getUpcomingShowsByDate(followUpEmailDate, true);
+  await sendEmails(followUpShows, "follow-up");
 
-      // const finalCallEmailDate = now.add(3, "days");
-      // const finalCallShows = await getUpcomingShowsByDate(
-      //   finalCallEmailDate,
-      //   true
-      // );
-      // await sendEmails(finalCallShows, 'late')
-    }
-    default:
-      res.setHeader("Allow", ["GET"]);
-      res.status(405).end(`Method ${method} Not Allowed`);
-  }
+  const finalCallEmailDate = now.add(3, "days");
+  const finalCallShows = await getUpcomingShowsByDate(finalCallEmailDate, true);
+  await sendEmails(finalCallShows, "late");
+
+  await res.status(200);
 }
 
 function subject(severity: string) {
   if (severity == "initial") {
     return "Upcoming show - info required";
   } else if (severity == "follow-up") {
-    return "Final call for info!";
+    return "Upcoming show - final call for info!";
   } else {
-    return "Your submission is late!";
+    return "Upcoming show - your submission is late!";
   }
 }
 

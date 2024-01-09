@@ -95,7 +95,7 @@ export const ShowSubmissionEmail = ({
                   {severityText(severity, submissionDeadlineDate)}
                 </Text>
                 <Button
-                  href={baseUrl + "/new-submission?id=" + showId}
+                  href={baseUrl + "/submission-v2?id=" + showId}
                   style={button}
                   pY={9}
                   pX={12}

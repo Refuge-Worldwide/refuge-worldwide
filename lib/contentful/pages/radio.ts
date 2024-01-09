@@ -258,26 +258,26 @@ export async function getRelatedShows(
   return filteredShows;
 }
 
-export async function getUpcomingShowsByDate(preview: boolean) {
-  // const start = day.startOf("day");
-  // const end = start.add(1, "day");
-  // const startISO = start.toISOString();
-  // const endISO = end.toISOString();
+export async function getUpcomingShowsByDate(date, preview: boolean) {
+  const s = date.startOf("day").add(5, "hour");
+  const e = s.add(1, "day");
+  const start = s.toISOString();
+  const end = e.toISOString();
 
-  // console.log(startISO);
-  // console.log(endISO);
+  console.log(start);
+  console.log(end);
 
-  const UpcomingShowsQuery = /* GraphQL */ `
-    query upcomingShowsByDate {
+  const UpcomingShowsByDateQuery = /* GraphQL */ `
+    query upcomingShowsByDateQuery(
+      $start: DateTime
+      $end: DateTime
+      $preview: Boolean
+    ) {
       showCollection(
         order: date_ASC
-        where: {
-          date_gt: "2023-10-07T00:00:00.000Z"
-          dateEnd_lte: "2023-10-08T00:00:00.000Z"
-          dateEnd_exists: true
-        }
-        preview: true
-        limit: 999
+        where: { date_gte: $start, dateEnd_lte: $end, dateEnd_exists: true }
+        preview: $preview
+        limit: 9
       ) {
         items {
           title
@@ -306,7 +306,9 @@ export async function getUpcomingShowsByDate(preview: boolean) {
     }
   `;
 
-  const res = await graphql(UpcomingShowsQuery, { preview });
-
+  const res = await graphql(UpcomingShowsByDateQuery, {
+    variables: { start, end, preview },
+    preview,
+  });
   return extractCollection<ShowInterface>(res, "showCollection");
 }
