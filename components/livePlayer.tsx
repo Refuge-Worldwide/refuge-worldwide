@@ -22,11 +22,9 @@ const BroadcastingIndicator = ({
 }) => {
   if (status === "online")
     return (
-      <div className="grow-0 flex items-center space-x-2 bg-white/25 px-2 py-1 rounded-md">
+      <div className="grow-0 items-center space-x-2 opacity-70 hidden md:flex border-white">
         <div className="shrink-0 w-7 h-7 sm:h-3 sm:w-3 rounded-full bg-red animate-pulse mt-1" />
-        <p className="hidden md:block leading-none mt-1 text-tiny uppercase">
-          Live
-        </p>
+        <p className="leading-none mt-1 text-tiny uppercase">LIVE</p>
       </div>
     );
   else if (isLoading)
@@ -34,7 +32,7 @@ const BroadcastingIndicator = ({
       <div className="grow-0 flex items-center space-x-6 opacity-70">
         <div className="shrink-0 w-7 h-7 sm:h-10 sm:w-10 rounded-full bg-white/25" />
         <div className="h-6 sm:h-9 w-56 flex items-center space-x-2 whitespace-nowrap px-2 ml-6 bg-white opacity-25"></div>
-        <p className="hidden leading-none mt-1 animate-pulse uppercase">
+        <p className="hidden leading-none mt-1 text-tiny animate-pulse uppercase">
           Loading
         </p>
       </div>
@@ -43,7 +41,7 @@ const BroadcastingIndicator = ({
   return (
     <div className="grow-0 flex items-center space-x-6">
       <div className="shrink-0 w-7 h-7 sm:h-10 sm:w-10 rounded-full bg-white/25" />
-      <p className="leading-none mt-1 uppercase">Offline</p>
+      <p className="leading-none mt-1 text-tiny uppercase">Offline</p>
     </div>
   );
 };
@@ -67,7 +65,7 @@ export default function LivePlayer() {
   });
 
   const playerWrapperClassNames = cn(
-    "bg-black text-white h-12 sm:h-16 pl-4 sm:pl-8 flex items-center space-x-3 sm:space-x-6",
+    "bg-black text-white h-12 sm:h-16 pl-4 sm:pl-8 flex items-center space-x-3 sm:space-x-5",
     {
       "sticky top-0 z-50": isOnline,
     }
@@ -109,6 +107,7 @@ export default function LivePlayer() {
           </button>
         </>
       )}
+
       <BroadcastingIndicator
         status={scheduleData?.status}
         isLoading={isLoading}
@@ -117,10 +116,15 @@ export default function LivePlayer() {
       />
 
       {!isLoading && !error && scheduleData?.liveNow?.title && (
-        <Marquee
-          key={scheduleData?.liveNow.title}
-          text={<span className="pr-8">{scheduleData?.liveNow.title}</span>}
-        />
+        <Link
+          className="flex-1 truncate mt-0.5"
+          href={scheduleData?.liveNow.link}
+        >
+          <Marquee
+            key={scheduleData?.liveNow.title}
+            text={<span className="pr-8">{scheduleData?.liveNow.title}</span>}
+          />
+        </Link>
       )}
 
       {!isLoading && (
