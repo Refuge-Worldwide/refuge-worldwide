@@ -1,7 +1,7 @@
 import { useCallback, useState, useEffect } from "react";
 import { InferGetStaticPropsType } from "next";
 import { getSubmissionPage } from "../lib/contentful/pages/submission";
-import ShowSubmissionForm from "../components/showSubmissionForm";
+import ShowSubmissionForm from "../components/submission/showSubmissionForm";
 import Layout from "../components/layout";
 import PageMeta from "../components/seo/page";
 import SinglePage from "../views/singlePage";

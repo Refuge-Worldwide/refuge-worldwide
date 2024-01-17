@@ -1,18 +1,20 @@
 import { useState } from "react";
-import MultiSelectField from "./formFields/multiSelectField";
-import ImageUploadField from "./formFields/imageUploadField";
+import MultiSelectField from "../formFields/multiSelectField";
+import ImageUploadField from "../formFields/imageUploadField";
 import { useFormikContext, Field, FieldArray, ErrorMessage } from "formik";
-import { Close } from "../icons/menu";
-import InputField from "./formFields/inputField";
-import TextareaField from "./formFields/textareaField";
-import CheckboxField from "./formFields/checkboxField";
-import { SubmissionFormValues } from "../types/shared";
-import { AiOutlineInfoCircle } from "react-icons/ai";
-import * as RadioGroup from "@radix-ui/react-radio-group";
+import { Close } from "../../icons/menu";
+import InputField from "../formFields/inputField";
+import TextareaField from "../formFields/textareaField";
+import CheckboxField from "../formFields/checkboxField";
+import { SubmissionFormValues } from "../../types/shared";
+import { AiOutlineCalendar, AiOutlineInfoCircle } from "react-icons/ai";
+import dayjs from "dayjs";
 
-const env = process.env.NODE_ENV;
+var advancedFormat = require("dayjs/plugin/advancedFormat");
+dayjs.extend(advancedFormat);
 
 export default function ShowSubmissionStep3({
+  initial,
   genres,
   artists,
   uploadLink,
@@ -21,26 +23,19 @@ export default function ShowSubmissionStep3({
   const [mp3, setMp3] = useState<boolean>(false);
   const [oneHr, setOneHr] = useState<boolean>(false);
   const [micLevel, setMicLevel] = useState<boolean>(false);
-  const { values, setFieldValue } = useFormikContext<SubmissionFormValues>();
-
+  const { values } = useFormikContext<SubmissionFormValues>();
+  const newSubmission = initial ? false : true;
   return (
     <div>
-      {env == "development" && (
-        <pre className="text-white bg-black">
-          {JSON.stringify(values, null, 2)}
-        </pre>
-      )}
-      <fieldset className="mt-16">
-        <InputField
-          name="email"
-          type="email"
-          label="Email address"
-          required={true}
-        />
-        {showType === "live" && (
-          <InputField name="number" type="tel" label="Contact number" />
-        )}
-      </fieldset>
+      <div className="flex gap-2 md:gap-3 items-center border border-black p-3 md:p-6 bg-orange my-16">
+        <AiOutlineCalendar className="w-5 sm:w-6 md:w-8 h-full" />
+        <span className="flex-1">
+          Submitting for {showType.toLowerCase()} show on{" "}
+          {dayjs(initial.date).format("dddd Do MMMM, HH:mm")}-
+          {dayjs(initial.dateEnd).format("HH:mm")}
+        </span>
+      </div>
+
       <fieldset>
         <MultiSelectField
           label="Artist(s)*"
@@ -48,8 +43,8 @@ export default function ShowSubmissionStep3({
           name="artists"
           options={artists}
           limit={10}
+          value={values.artists}
         />
-
         <CheckboxField
           name="hasExtraArtists"
           label="Click here to add any artists/guests/collectives not found above."
@@ -129,34 +124,6 @@ export default function ShowSubmissionStep3({
           description="For you and your guest(s). A comma seperated list NOT including the @ symbol."
         />
         <InputField
-          name="datetime"
-          type={showType == "live" ? "datetime-local" : "date"}
-          label={showType == "live" ? "Show date / time (CET)" : "Show date"}
-          required={true}
-        />
-        <fieldset className="mb-10">
-          <legend>Show length</legend>
-          <RadioGroup.Root
-            className="flex"
-            name="Show length"
-            defaultValue="1"
-            onValueChange={(value: string) => setFieldValue("length", value)}
-          >
-            <RadioGroup.Item value="1" asChild>
-              <label className="data-[state=checked]:bg-black data-[state=checked]:text-white block cursor-pointer pill-input rounded-tr-none rounded-br-none py-3 text-center">
-                1hr
-              </label>
-            </RadioGroup.Item>
-
-            <RadioGroup.Item value="2" asChild>
-              <label className="data-[state=checked]:bg-black data-[state=checked]:text-white block cursor-pointer select-none pill-input rounded-tl-none rounded-bl-none py-3 text-center">
-                2hr
-              </label>
-            </RadioGroup.Item>
-          </RadioGroup.Root>
-          <ErrorMessage className="text-red" component="span" name="length" />
-        </fieldset>
-        <InputField
           name="showName"
           type="text"
           label="Show title"
@@ -185,6 +152,7 @@ export default function ShowSubmissionStep3({
           label="Show description"
           required={true}
         />
+
         <MultiSelectField
           label="Genres"
           description="Up to 3. If you can't find a genre on this list please get in touch."

@@ -138,7 +138,7 @@ export const ShowSubmissionEmail = ({
               margin: "16px auto",
             }}
           >
-            © 2023 | Location copyright info | refugeworldwide.com
+            © {dayjs().year()} | refugeworldwide.com
           </Text>
         </Container>
       </Body>

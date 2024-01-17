@@ -280,6 +280,9 @@ export async function getUpcomingShowsByDate(date, preview: boolean) {
         limit: 9
       ) {
         items {
+          sys {
+            id
+          }
           title
           type
           date
@@ -296,6 +299,9 @@ export async function getUpcomingShowsByDate(date, preview: boolean) {
           }
           artistsCollection(limit: 9) {
             items {
+              sys {
+                id
+              }
               name
               slug
               email
