@@ -1,5 +1,5 @@
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
-import Prose from "./Prose";
+import Prose from "../Prose";
 
 export default function ShowSubmissionInfo({
   liveShows,
