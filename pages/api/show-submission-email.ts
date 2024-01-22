@@ -13,6 +13,15 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const authHeader = req.headers.authorization;
+
+  if (
+    !process.env.CRON_SECRET ||
+    authHeader !== `Bearer ${process.env.CRON_SECRET}`
+  ) {
+    return res.status(401).json({ success: false });
+  }
+
   try {
     const now = dayjs();
 
@@ -33,7 +42,7 @@ export default async function handler(
       true
     );
     await sendEmails(finalCallShows, "late");
-    return res.status(200).end();
+    return res.status(200).json({ success: true });
   } catch (error) {
     return res.status(400).send(error);
   }
