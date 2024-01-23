@@ -160,16 +160,14 @@ function Calendar() {
     artists: selectedShow?.extendedProps?.artists
       ? selectedShow?.extendedProps?.artists
       : [],
-    status: [
-      {
-        value: selectedShow?.extendedProps?.status
-          ? selectedShow?.extendedProps?.status
-          : "TBC",
-        label: selectedShow?.extendedProps?.status
-          ? selectedShow?.extendedProps?.status
-          : "TBC",
-      },
-    ],
+    status: {
+      value: selectedShow?.extendedProps?.status
+        ? selectedShow?.extendedProps?.status
+        : "TBC",
+      label: selectedShow?.extendedProps?.status
+        ? selectedShow?.extendedProps?.status
+        : "TBC",
+    },
     booker: calculateBooker(),
     hasExtraArtists: false,
     extraArtists: [
