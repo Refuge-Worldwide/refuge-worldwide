@@ -57,6 +57,10 @@ export default async function handler(
     const liveNow = {
       title: liveNowTitle(),
       artwork: liveNowArtwork,
+      slug:
+        liveNowContentful && liveNowContentful.slug
+          ? liveNowContentful.slug
+          : null,
     };
 
     const scheduleData = {

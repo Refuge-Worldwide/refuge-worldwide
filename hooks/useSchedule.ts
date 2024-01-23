@@ -7,6 +7,7 @@ type Schedule = {
     title: string;
     artwork: string;
     slug?: string;
+    isMixedFeelings?: boolean;
   };
   nextUp: Array<ScheduleShow>;
   schedule: Array<ScheduleShow>;

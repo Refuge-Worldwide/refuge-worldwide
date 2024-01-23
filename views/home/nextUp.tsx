@@ -13,7 +13,12 @@ export default function NextUp() {
 
   const bgColour = bgOptions[Math.floor(Math.random() * bgOptions.length)];
 
-  if ((!isLoading && !scheduleData?.nextUp) || error) return null;
+  if (
+    (!isLoading && !scheduleData?.nextUp) ||
+    error ||
+    scheduleData?.liveNow.isMixedFeelings
+  )
+    return null;
   else
     return (
       <section className={`${bgColour} border-t-2 border-b-2`}>

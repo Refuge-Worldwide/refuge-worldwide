@@ -1,9 +1,11 @@
 import create from "zustand";
+import Cookies from "js-cookie";
 
 export enum ActivePlayer {
   MIXCLOUD,
   RADIO_CO,
   SOUNDCLOUD,
+  YOUTUBE,
 }
 
 interface GlobalStore {
@@ -21,9 +23,17 @@ export const useGlobalStore = create<GlobalStore>()((set) => ({
   showUrl: undefined,
   showUrlSet: (showUrl) =>
     set({
-      activePlayer: showUrl.includes("soundcloud")
-        ? ActivePlayer.SOUNDCLOUD
-        : ActivePlayer.MIXCLOUD,
+      activePlayer: archivePlayerType(showUrl),
       showUrl,
     }),
 }));
+
+const archivePlayerType = (showUrl) => {
+  if (showUrl.includes("soundcloud")) {
+    return ActivePlayer.SOUNDCLOUD;
+  }
+  if (showUrl.includes("youtube")) {
+    return ActivePlayer.YOUTUBE;
+  }
+  return ActivePlayer.MIXCLOUD;
+};
