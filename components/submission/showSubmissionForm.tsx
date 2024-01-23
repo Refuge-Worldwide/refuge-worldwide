@@ -32,15 +32,7 @@ const validationSchema = [
     ),
   }),
   Yup.object().shape({
-    email: Yup.string()
-      .email("Invalid email")
-      .required("Please provide your email address"),
-    number: Yup.string(),
     showName: Yup.string().required("Please provide a show name"),
-    datetime: Yup.date()
-      .min(today, "Date cannot be in the past")
-      .required("Please choose a date for your show"),
-    length: Yup.number().required("Please choose a length for your show"),
     genres: Yup.array()
       .of(
         Yup.object().shape({
@@ -146,6 +138,8 @@ export default function ShowSubmissionForm({
   const [submissionError, setSubmissionError] = useState<boolean>(false);
 
   const _handleSubmit = (values, actions) => {
+    console.log("SUBMITTING");
+    console.log(isLastStep);
     if (isLastStep) {
       console.log("its the last step");
       _submitForm(values, actions);
@@ -170,8 +164,8 @@ export default function ShowSubmissionForm({
     const JSONData = JSON.stringify(values);
     const endpoint = "/api/show-submission-v2";
     const options = {
-      // The method is POST because we are sending data.
-      method: initial ? "PATCH" : "POST",
+      // The method is PATCH because we are updating.
+      method: "PATCH",
       // Tell the server we're sending JSON.
       headers: {
         "Content-Type": "application/json",

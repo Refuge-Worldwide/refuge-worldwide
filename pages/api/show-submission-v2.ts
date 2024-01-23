@@ -238,6 +238,11 @@ const updateShow = async (values) => {
     );
     const dateFormatted = dayjs(values.datetime).format("DD MMM YYYY");
     const genres = createReferencesArray(values.genres);
+    let additionalImages = [];
+    values.image.slice(1).forEach((image) => {
+      additionalImages.push(image.url);
+    });
+    Object.values(values.image).join(",");
     console.log(genres);
     client
       .getSpace(spaceId)
@@ -279,6 +284,9 @@ const updateShow = async (values) => {
         };
         entry.fields.status = {
           "en-US": "Submitted",
+        };
+        entry.fields.additionalImages = {
+          "en-US": additionalImages,
         };
         return entry.update();
       })
@@ -352,7 +360,6 @@ export default async function handler(
       }
     case "PATCH":
       //submit show update to contentful
-      // Get data submitted in request's body.
       console.log(values);
       console.log("UPDATING");
       console.log(dayjs().utcOffset());
@@ -382,36 +389,5 @@ export default async function handler(
       } catch (err) {
         res.status(400).json({ data: "issue submitting form" });
       }
-    // case "POST":
-    //   //submit show update to contentful
-    //   // Get data submitted in request's body.
-    //   console.log(values);
-    //   console.log(dayjs().utcOffset());
-    //   try {
-    //     values.imageId = await uploadImage(values.showName, values.image);
-    //     if (values.hasExtraArtists) {
-    //       for (const artist of values.extraArtists) {
-    //         // if ((artist.bio && artist.image) || (artist.bio !== "" && artist.image !== "")) {
-    //         console.log("adding artist to contentful: " + artist.name);
-    //         const contentfulNewArtist = await addArtist(artist);
-    //         console.log(contentfulNewArtist);
-    //         values.artists.push(contentfulNewArtist);
-    //         // }
-    //       }
-    //     }
-    //     if (values.hasNewGenres) {
-    //       const genres = values.newGenres.split(", ");
-    //       for (const genre of genres) {
-    //         const contentfulNewGenre = await addGenre(genre);
-    //         values.genres.push(contentfulNewGenre);
-    //       }
-    //     }
-    //     await addShow(values);
-    //     await appendToSpreadsheet(values);
-    //     console.log("form submitted successfully");
-    //     res.status(200).json({ data: "successfully created show :)" });
-    //   } catch (err) {
-    //     res.status(400).json({ data: "issue submitting form" });
-    //   }
   }
 }
