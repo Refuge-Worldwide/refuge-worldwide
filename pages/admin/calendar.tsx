@@ -309,12 +309,8 @@ function Calendar() {
   };
 
   const handleEventClick = (eventInfo) => {
-    // remove UTC timezone stamp
     setShowDialogOpen(true);
     setSelectedShow(eventInfo.event);
-    // console.log(eventInfo.event.id);
-    // const url = `https://app.contentful.com/spaces/taoiy3h84mql/environments/master/entries/${eventInfo.event.id}`;
-    // window.open(url, "_blank");
   };
 
   const reloadCalendar = () => {
@@ -328,8 +324,8 @@ function Calendar() {
   };
 
   const handleDatePickerChange = () => {
-    // let calendarApi = calendarRef.current.getApi();
-    // calendarApi.gotoDate(datePicker.current.value);
+    let calendarApi = calendarRef.current.getApi();
+    calendarApi.gotoDate(datePicker.current.value);
   };
 
   const handleDatesSet = (dateInfo) => {
@@ -549,7 +545,7 @@ function Calendar() {
           )}
         </button>
 
-        <DropdownMenu.Root
+        {/* <DropdownMenu.Root
           open={addDropdownOpen}
           onOpenChange={setAddDropdownOpen}
         >
@@ -579,7 +575,7 @@ function Calendar() {
               </DropdownMenu.Item>
             </DropdownMenu.Content>
           </DropdownMenu.Portal>
-        </DropdownMenu.Root>
+        </DropdownMenu.Root> */}
 
         <Dialog.Root
           open={showDialogOpen}
