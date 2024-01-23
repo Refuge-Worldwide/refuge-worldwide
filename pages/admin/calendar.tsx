@@ -279,7 +279,7 @@ function Calendar() {
       published: false,
       backgroundColor:
         values.status.value == "TBC"
-          ? "#EDB8B4"
+          ? "#e3e3e3"
           : values.status.value == "Confirmed"
           ? "#F1E2AF"
           : values.status.value == "Submitted"
@@ -287,7 +287,7 @@ function Calendar() {
           : "#B3DCC1",
       borderColor:
         values.status.value == "TBC"
-          ? "#EDB8B4"
+          ? "#e3e3e3"
           : values.status.value == "Confirmed"
           ? "#F1E2AF"
           : values.status.value == "Submitted"

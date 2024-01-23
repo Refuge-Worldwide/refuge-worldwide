@@ -118,7 +118,7 @@ export async function getCalendarShows(start, end, preview: boolean) {
       published: show.sys.publishedVersion ? true : false,
       backgroundColor:
         show.status == "TBC"
-          ? "#EDB8B4"
+          ? "#e3e3e3"
           : show.status == "Confirmed"
           ? "#F1E2AF"
           : show.status == "Submitted"
@@ -126,7 +126,7 @@ export async function getCalendarShows(start, end, preview: boolean) {
           : "#B3DCC1",
       borderColor:
         show.status == "TBC"
-          ? "#EDB8B4"
+          ? "#e3e3e3"
           : show.status == "Confirmed"
           ? "#F1E2AF"
           : show.status == "Submitted"
