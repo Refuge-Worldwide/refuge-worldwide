@@ -134,10 +134,10 @@ function Calendar() {
       const artists = await getAllArtists();
       setArtists(artists);
     })();
-    const interval = setInterval(() => reloadCalendar(), 30000);
-    return () => {
-      clearInterval(interval);
-    };
+    // const interval = setInterval(() => reloadCalendar(), 30000);
+    // return () => {
+    //   clearInterval(interval);
+    // };
   }, []);
 
   const calculateBooker = () => {
@@ -160,16 +160,14 @@ function Calendar() {
     artists: selectedShow?.extendedProps?.artists
       ? selectedShow?.extendedProps?.artists
       : [],
-    status: [
-      {
-        value: selectedShow?.extendedProps?.status
-          ? selectedShow?.extendedProps?.status
-          : "TBC",
-        label: selectedShow?.extendedProps?.status
-          ? selectedShow?.extendedProps?.status
-          : "TBC",
-      },
-    ],
+    status: {
+      value: selectedShow?.extendedProps?.status
+        ? selectedShow?.extendedProps?.status
+        : "TBC",
+      label: selectedShow?.extendedProps?.status
+        ? selectedShow?.extendedProps?.status
+        : "TBC",
+    },
     booker: calculateBooker(),
     hasExtraArtists: false,
     extraArtists: [
@@ -281,7 +279,7 @@ function Calendar() {
       published: false,
       backgroundColor:
         values.status.value == "TBC"
-          ? "#EDB8B4"
+          ? "#e3e3e3"
           : values.status.value == "Confirmed"
           ? "#F1E2AF"
           : values.status.value == "Submitted"
@@ -289,7 +287,7 @@ function Calendar() {
           : "#B3DCC1",
       borderColor:
         values.status.value == "TBC"
-          ? "#EDB8B4"
+          ? "#e3e3e3"
           : values.status.value == "Confirmed"
           ? "#F1E2AF"
           : values.status.value == "Submitted"
@@ -830,7 +828,7 @@ function Calendar() {
                             name="status"
                             options={statusOptions}
                             limit={1}
-                            value={initialValues.status}
+                            value={[initialValues.status]}
                           />
 
                           <InputField
