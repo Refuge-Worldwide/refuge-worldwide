@@ -11,6 +11,7 @@ import {
   createReferencesArray,
 } from "../../lib/contentful/management";
 import { getShowById } from "../../lib/contentful/pages/submission";
+import { sendSlackMessage } from "../../lib/slack";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -132,7 +133,7 @@ const addArtist = async (artist) => {
     return addedArtist;
   } catch (err) {
     console.log(err);
-    throw 400;
+    throw err;
   }
 };
 
@@ -154,7 +155,7 @@ const addGenre = async (genre) => {
     return addedGenre;
   } catch (err) {
     console.log(err);
-    throw 400;
+    throw err;
   }
 };
 
@@ -223,7 +224,7 @@ const addShow = async (values) => {
     return entry;
   } catch (err) {
     console.log(err);
-    throw 400;
+    throw err;
   }
 };
 
@@ -296,7 +297,7 @@ const updateShow = async (values) => {
       });
   } catch (err) {
     console.log(err);
-    throw 400;
+    throw err;
   }
 };
 
@@ -326,7 +327,7 @@ const uploadImage = async (name, image) => {
     return processedAsset.sys.id;
   } catch (err) {
     console.log(err);
-    throw 400;
+    throw err;
   }
 };
 
@@ -387,6 +388,10 @@ export default async function handler(
         console.log("form submitted successfully");
         res.status(200).json({ data: "successfully updated show :)" });
       } catch (err) {
+        const message = `⚠️ ERROR SUBMITTING FORM
+        \n\nShow: ${values.showName}
+        \nError: ${err}`;
+        sendSlackMessage(message, "dev");
         res.status(400).json({ data: "issue submitting form" });
       }
   }
