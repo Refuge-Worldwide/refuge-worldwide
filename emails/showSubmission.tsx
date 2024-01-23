@@ -23,7 +23,7 @@ interface EmailProps {
   userName: string;
   showDateStart: string;
   showDateEnd: string;
-  showType: "live" | "pre-record";
+  showType: string;
   severity: "initial" | "follow-up" | "late";
   showId: string;
 }
@@ -95,7 +95,7 @@ export const ShowSubmissionEmail = ({
                   {severityText(severity, submissionDeadlineDate)}
                 </Text>
                 <Button
-                  href={baseUrl + "/new-submission?id=" + showId}
+                  href={baseUrl + "/submission-v2?id=" + showId}
                   style={button}
                   pY={9}
                   pX={12}
@@ -110,7 +110,7 @@ export const ShowSubmissionEmail = ({
                   Date: {formattedDate}
                   <br />
                   Location:{" "}
-                  {showType == "live" ? (
+                  {showType == "Live" ? (
                     <Link
                       href="https://goo.gl/maps/ZY1w74xS4ULk4B1z5"
                       style={link}
@@ -138,7 +138,7 @@ export const ShowSubmissionEmail = ({
               margin: "16px auto",
             }}
           >
-            © 2023 | Location copyright info | refugeworldwide.com
+            © {dayjs().year()} | refugeworldwide.com
           </Text>
         </Container>
       </Body>

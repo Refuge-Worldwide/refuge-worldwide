@@ -165,5 +165,7 @@ export const transformForDropdown = (array) => {
   return array.map((item) => ({
     value: item.sys.id,
     label: item.name,
+    // to do: remove sys and name from spread to reduce size of object
+    ...item,
   }));
 };

@@ -6,33 +6,43 @@ import interactionPlugin from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
 import Loading from "../../components/loading";
-// import * as Dialog from "@radix-ui/react-dialog";
-// import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import * as Dialog from "@radix-ui/react-dialog";
+import * as Popover from "@radix-ui/react-popover";
+import * as RadioGroup from "@radix-ui/react-radio-group";
 import { useState, useEffect, useRef, useCallback } from "react";
-// import InputField from "../../components/formFields/inputField";
-// import MultiSelectField from "../../components/formFields/multiSelectField";
-// import { Formik, Form, FieldArray, Field } from "formik";
-// import { Cross } from "../../icons/cross";
-// Add back in for calendar v2
-// import {
-//   getAllArtists,
-//   deleteCalendarShow,
-//   createCalendarShow,
-//   updateCalendarShow,
-//   createArtist,
-//   updateArtistEmail,
-// } from "../../lib/contentful/calendar";
-// import { Arrow } from "../../icons/arrow";
-// import CheckboxField from "../../components/formFields/checkboxField";
-// import { Close } from "../../icons/menu";
+import InputField from "../../components/formFields/inputField";
+import MultiSelectField from "../../components/formFields/multiSelectField";
+import { Formik, Form, FieldArray, Field } from "formik";
+import { Cross } from "../../icons/cross";
+import {
+  getAllArtists,
+  deleteCalendarShow,
+  createCalendarShow,
+  updateCalendarShow,
+  createArtist,
+} from "../../lib/contentful/calendar";
+import { Arrow } from "../../icons/arrow";
+import CheckboxField from "../../components/formFields/checkboxField";
+import { Close } from "../../icons/menu";
 import { TfiReload } from "react-icons/tfi";
 import { IoMdCheckmark, IoMdMusicalNote } from "react-icons/io";
-// import { RxExternalLink } from "react-icons/rx";
+import {
+  RxExternalLink,
+  RxDownload,
+  RxCopy,
+  RxDotsVertical,
+} from "react-icons/rx";
 import { AiOutlineLoading3Quarters, AiOutlineCalendar } from "react-icons/ai";
-// import { RiDeleteBin7Line } from "react-icons/ri";
-// import Link from "next/link";
+import { RiDeleteBin7Line } from "react-icons/ri";
+import Link from "next/link";
 import dayjs from "dayjs";
 import useWindowSize from "../../hooks/useWindowSize";
+import toast, { Toaster } from "react-hot-toast";
+import { useUser } from "@supabase/auth-helpers-react";
+import { useRouter } from "next/router";
+import CalendarSearch from "../../views/admin/calendarSearch";
+import EmailModal from "../../views/admin/emailModal";
+const HIDDEN_DAYS = [0];
 
 export default function CalendarPage() {
   return (
@@ -45,16 +55,20 @@ export default function CalendarPage() {
 }
 
 function Calendar() {
-  // const [artists, setArtists] = useState(null);
+  const [artists, setArtists] = useState(null);
   const [showDialogOpen, setShowDialogOpen] = useState<boolean>(false);
-  // const [addDropdownOpen, setAddDropdownOpen] = useState<boolean>(false);
-  // const [selectedShow, setSelectedShow] = useState(null);
+  const [searchDialogOpen, setSearchDialogOpen] = useState<boolean>(false);
+  const [selectedShow, setSelectedShow] = useState(null);
   const [calendarLoading, setCalendarLoading] = useState<boolean>(false);
-  // const [isDeleting, setIsDeleting] = useState<boolean>(false);
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
+  const [highlightedShow, setHighlightedShow] = useState<string>(null);
   const calendarRef = useRef<any>();
-  // const formRef = useRef<any>();
+  const formRef = useRef<any>();
   const datePicker = useRef<any>();
   const windowSize = useWindowSize();
+  const user = useUser();
+  const [username, setUsername] = useState<string>("");
+  const router = useRouter();
 
   const handleKeyPress = useCallback((event) => {
     const calendarApi = calendarRef.current.getApi();
@@ -74,16 +88,22 @@ function Calendar() {
     }
   }, []);
 
-  // Add back in for calendar v2
-
-  // useEffect(() => {
-  //   if (formRef.current) {
-  //     console.log(formRef);
-  //   }
-  // }, [formRef]);
+  useEffect(() => {
+    if (formRef.current) {
+      console.log(formRef);
+    }
+  }, [formRef]);
 
   useEffect(() => {
-    if (!showDialogOpen) {
+    if (user?.email) {
+      let username = user.email.split("@")[0];
+      username = username.charAt(0).toUpperCase() + username.slice(1);
+      setUsername(username);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (!showDialogOpen && !searchDialogOpen) {
       // attach the event listener
       document.addEventListener("keydown", handleKeyPress);
 
@@ -92,187 +112,204 @@ function Calendar() {
         document.removeEventListener("keydown", handleKeyPress);
       };
     }
-  }, [handleKeyPress, showDialogOpen]);
+  }, [handleKeyPress, showDialogOpen, searchDialogOpen]);
 
-  // Add back in for calendar v2
+  const statusOptions = [
+    {
+      value: "TBC",
+      label: "TBC",
+    },
+    {
+      value: "Confirmed",
+      label: "Confirmed",
+    },
+    {
+      value: "Submitted",
+      label: "Submitted",
+    },
+  ];
 
-  // const statusOptions = [
-  //   {
-  //     value: "TBC",
-  //     label: "TBC",
-  //   },
-  //   {
-  //     value: "Confirmed",
-  //     label: "Confirmed",
-  //   },
-  //   {
-  //     value: "Submitted",
-  //     label: "Submitted",
-  //   },
-  // ];
+  useEffect(() => {
+    (async () => {
+      const artists = await getAllArtists();
+      setArtists(artists);
+    })();
+    const interval = setInterval(() => reloadCalendar(), 30000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
 
-  // useEffect(() => {
-  //   (async () => {
-  //     const artists = await getAllArtists();
-  //     setArtists(artists);
-  //   })();
-  //   const interval = setInterval(() => reloadCalendar(), 60000);
-  //   return () => {
-  //     clearInterval(interval);
-  //   };
-  // }, []);
+  const calculateBooker = () => {
+    if (selectedShow?.extendedProps?.booker) {
+      return selectedShow?.extendedProps?.booker;
+    } else if (!selectedShow?.id) {
+      return username;
+    }
+    return undefined;
+  };
 
-  // const initialValues = {
-  //   id: selectedShow?.id,
-  //   title: selectedShow?.title,
-  //   start: selectedShow?.startStr,
-  //   end: selectedShow?.endStr,
-  //   artists: selectedShow?.extendedProps?.artists
-  //     ? selectedShow?.extendedProps?.artists
-  //     : [],
-  //   status: [
-  //     {
-  //       value: selectedShow?.extendedProps?.status
-  //         ? selectedShow?.extendedProps?.status
-  //         : "TBC",
-  //       label: selectedShow?.extendedProps?.status
-  //         ? selectedShow?.extendedProps?.status
-  //         : "TBC",
-  //     },
-  //   ],
-  //   booker: selectedShow?.extendedProps?.booker,
-  //   hasExtraArtists: false,
-  //   extraArtists: [
-  //     {
-  //       name: "",
-  //       pronouns: "",
-  //     },
-  //   ],
-  // };
+  const initialValues = {
+    id: selectedShow?.id,
+    title: selectedShow?.title,
+    type: selectedShow?.extendedProps?.type
+      ? selectedShow?.extendedProps?.type
+      : "Live",
+    start: selectedShow?.startStr,
+    end: selectedShow?.endStr,
+    artists: selectedShow?.extendedProps?.artists
+      ? selectedShow?.extendedProps?.artists
+      : [],
+    status: [
+      {
+        value: selectedShow?.extendedProps?.status
+          ? selectedShow?.extendedProps?.status
+          : "TBC",
+        label: selectedShow?.extendedProps?.status
+          ? selectedShow?.extendedProps?.status
+          : "TBC",
+      },
+    ],
+    booker: calculateBooker(),
+    hasExtraArtists: false,
+    extraArtists: [
+      {
+        name: "",
+        pronouns: "",
+      },
+    ],
+    artistEmails: [{}],
+  };
 
-  // const handleSubmit = async (values, actions) => {
-  //   const method = values.id ? "update" : "create";
-  //   let show = null;
-  //   setCalendarLoading(true);
-  //   try {
-  //     if (values.hasExtraArtists) {
-  //       for (const artist of values.extraArtists) {
-  //         // if ((artist.bio && artist.image) || (artist.bio !== "" && artist.image !== "")) {
-  //         console.log("adding artist to contentful: " + artist.name);
-  //         const contentfulNewArtist = await createArtist(artist);
-  //         console.log(contentfulNewArtist);
-  //         values.artists.push(contentfulNewArtist);
-  //         // }
-  //       }
-  //     }
+  const handleSubmit = async (values, actions) => {
+    const method = values.id ? "update" : "create";
+    let show = null;
+    setCalendarLoading(true);
+    try {
+      if (values.hasExtraArtists) {
+        for (const artist of values.extraArtists) {
+          // if ((artist.bio && artist.image) || (artist.bio !== "" && artist.image !== "")) {
+          console.log("adding artist to contentful: " + artist.name);
+          const contentfulNewArtist = await createArtist(artist);
+          console.log(contentfulNewArtist);
+          values.artists.push(contentfulNewArtist);
+          // }
+        }
+      }
 
-  //     // if (values.artistEmails) {
-  //     //   console.log(values.artistEmails);
-  //     //   for (const artist of values.artistEmails) {
-  //     //     await updateArtistEmail(artist.id, artist.email);
-  //     //   }
-  //     // }
+      // if (values.artistEmails) {
+      //   console.log(values.artistEmails);
+      //   for (const artist of values.artistEmails) {
+      //     await updateArtistEmail(artist.id, artist.email);
+      //   }
+      // }
 
-  //     if (method == "update") {
-  //       show = await updateCalendarShow(values);
-  //     } else {
-  //       show = await createCalendarShow(values);
-  //     }
+      if (method == "update") {
+        show = await updateCalendarShow(values);
+      } else {
+        show = await createCalendarShow(values);
+      }
 
-  //     // manually add show to full calendar
-  //     const calendarApi = calendarRef.current.getApi();
-  //     const fcEvent = transformEventForFullCalendar(values, show);
-  //     if (method == "update") {
-  //       calendarApi.getEventById(values.id).remove();
-  //     }
-  //     calendarApi.addEvent(fcEvent);
-  //     actions.setSubmitting(false);
-  //     actions.setStatus("submitted");
-  //     setShowDialogOpen(false);
-  //     setCalendarLoading(false);
-  //   } catch (error) {
-  //     console.log(error);
-  //     throw error;
-  //   }
-  // };
+      // manually add show to full calendar
+      const calendarApi = calendarRef.current.getApi();
+      console.log(values);
+      const fcEvent = transformEventForFullCalendar(values, show.sys.id);
+      if (method == "update") {
+        calendarApi.getEventById(values.id).remove();
+      }
+      calendarApi.addEvent(fcEvent, []);
+      actions.setSubmitting(false);
+      actions.setStatus("submitted");
+      setCalendarLoading(false);
+      setShowDialogOpen(false);
+      toast.success(method == "update" ? "Show updated" : "Show created");
+    } catch (error) {
+      console.log(error);
+      toast.error(
+        method == "update" ? "Error updating show" : "Error creating show"
+      );
+      throw error;
+    }
+  };
 
-  // const handleEventDrop = async (eventInfo) => {
-  //   setCalendarLoading(true);
-  //   console.log("handle drop: " + eventInfo);
-  //   const values = {
-  //     id: eventInfo.event.id,
-  //     start: eventInfo.event.startStr,
-  //     end: eventInfo.event.endStr,
-  //   };
-  //   updateCalendarShow(values)
-  //     .then(() => {
-  //       setCalendarLoading(false);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
+  const handleEventDrop = async (eventInfo) => {
+    setCalendarLoading(true);
+    console.log("handle drop: " + eventInfo);
+    const values = {
+      id: eventInfo.event.id,
+      start: eventInfo.event.startStr,
+      end: eventInfo.event.endStr,
+    };
+    updateCalendarShow(values)
+      .then(() => {
+        setCalendarLoading(false);
+        toast.success("Show updated");
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error("Error moving show");
+      });
+  };
 
-  // const handleDelete = async (id) => {
-  //   setCalendarLoading(true);
-  //   setIsDeleting(true);
-  //   deleteCalendarShow(id)
-  //     .then((entry) => {
-  //       let calendarApi = calendarRef.current.getApi();
-  //       calendarApi.getEventById(id).remove();
-  //       setShowDialogOpen(false);
-  //       setCalendarLoading(false);
-  //       setIsDeleting(false);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
+  const handleDelete = async (id) => {
+    setCalendarLoading(true);
+    setIsDeleting(true);
+    deleteCalendarShow(id)
+      .then((entry) => {
+        let calendarApi = calendarRef.current.getApi();
+        calendarApi.getEventById(id).remove();
+        setShowDialogOpen(false);
+        setCalendarLoading(false);
+        setIsDeleting(false);
+        toast.success("Show deleted");
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error("Error deleting show");
+      });
+  };
 
-  // const transformEventForFullCalendar = (values, id) => {
-  //   return {
-  //     id: id,
-  //     title: values.title,
-  //     artists: values.artists,
-  //     start: values.start,
-  //     end: values.end,
-  //     status: values.status[0].value,
-  //     published: false,
-  //     backgroundColor:
-  //       values.status == "TBC"
-  //         ? "#EDB8B4"
-  //         : values.status == "Confirmed"
-  //         ? "#F1E2AF"
-  //         : values.status == "Submitted"
-  //         ? "#B3DCC1"
-  //         : "#B3DCC1",
-  //     borderColor:
-  //       values.status == "TBC"
-  //         ? "#EDB8B4"
-  //         : values.status == "Confirmed"
-  //         ? "#F1E2AF"
-  //         : values.status == "Submitted"
-  //         ? "#B3DCC1"
-  //         : "#B3DCC1",
-  //     booker: values.booker ? values.booker : "George",
-  //   };
-  // };
+  const transformEventForFullCalendar = (values, id) => {
+    return {
+      id: id,
+      title: values.title,
+      type: values.type ? values.type : "Live",
+      artists: values.artists,
+      start: values.start,
+      end: values.end,
+      status: values.status.value,
+      published: false,
+      backgroundColor:
+        values.status.value == "TBC"
+          ? "#EDB8B4"
+          : values.status.value == "Confirmed"
+          ? "#F1E2AF"
+          : values.status.value == "Submitted"
+          ? "#B3DCC1"
+          : "#B3DCC1",
+      borderColor:
+        values.status.value == "TBC"
+          ? "#EDB8B4"
+          : values.status.value == "Confirmed"
+          ? "#F1E2AF"
+          : values.status.value == "Submitted"
+          ? "#B3DCC1"
+          : "#B3DCC1",
+      booker: values.booker ? values.booker : "George",
+    };
+  };
 
-  // function handleSelect(selectInfo) {
-  //   console.log("select info");
-  //   setShowDialogOpen(true);
-  //   setSelectedShow(selectInfo);
-  //   console.log(selectInfo.startStr);
-  // }
+  const handleSelect = (selectInfo) => {
+    console.log("select info");
+    setShowDialogOpen(true);
+    setSelectedShow(selectInfo);
+    console.log(selectInfo.startStr);
+  };
 
-  function handleEventClick(eventInfo) {
-    // remove UTC timezone stamp
-    // setShowDialogOpen(true);
-    // setSelectedShow(eventInfo.event);
-    console.log(eventInfo.event.id);
-    const url = `https://app.contentful.com/spaces/taoiy3h84mql/environments/master/entries/${eventInfo.event.id}`;
-    window.open(url, "_blank");
-  }
+  const handleEventClick = (eventInfo) => {
+    setShowDialogOpen(true);
+    setSelectedShow(eventInfo.event);
+  };
 
   const reloadCalendar = () => {
     console.log("reloading calendar");
@@ -289,12 +326,131 @@ function Calendar() {
     calendarApi.gotoDate(datePicker.current.value);
   };
 
-  if (windowSize.width)
+  const handleDatesSet = (dateInfo) => {
+    router.replace(
+      {
+        query: {
+          start: dateInfo.startStr.split("T")[0],
+          view: dateInfo.view.type,
+        },
+      },
+      undefined,
+      { shallow: true }
+    );
+  };
+
+  const goToHighlightedShow = (date, showId) => {
+    let calendarApi = calendarRef.current.getApi();
+    calendarApi.gotoDate(date);
+    // calendarApi.scrollToTime(date);
+    setHighlightedShow(showId);
+    // to do: check if date of select show is outside of current daterange of calendar
+    setTimeout(() => {
+      if (!calendarLoading) {
+        highlightShow(showId);
+      }
+    }, 300);
+  };
+
+  const handleCalendarLoading = (e) => {
+    setCalendarLoading(e);
+    if (!e && highlightedShow) {
+      highlightShow(highlightedShow);
+    }
+  };
+
+  const highlightShow = (showId) => {
+    setTimeout(() => {
+      const showEl = document.getElementById(showId).parentElement;
+      // to do: scroll event into view
+      showEl.scrollIntoView({
+        block: "center",
+        behavior: "smooth",
+      });
+      console.log(showEl);
+      showEl.classList.add("fc-highlighted-event");
+      setHighlightedShow(null);
+      setTimeout(() => {
+        if (showEl) {
+          showEl.classList.remove("fc-highlighted-event");
+        }
+      }, 10000);
+    }, 100);
+  };
+
+  const handleSearchDialogToggle = (open) => {
+    setSearchDialogOpen(open);
+  };
+
+  const handleCopyFormLink = (showId) => {
+    const showFormLink = "http://localhost:3000/submission-v2?id=" + showId;
+    navigator.clipboard.writeText(showFormLink).then(
+      () => {
+        toast.success("Submission link copied to clipboard");
+      },
+      () => {
+        toast.error("Issue copying to clipboard");
+      }
+    );
+  };
+
+  const getInitialView = () => {
+    if (windowSize.width < 765) {
+      return "timeGridDay";
+    } else {
+      if (router.query?.view) {
+        return router.query.view.toString();
+      } else return "timeGridWeek";
+    }
+  };
+
+  async function downloadImages() {
+    console.log(selectedShow.extendedProps.images);
+    if (selectedShow.extendedProps.images[0]) {
+      for (
+        let index = 0;
+        index < selectedShow.extendedProps.images.length;
+        index++
+      ) {
+        // for each image of the show
+        // define what we want in the ZIP
+        const url = selectedShow.extendedProps.images[index];
+
+        // get the ZIP stream in a Blob
+        let blob = await fetch(url).then((r) => r.blob());
+
+        // make and click a temporary link to download the Blob
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = selectedShow.title + " (" + (index + 1) + ")";
+        link.click();
+        link.remove();
+      }
+    } else {
+      toast.error("Show has no images");
+    }
+  }
+
+  if (windowSize.width && router.isReady)
     return (
       <div className="mt-2 lg:m-4 h-[calc(100vh-100px)] lg:h-[calc(100vh-125px)] relative">
         <PageMeta title="Calendar | Refuge Worldwide" path="signin/" />
+        <div>
+          <Toaster
+            position="bottom-center"
+            toastOptions={{
+              style: {
+                border: "1px solid black",
+                padding: "16px",
+                color: "black",
+                borderRadius: "0px",
+              },
+            }}
+          />
+        </div>
         <FullCalendar
           ref={calendarRef}
+          initialDate={router.query?.start?.toString()}
           plugins={[
             dayGridPlugin,
             interactionPlugin,
@@ -342,20 +498,20 @@ function Calendar() {
             hour12: false,
           }}
           eventClick={handleEventClick}
-          // Add back in for calendar v2
-          // eventDrop={handleEventDrop}
-          // eventResize={handleEventDrop}
-          // select={handleSelect}
-          loading={(e) => setCalendarLoading(e)}
+          eventDrop={handleEventDrop}
+          eventResize={handleEventDrop}
+          select={handleSelect}
+          editable={true}
+          selectable={true}
+          loading={(e) => handleCalendarLoading(e)}
           firstDay={1}
-          initialView={windowSize.width < 765 ? "timeGridDay" : "timeGridWeek"}
+          initialView={getInitialView()}
           nowIndicator={true}
-          // Add back in for calendar v2
-          // editable={true}
-          // selectable={true}
           selectMirror={true}
+          datesSet={handleDatesSet}
           events={getEvents}
           eventContent={renderEventContent}
+          scrollTimeReset={false}
         />
         <input
           type="date"
@@ -369,6 +525,11 @@ function Calendar() {
         >
           <AiOutlineCalendar size={25} />
         </button>
+        <CalendarSearch
+          onView={goToHighlightedShow}
+          onEdit={handleEventClick}
+          onToggle={handleSearchDialogToggle}
+        />
         <button
           className="absolute top-1 lg:top-2 right-2 lg:right-0 disabled:cursor-wait"
           onClick={reloadCalendar}
@@ -381,7 +542,6 @@ function Calendar() {
           )}
         </button>
 
-        {/* Add back in for calendar v2 */}
         {/* <DropdownMenu.Root
           open={addDropdownOpen}
           onOpenChange={setAddDropdownOpen}
@@ -414,186 +574,281 @@ function Calendar() {
           </DropdownMenu.Portal>
         </DropdownMenu.Root> */}
 
-        {/* Add back in for calendar v2 */}
-        {/* <Dialog.Root
+        <Dialog.Root
           open={showDialogOpen}
           onOpenChange={(showDialogOpen) => setShowDialogOpen(showDialogOpen)}
         >
           <Dialog.Portal>
-            <Dialog.Overlay className="w-screen h-screen fixed top-0 left-0 bg-black opacity-70 z-50" />
-            <Dialog.Content className="bg-white w-full h-full lg:h-auto lg:max-w-3xl fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 border-black border">
-              <div className="relative p-8 overflow-y-scroll max-h-[95vh]">
-                <Dialog.Close asChild>
-                  <button className="float-right" aria-label="Close">
-                    <Cross />
-                  </button>
-                </Dialog.Close>
-                <Dialog.Title
-                  asChild
-                  className="mb-6 pb-3 border-b border-black"
-                >
-                  <h5 className="font-sans font-medium">
-                    {selectedShow?.title ? "Edit" : "New"} show
-                    {selectedShow?.id && (
-                      <Link
-                        target="_blank"
-                        href={`https://app.contentful.com/spaces/taoiy3h84mql/environments/master/entries/${selectedShow.id}`}
-                      >
-                        <RxExternalLink className="inline ml-2 mb-1" />
-                      </Link>
-                    )}
-                  </h5>
-                </Dialog.Title>
-                <Formik
-                  innerRef={formRef}
-                  initialValues={initialValues}
-                  onSubmit={handleSubmit}
-                >
-                  {({ values, isSubmitting }) => (
+            <Dialog.Overlay className="data-[state=open]:animate-overlayShow  w-screen h-screen fixed top-0 left-0 bg-black/50 z-50 backdrop-blur-sm" />
+            <Dialog.Content className="data-[state=open]:animate-contentShow bg-white w-full h-full lg:h-auto lg:max-w-4xl fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 border-black border">
+              <Formik
+                innerRef={formRef}
+                initialValues={initialValues}
+                onSubmit={handleSubmit}
+                form="showForm"
+              >
+                {({ values, isSubmitting, dirty, setFieldValue }) => (
+                  <div className="relative overflow-y-auto max-h-[95vh]">
+                    <div className="px-8 py-4 sticky top-0 bg-white border-b border-black flex justify-between gap-4 items-center z-20">
+                      <Dialog.Title asChild className="grow">
+                        <h5 className="font-sans font-medium">
+                          {selectedShow?.title ? "Edit" : "New"} show
+                        </h5>
+                      </Dialog.Title>
+                      {values?.id && (
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => downloadImages()}
+                            className="hover:bg-black/10 p-2 rounded-lg"
+                          >
+                            <RxDownload />
+                          </button>
+                          <button
+                            type="button"
+                            className="hover:bg-black/10 p-2 rounded-lg hidden lg:block"
+                            onClick={() => {
+                              setFieldValue("id", undefined);
+                              toast.success(
+                                "Show duplicated. Please change necessary fields and hit the add button."
+                              );
+                            }}
+                          >
+                            <RxCopy />
+                          </button>
+                          <Popover.Root>
+                            <Popover.Trigger asChild>
+                              <button className="hover:bg-black/10 p-2 rounded-lg">
+                                <RxDotsVertical />
+                              </button>
+                            </Popover.Trigger>
+                            <Popover.Content
+                              align="end"
+                              sideOffset={8}
+                              className="border border-black p-2 bg-white shadow-md text-small flex flex-col items-start"
+                            >
+                              <Link
+                                className="hover:bg-black/10 px-2 py-1 rounded-lg"
+                                target="_blank"
+                                href={`https://app.contentful.com/spaces/taoiy3h84mql/environments/master/entries/${selectedShow.id}`}
+                              >
+                                Open in Contentful
+                              </Link>
+                              <button
+                                type="button"
+                                className="hover:bg-black/10 px-2 py-1 rounded-lg"
+                                onClick={() => {
+                                  setFieldValue("id", undefined);
+                                  toast.success(
+                                    "Show duplicated. Please change necessary fields and hit the add button."
+                                  );
+                                }}
+                              >
+                                Duplicate (shallow)
+                              </button>
+                              <button
+                                onClick={() => handleCopyFormLink(values.id)}
+                                className="hover:bg-black/10 px-2 py-1 rounded-lg"
+                              >
+                                Copy form link
+                              </button>
+                              <button
+                                onClick={() => downloadImages()}
+                                className="hover:bg-black/10 px-2 py-1 rounded-lg"
+                              >
+                                Download images
+                              </button>
+                            </Popover.Content>
+                          </Popover.Root>
+                        </div>
+                      )}
+                      <Dialog.Close asChild>
+                        <button aria-label="Close" className="lg:hidden">
+                          <Cross />
+                        </button>
+                      </Dialog.Close>
+                    </div>
                     <Form id="calendarShow">
-                      <Field type="hidden" name="id" />
-                      <InputField
-                        name="title"
-                        label="Show name"
-                        required
-                        type="text"
-                      />
-                      <MultiSelectField
-                        label="Artist(s)*"
-                        name="artists"
-                        options={artists}
-                        limit={10}
-                        value={initialValues.artists}
-                      />
+                      <div className="p-8">
+                        <Field type="hidden" name="id" />
+                        <div className="mb-8">
+                          <RadioGroup.Root
+                            className="flex"
+                            name="Type of show"
+                            onValueChange={(value: string) =>
+                              setFieldValue("type", value)
+                            }
+                            defaultValue="live"
+                            value={values.type}
+                          >
+                            <RadioGroup.Item value="Live" asChild>
+                              <label className="data-[state=checked]:bg-black data-[state=checked]:text-white block cursor-pointer pill-input rounded-tr-none rounded-br-none py-3 text-center">
+                                Live
+                              </label>
+                            </RadioGroup.Item>
 
-                      <CheckboxField
-                        name="hasExtraArtists"
-                        label="New artist?"
-                        size="small"
-                      />
+                            <RadioGroup.Item value="Pre-record" asChild>
+                              <label className="data-[state=checked]:bg-black data-[state=checked]:text-white block cursor-pointer select-none pill-input rounded-tl-none rounded-bl-none py-3 text-center">
+                                Pre-record
+                              </label>
+                            </RadioGroup.Item>
+                          </RadioGroup.Root>
+                        </div>
+                        <InputField
+                          name="title"
+                          label="Show name"
+                          required
+                          type="text"
+                        />
+                        <MultiSelectField
+                          label="Artist(s)*"
+                          name="artists"
+                          options={artists}
+                          limit={10}
+                          value={initialValues.artists}
+                        />
+                        <EmailModal artists={values.artists} />
 
-
-                      {values.hasExtraArtists && (
-                        <fieldset className=" mb-8">
-                          <legend className="mb-6">New artist(s)</legend>
+                        {/* <details className="-mt-6 mb-8" open={!values.id}>
+                          <summary className="text-small">Emails</summary>
                           <FieldArray
-                            name="extraArtists"
-                            render={(arrayHelpers) => (
+                            name="artistEmails"
+                            render={() => (
                               <div>
-                                {values.extraArtists &&
-                                  values.extraArtists.map(
-                                    (extraArtist, index) => (
-                                      <div
-                                        className="mb-8 border border-black p-8 relative"
-                                        key={"extraArtist" + index}
-                                      >
-                                        {index > 0 && (
-                                          <button
-                                            className="float-right"
-                                            onClick={() =>
-                                              arrayHelpers.remove(index)
-                                            }
-                                            type="button"
-                                          >
-                                            <Close size={24} />
-                                          </button>
-                                        )}
-                                        <InputField
-                                          name={`extraArtists.${index}.name`}
-                                          type="text"
-                                          label="Name"
-                                          required
-                                        />
-                                        <InputField
-                                          name={`extraArtists.${index}.pronouns`}
-                                          type="text"
-                                          label="Pronouns"
-                                        />
-                                        <InputField
-                                          name={`extraArtists.${index}.email`}
-                                          type="text"
-                                          label="Email"
-                                          required
-                                        />
-                                      </div>
-                                    )
-                                  )}
-                                <button
-                                  className="underline"
-                                  onClick={() => arrayHelpers.push("")}
-                                  type="button"
-                                >
-                                  Add another artist
-                                </button>
+                                {values.artists.map((artist, index) => (
+                                  <div key={"artistEmails" + index}>
+                                    <input
+                                      name={`artistEmails.${index}.id`}
+                                      type="text"
+                                      value={artist.value}
+                                    />
+                                    <InputField
+                                      name={`artistEmails.${index}.id`}
+                                      type="text"
+                                      label={`Email for ${artist.label}`}
+                                      required
+                                      value={artist.value}
+                                      hidden
+                                    />
+                                    <Field
+                                      type="text"
+                                      name={`artistEmails.${index}.id`}
+                                      value={artist.value}
+                                      hidden
+                                    />
+                                    <InputField
+                                      name={`artistEmails.${index}.email`}
+                                      type="text"
+                                      label={`Email for ${artist.label}`}
+                                    />
+                                  </div>
+                                ))}
                               </div>
                             )}
                           />
-                        </fieldset>
-                      )}
+                        </details> */}
+                        <CheckboxField
+                          name="hasExtraArtists"
+                          label="New artist?"
+                          size="small"
+                        />
 
-                      <FieldArray
-                        name="artistEmails"
-                        render={() => (
-                          <div>
-                            {values.artists
-                              .filter((artist) => artist.email == null)
-                              .map((artist, index) => (
-                                <div key={"artistEmails" + index}>
-                                  <input
-                                    name={`artistEmails.${index}.name`}
-                                    type="text"
-                                    value={artist.label}
-                                  />
-                                  <input
-                                    name={`artistEmails.${index}.id`}
-                                    type="text"
-                                    value={artist.value}
-                                  />
-                                  <InputField
-                                    name={`artistEmails.${index}.email`}
-                                    type="text"
-                                    label={`Email for ${artist.label}`}
-                                    required
-                                  />
+                        {values.hasExtraArtists && (
+                          <fieldset className=" mb-8">
+                            <legend className="mb-6">New artist(s)</legend>
+                            <FieldArray
+                              name="extraArtists"
+                              render={(arrayHelpers) => (
+                                <div>
+                                  {values.extraArtists &&
+                                    values.extraArtists.map(
+                                      (extraArtist, index) => (
+                                        <div
+                                          className="mb-8 border border-black p-8 relative"
+                                          key={"extraArtist" + index}
+                                        >
+                                          {index > 0 && (
+                                            <button
+                                              className="float-right"
+                                              onClick={() =>
+                                                arrayHelpers.remove(index)
+                                              }
+                                              type="button"
+                                            >
+                                              <Close size={24} />
+                                            </button>
+                                          )}
+                                          <InputField
+                                            name={`extraArtists.${index}.name`}
+                                            type="text"
+                                            label="Name"
+                                            required
+                                          />
+                                          <InputField
+                                            name={`extraArtists.${index}.pronouns`}
+                                            type="text"
+                                            label="Pronouns"
+                                          />
+                                          <InputField
+                                            name={`extraArtists.${index}.email`}
+                                            type="text"
+                                            label="Email"
+                                            required
+                                          />
+                                        </div>
+                                      )
+                                    )}
+                                  <button
+                                    className="underline"
+                                    onClick={() => arrayHelpers.push("")}
+                                    type="button"
+                                  >
+                                    Add another artist
+                                  </button>
                                 </div>
-                              ))}
-                          </div>
+                              )}
+                            />
+                          </fieldset>
                         )}
-                      />
 
-                      <InputField
-                        name="start"
-                        label="Start"
-                        required
-                        type="datetime-local"
-                      />
-                      <InputField
-                        name="end"
-                        label="End"
-                        required
-                        type="datetime-local"
-                      />
-                      <MultiSelectField
-                        label="Status"
-                        name="status"
-                        options={statusOptions}
-                        limit={1}
-                        value={initialValues.status}
-                      />
-                      <InputField
-                        name="booker"
-                        label="Booker"
-                        required
-                        type="text"
-                      />
-                      <div className="flex justify-between items-center mt-6">
+                        <div className="lg:grid lg:grid-cols-2 gap-4">
+                          <InputField
+                            name="start"
+                            label="Start"
+                            required
+                            type="datetime-local"
+                          />
+                          <InputField
+                            name="end"
+                            label="End"
+                            required
+                            type="datetime-local"
+                          />
+                        </div>
+                        <div className="lg:grid lg:grid-cols-2 items-center lg:gap-4">
+                          <MultiSelectField
+                            label="Status"
+                            name="status"
+                            options={statusOptions}
+                            limit={1}
+                            value={initialValues.status}
+                          />
+
+                          <InputField
+                            name="booker"
+                            label="Booker"
+                            required
+                            type="text"
+                          />
+                        </div>
+                      </div>
+                      <div className="flex justify-between items-center lg:sticky lg:bottom-0 lg:bg-white py-4 px-8 border-t border-black">
                         <button
                           type="submit"
-                          className="inline-flex items-center space-x-4 text-base font-medium disabled:cursor-not-allowed"
+                          className="hover:bg-black/10 py-2 px-4 rounded-lg inline-flex items-center space-x-4 text-base font-medium disabled:cursor-not-allowed"
                           disabled={isSubmitting}
                         >
                           <span className="underline">
-                            {selectedShow?.title ? "Save" : "Add"}
+                            {values?.id ? "Save" : "Add"}
                           </span>
                           {isSubmitting ? (
                             <AiOutlineLoading3Quarters className="animate-spin" />
@@ -601,32 +856,34 @@ function Calendar() {
                             <Arrow />
                           )}
                         </button>
-                        {selectedShow?.title && (
-                          <button
-                            type="button"
-                            className="cursor-pointer disabled:cursor-not-allowed"
-                            value="delete"
-                            onClick={() => {
-                              handleDelete(values.id);
-                            }}
-                            disabled={isDeleting}
-                          >
-                            {" "}
-                            {isDeleting ? (
-                              <AiOutlineLoading3Quarters className="animate-spin" />
-                            ) : (
-                              <RiDeleteBin7Line />
-                            )}
-                          </button>
+                        {values?.id && (
+                          <div className="flex gap-6 items-center">
+                            <button
+                              type="button"
+                              className="hover:bg-black/10 p-2 rounded-lg cursor-pointer disabled:cursor-not-allowed"
+                              value="delete"
+                              onClick={() => {
+                                handleDelete(values.id);
+                              }}
+                              disabled={isDeleting}
+                            >
+                              {" "}
+                              {isDeleting ? (
+                                <AiOutlineLoading3Quarters className="animate-spin" />
+                              ) : (
+                                <RiDeleteBin7Line />
+                              )}
+                            </button>
+                          </div>
                         )}
                       </div>
                     </Form>
-                  )}
-                </Formik>
-              </div>
+                  </div>
+                )}
+              </Formik>
             </Dialog.Content>
           </Dialog.Portal>
-        </Dialog.Root> */}
+        </Dialog.Root>
       </div>
     );
 
@@ -635,7 +892,7 @@ function Calendar() {
 
 function renderEventContent(eventInfo) {
   return (
-    <div className="p-1">
+    <div className="p-1" id={eventInfo.event.id}>
       <div className="mt-1 flex justify-between">
         <p className="text-xxs font-medium">{eventInfo.timeText} </p>
         <p className="text-xxs italic">

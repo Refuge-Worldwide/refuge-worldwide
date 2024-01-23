@@ -184,13 +184,23 @@ module.exports = {
           from: { transform: "rotate(0deg)" },
           to: { transform: "rotate(-360deg)" },
         },
-        "slide-in": {
-          "0%": { transform: "translateY(100%)" },
-          "100%": { transform: "translateY(0)" },
+        overlayShow: {
+          from: { opacity: 0 },
+          to: { opacity: 1 },
+        },
+        contentShow: {
+          from: { opacity: 0, transform: "translate(-50%, -48%) scale(0.96)" },
+          to: { opacity: 1, transform: "translate(-50%, -50%) scale(1)" },
+          "slide-in": {
+            "0%": { transform: "translateY(100%)" },
+            "100%": { transform: "translateY(0)" },
+          },
         },
       },
       animation: {
         refresh: "refresh 1.25s ease-in-out infinite forwards",
+        overlayShow: "overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1)",
+        contentShow: "contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1)",
         "slide-in": "slide-in 0.25s ease-out forwards",
       },
     },
