@@ -34,6 +34,7 @@ export default function ImageUploadField({
 }) {
   const [field, meta, helpers] = useField(props);
   const { values, setFieldValue } = useFormikContext<any>();
+  const [showAltText, setShowAltText] = useState<boolean>(false);
 
   // const setFieldValue(field, value){
   const imageUploaded = (file) => {
@@ -49,6 +50,7 @@ export default function ImageUploadField({
     } else {
       setFieldValue(props.name, image);
     }
+    setShowAltText(true);
   };
 
   const _reorderDeleteHandler = (files) => {
@@ -74,35 +76,43 @@ export default function ImageUploadField({
             : "Minimum dimensions: 1000x1000px, maximum file size: 3MB."}
         </span>
       </label>
-      <FilePond
-        {...field}
-        {...props}
-        className="min-h-36"
-        // files={files}
-        allowMultiple={multi}
-        credits={false}
-        server={serverOptions}
-        onprocessfile={(error, file) => {
-          imageUploaded(file);
-        }}
-        onreorderfiles={(files) => {
-          if (multi) {
-            _reorderDeleteHandler(files);
-          }
-        }}
-        onupdatefiles={(files) => {
-          // only fire handler when image is removed.
-          if (files.length < values.image.length) {
-            _reorderDeleteHandler(files);
-          }
-        }}
-        allowReorder={multi}
-        labelIdle='Drag & Drop your image or <span class="filepond--label-action">Browse</span>'
-        acceptedFileTypes={["image/png", "image/jpeg"]}
-        labelFileTypeNotAllowed="Invalid file type. Please only upload images of JPEG and PNG format"
-        maxFileSize="3MB"
-        labelMaxFileSizeExceeded="Image is too large. 3MB is the maximum file size."
-      />
+      <div className="grid gap-4 border p-8">
+        <FilePond
+          {...field}
+          {...props}
+          className="min-h-36"
+          // files={files}
+          allowMultiple={false}
+          credits={false}
+          server={serverOptions}
+          onprocessfile={(error, file) => {
+            imageUploaded(file);
+          }}
+          onreorderfiles={(files) => {
+            if (multi) {
+              _reorderDeleteHandler(files);
+            }
+          }}
+          onupdatefiles={(files) => {
+            // only fire handler when image is removed.
+            if (files.length < values.image.length) {
+              _reorderDeleteHandler(files);
+            }
+          }}
+          allowReorder={multi}
+          labelIdle='Drag & Drop your image or <span class="filepond--label-action">Browse</span>'
+          acceptedFileTypes={["image/png", "image/jpeg"]}
+          labelFileTypeNotAllowed="Invalid file type. Please only upload images of JPEG and PNG format"
+          maxFileSize="3MB"
+          labelMaxFileSizeExceeded="Image is too large. 3MB is the maximum file size."
+        />
+        <div>
+          <label className="block text-small">
+            Alt text - short description of image
+          </label>
+          <textarea className="pill-input" />
+        </div>
+      </div>
       {meta.touched && meta.error ? (
         <span className="text-red mt-2">{meta.error}</span>
       ) : null}
