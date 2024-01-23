@@ -7,7 +7,6 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
 import Loading from "../../components/loading";
 import * as Dialog from "@radix-ui/react-dialog";
-import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as Popover from "@radix-ui/react-popover";
 import * as RadioGroup from "@radix-ui/react-radio-group";
 import { useState, useEffect, useRef, useCallback } from "react";
@@ -34,7 +33,7 @@ import {
   RxDotsVertical,
 } from "react-icons/rx";
 import { AiOutlineLoading3Quarters, AiOutlineCalendar } from "react-icons/ai";
-import { RiDeleteBin7Line, RiFileCopyLine } from "react-icons/ri";
+import { RiDeleteBin7Line } from "react-icons/ri";
 import Link from "next/link";
 import dayjs from "dayjs";
 import useWindowSize from "../../hooks/useWindowSize";
@@ -59,7 +58,6 @@ function Calendar() {
   const [artists, setArtists] = useState(null);
   const [showDialogOpen, setShowDialogOpen] = useState<boolean>(false);
   const [searchDialogOpen, setSearchDialogOpen] = useState<boolean>(false);
-  const [addDropdownOpen, setAddDropdownOpen] = useState<boolean>(false);
   const [selectedShow, setSelectedShow] = useState(null);
   const [calendarLoading, setCalendarLoading] = useState<boolean>(false);
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
@@ -136,10 +134,10 @@ function Calendar() {
       const artists = await getAllArtists();
       setArtists(artists);
     })();
-    // const interval = setInterval(() => reloadCalendar(), 60000);
-    // return () => {
-    //   clearInterval(interval);
-    // };
+    const interval = setInterval(() => reloadCalendar(), 30000);
+    return () => {
+      clearInterval(interval);
+    };
   }, []);
 
   const calculateBooker = () => {
@@ -672,12 +670,6 @@ function Calendar() {
                     </div>
                     <Form id="calendarShow">
                       <div className="p-8">
-                        {/* <pre className="text-white bg-black">
-                          {JSON.stringify(values, null, 2)}
-                        </pre> */}
-                        {/* <pre className="text-white bg-black">
-                          {JSON.stringify(selectedShow, null, 2)}
-                        </pre> */}
                         <Field type="hidden" name="id" />
                         <div className="mb-8">
                           <RadioGroup.Root
