@@ -134,10 +134,10 @@ function Calendar() {
       const artists = await getAllArtists();
       setArtists(artists);
     })();
-    const interval = setInterval(() => reloadCalendar(), 30000);
-    return () => {
-      clearInterval(interval);
-    };
+    // const interval = setInterval(() => reloadCalendar(), 30000);
+    // return () => {
+    //   clearInterval(interval);
+    // };
   }, []);
 
   const calculateBooker = () => {
