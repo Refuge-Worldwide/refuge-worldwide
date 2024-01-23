@@ -191,9 +191,10 @@ module.exports = {
         contentShow: {
           from: { opacity: 0, transform: "translate(-50%, -48%) scale(0.96)" },
           to: { opacity: 1, transform: "translate(-50%, -50%) scale(1)" },
-        "slide-in": {
-          "0%": { transform: "translateY(100%)" },
-          "100%": { transform: "translateY(0)" },
+          "slide-in": {
+            "0%": { transform: "translateY(100%)" },
+            "100%": { transform: "translateY(0)" },
+          },
         },
       },
       animation: {
