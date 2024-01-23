@@ -666,9 +666,6 @@ function Calendar() {
                       </Dialog.Close>
                     </div>
                     <Form id="calendarShow">
-                      <pre className="text-white bg-black">
-                        {JSON.stringify(values, null, 2)}
-                      </pre>
                       <div className="p-8">
                         <Field type="hidden" name="id" />
                         <div className="mb-8">
