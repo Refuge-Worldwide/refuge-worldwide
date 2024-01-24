@@ -413,7 +413,7 @@ export async function createArtist(artist) {
             "en-US": false,
           },
           email: {
-            "en-US": false,
+            "en-US": [artist.email],
           },
         },
       })

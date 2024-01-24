@@ -32,6 +32,6 @@ export const formatArtistsForContenful = (
     ].join(artistSimpleArray.length < 2 ? "" : " & ");
     return formattedArtists;
   } else {
-    return artists[0].label.toString();
+    return artists[0]?.label?.toString();
   }
 };

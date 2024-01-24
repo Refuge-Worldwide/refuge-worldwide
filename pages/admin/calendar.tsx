@@ -287,7 +287,7 @@ function Calendar() {
           : values.status.value == "Submitted"
           ? "#B3DCC1"
           : "#B3DCC1",
-      booker: values.booker ? values.booker : "George",
+      booker: values.booker ? values.booker : "",
     };
   };
 
@@ -660,6 +660,9 @@ function Calendar() {
                       </Dialog.Close>
                     </div>
                     <Form id="calendarShow">
+                      <pre className="text-white bg-black">
+                        {JSON.stringify(values, null, 2)}
+                      </pre>
                       <div className="p-8">
                         <Field type="hidden" name="id" />
                         <div className="mb-8">
@@ -692,7 +695,7 @@ function Calendar() {
                           type="text"
                         />
                         <ArtistMultiSelectField
-                          label="Artist(s)*"
+                          label="Artist(s)"
                           name="artists"
                           limit={10}
                           value={initialValues.artists}
@@ -827,7 +830,6 @@ function Calendar() {
                           <InputField
                             name="booker"
                             label="Booker"
-                            required
                             type="text"
                           />
                         </div>
