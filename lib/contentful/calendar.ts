@@ -261,7 +261,7 @@ export async function createCalendarShow(values) {
   const artists = createReferencesArray(values.artists);
   const startDateTime = dayjs(values.start + "Z").toISOString();
   const endDateTime = dayjs(values.end + "Z").toISOString();
-  const dateFormatted = dayjs(values.datetime).format("DD MMM YYYY");
+  const dateFormatted = dayjs(values.start).format("DD MMM YYYY");
   const artistsForInternal = formatArtistsForContenful(
     values.artists,
     values.hasExtraArtists,
@@ -319,7 +319,7 @@ export async function updateCalendarShow(values) {
   if (values.artists) {
     artists = createReferencesArray(values.artists);
   }
-  const dateFormatted = dayjs(values.datetime).format("DD MMM YYYY");
+  const dateFormatted = dayjs(values.start).format("DD MMM YYYY");
   const artistsForInternal = formatArtistsForContenful(
     values.artists,
     values.hasExtraArtists,
