@@ -383,3 +383,31 @@
 .animated-dialog-content[data-state="closed"] {
   animation: expandOut 150ms ease-out;
 }
+
+/* birthday special balloon */
+
+.balloon-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.balloon-float-2 {
+  animation: float 7s ease-in-out infinite;
+  animation-delay: 0.25;
+}
+
+.balloon-float-3 {
+  animation: float 8s ease-in-out infinite;
+  animation-delay: 0.5;
+}
+
+@keyframes float {
+  0% {
+    transform: translatey(0px);
+  }
+  50% {
+    transform: translatey(-6px);
+  }
+  100% {
+    transform: translatey(0px);
+  }
+}
