@@ -828,7 +828,7 @@ function Calendar() {
                             name="status"
                             options={statusOptions}
                             limit={1}
-                            value={initialValues.status}
+                            value={[initialValues.status]}
                           />
 
                           <InputField
