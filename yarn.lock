@@ -1716,6 +1716,11 @@
     domhandler "^5.0.3"
     selderee "^0.10.0"
 
+"@seznam/compose-react-refs@^1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@seznam/compose-react-refs/-/compose-react-refs-1.0.6.tgz#6ec4e70bdd6e32f8e70b4100f27267cf306bd8df"
+  integrity sha512-izzOXQfeQLonzrIQb8u6LQ8dk+ymz3WXTIXjvOlTXHq6sbzROg3NWU+9TTAOpEoK9Bth24/6F/XrfHJ5yR5n6Q==
+
 "@slack/logger@^3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@slack/logger/-/logger-3.0.0.tgz#b736d4e1c112c22a10ffab0c2d364620aedcb714"
@@ -2120,6 +2125,11 @@
   version "1.0.0"
   resolved "https://registry.npmjs.org/@use-it/interval/-/interval-1.0.0.tgz"
   integrity sha512-WQFcnSt/xM/mS8ZtJ0ut5lhPrl+V0HDPPcI/J0eUClsfiD+/r8A7IeW/pVcfpSVGWRmN3+WnjNteWuKyWs2WZg==
+
+"@vtaits/use-lazy-ref@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@vtaits/use-lazy-ref/-/use-lazy-ref-0.1.0.tgz#0d5fb47a4334ff57f5d2abf00c9919696e382d86"
+  integrity sha512-/m5z3Df6I6i/B0lnv6pB2O1+X/nWVquqbnltq+irW1+Nhpv0PpeMzSNf9lTjzT/eHRZtH2fM1370AdYqc3FTyQ==
 
 "@widgetbot/crate@^3.5.4":
   version "3.5.4"
@@ -6309,6 +6319,16 @@ react-remove-scroll@2.5.5:
     use-callback-ref "^1.3.0"
     use-sidecar "^1.1.2"
 
+react-select-async-paginate@^0.7.3:
+  version "0.7.3"
+  resolved "https://registry.yarnpkg.com/react-select-async-paginate/-/react-select-async-paginate-0.7.3.tgz#d2d718aede42e884d9aed627b7a65b32f3813642"
+  integrity sha512-5r1vcXsVhG2zWbEEAnsnT55UIbU0H0kW+l0x/qJyEX/jwmn+7DyI8DbV92GYa4V4WsmMg224eki00erayqK/sQ==
+  dependencies:
+    "@seznam/compose-react-refs" "^1.0.6"
+    "@vtaits/use-lazy-ref" "^0.1.0"
+    sleep-promise "^9.1.0"
+    use-is-mounted-ref "^1.5.0"
+
 react-select@^5.6.1:
   version "5.6.1"
   resolved "https://registry.npmjs.org/react-select/-/react-select-5.6.1.tgz"
@@ -6812,6 +6832,11 @@ slash@^4.0.0:
   version "4.0.0"
   resolved "https://registry.npmjs.org/slash/-/slash-4.0.0.tgz"
   integrity "sha1-JCI3IXbExsWt214q2oha+YSzlqc= sha512-3dOsAHXXUkQTpOYcoAxLIorMTp4gIQr5IW3iVb7A7lFIp0VHhnynm9izx6TssdrIcVIESAlVjtnO2K8bg+Coew=="
+
+sleep-promise@^9.1.0:
+  version "9.1.0"
+  resolved "https://registry.yarnpkg.com/sleep-promise/-/sleep-promise-9.1.0.tgz#101ebe65700bcd184709da95d960967b02b79d03"
+  integrity sha512-UHYzVpz9Xn8b+jikYSD6bqvf754xL2uBUzDFwiU6NcdZeifPr6UfgU43xpkPu67VMS88+TI2PSI7Eohgqf2fKA==
 
 slice-ansi@^3.0.0:
   version "3.0.0"
@@ -7563,6 +7588,11 @@ use-debounce@^10.0.0:
   version "10.0.0"
   resolved "https://registry.yarnpkg.com/use-debounce/-/use-debounce-10.0.0.tgz#5091b18d6c16292605f588bae3c0d2cfae756ff2"
   integrity sha512-XRjvlvCB46bah9IBXVnq/ACP2lxqXyZj0D9hj4K5OzNroMDpTEBg8Anuh1/UfRTRs7pLhQ+RiNxxwZu9+MVl1A==
+
+use-is-mounted-ref@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/use-is-mounted-ref/-/use-is-mounted-ref-1.5.0.tgz#d737e7b30f1bbbaca594f21cdd2621dc52ae8180"
+  integrity sha512-p5FksHf/ospZUr5KU9ese6u3jp9fzvZ3wuSb50i0y6fdONaHWgmOqQtxR/PUcwi6hnhQDbNxWSg3eTK3N6m+dg==
 
 use-isomorphic-layout-effect@^1.1.2:
   version "1.1.2"
