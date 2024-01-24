@@ -42,31 +42,13 @@ export default function Navigation() {
                   className="h-10 w-[4.125rem]"
                 />
                 <Image
-                  src="/images/balloon.svg"
+                  src="/images/balloon-cluster.svg"
                   width={66}
                   height={40}
                   alt=""
                   priority
                   unoptimized
-                  className="h-16 z-[60] w-[4.125rem] absolute balloon-float left-[0.5rem] top-9"
-                />
-                <Image
-                  src="/images/balloon-purple.svg"
-                  width={66}
-                  height={40}
-                  alt=""
-                  priority
-                  unoptimized
-                  className="h-16 z-[60] w-[4.125rem] absolute balloon-float balloon-float-2 left-[2.5rem] top-7"
-                />
-                <Image
-                  src="/images/balloon-green.svg"
-                  width={66}
-                  height={40}
-                  alt=""
-                  priority
-                  unoptimized
-                  className="h-16 z-[60] w-[4.125rem] absolute balloon-float balloon-float-3 left-[4.5rem] top-8"
+                  className="h-16 z-[60] w-[4.125rem] absolute balloon-float left-[4rem] top-[7px]"
                 />
               </Link>
             </li>
