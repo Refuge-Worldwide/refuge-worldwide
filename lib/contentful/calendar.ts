@@ -261,6 +261,14 @@ export async function createCalendarShow(values) {
   const artists = createReferencesArray(values.artists);
   const startDateTime = dayjs(values.start + "Z").toISOString();
   const endDateTime = dayjs(values.end + "Z").toISOString();
+  const dateFormatted = dayjs(values.datetime).format("DD MMM YYYY");
+  const artistsForInternal = formatArtistsForContenful(
+    values.artists,
+    values.hasExtraArtists,
+    values.extraArtists
+  );
+  const internal =
+    values.title + " - " + artistsForInternal + " - " + dateFormatted;
   return client
     .getSpace(spaceId)
     .then((space) => space.getEnvironment(environmentId))
@@ -271,7 +279,7 @@ export async function createCalendarShow(values) {
             "en-US": values.title,
           },
           internal: {
-            "en-US": values.title,
+            "en-US": internal,
           },
           date: {
             "en-US": startDateTime,
@@ -311,7 +319,14 @@ export async function updateCalendarShow(values) {
   if (values.artists) {
     artists = createReferencesArray(values.artists);
   }
-  console.log(values);
+  const dateFormatted = dayjs(values.datetime).format("DD MMM YYYY");
+  const artistsForInternal = formatArtistsForContenful(
+    values.artists,
+    values.hasExtraArtists,
+    values.extraArtists
+  );
+  const internal =
+    values.title + " - " + artistsForInternal + " - " + dateFormatted;
   //fetch entry using id
   return (
     client
@@ -323,6 +338,7 @@ export async function updateCalendarShow(values) {
         console.log(entry);
         entry.fields.date["en-US"] = startDateTime;
         entry.fields.dateEnd["en-US"] = endDateTime;
+        entry.fields.internal["en-US"] = internal;
         if (values.title) {
           entry.fields.title["en-US"] = values.title;
         }
