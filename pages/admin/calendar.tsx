@@ -54,7 +54,6 @@ export default function CalendarPage() {
 }
 
 function Calendar() {
-  const [artists, setArtists] = useState(null);
   const [showDialogOpen, setShowDialogOpen] = useState<boolean>(false);
   const [searchDialogOpen, setSearchDialogOpen] = useState<boolean>(false);
   const [selectedShow, setSelectedShow] = useState(null);
