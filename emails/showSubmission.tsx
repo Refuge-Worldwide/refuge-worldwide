@@ -30,7 +30,7 @@ interface EmailProps {
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL
   ? `https://${process.env.NEXT_PUBLIC_SITE_URL}`
-  : "http://localhost:3000";
+  : "http://localhost:3000/";
 
 export const ShowSubmissionEmail = ({
   userName = "No Plastic",
@@ -95,7 +95,7 @@ export const ShowSubmissionEmail = ({
                   {severityText(severity, submissionDeadlineDate)}
                 </Text>
                 <Button
-                  href={baseUrl + "/submission-v2?id=" + showId}
+                  href={baseUrl + "submission-v2?id=" + showId}
                   style={button}
                   pY={9}
                   pX={12}

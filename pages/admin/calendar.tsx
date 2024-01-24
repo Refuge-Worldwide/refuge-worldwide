@@ -44,8 +44,8 @@ import CalendarSearch from "../../views/admin/calendarSearch";
 import EmailModal from "../../views/admin/emailModal";
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL
-  ? `https://${process.env.NEXT_PUBLIC_SITE_URL}`
-  : "http://localhost:3000";
+  ? `${process.env.NEXT_PUBLIC_SITE_URL}`
+  : "http://localhost:3000/";
 
 export default function CalendarPage() {
   return (
@@ -379,7 +379,7 @@ function Calendar() {
   };
 
   const handleCopyFormLink = (showId) => {
-    const showFormLink = baseUrl + "/submission-v2?id=" + showId;
+    const showFormLink = baseUrl + "submission-v2?id=" + showId;
     navigator.clipboard.writeText(showFormLink).then(
       () => {
         toast.success("Submission link copied to clipboard");
