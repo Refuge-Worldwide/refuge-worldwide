@@ -114,3 +114,34 @@ export async function getCalendarSearchData(query: string, limit = 100) {
     duration: end - start,
   };
 }
+
+export async function getArtistSearchData(query: string, limit = 20) {
+  const start = Date.now();
+
+  const [artistsCollection] = await Promise.all([
+    previewClient.getEntries<TypeArtistFields>({
+      content_type: "artist",
+      limit: limit,
+      order: "fields.name",
+
+      "fields.name[match]": query,
+
+      select: ["fields.name", "fields.email"],
+    }),
+  ]);
+
+  const end = Date.now();
+
+  const items = artistsCollection.items.map((artist) => {
+    return {
+      label: artist.fields.name,
+      value: artist.sys.id,
+      email: artist.fields.email,
+    };
+  });
+
+  return {
+    items,
+    duration: end - start,
+  };
+}

@@ -25,6 +25,7 @@ export interface TypeArtistFields {
   photo: Contentful.Asset;
   coverImagePosition: "top" | "center" | "bottom";
   content?: CFRichTextTypes.Block | CFRichTextTypes.Inline;
+  email?: string;
 }
 
 export type TypeArtist = Contentful.Entry<TypeArtistFields>;

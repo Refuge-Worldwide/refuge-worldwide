@@ -12,10 +12,10 @@ import * as RadioGroup from "@radix-ui/react-radio-group";
 import { useState, useEffect, useRef, useCallback } from "react";
 import InputField from "../../components/formFields/inputField";
 import MultiSelectField from "../../components/formFields/multiSelectField";
+import ArtistMultiSelectField from "../../components/formFields/artistsMultiSelectField";
 import { Formik, Form, FieldArray, Field } from "formik";
 import { Cross } from "../../icons/cross";
 import {
-  getAllArtists,
   deleteCalendarShow,
   createCalendarShow,
   updateCalendarShow,
@@ -42,7 +42,6 @@ import { useUser } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/router";
 import CalendarSearch from "../../views/admin/calendarSearch";
 import EmailModal from "../../views/admin/emailModal";
-const HIDDEN_DAYS = [0];
 
 export default function CalendarPage() {
   return (
@@ -55,7 +54,6 @@ export default function CalendarPage() {
 }
 
 function Calendar() {
-  const [artists, setArtists] = useState(null);
   const [showDialogOpen, setShowDialogOpen] = useState<boolean>(false);
   const [searchDialogOpen, setSearchDialogOpen] = useState<boolean>(false);
   const [selectedShow, setSelectedShow] = useState(null);
@@ -129,16 +127,12 @@ function Calendar() {
     },
   ];
 
-  useEffect(() => {
-    (async () => {
-      const artists = await getAllArtists();
-      setArtists(artists);
-    })();
-    // const interval = setInterval(() => reloadCalendar(), 30000);
-    // return () => {
-    //   clearInterval(interval);
-    // };
-  }, []);
+  // useEffect(() => {
+  // const interval = setInterval(() => reloadCalendar(), 30000);
+  // return () => {
+  //   clearInterval(interval);
+  // };
+  // }, []);
 
   const calculateBooker = () => {
     if (selectedShow?.extendedProps?.booker) {
@@ -697,10 +691,9 @@ function Calendar() {
                           required
                           type="text"
                         />
-                        <MultiSelectField
+                        <ArtistMultiSelectField
                           label="Artist(s)*"
                           name="artists"
-                          options={artists}
                           limit={10}
                           value={initialValues.artists}
                         />

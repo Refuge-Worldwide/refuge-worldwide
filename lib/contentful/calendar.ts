@@ -1,6 +1,5 @@
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-import next from "next";
 import { graphql } from ".";
 import { extractCollection } from "../../util";
 import { ArtistInterface } from "../../types/shared";
@@ -211,7 +210,7 @@ export async function searchCalendarShows(query, preview: boolean) {
   });
 
   return {
-    processed,
+    items: processed,
   };
 }
 

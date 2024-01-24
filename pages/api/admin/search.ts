@@ -1,21 +1,31 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { assertError } from "ts-extras";
-import { getCalendarSearchData } from "../../../lib/contentful/search";
+import { getArtistSearchData } from "../../../lib/contentful/search";
 import { searchCalendarShows } from "../../../lib/contentful/calendar";
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   try {
-    const { query } = req.query as typeof req.query & {
+    const { query, type } = req.query as typeof req.query & {
       query: string;
+      type?: string;
     };
 
-    const shows = await searchCalendarShows(query, true);
+    let items = [];
+
+    if (type == "artists") {
+      const artists = await getArtistSearchData(query);
+      items = artists.items;
+    } else {
+      const shows = await searchCalendarShows(query, true);
+      items = shows.items;
+    }
 
     res
       .setHeader("Cache-Control", "s-maxage=1, stale-while-revalidate=59")
-      .json(shows.processed);
+      .json(items);
   } catch (error) {
     assertError(error);
 
