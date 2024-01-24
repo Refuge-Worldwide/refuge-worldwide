@@ -43,6 +43,10 @@ import { useRouter } from "next/router";
 import CalendarSearch from "../../views/admin/calendarSearch";
 import EmailModal from "../../views/admin/emailModal";
 
+const baseUrl = process.env.VERCEL_URL
+  ? `https://${process.env.VERCEL_URL}`
+  : "http://localhost:3000";
+
 export default function CalendarPage() {
   return (
     <Layout>
@@ -375,7 +379,7 @@ function Calendar() {
   };
 
   const handleCopyFormLink = (showId) => {
-    const showFormLink = "http://localhost:3000/submission-v2?id=" + showId;
+    const showFormLink = baseUrl + "/submission-v2?id=" + showId;
     navigator.clipboard.writeText(showFormLink).then(
       () => {
         toast.success("Submission link copied to clipboard");
