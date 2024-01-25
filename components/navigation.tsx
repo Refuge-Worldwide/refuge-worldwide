@@ -31,7 +31,7 @@ export default function Navigation() {
         <div className="px-4 md:px-8 py-2.5">
           <ul className="flex items-center">
             <li>
-              <Link href="/" className="flex">
+              <Link href="/" className="flex relative">
                 <Image
                   src="/images/navigation-smile.svg"
                   width={66}
@@ -40,6 +40,15 @@ export default function Navigation() {
                   priority
                   unoptimized
                   className="h-10 w-[4.125rem]"
+                />
+                <Image
+                  src="/images/balloon-cluster.svg"
+                  width={66}
+                  height={40}
+                  alt=""
+                  priority
+                  unoptimized
+                  className="h-16 z-[60] w-[4.125rem] absolute balloon-float left-[4rem] top-[7px]"
                 />
               </Link>
             </li>
