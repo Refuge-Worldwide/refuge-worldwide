@@ -275,9 +275,14 @@ export async function getUpcomingShowsByDate(date, preview: boolean) {
     ) {
       showCollection(
         order: date_ASC
-        where: { date_gte: $start, dateEnd_lte: $end, dateEnd_exists: true }
+        where: {
+          date_gte: $start
+          dateEnd_lte: $end
+          dateEnd_exists: true
+          status: "Confirmed"
+        }
         preview: $preview
-        limit: 9
+        limit: 50
       ) {
         items {
           sys {

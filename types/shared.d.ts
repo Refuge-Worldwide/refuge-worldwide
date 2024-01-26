@@ -109,7 +109,7 @@ export interface ShowInterface {
   title: string;
   date: string;
   dateEnd?: string;
-  type?: string;
+  type?: "Live" | "Pre-record";
   slug: string;
   coverImage: CoverImage;
   coverImagePosition: CoverImagePosition;
