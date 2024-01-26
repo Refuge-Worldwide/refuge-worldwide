@@ -13,6 +13,8 @@ import dayjs from "dayjs";
 var advancedFormat = require("dayjs/plugin/advancedFormat");
 dayjs.extend(advancedFormat);
 
+const env = process.env.NODE_ENV;
+
 export default function ShowSubmissionStep3({
   initial,
   genres,
@@ -27,12 +29,23 @@ export default function ShowSubmissionStep3({
   const newSubmission = initial ? false : true;
   return (
     <div>
+      {env == "development" && (
+        <pre className="text-white bg-black">
+          {JSON.stringify(values, null, 2)}
+        </pre>
+      )}
       <div className="flex gap-2 md:gap-3 items-center border border-black p-3 md:p-6 bg-orange my-16">
         <AiOutlineCalendar className="w-5 sm:w-6 md:w-8 h-full" />
         <span className="flex-1">
           Submitting for {showType.toLowerCase()} show on{" "}
-          {dayjs(initial.date).format("dddd Do MMMM, HH:mm")}-
-          {dayjs(initial.dateEnd).format("HH:mm")}
+          {showType == "Live" ? (
+            <>
+              {dayjs(initial.date).format("dddd Do MMMM, HH:mm")}-
+              {dayjs(initial.dateEnd).format("HH:mm")}
+            </>
+          ) : (
+            <>{dayjs(initial.date).format("dddd Do MMMM")}</>
+          )}
         </span>
       </div>
 
@@ -226,14 +239,14 @@ export default function ShowSubmissionStep3({
           </fieldset>
         )}
 
-        {showType === "live" && (
+        {showType === "Live" && (
           <CheckboxField
             name="additionalEq"
             label="Are you bringing additional DJ or live-performance equipment (including laptop or controllers)?"
           />
         )}
 
-        {showType === "live" && values.additionalEq && (
+        {showType === "Live" && values.additionalEq && (
           <InputField
             name="additionalEqDesc"
             type="text"

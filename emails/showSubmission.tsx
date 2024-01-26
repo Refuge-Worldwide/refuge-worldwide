@@ -18,6 +18,7 @@ import * as React from "react";
 import dayjs from "dayjs";
 var advancedFormat = require("dayjs/plugin/advancedFormat");
 dayjs.extend(advancedFormat);
+const env = process.env.NODE_ENV;
 
 interface EmailProps {
   userName: string;
@@ -28,27 +29,32 @@ interface EmailProps {
   showId: string;
 }
 
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL
-  ? `https://${process.env.NEXT_PUBLIC_SITE_URL}`
-  : "http://localhost:3000/";
+// const baseUrl = process.env.NEXT_PUBLIC_SITE_URL
+//   ? `https://${process.env.NEXT_PUBLIC_SITE_URL}`
+//   : "http://localhost:3000/";
+
+const baseUrl = "https://refugeworldwide.com/";
 
 export const ShowSubmissionEmail = ({
-  userName = "No Plastic",
-  showDateStart = "2023-10-02T15:00:00.000Z",
-  showDateEnd = "2023-10-02T17:00:00.000Z",
-  showType = "live",
-  severity = "late",
-  showId = "3mJ2xrYzyd4NOwMry3wJJQ",
+  userName = "Oramics",
+  showDateStart = "2024-02-05T15:00:00.000Z",
+  showDateEnd = "2024-02-05T17:00:00.000Z",
+  showType = "Pre-record",
+  severity = "initial",
+  showId = "7JIvNxsqyZcPZsw2PJGzIx",
 }: EmailProps) => {
   const startDate = dayjs(showDateStart);
-  const formattedDate =
+  let formattedDate =
     startDate.format("dddd Do MMMM, HH:mm") +
     "-" +
     dayjs(showDateEnd).format("HH:mm");
+  if (showType == "Pre-record") {
+    formattedDate = startDate.format("dddd Do MMMM");
+  }
   const submissionDeadlineDate = startDate
     .subtract(4, "day")
     .format("dddd Do MMMM");
-
+  const submitUrl = baseUrl + "submission-v2?id=" + showId;
   return (
     <Html>
       <Head />
@@ -57,7 +63,7 @@ export const ShowSubmissionEmail = ({
         <Container>
           <Section style={logo}>
             <Img
-              src={`https://res.cloudinary.com/dqjn26pey/image/upload/v1692697351/refuge-worldwide-logo_y2u1qh.png`}
+              src={`https://res.cloudinary.com/dqjn26pey/image/upload/v1706278328/Refuge-pichi_mg1jge.jpg`}
               height={89}
               width={146}
               style={logo}
@@ -91,17 +97,19 @@ export const ShowSubmissionEmail = ({
                   )}
                   You have a show with us on {formattedDate} and we need some
                   info from you ahead of this. Please fill out{" "}
-                  <Link style={link}>this submission form</Link>{" "}
-                  {severityText(severity, submissionDeadlineDate)}
+                  <Link style={link} href={submitUrl}>
+                    this submission form
+                  </Link>{" "}
+                  {severityText(severity, submissionDeadlineDate)}.
                 </Text>
-                <Button
-                  href={baseUrl + "submission-v2?id=" + showId}
-                  style={button}
-                  pY={9}
-                  pX={12}
-                >
+                <Button href={submitUrl} style={button} pY={9} pX={12}>
                   SHOW SUBMISSION FORM
                 </Button>
+                <Text style={paragraph}>
+                  Note: We are updating our submission process, so please use
+                  the link above and NOT the submission link you have used
+                  previously.
+                </Text>
                 <Hr style={seperator} />
                 <Heading as="h2" style={paragraph}>
                   <b>Your upcoming show</b>
@@ -109,16 +117,16 @@ export const ShowSubmissionEmail = ({
                 <Text style={{ ...paragraph, marginTop: -5 }}>
                   Date: {formattedDate}
                   <br />
-                  Location:{" "}
-                  {showType == "Live" ? (
-                    <Link
-                      href="https://goo.gl/maps/ZY1w74xS4ULk4B1z5"
-                      style={link}
-                    >
-                      Weserstraße 166, 12045
-                    </Link>
-                  ) : (
-                    "Online"
+                  {showType == "live" && (
+                    <>
+                      Location:{" "}
+                      <Link
+                        href="https://goo.gl/maps/ZY1w74xS4ULk4B1z5"
+                        style={link}
+                      >
+                        Weserstraße 166, 12045
+                      </Link>
+                    </>
                   )}
                 </Text>
                 <Hr style={seperator} />
