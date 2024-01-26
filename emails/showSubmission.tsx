@@ -41,7 +41,7 @@ export const ShowSubmissionEmail = ({
   showDateEnd = "2024-02-05T17:00:00.000Z",
   showType = "pre-record",
   severity = "initial",
-  showId = "3mJ2xrYzyd4NOwMry3wJJQ",
+  showId = "7JIvNxsqyZcPZsw2PJGzIx",
 }: EmailProps) => {
   const startDate = dayjs(showDateStart);
   let formattedDate =
@@ -54,7 +54,7 @@ export const ShowSubmissionEmail = ({
   const submissionDeadlineDate = startDate
     .subtract(4, "day")
     .format("dddd Do MMMM");
-
+  const submitUrl = baseUrl + "submission-v2?id=" + showId;
   return (
     <Html>
       <Head />
@@ -63,7 +63,7 @@ export const ShowSubmissionEmail = ({
         <Container>
           <Section style={logo}>
             <Img
-              src={`https://res.cloudinary.com/dqjn26pey/image/upload/v1692697351/refuge-worldwide-logo_y2u1qh.png`}
+              src={`https://res.cloudinary.com/dqjn26pey/image/upload/v1706278328/Refuge-pichi_mg1jge.jpg`}
               height={89}
               width={146}
               style={logo}
@@ -97,15 +97,12 @@ export const ShowSubmissionEmail = ({
                   )}
                   You have a show with us on {formattedDate} and we need some
                   info from you ahead of this. Please fill out{" "}
-                  <Link style={link}>this submission form</Link>{" "}
+                  <Link style={link} href={submitUrl}>
+                    this submission form
+                  </Link>{" "}
                   {severityText(severity, submissionDeadlineDate)}.
                 </Text>
-                <Button
-                  href={baseUrl + "submission-v2?id=" + showId}
-                  style={button}
-                  pY={9}
-                  pX={12}
-                >
+                <Button href={submitUrl} style={button} pY={9} pX={12}>
                   SHOW SUBMISSION FORM
                 </Button>
                 <Text style={paragraph}>
