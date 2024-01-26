@@ -24,7 +24,7 @@ interface EmailProps {
   userName: string;
   showDateStart: string;
   showDateEnd: string;
-  showType: string;
+  showType: "Live" | "Pre-record";
   severity: "initial" | "follow-up" | "late";
   showId: string;
 }
@@ -117,7 +117,7 @@ export const ShowSubmissionEmail = ({
                 <Text style={{ ...paragraph, marginTop: -5 }}>
                   Date: {formattedDate}
                   <br />
-                  {showType == "live" && (
+                  {showType == "Live" && (
                     <>
                       Location:{" "}
                       <Link

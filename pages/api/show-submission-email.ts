@@ -72,12 +72,7 @@ async function sendEmails(
               const data = await resend.sendEmail({
                 from: "Refuge Worldwide <noreply@mail.refugeworldwide.com>",
                 to: artist.email,
-                bcc: [
-                  "jack@refugeworldwide.com",
-                  "george@refugeworldwide.com",
-                  "graeme@refugeworldwide.com",
-                  "richard@refugeworldwide.com",
-                ],
+                bcc: ["jack@refugeworldwide.com"],
                 subject: subject(severity),
                 reply_to: "hello@refugeworldwide.com",
                 react: ShowSubmissionEmail({
