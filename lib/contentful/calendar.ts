@@ -316,17 +316,19 @@ export async function updateCalendarShow(values) {
   const startDateTime = dayjs(values.start + "Z").toISOString();
   const endDateTime = dayjs(values.end + "Z").toISOString();
   let artists;
+  let internal = "";
   if (values.artists) {
     artists = createReferencesArray(values.artists);
+    const dateFormatted = dayjs(values.start).format("DD MMM YYYY");
+    const artistsForInternal = formatArtistsForContenful(
+      values.artists,
+      values.hasExtraArtists,
+      values.extraArtists
+    );
+    internal =
+      values.title + " - " + artistsForInternal + " - " + dateFormatted;
   }
-  const dateFormatted = dayjs(values.start).format("DD MMM YYYY");
-  const artistsForInternal = formatArtistsForContenful(
-    values.artists,
-    values.hasExtraArtists,
-    values.extraArtists
-  );
-  const internal =
-    values.title + " - " + artistsForInternal + " - " + dateFormatted;
+
   //fetch entry using id
   return (
     client
@@ -338,7 +340,9 @@ export async function updateCalendarShow(values) {
         console.log(entry);
         entry.fields.date["en-US"] = startDateTime;
         entry.fields.dateEnd["en-US"] = endDateTime;
-        entry.fields.internal["en-US"] = internal;
+        if (values.artists) {
+          entry.fields.internal["en-US"] = internal;
+        }
         if (values.title) {
           entry.fields.title["en-US"] = values.title;
         }
@@ -348,10 +352,10 @@ export async function updateCalendarShow(values) {
         if (values.status && entry.fields.status) {
           entry.fields.status["en-US"] = values.status.value;
         }
-        if (values.booker & entry.fields.booker) {
+        if (values.booker && entry.fields.booker) {
           entry.fields.booker["en-US"] = values.booker;
         }
-        if (entry.fields.type) {
+        if (values.type && entry.fields.type) {
           entry.fields.type["en-US"] = values.type;
         }
         return entry.update();
