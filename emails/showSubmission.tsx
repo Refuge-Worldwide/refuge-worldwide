@@ -39,7 +39,7 @@ export const ShowSubmissionEmail = ({
   userName = "Oramics",
   showDateStart = "2024-02-05T15:00:00.000Z",
   showDateEnd = "2024-02-05T17:00:00.000Z",
-  showType = "pre-record",
+  showType = "Pre-record",
   severity = "initial",
   showId = "7JIvNxsqyZcPZsw2PJGzIx",
 }: EmailProps) => {
@@ -48,7 +48,7 @@ export const ShowSubmissionEmail = ({
     startDate.format("dddd Do MMMM, HH:mm") +
     "-" +
     dayjs(showDateEnd).format("HH:mm");
-  if (showType == "pre-record") {
+  if (showType == "Pre-record") {
     formattedDate = startDate.format("dddd Do MMMM");
   }
   const submissionDeadlineDate = startDate

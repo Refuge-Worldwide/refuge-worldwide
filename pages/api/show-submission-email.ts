@@ -34,14 +34,14 @@ export default async function handler(
 
     const followUpEmailDate = now.add(4, "days");
     const followUpShows = await getUpcomingShowsByDate(followUpEmailDate, true);
-    // await sendEmails(followUpShows, "follow-up");
+    await sendEmails(followUpShows, "follow-up");
 
     const finalCallEmailDate = now.add(3, "days");
     const finalCallShows = await getUpcomingShowsByDate(
       finalCallEmailDate,
       true
     );
-    // await sendEmails(finalCallShows, "late");
+    await sendEmails(finalCallShows, "late");
     return res.status(200).json({ success: true });
   } catch (error) {
     return res.status(400).send(error);
