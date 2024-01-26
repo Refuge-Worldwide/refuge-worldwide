@@ -117,7 +117,7 @@ function SubmissionForm({
       <div className="my-32">
         <p>
           Issue loading submission form. If this error pursists please contact
-          [email]
+          hello@refugeworldwide.com
         </p>
       </div>
     );

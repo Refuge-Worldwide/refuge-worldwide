@@ -55,7 +55,7 @@ export interface ArtistInterface {
   coverImagePosition: CoverImagePosition;
   isResident: boolean;
   content?: Content;
-  email?: string;
+  email?: string[];
 }
 
 export type ArtistEntry = {

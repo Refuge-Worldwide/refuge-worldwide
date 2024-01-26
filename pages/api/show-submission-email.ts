@@ -15,12 +15,12 @@ export default async function handler(
 ) {
   const authHeader = req.headers.authorization;
 
-  if (
-    !process.env.CRON_SECRET ||
-    authHeader !== `Bearer ${process.env.CRON_SECRET}`
-  ) {
-    return res.status(401).json({ success: false });
-  }
+  // if (
+  //   !process.env.CRON_SECRET ||
+  //   authHeader !== `Bearer ${process.env.CRON_SECRET}`
+  // ) {
+  //   return res.status(401).json({ success: false });
+  // }
 
   try {
     const now = dayjs();
@@ -34,14 +34,14 @@ export default async function handler(
 
     const followUpEmailDate = now.add(4, "days");
     const followUpShows = await getUpcomingShowsByDate(followUpEmailDate, true);
-    await sendEmails(followUpShows, "follow-up");
+    // await sendEmails(followUpShows, "follow-up");
 
     const finalCallEmailDate = now.add(3, "days");
     const finalCallShows = await getUpcomingShowsByDate(
       finalCallEmailDate,
       true
     );
-    await sendEmails(finalCallShows, "late");
+    // await sendEmails(finalCallShows, "late");
     return res.status(200).json({ success: true });
   } catch (error) {
     return res.status(400).send(error);
@@ -72,6 +72,12 @@ async function sendEmails(
               const data = await resend.sendEmail({
                 from: "Refuge Worldwide <noreply@mail.refugeworldwide.com>",
                 to: artist.email,
+                bcc: [
+                  "jack@refugeworldwide.com",
+                  "george@refugeworldwide.com",
+                  "graeme@refugeworldwide.com",
+                  "richard@refugeworldwide.com",
+                ],
                 subject: subject(severity),
                 reply_to: "hello@refugeworldwide.com",
                 react: ShowSubmissionEmail({

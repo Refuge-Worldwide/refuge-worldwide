@@ -384,7 +384,7 @@ export default async function handler(
           }
         }
         await updateShow(values);
-        // await appendToSpreadsheet(values);
+        await appendToSpreadsheet(values);
         console.log("form submitted successfully");
         res.status(200).json({ data: "successfully updated show :)" });
       } catch (err) {
