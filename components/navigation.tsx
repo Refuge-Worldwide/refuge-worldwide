@@ -41,15 +41,6 @@ export default function Navigation() {
                   unoptimized
                   className="h-10 w-[4.125rem]"
                 />
-                <Image
-                  src="/images/balloon-cluster.svg"
-                  width={66}
-                  height={40}
-                  alt=""
-                  priority
-                  unoptimized
-                  className="h-16 z-[60] w-[4.125rem] absolute balloon-float left-[4rem] top-[7px]"
-                />
               </Link>
             </li>
 
