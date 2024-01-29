@@ -282,7 +282,7 @@ export async function getUpcomingShowsByDate(date, preview: boolean) {
           status: "Confirmed"
         }
         preview: $preview
-        limit: 50
+        limit: 2
       ) {
         items {
           sys {
