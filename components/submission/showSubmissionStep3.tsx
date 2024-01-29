@@ -187,8 +187,8 @@ export default function ShowSubmissionStep3({
           />
         )}
 
-        {showType === "preRecord" && (
-          <fieldset>
+        {showType === "Pre-record" && (
+          <fieldset className="mb-10">
             <legend>
               Upload your show{" "}
               <a href={uploadLink} rel="noreferrer" target="_blank">
