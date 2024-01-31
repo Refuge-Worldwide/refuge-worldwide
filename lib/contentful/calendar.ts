@@ -268,7 +268,11 @@ export async function createCalendarShow(values) {
     values.extraArtists
   );
   const internal =
-    values.title + " - " + artistsForInternal + " - " + dateFormatted;
+    values.title.split(" | ")[0] +
+    " - " +
+    artistsForInternal +
+    " - " +
+    dateFormatted;
   return client
     .getSpace(spaceId)
     .then((space) => space.getEnvironment(environmentId))
@@ -326,7 +330,11 @@ export async function updateCalendarShow(values) {
       values.extraArtists
     );
     internal =
-      values.title + " - " + artistsForInternal + " - " + dateFormatted;
+      values.title.split(" | ")[0] +
+      " - " +
+      artistsForInternal +
+      " - " +
+      dateFormatted;
   }
 
   //fetch entry using id
