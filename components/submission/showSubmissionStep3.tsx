@@ -10,9 +10,10 @@ import ArtistMultiSelectField from "../formFields/artistsMultiSelectField";
 import { SubmissionFormValues } from "../../types/shared";
 import { AiOutlineCalendar, AiOutlineInfoCircle } from "react-icons/ai";
 import dayjs from "dayjs";
-
+import utc from "dayjs/plugin/utc";
 var advancedFormat = require("dayjs/plugin/advancedFormat");
 dayjs.extend(advancedFormat);
+dayjs.extend(utc);
 
 const env = process.env.NODE_ENV;
 
@@ -40,8 +41,8 @@ export default function ShowSubmissionStep3({
           Submitting for {showType.toLowerCase()} show on{" "}
           {showType == "Live" ? (
             <>
-              {dayjs(initial.date).format("dddd Do MMMM, HH:mm")}-
-              {dayjs(initial.dateEnd).format("HH:mm")}
+              {dayjs(initial.date).utc().format("dddd Do MMMM, HH:mm")}-
+              {dayjs(initial.dateEnd).utc().format("HH:mm CET")}
             </>
           ) : (
             <>{dayjs(initial.date).format("dddd Do MMMM")}</>

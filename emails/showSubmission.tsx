@@ -16,8 +16,10 @@ import {
 } from "@react-email/components";
 import * as React from "react";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 var advancedFormat = require("dayjs/plugin/advancedFormat");
 dayjs.extend(advancedFormat);
+dayjs.extend(utc);
 const env = process.env.NODE_ENV;
 
 interface EmailProps {
@@ -43,11 +45,11 @@ export const ShowSubmissionEmail = ({
   severity = "initial",
   showId = "7JIvNxsqyZcPZsw2PJGzIx",
 }: EmailProps) => {
-  const startDate = dayjs(showDateStart);
+  const startDate = dayjs(showDateStart).utc();
   let formattedDate =
     startDate.format("dddd Do MMMM, HH:mm") +
     "-" +
-    dayjs(showDateEnd).format("HH:mm");
+    dayjs(showDateEnd).utc().format("HH:mm CET");
   if (showType == "Pre-record") {
     formattedDate = startDate.format("dddd Do MMMM");
   }
