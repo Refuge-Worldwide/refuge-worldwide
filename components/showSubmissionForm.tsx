@@ -121,7 +121,6 @@ const initialValues: SubmissionFormValues = {
 
 export default function ShowSubmissionForm({
   genres,
-  artists,
   uploadLink,
   importantInfo,
 }) {
@@ -199,7 +198,6 @@ export default function ShowSubmissionForm({
           <ShowSubmissionStep3
             showType={values.showType}
             genres={genres}
-            artists={artists}
             uploadLink={uploadLink}
           />
         );

@@ -6,18 +6,14 @@ import { Close } from "../icons/menu";
 import InputField from "./formFields/inputField";
 import TextareaField from "./formFields/textareaField";
 import CheckboxField from "./formFields/checkboxField";
+import ArtistMultiSelectField from "./formFields/artistsMultiSelectField";
 import { SubmissionFormValues } from "../types/shared";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import * as RadioGroup from "@radix-ui/react-radio-group";
 
 const env = process.env.NODE_ENV;
 
-export default function ShowSubmissionStep3({
-  genres,
-  artists,
-  uploadLink,
-  showType,
-}) {
+export default function ShowSubmissionStep3({ genres, uploadLink, showType }) {
   const [mp3, setMp3] = useState<boolean>(false);
   const [oneHr, setOneHr] = useState<boolean>(false);
   const [micLevel, setMicLevel] = useState<boolean>(false);
@@ -42,11 +38,10 @@ export default function ShowSubmissionStep3({
         )}
       </fieldset>
       <fieldset>
-        <MultiSelectField
+        <ArtistMultiSelectField
           label="Artist(s)*"
           description="Please include guests, collectives and show hosts."
           name="artists"
-          options={artists}
           limit={10}
         />
 

@@ -6,6 +6,7 @@ import { Close } from "../../icons/menu";
 import InputField from "../formFields/inputField";
 import TextareaField from "../formFields/textareaField";
 import CheckboxField from "../formFields/checkboxField";
+import ArtistMultiSelectField from "../formFields/artistsMultiSelectField";
 import { SubmissionFormValues } from "../../types/shared";
 import { AiOutlineCalendar, AiOutlineInfoCircle } from "react-icons/ai";
 import dayjs from "dayjs";
@@ -18,7 +19,6 @@ const env = process.env.NODE_ENV;
 export default function ShowSubmissionStep3({
   initial,
   genres,
-  artists,
   uploadLink,
   showType,
 }) {
@@ -50,11 +50,10 @@ export default function ShowSubmissionStep3({
       </div>
 
       <fieldset>
-        <MultiSelectField
+        <ArtistMultiSelectField
           label="Artist(s)*"
           description="Please include guests, collectives and show hosts."
           name="artists"
-          options={artists}
           limit={10}
           value={values.artists}
         />
