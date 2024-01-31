@@ -11,14 +11,12 @@ import { getAllArtists } from "../lib/contentful/pages/submission";
 
 export async function getStaticProps({ preview = false }) {
   const genres = await getAllGenres();
-  const AllArtists = await getAllArtists();
   return {
     props: {
       genres: genres.map((genre) => ({
         value: genre.sys.id,
         label: genre.name,
       })),
-      artists: AllArtists,
       preview,
       ...(await getSubmissionPage(preview)),
     },
@@ -27,7 +25,6 @@ export async function getStaticProps({ preview = false }) {
 
 export default function NewSubmissionPage({
   genres,
-  artists,
   coverImage,
   liveShows,
   liveShows2,
@@ -52,7 +49,6 @@ export default function NewSubmissionPage({
             <h1>Show Submission Form</h1>
             <ShowSubmissionForm
               genres={genres}
-              artists={artists}
               uploadLink={uploadLink}
               importantInfo={importantInfo}
             />

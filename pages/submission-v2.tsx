@@ -18,14 +18,12 @@ import {
 
 export async function getStaticProps({ preview = false }) {
   const genres = await getAllGenres();
-  const AllArtists = await getAllArtists();
   return {
     props: {
       genres: genres.map((genre) => ({
         value: genre.sys.id,
         label: genre.name,
       })),
-      artists: AllArtists,
       preview,
       ...(await getSubmissionPage(preview)),
     },
@@ -34,7 +32,6 @@ export async function getStaticProps({ preview = false }) {
 
 export default function NewSubmissionPage({
   genres,
-  artists,
   coverImage,
   liveShows,
   liveShows2,
@@ -79,7 +76,6 @@ export default function NewSubmissionPage({
               isLoading={isLoading}
               data={data}
               genres={genres}
-              artists={artists}
               uploadLink={uploadLink}
               importantInfo={importantInfo}
             />
@@ -94,14 +90,12 @@ function SubmissionForm({
   isLoading,
   data,
   genres,
-  artists,
   uploadLink,
   importantInfo,
 }: {
   isLoading: boolean;
   data: ShowInterface;
   genres: Dropdown;
-  artists: Dropdown;
   uploadLink: string;
   importantInfo: SubmissionImportantInfo;
 }) {
@@ -136,7 +130,6 @@ function SubmissionForm({
     <ShowSubmissionForm
       initial={data}
       genres={genres}
-      artists={artists}
       uploadLink={uploadLink}
       importantInfo={importantInfo}
     />

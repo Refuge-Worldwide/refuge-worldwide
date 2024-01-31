@@ -94,13 +94,11 @@ const validationSchema = [
 export default function ShowSubmissionForm({
   initial,
   genres,
-  artists,
   uploadLink,
   importantInfo,
 }: {
   initial?: ShowInterface;
   genres: Dropdown;
-  artists: Dropdown;
   uploadLink: string;
   importantInfo: SubmissionImportantInfo;
 }) {
@@ -209,7 +207,6 @@ export default function ShowSubmissionForm({
             initial={initial}
             showType={values.showType}
             genres={genres}
-            artists={artists}
             uploadLink={uploadLink}
           />
         );
