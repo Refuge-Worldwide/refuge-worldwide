@@ -14,18 +14,15 @@ export default function EmailModal({ artists }) {
   const [artist, setArtist] = useState<any>(null);
   const [isSubmittingEmail, setIsSubmittingEmail] = useState<boolean>(false);
 
-  // useEffect(() => {
-  //   if (artists.length > artistLength && !artists[artists.length - 1].email) {
-  //     // setModalOpen(true);
-  //     console.log("new artist added");
-  //     setArtist(artists[artists.length - 1]);
-  //     setModalOpen(true);
-  //   }
+  useEffect(() => {
+    // if we have added to the array and new artist doesn't have an email then show the modal
+    if (artists.length > artistLength && !artists[artists.length - 1].email) {
+      setArtist(artists[artists.length - 1]);
+      setModalOpen(true);
+    }
 
-  //   setArtistLength(artists.length);
-
-  //   // if we have added to the array and new artist doesn't have an email then show the modal
-  // }, [artists]);
+    setArtistLength(artists.length);
+  }, [artists]);
 
   const handleOpenModal = (artist) => {
     setArtist(artist);
