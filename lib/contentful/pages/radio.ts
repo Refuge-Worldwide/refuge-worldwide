@@ -4,6 +4,7 @@ import {
   GenreInterface,
   ShowInterface,
   PastShowSchema,
+  CollectionInterface,
 } from "../../../types/shared";
 import {
   extractCollection,
@@ -308,4 +309,106 @@ export async function getUpcomingShowsByDate(preview: boolean) {
   const res = await graphql(UpcomingShowsQuery, { preview });
 
   return extractCollection<ShowInterface>(res, "showCollection");
+}
+
+export async function getCollectionPageSingle(slug: string, preview: boolean) {
+  const CollectionPageSingleQuery = /* GraphQL */ `
+    query RadioPageSingleQuery($slug: String, $preview: Boolean) {
+      collectionCollection(
+        where: { slug: $slug }
+        limit: 1
+        preview: $preview
+      ) {
+        items {
+          sys {
+            id
+          }
+          title
+          description
+          slug
+          image {
+            url
+          }
+          shows: showsCollection(limit: 50) {
+            items {
+              sys {
+                id
+              }
+              title
+              date
+              slug
+              mixcloudLink
+              coverImage {
+                sys {
+                  id
+                }
+                url
+              }
+              genresCollection(limit: 9) {
+                items {
+                  name
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  const res = await graphql(CollectionPageSingleQuery, {
+    variables: { slug, preview },
+    preview,
+  });
+
+  let collection = extractCollectionItem<CollectionInterface>(
+    res,
+    "collectionCollection"
+  );
+
+  collection.shows = collection.shows.items;
+
+  collection.shows.forEach((show) => {
+    show.genres = show.genresCollection.items.map((genre) => genre.name);
+    show.coverImage = show.coverImage.url;
+  });
+
+  return collection;
+}
+
+export async function getCollections(preview: boolean) {
+  const CollectionsQuery = /* GraphQL */ `
+    query CollectionsQuery($preview: Boolean) {
+      collectionCollection(preview: $preview) {
+        items {
+          sys {
+            id
+          }
+          title
+          slug
+          image {
+            url
+          }
+          description
+          shows: showsCollection(limit: 10) {
+            items {
+              title
+              slug
+              mixcloudLink
+              sys {
+                id
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  const res = await graphql(CollectionsQuery, {
+    variables: { preview },
+    preview,
+  });
+
+  return extractCollection<CollectionInterface>(res, "collectionCollection");
 }

@@ -10,6 +10,7 @@ import {
   FeaturedArticleFragment,
   ShowPreviewFragment,
 } from "../fragments";
+import { getCollectionPageSingle } from "./radio";
 
 export async function getHomePage() {
   const HomePageQuery = /* GraphQL */ `
@@ -41,12 +42,6 @@ export async function getHomePage() {
           ...ArticlePreviewFragment
         }
       }
-
-      nextUp: sectionToday(id: "2bP8MlTMBYfe1paaxwwziy") {
-        content {
-          json
-        }
-      }
     }
 
     ${ShowPreviewFragment}
@@ -56,6 +51,11 @@ export async function getHomePage() {
 
   const data = await graphql(HomePageQuery);
 
+  const featuredCollection = await getCollectionPageSingle(
+    "energy-crew",
+    false
+  );
+
   return {
     featuredArticles: extractCollection<ArticleInterface>(
       data,
@@ -64,6 +64,6 @@ export async function getHomePage() {
     featuredShows: extractPage<HomePageData>(data, "pageHome")
       .featuredShowsCollection.items,
     latestArticles: extractCollection<ArticleInterface>(data, "latestArticles"),
-    nextUp: extractPage<NextUpSection>(data, "nextUp"),
+    featuredCollection: featuredCollection,
   };
 }

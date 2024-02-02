@@ -95,6 +95,31 @@ export async function getShowPathsToPreRender() {
   return paths;
 }
 
+export async function getCollectionPathsToPreRender() {
+  const CollectionPathsToPreRenderQuery = /* GraphQL */ `
+    query CollectionPathsToPreRenderQuery {
+      collectionCollection(where: { slug_exists: true }, limit: 100) {
+        items {
+          slug
+        }
+      }
+    }
+  `;
+
+  const data = await graphql(CollectionPathsToPreRenderQuery);
+
+  const collection = extractCollection<{ slug: string }>(
+    data,
+    "collectionCollection"
+  );
+
+  const paths = collection.map((el) => ({
+    params: { slug: el.slug },
+  }));
+
+  return paths;
+}
+
 export async function getWorkshopPathsToPreRender() {
   const WorkshopPathsToPreRenderQuery = /* GraphQL */ `
     query WorkshopPathsToPreRenderQuery {

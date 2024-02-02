@@ -319,3 +319,11 @@ export type SubmissionImportantInfo = {
   liveShows2: Content;
   preRecords: Content;
 };
+
+export type CollectionInterface = {
+  title: string;
+  slug: string;
+  description: string;
+  image: CoverImage;
+  shows: Array<PastShowSchema>;
+};

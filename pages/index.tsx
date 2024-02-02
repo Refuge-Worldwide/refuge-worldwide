@@ -6,6 +6,7 @@ import FeaturedShows from "../views/home/featuredShows";
 import LatestNews from "../views/home/latestNews";
 import NextUp from "../views/home/nextUp";
 import FeaturedArticles from "../views/news/featuredArticles";
+import FeaturedCollection from "../views/home/featuredCollection";
 import Head from "next/head";
 
 export async function getStaticProps() {
@@ -18,7 +19,7 @@ export default function HomePage({
   featuredArticles,
   featuredShows,
   latestArticles,
-  nextUp,
+  featuredCollection,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <Layout pageId="3xN3mbIMb4CwtrZqlRbYyu">
@@ -35,6 +36,8 @@ export default function HomePage({
       <FeaturedShows shows={featuredShows} />
 
       <FeaturedArticles articles={featuredArticles} />
+
+      <FeaturedCollection collection={featuredCollection} />
 
       <LatestNews articles={latestArticles} />
     </Layout>
