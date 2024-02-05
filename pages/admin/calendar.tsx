@@ -410,8 +410,10 @@ function Calendar() {
       ) {
         // for each image of the show
         // define what we want in the ZIP
-        const url = selectedShow.extendedProps.images[index];
-
+        const url = selectedShow.extendedProps.images[index].replace(
+          "http://",
+          "https://"
+        );
         // get the ZIP stream in a Blob
         let blob = await fetch(url).then((r) => r.blob());
 
