@@ -1,22 +1,13 @@
-import { useCallback, useState } from "react";
 import { InferGetStaticPropsType } from "next";
 import { getSubmissionPage } from "../lib/contentful/pages/submission";
-import ShowSubmissionForm from "../components/showSubmissionForm";
 import Layout from "../components/layout";
 import PageMeta from "../components/seo/page";
 import SinglePage from "../views/singlePage";
 import Head from "next/head";
-import { getAllGenres } from "../lib/contentful/pages/radio";
-import { getAllArtists } from "../lib/contentful/pages/submission";
 
 export async function getStaticProps({ preview = false }) {
-  const genres = await getAllGenres();
   return {
     props: {
-      genres: genres.map((genre) => ({
-        value: genre.sys.id,
-        label: genre.name,
-      })),
       preview,
       ...(await getSubmissionPage(preview)),
     },
@@ -24,12 +15,10 @@ export async function getStaticProps({ preview = false }) {
 }
 
 export default function NewSubmissionPage({
-  genres,
   coverImage,
   liveShows,
   liveShows2,
   preRecords,
-  uploadLink,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const importantInfo = {
     liveShows: liveShows,
@@ -47,11 +36,13 @@ export default function NewSubmissionPage({
         <section className="container-md p-4 sm:p-8 bg-white">
           <div id="submission-form" className="prose max-w-none sm:prose-lg">
             <h1>Show Submission Form</h1>
-            <ShowSubmissionForm
-              genres={genres}
-              uploadLink={uploadLink}
-              importantInfo={importantInfo}
-            />
+            <div className="h-6 md:h-12" />
+            <p className="my-24">
+              This submission form is no longer active. You should recieve an
+              email from us ahead of your show with info on how to submit info
+              through our new submission form.
+            </p>
+            <div className="h-6 md:h-12" />
           </div>
         </section>
       </SinglePage>

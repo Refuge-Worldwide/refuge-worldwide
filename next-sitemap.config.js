@@ -32,6 +32,7 @@ module.exports = {
           "/submission",
           "/community-feedback",
           "/residents-feedback",
+          "/submission-v2",
         ],
       },
     ],
