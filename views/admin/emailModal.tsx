@@ -6,7 +6,8 @@ import { Formik, Form, Field } from "formik";
 import { AiOutlineMail } from "react-icons/ai";
 import { Arrow } from "../../icons/arrow";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { updateArtistEmail } from "../../lib/contentful/calendar";
+import { RiMailCheckFill, RiMailLine } from "react-icons/ri";
+import toast from "react-hot-toast";
 
 export default function EmailModal({ artists }) {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
@@ -34,16 +35,20 @@ export default function EmailModal({ artists }) {
     console.log(values);
 
     try {
-      await updateArtistEmail(values.id, values.email);
+      const response = await fetch("/api/admin/artist-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
       setIsSubmittingEmail(false);
       setModalOpen(false);
-      // toast.success(method == "update" ? "Show updated" : "Show created");
+      toast.success("Email address added");
     } catch (error) {
       setIsSubmittingEmail(true);
       console.log(error);
-      // toast.error(
-      //   method == "update" ? "Error updating show" : "Error creating show"
-      // );
+      toast.error("Error adding email address");
       throw error;
     }
   };
@@ -63,7 +68,7 @@ export default function EmailModal({ artists }) {
               className="text-tiny border-black/75 hover:bg-black hover:text-white border px-2 py-1 rounded-lg flex items-center gap-1"
               onClick={() => handleOpenModal(artist)}
             >
-              <AiOutlineMail />
+              {artist.email ? <RiMailCheckFill /> : <RiMailLine />}
               {artist.label}
             </button>
           </div>

@@ -10,11 +10,13 @@ import {
   formatArtistsForContenful,
   createReferencesArray,
 } from "../../lib/contentful/management";
+import { sendConfirmationEmail } from "../resend/email";
+
 dayjs.extend(utc);
 
 const spaceId = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID;
 const client = createClient({
-  accessToken: process.env.NEXT_PUBLIC_CONTENTFUL_MANAGEMENT_ACCESS_TOKEN,
+  accessToken: process.env.CONTENTFUL_MANAGEMENT_ACCESS_TOKEN,
 });
 const environmentId = process.env.NEXT_PUBLIC_CONTENTFUL_ENVIRONMENT_ID;
 const showContentTypeId = "show";
@@ -308,6 +310,10 @@ export async function createCalendarShow(values) {
     )
     .then((entry) => {
       console.log(`Show ${entry.sys.id} created.`);
+      if (values.status.value == "Confirmed") {
+        console.log("Send confirmation email");
+        sendConfirmationEmail(values);
+      }
       return entry;
     })
     .catch((error) => {
@@ -317,10 +323,12 @@ export async function createCalendarShow(values) {
 }
 
 export async function updateCalendarShow(values) {
+  console.log(values);
   const startDateTime = dayjs(values.start + "Z").toISOString();
   const endDateTime = dayjs(values.end + "Z").toISOString();
   let artists;
   let internal = "";
+  let confirmationEmail = false;
   if (values.artists) {
     artists = createReferencesArray(values.artists);
     const dateFormatted = dayjs(values.start).format("DD MMM YYYY");
@@ -345,7 +353,12 @@ export async function updateCalendarShow(values) {
       .then((environment) => environment.getEntry(values.id))
       //update fields with values from form
       .then((entry) => {
-        console.log(entry);
+        if (
+          entry.fields?.status["en-US"] == "TBC" &&
+          values?.status?.value == "Confirmed"
+        ) {
+          confirmationEmail = true;
+        }
         entry.fields.date["en-US"] = startDateTime;
         entry.fields.dateEnd["en-US"] = endDateTime;
         if (values.artists) {
@@ -372,12 +385,13 @@ export async function updateCalendarShow(values) {
         // if entry has already been published we want to publish updates
         console.log("is entry published: " + isPublished(entry));
         if (isPublished(entry)) {
-          return entry.publish();
+          entry.publish();
         }
-        return entry;
-      })
-      .then((entry) => {
         console.log(`Show ${entry.sys.id} updated.`);
+        if (confirmationEmail) {
+          console.log("send confirmation email");
+          sendConfirmationEmail(values);
+        }
         return entry;
       })
       .catch((error) => {
@@ -396,12 +410,10 @@ export async function deleteCalendarShow(id) {
     .then((entry) => {
       console.log(`Show ${entry.sys.id} deleted.`);
       return entry;
-      // res.status(202).json({});
     })
     .catch((error) => {
       console.log(error);
       throw error;
-      // res.status(400).json({ message: error.message });
     });
 }
 

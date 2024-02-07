@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import { getUpcomingShowsByDate } from "../../lib/contentful/pages/radio";
 import { ShowInterface } from "../../types/shared";
 import { sendSlackMessage } from "../../lib/slack";
+import { sendEmail } from "../../lib/resend/email";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const slackURL = process.env.SLACK_WEBHOOK_URL;
@@ -52,16 +53,6 @@ export default async function handler(
   }
 }
 
-function subject(severity: string) {
-  if (severity == "initial") {
-    return "Upcoming show - info required";
-  } else if (severity == "follow-up") {
-    return "Upcoming show - final call for info!";
-  } else {
-    return "Upcoming show - your submission is late!";
-  }
-}
-
 async function sendEmails(
   shows: ShowInterface[],
   severity: "initial" | "follow-up" | "late"
@@ -72,30 +63,7 @@ async function sendEmails(
       await Promise.all(
         show.artistsCollection.items.map(async (artist) => {
           if (artist.email) {
-            try {
-              const data = await resend.sendEmail({
-                from: "Refuge Worldwide <noreply@mail.refugeworldwide.com>",
-                to: artist.email,
-                bcc: ["jack@refugeworldwide.com"],
-                subject: subject(severity),
-                reply_to: "hello@refugeworldwide.com",
-                react: ShowSubmissionEmail({
-                  userName: artist.name,
-                  showDateStart: show.date,
-                  showDateEnd: show.dateEnd,
-                  showType: show.type,
-                  severity: severity,
-                  showId: show.sys.id,
-                }),
-              });
-              showEmailed = true;
-            } catch (err) {
-              // send message to slack saying there was an issue sending the email
-              console.log(err);
-              sendSlackMessage(
-                `Failed to send email request to ${artist.name}(${artist.email}) on show *${show.title}*. ${err}. <@U04HG3VHHEW>`
-              );
-            }
+            await sendEmail(artist, show, severity);
           } else {
             // send message to slack saying artist does not have email address assigned to them.
             console.log(artist.name + " does not have email");

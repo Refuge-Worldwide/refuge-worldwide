@@ -15,12 +15,6 @@ import MultiSelectField from "../../components/formFields/multiSelectField";
 import ArtistMultiSelectField from "../../components/formFields/artistsMultiSelectField";
 import { Formik, Form, FieldArray, Field } from "formik";
 import { Cross } from "../../icons/cross";
-import {
-  deleteCalendarShow,
-  createCalendarShow,
-  updateCalendarShow,
-  createArtist,
-} from "../../lib/contentful/calendar";
 import { Arrow } from "../../icons/arrow";
 import CheckboxField from "../../components/formFields/checkboxField";
 import { Close } from "../../icons/menu";
@@ -42,6 +36,7 @@ import { useUser } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/router";
 import CalendarSearch from "../../views/admin/calendarSearch";
 import EmailModal from "../../views/admin/emailModal";
+import TextareaField from "../../components/formFields/textareaField";
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL
   ? `${process.env.NEXT_PUBLIC_SITE_URL}`
@@ -178,39 +173,24 @@ function Calendar() {
   };
 
   const handleSubmit = async (values, actions) => {
-    const method = values.id ? "update" : "create";
+    const method = values.id ? "PUT" : "POST";
     let show = null;
     setCalendarLoading(true);
     try {
-      if (values.hasExtraArtists) {
-        for (const artist of values.extraArtists) {
-          // if ((artist.bio && artist.image) || (artist.bio !== "" && artist.image !== "")) {
-          console.log("adding artist to contentful: " + artist.name);
-          const contentfulNewArtist = await createArtist(artist);
-          console.log(contentfulNewArtist);
-          values.artists.push(contentfulNewArtist);
-          // }
-        }
-      }
-
-      // if (values.artistEmails) {
-      //   console.log(values.artistEmails);
-      //   for (const artist of values.artistEmails) {
-      //     await updateArtistEmail(artist.id, artist.email);
-      //   }
-      // }
-
-      if (method == "update") {
-        show = await updateCalendarShow(values);
-      } else {
-        show = await createCalendarShow(values);
-      }
-
+      const response = await fetch("/api/admin/calendar-show", {
+        method: method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
+      const showId = await response.json();
+      console.log("SHOW ID");
+      console.log(showId);
       // manually add show to full calendar
       const calendarApi = calendarRef.current.getApi();
-      console.log(values);
-      const fcEvent = transformEventForFullCalendar(values, show.sys.id);
-      if (method == "update") {
+      const fcEvent = transformEventForFullCalendar(values, showId);
+      if (method == "PUT") {
         calendarApi.getEventById(values.id).remove();
       }
       calendarApi.addEvent(fcEvent, []);
@@ -218,11 +198,11 @@ function Calendar() {
       actions.setStatus("submitted");
       setCalendarLoading(false);
       setShowDialogOpen(false);
-      toast.success(method == "update" ? "Show updated" : "Show created");
+      toast.success(method == "PUT" ? "Show updated" : "Show created");
     } catch (error) {
       console.log(error);
       toast.error(
-        method == "update" ? "Error updating show" : "Error creating show"
+        method == "PUT" ? "Error updating show" : "Error creating show"
       );
       throw error;
     }
@@ -236,7 +216,13 @@ function Calendar() {
       start: eventInfo.event.startStr,
       end: eventInfo.event.endStr,
     };
-    updateCalendarShow(values)
+    const response = await fetch("/api/admin/calendar-show", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(values),
+    })
       .then(() => {
         setCalendarLoading(false);
         toast.success("Show updated");
@@ -250,8 +236,14 @@ function Calendar() {
   const handleDelete = async (id) => {
     setCalendarLoading(true);
     setIsDeleting(true);
-    deleteCalendarShow(id)
-      .then((entry) => {
+    const response = await fetch("/api/admin/calendar-show", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(id),
+    })
+      .then(() => {
         let calendarApi = calendarRef.current.getApi();
         calendarApi.getEventById(id).remove();
         setShowDialogOpen(false);
@@ -599,6 +591,7 @@ function Calendar() {
                           >
                             <RxDownload />
                           </button>
+
                           <button
                             type="button"
                             className="hover:bg-black/10 p-2 rounded-lg hidden lg:block"
@@ -611,6 +604,13 @@ function Calendar() {
                           >
                             <RxCopy />
                           </button>
+                          <Link
+                            className="hover:bg-black/10 px-2 py-1 rounded-lg"
+                            target="_blank"
+                            href={`https://app.contentful.com/spaces/taoiy3h84mql/environments/master/entries/${selectedShow.id}`}
+                          >
+                            <RxExternalLink />
+                          </Link>
                           <Popover.Root>
                             <Popover.Trigger asChild>
                               <button className="hover:bg-black/10 p-2 rounded-lg">
@@ -622,13 +622,6 @@ function Calendar() {
                               sideOffset={8}
                               className="border border-black p-2 bg-white shadow-md text-small flex flex-col items-start"
                             >
-                              <Link
-                                className="hover:bg-black/10 px-2 py-1 rounded-lg"
-                                target="_blank"
-                                href={`https://app.contentful.com/spaces/taoiy3h84mql/environments/master/entries/${selectedShow.id}`}
-                              >
-                                Open in Contentful
-                              </Link>
                               <button
                                 type="button"
                                 className="hover:bg-black/10 px-2 py-1 rounded-lg"
@@ -646,12 +639,6 @@ function Calendar() {
                                 className="hover:bg-black/10 px-2 py-1 rounded-lg"
                               >
                                 Copy form link
-                              </button>
-                              <button
-                                onClick={() => downloadImages()}
-                                className="hover:bg-black/10 px-2 py-1 rounded-lg"
-                              >
-                                Download images
                               </button>
                             </Popover.Content>
                           </Popover.Root>
@@ -677,13 +664,13 @@ function Calendar() {
                             value={values.type}
                           >
                             <RadioGroup.Item value="Live" asChild>
-                              <label className="data-[state=checked]:bg-black data-[state=checked]:text-white block cursor-pointer pill-input rounded-tr-none rounded-br-none py-3 text-center">
+                              <label className="data-[state=checked]:bg-blue  block cursor-pointer pill-input rounded-tr-none rounded-br-none py-3 text-center">
                                 Live
                               </label>
                             </RadioGroup.Item>
 
                             <RadioGroup.Item value="Pre-record" asChild>
-                              <label className="data-[state=checked]:bg-black data-[state=checked]:text-white block cursor-pointer select-none pill-input rounded-tl-none rounded-bl-none py-3 text-center">
+                              <label className="data-[state=checked]:bg-blue block cursor-pointer select-none pill-input rounded-tl-none rounded-bl-none py-3 text-center">
                                 Pre-record
                               </label>
                             </RadioGroup.Item>
@@ -834,6 +821,7 @@ function Calendar() {
                             type="text"
                           />
                         </div>
+                        <TextareaField name="notes" label="Notes" rows={2} />
                       </div>
                       <div className="flex justify-between items-center lg:sticky lg:bottom-0 lg:bg-white py-4 px-8 border-t border-black">
                         <button

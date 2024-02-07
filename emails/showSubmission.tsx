@@ -27,7 +27,7 @@ interface EmailProps {
   showDateStart: string;
   showDateEnd: string;
   showType: "Live" | "Pre-record";
-  severity: "initial" | "follow-up" | "late";
+  severity: "confirmation" | "initial" | "follow-up" | "late";
   showId: string;
 }
 
@@ -41,8 +41,8 @@ export const ShowSubmissionEmail = ({
   userName = "Oramics",
   showDateStart = "2024-02-05T15:00:00.000Z",
   showDateEnd = "2024-02-05T17:00:00.000Z",
-  showType = "Pre-record",
-  severity = "initial",
+  showType = "Live",
+  severity = "confirmation",
   showId = "7JIvNxsqyZcPZsw2PJGzIx",
 }: EmailProps) => {
   const startDate = dayjs(showDateStart).utc();
@@ -57,6 +57,7 @@ export const ShowSubmissionEmail = ({
     .subtract(4, "day")
     .format("dddd Do MMMM");
   const submitUrl = baseUrl + "submission-v2?id=" + showId;
+  const showFormLink = startDate.diff(dayjs(), "day") < 10;
   return (
     <Html>
       <Head />
@@ -86,32 +87,57 @@ export const ShowSubmissionEmail = ({
                   Hi {userName},{" "}
                 </Heading>
 
-                <Text style={paragraph}>
-                  {severity == "follow-up" && (
-                    <span style={{ fontWeight: "bold" }}>
-                      Final call for info!{" "}
-                    </span>
-                  )}
-                  {severity == "late" && (
-                    <span style={{ fontWeight: "bold" }}>
-                      Your submission is late!{" "}
-                    </span>
-                  )}
-                  You have a show with us on {formattedDate} and we need some
-                  info from you ahead of this. Please fill out{" "}
-                  <Link style={link} href={submitUrl}>
-                    this submission form
-                  </Link>{" "}
-                  {severityText(severity, submissionDeadlineDate)}.
-                </Text>
-                <Button href={submitUrl} style={button} pY={9} pX={12}>
-                  SHOW SUBMISSION FORM
-                </Button>
-                <Text style={paragraph}>
-                  Note: We are updating our submission process, so please use
-                  the link above and NOT the submission link you have used
-                  previously.
-                </Text>
+                {severity == "confirmation" ? (
+                  <Text style={paragraph}>
+                    Confirming your show with us on {formattedDate}. We look
+                    forward to welcoming you onto the station.
+                    {!showFormLink ? (
+                      <>
+                        You will recieve an email from us closer to your show,
+                        in the meantime please add it to your calendar.
+                      </>
+                    ) : (
+                      <>
+                        Please fill out{" "}
+                        <Link style={link} href={submitUrl}>
+                          this submission form
+                        </Link>{" "}
+                        and add the show to your calendar.
+                      </>
+                    )}
+                  </Text>
+                ) : (
+                  <Text style={paragraph}>
+                    {severity == "follow-up" && (
+                      <span style={{ fontWeight: "bold" }}>
+                        Final call for info!{" "}
+                      </span>
+                    )}
+                    {severity == "late" && (
+                      <span style={{ fontWeight: "bold" }}>
+                        Your submission is late!{" "}
+                      </span>
+                    )}
+                    You have a show with us on {formattedDate} and we need some
+                    info from you ahead of this. Please fill out{" "}
+                    <Link style={link} href={submitUrl}>
+                      this submission form
+                    </Link>{" "}
+                    {severityText(severity, submissionDeadlineDate)}.
+                  </Text>
+                )}
+                {showFormLink && (
+                  <>
+                    <Button href={submitUrl} style={button} pY={9} pX={12}>
+                      SHOW SUBMISSION FORM
+                    </Button>
+                    <Text style={paragraph}>
+                      Note: We are updating our submission process, so please
+                      use the link above and NOT the submission link you have
+                      used previously.
+                    </Text>
+                  </>
+                )}
                 <Hr style={seperator} />
                 <Heading as="h2" style={paragraph}>
                   <b>Your upcoming show</b>
@@ -148,7 +174,7 @@ export const ShowSubmissionEmail = ({
               margin: "16px auto",
             }}
           >
-            © {dayjs().year()} | refugeworldwide.com
+            refugeworldwide.com
           </Text>
         </Container>
       </Body>
