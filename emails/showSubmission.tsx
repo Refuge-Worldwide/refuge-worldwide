@@ -210,7 +210,7 @@ const severityText = (level: string, date: string) => {
         >
           as soon as you can
         </span>{" "}
-        and no later than tomorrow.
+        and no later than tomorrow
       </span>
     );
   } else {
@@ -225,7 +225,7 @@ const severityText = (level: string, date: string) => {
         >
           by the end of today{" "}
         </span>
-        otherwise we will have to sadly cancel your show.
+        otherwise we will have to sadly cancel your show
       </span>
     );
   }
