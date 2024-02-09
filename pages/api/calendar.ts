@@ -1,21 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { assertError } from "ts-extras";
 import { getCalendarShows } from "../../lib/contentful/calendar";
-import { createClient } from "contentful-management";
-import {
-  formatArtistsForContenful,
-  createReferencesArray,
-} from "../../lib/contentful/management";
-import dayjs from "dayjs";
-
-const accesstoken = process.env.CONTENTFUL_MANAGEMENT_ACCESS_TOKEN;
-const spaceId = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID;
-const client = createClient({
-  accessToken: accesstoken,
-});
-const environmentId = process.env.NEXT_PUBLIC_CONTENTFUL_ENVIRONMENT_ID;
-const showContentTypeId = "show";
-const artistContentTypeId = "artist";
 
 export default async function handler(
   req: NextApiRequest,

@@ -10,11 +10,13 @@ import {
   formatArtistsForContenful,
   createReferencesArray,
 } from "../../lib/contentful/management";
+import { sendConfirmationEmail } from "../resend/email";
+
 dayjs.extend(utc);
 
 const spaceId = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID;
 const client = createClient({
-  accessToken: process.env.NEXT_PUBLIC_CONTENTFUL_MANAGEMENT_ACCESS_TOKEN,
+  accessToken: process.env.CONTENTFUL_MANAGEMENT_ACCESS_TOKEN,
 });
 const environmentId = process.env.NEXT_PUBLIC_CONTENTFUL_ENVIRONMENT_ID;
 const showContentTypeId = "show";
@@ -297,9 +299,6 @@ export async function createCalendarShow(values) {
           status: {
             "en-US": values.status.value,
           },
-          booker: {
-            "en-US": values.booker,
-          },
           type: {
             "en-US": values.type,
           },
@@ -308,6 +307,10 @@ export async function createCalendarShow(values) {
     )
     .then((entry) => {
       console.log(`Show ${entry.sys.id} created.`);
+      // if (values.status.value == "Confirmed") {
+      //   console.log("Send confirmation email");
+      //   sendConfirmationEmail(values);
+      // }
       return entry;
     })
     .catch((error) => {
@@ -321,6 +324,7 @@ export async function updateCalendarShow(values) {
   const endDateTime = dayjs(values.end + "Z").toISOString();
   let artists;
   let internal = "";
+  let confirmationEmail = false;
   if (values.artists) {
     artists = createReferencesArray(values.artists);
     const dateFormatted = dayjs(values.start).format("DD MMM YYYY");
@@ -345,7 +349,12 @@ export async function updateCalendarShow(values) {
       .then((environment) => environment.getEntry(values.id))
       //update fields with values from form
       .then((entry) => {
-        console.log(entry);
+        if (
+          entry.fields?.status["en-US"] == "TBC" &&
+          values?.status?.value == "Confirmed"
+        ) {
+          confirmationEmail = true;
+        }
         entry.fields.date["en-US"] = startDateTime;
         entry.fields.dateEnd["en-US"] = endDateTime;
         if (values.artists) {
@@ -355,13 +364,10 @@ export async function updateCalendarShow(values) {
           entry.fields.title["en-US"] = values.title;
         }
         if (values.artists && values.artists.length) {
-          entry.fields.artists["en-US"] = artists;
+          entry.fields["artists"] = { "en-US": artists };
         }
         if (values.status && entry.fields.status) {
           entry.fields.status["en-US"] = values.status.value;
-        }
-        if (values.booker && entry.fields.booker) {
-          entry.fields.booker["en-US"] = values.booker;
         }
         if (values.type && entry.fields.type) {
           entry.fields.type["en-US"] = values.type;
@@ -372,17 +378,18 @@ export async function updateCalendarShow(values) {
         // if entry has already been published we want to publish updates
         console.log("is entry published: " + isPublished(entry));
         if (isPublished(entry)) {
-          return entry.publish();
+          entry.publish();
         }
-        return entry;
-      })
-      .then((entry) => {
         console.log(`Show ${entry.sys.id} updated.`);
+        // if (confirmationEmail) {
+        //   console.log("send confirmation email");
+        //   sendConfirmationEmail(values);
+        // }
         return entry;
       })
       .catch((error) => {
         console.log(error);
-        throw error;
+        throw new Error(error);
       })
   );
 }
@@ -396,12 +403,10 @@ export async function deleteCalendarShow(id) {
     .then((entry) => {
       console.log(`Show ${entry.sys.id} deleted.`);
       return entry;
-      // res.status(202).json({});
     })
     .catch((error) => {
       console.log(error);
       throw error;
-      // res.status(400).json({ message: error.message });
     });
 }
 
@@ -445,7 +450,6 @@ export async function createArtist(artist) {
 }
 
 export async function updateArtistEmail(id, email) {
-  console.log(id);
   return (
     client
       .getSpace(spaceId)
@@ -453,7 +457,6 @@ export async function updateArtistEmail(id, email) {
       .then((environment) => environment.getEntry(id))
       //update fields with values from form
       .then((entry) => {
-        console.log(entry);
         entry.fields.email = {
           "en-US": [email],
         };
