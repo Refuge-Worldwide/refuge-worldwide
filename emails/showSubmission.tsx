@@ -38,11 +38,11 @@ interface EmailProps {
 const baseUrl = "https://refugeworldwide.com/";
 
 export const ShowSubmissionEmail = ({
-  userName = "Oramics",
-  showDateStart = "2024-02-05T15:00:00.000Z",
-  showDateEnd = "2024-02-05T17:00:00.000Z",
+  userName = "Gramrcy",
+  showDateStart = "2024-02-15T15:00:00.000Z",
+  showDateEnd = "2024-02-15T17:00:00.000Z",
   showType = "Live",
-  severity = "confirmation",
+  severity = "late",
   showId = "7JIvNxsqyZcPZsw2PJGzIx",
 }: EmailProps) => {
   const startDate = dayjs(showDateStart).utc();
@@ -90,7 +90,7 @@ export const ShowSubmissionEmail = ({
                 {severity == "confirmation" ? (
                   <Text style={paragraph}>
                     Confirming your show with us on {formattedDate}. We look
-                    forward to welcoming you onto the station.
+                    forward to welcoming you onto the station.{" "}
                     {!showFormLink ? (
                       <>
                         You will recieve an email from us closer to your show,

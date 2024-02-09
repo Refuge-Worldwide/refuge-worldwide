@@ -299,9 +299,6 @@ export async function createCalendarShow(values) {
           status: {
             "en-US": values.status.value,
           },
-          booker: {
-            "en-US": values.booker,
-          },
           type: {
             "en-US": values.type,
           },
@@ -310,10 +307,10 @@ export async function createCalendarShow(values) {
     )
     .then((entry) => {
       console.log(`Show ${entry.sys.id} created.`);
-      if (values.status.value == "Confirmed") {
-        console.log("Send confirmation email");
-        sendConfirmationEmail(values);
-      }
+      // if (values.status.value == "Confirmed") {
+      //   console.log("Send confirmation email");
+      //   sendConfirmationEmail(values);
+      // }
       return entry;
     })
     .catch((error) => {
@@ -323,7 +320,6 @@ export async function createCalendarShow(values) {
 }
 
 export async function updateCalendarShow(values) {
-  console.log(values);
   const startDateTime = dayjs(values.start + "Z").toISOString();
   const endDateTime = dayjs(values.end + "Z").toISOString();
   let artists;
@@ -368,13 +364,10 @@ export async function updateCalendarShow(values) {
           entry.fields.title["en-US"] = values.title;
         }
         if (values.artists && values.artists.length) {
-          entry.fields.artists["en-US"] = artists;
+          entry.fields["artists"] = { "en-US": artists };
         }
         if (values.status && entry.fields.status) {
           entry.fields.status["en-US"] = values.status.value;
-        }
-        if (values.booker && entry.fields.booker) {
-          entry.fields.booker["en-US"] = values.booker;
         }
         if (values.type && entry.fields.type) {
           entry.fields.type["en-US"] = values.type;
@@ -388,15 +381,15 @@ export async function updateCalendarShow(values) {
           entry.publish();
         }
         console.log(`Show ${entry.sys.id} updated.`);
-        if (confirmationEmail) {
-          console.log("send confirmation email");
-          sendConfirmationEmail(values);
-        }
+        // if (confirmationEmail) {
+        //   console.log("send confirmation email");
+        //   sendConfirmationEmail(values);
+        // }
         return entry;
       })
       .catch((error) => {
         console.log(error);
-        throw error;
+        throw new Error(error);
       })
   );
 }
@@ -457,7 +450,6 @@ export async function createArtist(artist) {
 }
 
 export async function updateArtistEmail(id, email) {
-  console.log(id);
   return (
     client
       .getSpace(spaceId)
@@ -465,7 +457,6 @@ export async function updateArtistEmail(id, email) {
       .then((environment) => environment.getEntry(id))
       //update fields with values from form
       .then((entry) => {
-        console.log(entry);
         entry.fields.email = {
           "en-US": [email],
         };

@@ -12,7 +12,6 @@ export default async function handler(
 ) {
   console.log("REQUEST METHOD: " + req.method);
   const values = req.body;
-  console.log(values);
 
   switch (req.method) {
     case "POST":
@@ -21,15 +20,16 @@ export default async function handler(
           for (const artist of values.extraArtists) {
             console.log("adding artist to contentful: " + artist.name);
             const contentfulNewArtist = await createArtist(artist);
-            console.log(contentfulNewArtist);
             values.artists.push(contentfulNewArtist);
           }
         }
         const show = await createCalendarShow(values);
-        res.status(200).json(show.sys.id);
-      } catch (err) {
-        console.log(err);
-        res.status(400).json({ message: err.message });
+        return res
+          .status(200)
+          .json({ message: "show created", id: show.sys.id });
+      } catch (error) {
+        console.log(error);
+        return res.status(400).json({ message: error.message });
       }
     case "PUT":
       try {
@@ -37,23 +37,24 @@ export default async function handler(
           for (const artist of values.extraArtists) {
             console.log("adding artist to contentful: " + artist.name);
             const contentfulNewArtist = await createArtist(artist);
-            console.log(contentfulNewArtist);
             values.artists.push(contentfulNewArtist);
           }
         }
         const show = await updateCalendarShow(values);
-        res.status(200).json("Show updated");
-      } catch (err) {
-        console.log(err);
-        res.status(400).json({ message: err.message });
+        return res
+          .status(200)
+          .json({ message: "show updated", id: show.sys.id });
+      } catch (error) {
+        console.log(error);
+        return res.status(400).json({ message: error.message });
       }
     case "DELETE":
       try {
         await deleteCalendarShow(values);
-        res.status(200).json("Show deleted");
-      } catch (err) {
-        console.log(err);
-        res.status(400).json({ message: err.message });
+        return res.status(200).json("Show deleted");
+      } catch (error) {
+        console.log(error);
+        return res.status(400).json({ message: error.message });
       }
   }
 }

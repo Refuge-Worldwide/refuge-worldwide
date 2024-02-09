@@ -32,7 +32,6 @@ import Link from "next/link";
 import dayjs from "dayjs";
 import useWindowSize from "../../hooks/useWindowSize";
 import toast, { Toaster } from "react-hot-toast";
-import { useUser } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/router";
 import CalendarSearch from "../../views/admin/calendarSearch";
 import EmailModal from "../../views/admin/emailModal";
@@ -63,8 +62,6 @@ function Calendar() {
   const formRef = useRef<any>();
   const datePicker = useRef<any>();
   const windowSize = useWindowSize();
-  const user = useUser();
-  const [username, setUsername] = useState<string>("");
   const router = useRouter();
 
   const handleKeyPress = useCallback((event) => {
@@ -90,14 +87,6 @@ function Calendar() {
       console.log(formRef);
     }
   }, [formRef]);
-
-  useEffect(() => {
-    if (user?.email) {
-      let username = user.email.split("@")[0];
-      username = username.charAt(0).toUpperCase() + username.slice(1);
-      setUsername(username);
-    }
-  }, [user]);
 
   useEffect(() => {
     if (!showDialogOpen && !searchDialogOpen) {
@@ -133,15 +122,6 @@ function Calendar() {
   // };
   // }, []);
 
-  const calculateBooker = () => {
-    if (selectedShow?.extendedProps?.booker) {
-      return selectedShow?.extendedProps?.booker;
-    } else if (!selectedShow?.id) {
-      return username;
-    }
-    return undefined;
-  };
-
   const initialValues = {
     id: selectedShow?.id,
     title: selectedShow?.title,
@@ -161,7 +141,6 @@ function Calendar() {
         ? selectedShow?.extendedProps?.status
         : "TBC",
     },
-    booker: calculateBooker(),
     hasExtraArtists: false,
     extraArtists: [
       {
@@ -174,7 +153,6 @@ function Calendar() {
 
   const handleSubmit = async (values, actions) => {
     const method = values.id ? "PUT" : "POST";
-    let show = null;
     setCalendarLoading(true);
     try {
       const response = await fetch("/api/admin/calendar-show", {
@@ -184,9 +162,11 @@ function Calendar() {
         },
         body: JSON.stringify(values),
       });
-      const showId = await response.json();
-      console.log("SHOW ID");
-      console.log(showId);
+      if (!response.ok) {
+        throw new Error(`${response.status} ${response.statusText}`);
+      }
+      const data = await response.json();
+      const showId = data.id;
       // manually add show to full calendar
       const calendarApi = calendarRef.current.getApi();
       const fcEvent = transformEventForFullCalendar(values, showId);
@@ -204,6 +184,8 @@ function Calendar() {
       toast.error(
         method == "PUT" ? "Error updating show" : "Error creating show"
       );
+      setCalendarLoading(false);
+      actions.setSubmitting(false);
       throw error;
     }
   };
@@ -216,45 +198,54 @@ function Calendar() {
       start: eventInfo.event.startStr,
       end: eventInfo.event.endStr,
     };
-    const response = await fetch("/api/admin/calendar-show", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(values),
-    })
-      .then(() => {
-        setCalendarLoading(false);
-        toast.success("Show updated");
-      })
-      .catch((error) => {
-        console.log(error);
-        toast.error("Error moving show");
+    try {
+      const response = await fetch("/api/admin/calendar-show", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
       });
+      if (!response.ok) {
+        throw new Error(`${response.status} ${response.statusText}`);
+      }
+      setCalendarLoading(false);
+      toast.success("Show updated");
+    } catch (error) {
+      console.log(error);
+      toast.error("Error moving show");
+      setCalendarLoading(false);
+      throw error;
+    }
   };
 
   const handleDelete = async (id) => {
     setCalendarLoading(true);
     setIsDeleting(true);
-    const response = await fetch("/api/admin/calendar-show", {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(id),
-    })
-      .then(() => {
-        let calendarApi = calendarRef.current.getApi();
-        calendarApi.getEventById(id).remove();
-        setShowDialogOpen(false);
-        setCalendarLoading(false);
-        setIsDeleting(false);
-        toast.success("Show deleted");
-      })
-      .catch((error) => {
-        console.log(error);
-        toast.error("Error deleting show");
+    try {
+      const response = await fetch("/api/admin/calendar-show", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(id),
       });
+      if (!response.ok) {
+        throw new Error(`${response.status} ${response.statusText}`);
+      }
+      let calendarApi = calendarRef.current.getApi();
+      calendarApi.getEventById(id).remove();
+      setShowDialogOpen(false);
+      setCalendarLoading(false);
+      setIsDeleting(false);
+      toast.success("Show deleted");
+    } catch (error) {
+      console.log(error);
+      toast.error("Error deleting show");
+      setCalendarLoading(false);
+      setIsDeleting(true);
+      throw error;
+    }
   };
 
   const transformEventForFullCalendar = (values, id) => {
@@ -283,12 +274,10 @@ function Calendar() {
           : values.status.value == "Submitted"
           ? "#B3DCC1"
           : "#B3DCC1",
-      booker: values.booker ? values.booker : "",
     };
   };
 
   const handleSelect = (selectInfo) => {
-    console.log("select info");
     setShowDialogOpen(true);
     setSelectedShow(selectInfo);
     console.log(selectInfo.startStr);
@@ -806,22 +795,13 @@ function Calendar() {
                             type="datetime-local"
                           />
                         </div>
-                        <div className="lg:grid lg:grid-cols-2 items-center lg:gap-4">
-                          <MultiSelectField
-                            label="Status"
-                            name="status"
-                            options={statusOptions}
-                            limit={1}
-                            value={[initialValues.status]}
-                          />
-
-                          <InputField
-                            name="booker"
-                            label="Booker"
-                            type="text"
-                          />
-                        </div>
-                        <TextareaField name="notes" label="Notes" rows={2} />
+                        <MultiSelectField
+                          label="Status"
+                          name="status"
+                          options={statusOptions}
+                          limit={1}
+                          value={[initialValues.status]}
+                        />
                       </div>
                       <div className="flex justify-between items-center lg:sticky lg:bottom-0 lg:bg-white py-4 px-8 border-t border-black">
                         <button
@@ -877,9 +857,11 @@ function renderEventContent(eventInfo) {
     <div className="p-1" id={eventInfo.event.id}>
       <div className="mt-1 flex justify-between">
         <p className="text-xxs font-medium">{eventInfo.timeText} </p>
-        <p className="text-xxs italic">
-          {eventInfo.event.extendedProps.booker}
-        </p>
+        {eventInfo.event.extendedProps.type == "Pre-record" && (
+          <p className="text-xxs border border-black/20 opacity-80 bg-black text-white px-1 rounded">
+            Pre-rec
+          </p>
+        )}
       </div>
       <p className="text-tiny mt-1 line-clamp-2 slot-title">
         {eventInfo.event.title}

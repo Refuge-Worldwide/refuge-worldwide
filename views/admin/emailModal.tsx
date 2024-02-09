@@ -32,8 +32,6 @@ export default function EmailModal({ artists }) {
 
   const handleEmailSubmit = async (values) => {
     setIsSubmittingEmail(true);
-    console.log(values);
-
     try {
       const response = await fetch("/api/admin/artist-email", {
         method: "POST",
@@ -42,6 +40,9 @@ export default function EmailModal({ artists }) {
         },
         body: JSON.stringify(values),
       });
+      if (!response.ok) {
+        throw new Error(`${response.status} ${response.statusText}`);
+      }
       setIsSubmittingEmail(false);
       setModalOpen(false);
       toast.success("Email address added");

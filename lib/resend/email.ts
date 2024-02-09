@@ -8,7 +8,7 @@ export async function sendEmail(artist, show, severity) {
   try {
     const data = await resend.sendEmail({
       from: "Refuge Worldwide <noreply@mail.refugeworldwide.com>",
-      to: "jack@refugeworldwide.com",
+      to: artist.email,
       // bcc: ["jack@refugeworldwide.com"],
       subject: subject(severity),
       reply_to: [
@@ -41,7 +41,7 @@ export async function sendConfirmationEmail(show) {
         try {
           const data = await resend.sendEmail({
             from: "Refuge Worldwide <noreply@mail.refugeworldwide.com>",
-            to: "jack@refugeworldwide.com",
+            to: artist.email,
             // bcc: ["jack@refugeworldwide.com"],
             subject:
               "Show confirmation - " + dayjs(show.start).format("MMM YYYY"),
