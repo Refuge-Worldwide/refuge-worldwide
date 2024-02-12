@@ -21,7 +21,7 @@ export default async function handler(
 
         res
           .status(200)
-          .setHeader("Cache-Control", "s-maxage=1, stale-while-revalidate=59")
+          .setHeader("Cache-Control", "s-maxage=60, stale-while-revalidate")
           .json(shows);
         break;
       } catch (error) {
