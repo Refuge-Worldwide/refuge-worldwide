@@ -8,7 +8,7 @@ export default async function handler(
   const values = req.body;
   console.log("REQUEST METHOD: " + req.method);
   switch (req.method) {
-    case "GET":
+    case "POST":
       try {
         await sendConfirmationEmail(values);
         return res.status(200).json("Confirmation email sent");

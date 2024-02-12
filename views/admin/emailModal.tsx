@@ -8,8 +8,9 @@ import { Arrow } from "../../icons/arrow";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { RiMailCheckFill, RiMailLine } from "react-icons/ri";
 import toast from "react-hot-toast";
+import { updateArtistEmail } from "../../lib/contentful/calendar";
 
-export default function EmailModal({ artists }) {
+export default function EmailModal({ artists, client }) {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [artistLength, setArtistLength] = useState<number>(artists.length);
   const [artist, setArtist] = useState<any>(null);
@@ -32,24 +33,16 @@ export default function EmailModal({ artists }) {
 
   const handleEmailSubmit = async (values) => {
     setIsSubmittingEmail(true);
+    console.log(values);
+
     try {
-      const response = await fetch("/api/admin/artist-email", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      });
-      if (!response.ok) {
-        throw new Error(`${response.status} ${response.statusText}`);
-      }
+      await updateArtistEmail(values.id, values.email, client);
       setIsSubmittingEmail(false);
       setModalOpen(false);
-      toast.success("Email address added");
+      toast.success("Email added");
     } catch (error) {
-      setIsSubmittingEmail(true);
       console.log(error);
-      toast.error("Error adding email address");
+      toast.error("Error adding email");
       throw error;
     }
   };

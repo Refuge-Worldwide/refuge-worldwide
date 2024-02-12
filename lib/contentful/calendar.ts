@@ -15,9 +15,6 @@ import { sendConfirmationEmail } from "../resend/email";
 dayjs.extend(utc);
 
 const spaceId = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID;
-const client = createClient({
-  accessToken: process.env.CONTENTFUL_MANAGEMENT_ACCESS_TOKEN,
-});
 const environmentId = process.env.NEXT_PUBLIC_CONTENTFUL_ENVIRONMENT_ID;
 const showContentTypeId = "show";
 const artistContentTypeId = "artist";
@@ -259,7 +256,7 @@ export async function getAllArtists() {
   return mappedArtists;
 }
 
-export async function createCalendarShow(values) {
+export async function createCalendarShow(values, client) {
   const artists = createReferencesArray(values.artists);
   const startDateTime = dayjs(values.start + "Z").toISOString();
   const endDateTime = dayjs(values.end + "Z").toISOString();
@@ -307,19 +304,18 @@ export async function createCalendarShow(values) {
     )
     .then((entry) => {
       console.log(`Show ${entry.sys.id} created.`);
-      // if (values.status.value == "Confirmed") {
-      //   console.log("Send confirmation email");
-      //   sendConfirmationEmail(values);
-      // }
-      return entry;
+      return {
+        entry,
+        confirmationEmail: values.status.value == "Confirmed",
+      };
     })
     .catch((error) => {
       console.log(error);
-      throw error;
+      throw new Error(error);
     });
 }
 
-export async function updateCalendarShow(values) {
+export async function updateCalendarShow(values, client) {
   const startDateTime = dayjs(values.start + "Z").toISOString();
   const endDateTime = dayjs(values.end + "Z").toISOString();
   let artists;
@@ -381,11 +377,10 @@ export async function updateCalendarShow(values) {
           entry.publish();
         }
         console.log(`Show ${entry.sys.id} updated.`);
-        // if (confirmationEmail) {
-        //   console.log("send confirmation email");
-        //   sendConfirmationEmail(values);
-        // }
-        return entry;
+        return {
+          entry,
+          confirmationEmail: confirmationEmail,
+        };
       })
       .catch((error) => {
         console.log(error);
@@ -394,7 +389,7 @@ export async function updateCalendarShow(values) {
   );
 }
 
-export async function deleteCalendarShow(id) {
+export async function deleteCalendarShow(id, client) {
   return client
     .getSpace(spaceId)
     .then((space) => space.getEnvironment(environmentId))
@@ -406,11 +401,11 @@ export async function deleteCalendarShow(id) {
     })
     .catch((error) => {
       console.log(error);
-      throw error;
+      throw new Error(error);
     });
 }
 
-export async function createArtist(artist) {
+export async function createArtist(artist, client) {
   return client
     .getSpace(spaceId)
     .then((space) => space.getEnvironment(environmentId))
@@ -445,11 +440,11 @@ export async function createArtist(artist) {
     })
     .catch((error) => {
       console.log(error);
-      throw error;
+      throw new Error(error);
     });
 }
 
-export async function updateArtistEmail(id, email) {
+export async function updateArtistEmail(id, email, client) {
   return (
     client
       .getSpace(spaceId)
@@ -469,7 +464,7 @@ export async function updateArtistEmail(id, email) {
       })
       .catch((error) => {
         console.log(error);
-        throw error;
+        throw new Error(error);
       })
   );
 }
