@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { sendConfirmationEmail } from "../../../lib/resend/email";
+import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 
 export default async function handler(
   req: NextApiRequest,
@@ -8,7 +9,7 @@ export default async function handler(
   const values = req.body;
   console.log("REQUEST METHOD: " + req.method);
   switch (req.method) {
-    case "GET":
+    case "POST":
       try {
         await sendConfirmationEmail(values);
         return res.status(200).json("Confirmation email sent");

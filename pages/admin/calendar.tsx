@@ -15,6 +15,12 @@ import MultiSelectField from "../../components/formFields/multiSelectField";
 import ArtistMultiSelectField from "../../components/formFields/artistsMultiSelectField";
 import { Formik, Form, FieldArray, Field } from "formik";
 import { Cross } from "../../icons/cross";
+import {
+  deleteCalendarShow,
+  createCalendarShow,
+  updateCalendarShow,
+  createArtist,
+} from "../../lib/contentful/calendar";
 import { Arrow } from "../../icons/arrow";
 import CheckboxField from "../../components/formFields/checkboxField";
 import { Close } from "../../icons/menu";
@@ -36,6 +42,8 @@ import { useRouter } from "next/router";
 import CalendarSearch from "../../views/admin/calendarSearch";
 import EmailModal from "../../views/admin/emailModal";
 import TextareaField from "../../components/formFields/textareaField";
+import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
+import { createClient } from "contentful-management";
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL
   ? `${process.env.NEXT_PUBLIC_SITE_URL}`
@@ -63,6 +71,25 @@ function Calendar() {
   const datePicker = useRef<any>();
   const windowSize = useWindowSize();
   const router = useRouter();
+  const supabaseClient = useSupabaseClient();
+  const user = useUser();
+  const [contentfulClient, setContentfulClient] = useState<any>(null);
+
+  useEffect(() => {
+    const contentfulClient = async () => {
+      const { data } = await supabaseClient
+        .from("accessTokens")
+        .select("token")
+        .eq("application", "contentful")
+        .limit(1)
+        .single();
+      const client = createClient({
+        accessToken: data.token,
+      });
+      setContentfulClient(client);
+    };
+    if (user) contentfulClient();
+  }, [user]);
 
   const handleKeyPress = useCallback((event) => {
     const calendarApi = calendarRef.current.getApi();
@@ -152,25 +179,42 @@ function Calendar() {
   };
 
   const handleSubmit = async (values, actions) => {
-    const method = values.id ? "PUT" : "POST";
+    const method = values.id ? "update" : "create";
+    let show = null;
     setCalendarLoading(true);
     try {
-      const response = await fetch("/api/admin/calendar-show", {
-        method: method,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      });
-      if (!response.ok) {
-        throw new Error(`${response.status} ${response.statusText}`);
+      if (values.hasExtraArtists) {
+        for (const artist of values.extraArtists) {
+          // if ((artist.bio && artist.image) || (artist.bio !== "" && artist.image !== "")) {
+          console.log("adding artist to contentful: " + artist.name);
+          const contentfulNewArtist = await createArtist(
+            artist,
+            contentfulClient
+          );
+          console.log(contentfulNewArtist);
+          values.artists.push(contentfulNewArtist);
+          // }
+        }
       }
-      const data = await response.json();
-      const showId = data.id;
+
+      // if (values.artistEmails) {
+      //   console.log(values.artistEmails);
+      //   for (const artist of values.artistEmails) {
+      //     await updateArtistEmail(artist.id, artist.email);
+      //   }
+      // }
+
+      if (method == "update") {
+        show = await updateCalendarShow(values, contentfulClient);
+      } else {
+        show = await createCalendarShow(values, contentfulClient);
+      }
+
       // manually add show to full calendar
       const calendarApi = calendarRef.current.getApi();
-      const fcEvent = transformEventForFullCalendar(values, showId);
-      if (method == "PUT") {
+      console.log(values);
+      const fcEvent = transformEventForFullCalendar(values, show.entry.sys.id);
+      if (method == "update") {
         calendarApi.getEventById(values.id).remove();
       }
       calendarApi.addEvent(fcEvent, []);
@@ -178,11 +222,30 @@ function Calendar() {
       actions.setStatus("submitted");
       setCalendarLoading(false);
       setShowDialogOpen(false);
-      toast.success(method == "PUT" ? "Show updated" : "Show created");
+      toast.success(method == "update" ? "Show updated" : "Show created");
+      if (show.confirmationEmail) {
+        const fetchPromise = fetch("/api/admin/confirmation-email", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(values),
+        }).then((response) => {
+          return response.ok
+            ? response.json()
+            : Promise.reject(response.json());
+        });
+
+        toast.promise(fetchPromise, {
+          loading: "Sending confirmation email",
+          success: "Confirmation email sent",
+          error: "Failed to send confirmation email",
+        });
+      }
     } catch (error) {
       console.log(error);
       toast.error(
-        method == "PUT" ? "Error updating show" : "Error creating show"
+        method == "create" ? "Error updating show" : "Error creating show"
       );
       setCalendarLoading(false);
       actions.setSubmitting(false);
@@ -198,54 +261,33 @@ function Calendar() {
       start: eventInfo.event.startStr,
       end: eventInfo.event.endStr,
     };
-    try {
-      const response = await fetch("/api/admin/calendar-show", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
+    updateCalendarShow(values, contentfulClient)
+      .then(() => {
+        setCalendarLoading(false);
+        toast.success("Show updated");
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error("Error moving show");
       });
-      if (!response.ok) {
-        throw new Error(`${response.status} ${response.statusText}`);
-      }
-      setCalendarLoading(false);
-      toast.success("Show updated");
-    } catch (error) {
-      console.log(error);
-      toast.error("Error moving show");
-      setCalendarLoading(false);
-      throw error;
-    }
   };
 
   const handleDelete = async (id) => {
     setCalendarLoading(true);
     setIsDeleting(true);
-    try {
-      const response = await fetch("/api/admin/calendar-show", {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(id),
+    deleteCalendarShow(id, contentfulClient)
+      .then((entry) => {
+        let calendarApi = calendarRef.current.getApi();
+        calendarApi.getEventById(id).remove();
+        setShowDialogOpen(false);
+        setCalendarLoading(false);
+        setIsDeleting(false);
+        toast.success("Show deleted");
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error("Error deleting show");
       });
-      if (!response.ok) {
-        throw new Error(`${response.status} ${response.statusText}`);
-      }
-      let calendarApi = calendarRef.current.getApi();
-      calendarApi.getEventById(id).remove();
-      setShowDialogOpen(false);
-      setCalendarLoading(false);
-      setIsDeleting(false);
-      toast.success("Show deleted");
-    } catch (error) {
-      console.log(error);
-      toast.error("Error deleting show");
-      setCalendarLoading(false);
-      setIsDeleting(true);
-      throw error;
-    }
   };
 
   const transformEventForFullCalendar = (values, id) => {
@@ -410,7 +452,7 @@ function Calendar() {
     }
   }
 
-  if (windowSize.width && router.isReady)
+  if (windowSize.width && router.isReady && contentfulClient)
     return (
       <div className="mt-2 lg:m-4 h-[calc(100vh-100px)] lg:h-[calc(100vh-125px)] relative">
         <PageMeta title="Calendar | Refuge Worldwide" path="signin/" />
@@ -423,6 +465,7 @@ function Calendar() {
                 padding: "16px",
                 color: "black",
                 borderRadius: "0px",
+                fontSize: "1.5rem",
               },
             }}
           />
@@ -679,7 +722,10 @@ function Calendar() {
                           limit={10}
                           value={initialValues.artists}
                         />
-                        <EmailModal artists={values.artists} />
+                        <EmailModal
+                          artists={values.artists}
+                          client={contentfulClient}
+                        />
 
                         {/* <details className="-mt-6 mb-8" open={!values.id}>
                           <summary className="text-small">Emails</summary>
@@ -887,7 +933,7 @@ function renderEventContent(eventInfo) {
 
 async function getEvents(info: any) {
   const response = await fetch(
-    `/api/calendar?start=${info.startStr}&end=${info.endStr}`
+    `/api/admin/calendar?start=${info.startStr}&end=${info.endStr}`
   );
   const shows = await response.json();
   return shows.processed;

@@ -9,7 +9,6 @@ export async function sendEmail(artist, show, severity) {
     const data = await resend.sendEmail({
       from: "Refuge Worldwide <noreply@mail.refugeworldwide.com>",
       to: artist.email,
-      // bcc: ["jack@refugeworldwide.com"],
       subject: subject(severity),
       reply_to: [
         "leona@refugeworldwide.com",
@@ -25,12 +24,13 @@ export async function sendEmail(artist, show, severity) {
         showId: show.sys.id,
       }),
     });
-  } catch (err) {
+  } catch (error) {
     // send message to slack saying there was an issue sending the email
-    console.log(err);
+    console.log(error);
     sendSlackMessage(
-      `Failed to send email request to ${artist.name}(${artist.email}) on show *${show.title}*. ${err}. <@U04HG3VHHEW>`
+      `Failed to send email request to ${artist.name}(${artist.email}) on show *${show.title}*. ${error}. <@U04HG3VHHEW>`
     );
+    throw new Error(error);
   }
 }
 
@@ -42,7 +42,7 @@ export async function sendConfirmationEmail(show) {
           const data = await resend.sendEmail({
             from: "Refuge Worldwide <noreply@mail.refugeworldwide.com>",
             to: artist.email,
-            // bcc: ["jack@refugeworldwide.com"],
+            bcc: ["jack@refugeworldwide.com"],
             subject:
               "Show confirmation - " + dayjs(show.start).format("MMM YYYY"),
             reply_to: [
@@ -51,7 +51,7 @@ export async function sendConfirmationEmail(show) {
               "max@refugeworldwide.com",
             ],
             react: ShowSubmissionEmail({
-              userName: artist.name,
+              userName: artist.label,
               showDateStart: show.start,
               showDateEnd: show.end,
               showType: show.type,
@@ -59,11 +59,11 @@ export async function sendConfirmationEmail(show) {
               showId: show.id,
             }),
           });
-        } catch (err) {
+        } catch (error) {
           // send message to slack saying there was an issue sending the email
-          console.log(err);
+          console.log(error);
           sendSlackMessage(
-            `Failed to send email request to ${artist.name}(${artist.email}) on show *${show.title}*. ${err}. <@U04HG3VHHEW>`
+            `Failed to send email request to ${artist.name}(${artist.email}) on show *${show.title}*. ${error}. <@U04HG3VHHEW>`
           );
         }
       }
