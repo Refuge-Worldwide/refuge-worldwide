@@ -64,6 +64,7 @@ async function sendEmails(
         show.artistsCollection.items.map(async (artist) => {
           if (artist.email) {
             await sendEmail(artist, show, severity);
+            showEmailed = true;
           } else {
             // send message to slack saying artist does not have email address assigned to them.
             console.log(artist.name + " does not have email");
