@@ -44,7 +44,6 @@ import EmailModal from "../../views/admin/emailModal";
 import TextareaField from "../../components/formFields/textareaField";
 import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { createClient } from "contentful-management";
-import { sendConfirmationEmail } from "../../lib/resend/email";
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL
   ? `${process.env.NEXT_PUBLIC_SITE_URL}`
@@ -246,8 +245,10 @@ function Calendar() {
     } catch (error) {
       console.log(error);
       toast.error(
-        method == "update" ? "Error updating show" : "Error creating show"
+        method == "create" ? "Error updating show" : "Error creating show"
       );
+      setCalendarLoading(false);
+      actions.setSubmitting(false);
       throw error;
     }
   };
@@ -432,8 +433,10 @@ function Calendar() {
       ) {
         // for each image of the show
         // define what we want in the ZIP
-        const url = selectedShow.extendedProps.images[index];
-
+        const url = selectedShow.extendedProps.images[index].replace(
+          "http://",
+          "https://"
+        );
         // get the ZIP stream in a Blob
         let blob = await fetch(url).then((r) => r.blob());
 

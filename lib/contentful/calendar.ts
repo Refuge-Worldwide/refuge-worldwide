@@ -351,6 +351,12 @@ export async function updateCalendarShow(values, client) {
         ) {
           confirmationEmail = true;
         }
+        if (
+          entry.fields?.status["en-US"] == "TBC" &&
+          values?.status?.value == "Confirmed"
+        ) {
+          confirmationEmail = true;
+        }
         entry.fields.date["en-US"] = startDateTime;
         entry.fields.dateEnd["en-US"] = endDateTime;
         if (values.artists) {
@@ -360,6 +366,7 @@ export async function updateCalendarShow(values, client) {
           entry.fields.title["en-US"] = values.title;
         }
         if (values.artists && values.artists.length) {
+          entry.fields["artists"] = { "en-US": artists };
           entry.fields["artists"] = { "en-US": artists };
         }
         if (values.status && entry.fields.status) {
@@ -375,6 +382,7 @@ export async function updateCalendarShow(values, client) {
         console.log("is entry published: " + isPublished(entry));
         if (isPublished(entry)) {
           entry.publish();
+          entry.publish();
         }
         console.log(`Show ${entry.sys.id} updated.`);
         return {
@@ -384,6 +392,7 @@ export async function updateCalendarShow(values, client) {
       })
       .catch((error) => {
         console.log(error);
+        throw new Error(error);
         throw new Error(error);
       })
   );

@@ -27,7 +27,7 @@ interface EmailProps {
   showDateStart: string;
   showDateEnd: string;
   showType: "Live" | "Pre-record";
-  severity: "confirmation" | "initial" | "follow-up" | "late";
+  severity: "confirmation" | "confirmation" | "initial" | "follow-up" | "late";
   showId: string;
 }
 
@@ -181,7 +181,7 @@ export const ShowSubmissionEmail = ({
               margin: "16px auto",
             }}
           >
-            refugeworldwide.com
+            refugeworldwide.com refugeworldwide.com
           </Text>
         </Container>
       </Body>
@@ -217,7 +217,7 @@ const severityText = (level: string, date: string) => {
         >
           as soon as possible
         </span>{" "}
-        and no later than tomorrow
+        and no later than tomorrow and no later than tomorrow
       </span>
     );
   } else {
@@ -232,7 +232,8 @@ const severityText = (level: string, date: string) => {
         >
           by the end of today{" "}
         </span>
-        otherwise we will have to sadly cancel your show
+        otherwise we will have to sadly cancel your show otherwise we will have
+        to sadly cancel your show
       </span>
     );
   }
