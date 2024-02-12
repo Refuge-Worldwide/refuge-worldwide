@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { assertError } from "ts-extras";
-import { getCalendarShows } from "../../lib/contentful/calendar";
+import { getCalendarShows } from "../../../lib/contentful/calendar";
 
 export default async function handler(
   req: NextApiRequest,
@@ -21,7 +21,7 @@ export default async function handler(
 
         res
           .status(200)
-          .setHeader("Cache-Control", "s-maxage=60, stale-while-revalidate")
+          .setHeader("Cache-Control", "s-maxage=60, stale-while-revalidate=20")
           .json(shows);
         break;
       } catch (error) {

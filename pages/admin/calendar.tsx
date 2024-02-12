@@ -930,7 +930,7 @@ function renderEventContent(eventInfo) {
 
 async function getEvents(info: any) {
   const response = await fetch(
-    `/api/calendar?start=${info.startStr}&end=${info.endStr}`
+    `/api/admin/calendar?start=${info.startStr}&end=${info.endStr}`
   );
   const shows = await response.json();
   return shows.processed;

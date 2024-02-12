@@ -89,7 +89,7 @@ export const ShowSubmissionEmail = ({
 
                 {severity == "confirmation" ? (
                   <Text style={paragraph}>
-                    This email confirms your show at Refuge Worldwide on{" "}
+                    This email confirms your show on Refuge Worldwide on{" "}
                     {formattedDate}.
                     {!showFormLink && (
                       <>
