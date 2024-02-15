@@ -12,8 +12,6 @@ import { useRouter } from "next/router";
 import FeaturedEvents from "../../views/events/featuredEvents";
 import { Splide, SplideSlide, SplideTrack } from "@splidejs/react-splide";
 import { Chevron } from "../../icons/chevron";
-import Link from "next/link";
-import { Arrow } from "../../icons/arrow";
 
 export async function getStaticProps({ preview = false }) {
   return {
@@ -21,7 +19,7 @@ export async function getStaticProps({ preview = false }) {
   };
 }
 
-export default function NewsPage({
+export default function NewsAchivePage({
   featuredEvents,
   events,
   preview,
@@ -121,14 +119,15 @@ export default function NewsPage({
 
   return (
     <Layout preview={preview}>
-      <PageMeta title="Events | Refuge Worldwide" path="events/" />
-      <FeaturedEvents events={featuredEvents} />
-      <section className="p-4 sm:p-8 border-b-2">
+      <PageMeta
+        title="Events Archive | Refuge Worldwide"
+        path="events/archive"
+      />
+      <div className="p-4 sm:p-8 border-b-2">
         <div className="max-w-[1229px] mx-auto">
           <div className="lg:flex justify-between ">
-            <h1 className="hidden">Events</h1>
             <Pill outline>
-              <h2>Upcoming {title}</h2>
+              <h1>Past Events</h1>
             </Pill>
             <div className="h-5 lg:hidden" />
             <div className="py-2 px-4 border-2 border-black rounded-full w-fit flex flex-nowrap items-center max-w-full overflow-hidden">
@@ -184,19 +183,16 @@ export default function NewsPage({
             </div>
           </div>
         </div>
-      </section>
-
+      </div>
       <div className="">
         <div className="max-w-screen-xl mx-auto">
-          {/* <pre>{JSON.stringify(upcomingEvents, null, 2)}</pre> */}
-          {/* <pre>{JSON.stringify(pastEvents, null, 2)}</pre> */}
-          {Object.keys(upcomingEvents).length > 0 ? (
-            <UpcomingEvents events={upcomingEvents} />
+          {pastEvents.length > 0 ? (
+            <PastEvents title={title} events={pastEvents} />
           ) : (
             <div className="">
               <div className="max-w-screen-xl mx-auto">
                 <p className="p-4 sm:p-8 text-smedium font-medium md:font-light md:text-small">
-                  No upcoming {title}, please check back soon.
+                  No {title} in the archive, please check back soon.
                 </p>
               </div>
             </div>
@@ -204,18 +200,6 @@ export default function NewsPage({
         </div>
       </div>
       <div className="h-10 sm:h-16" />
-
-      <div className="text-center">
-        <Link
-          href="/events/archive"
-          className="inline-flex items-center space-x-4 text-base font-medium"
-        >
-          <span className="underline">Past events</span>
-          <Arrow />
-        </Link>
-      </div>
-
-      <div className="h-8 sm:h-10" />
     </Layout>
   );
 }
