@@ -3,7 +3,6 @@ import Layout from "../../../components/layout";
 import PageMeta from "../../../components/seo/page";
 import { getCollectionPageSingle } from "../../../lib/contentful/pages/radio";
 import { getCollectionPathsToPreRender } from "../../../lib/contentful/paths";
-import Collections from "../../../components/collections";
 import Pill from "../../../components/pill";
 import ShowPreview from "../../../components/showPreview";
 
