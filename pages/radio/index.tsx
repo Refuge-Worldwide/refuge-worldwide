@@ -10,9 +10,8 @@ import {
 } from "../../lib/contentful/pages/radio";
 import AllShows from "../../views/radio/allShows";
 import NextShows from "../../views/radio/nextShows";
-import Collections from "../../components/collections";
 import Pill from "../../components/pill";
-
+import Carousel from "../../components/carousel";
 export async function getStaticProps({ preview = false }) {
   const upcomingShows = await getUpcomingShows(preview);
 
@@ -48,14 +47,7 @@ export default function RadioPage({
 
       {upcomingShows.length > 0 && <NextShows upcomingShows={upcomingShows} />}
       <section className="border-b-2">
-        <div className="pt-16 -mt-16" id="shows" aria-hidden />
-
-        <div className="p-4 sm:p-8">
-          <Pill>
-            <h2>Collections</h2>
-          </Pill>
-          <Collections collections={collections} />
-        </div>
+        <Carousel items={collections} type="collection" title="Collections" />
       </section>
       <AllShows genres={genres} pastShows={pastShows} />
     </Layout>

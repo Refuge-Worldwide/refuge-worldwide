@@ -26,7 +26,7 @@ export default function AllShows({
       <div className="pt-16 -mt-16" id="shows" aria-hidden />
 
       <div className="p-4 sm:p-8">
-        <div className="md:flex justify-between">
+        <div className="flex justify-between items-center">
           <Pill>
             <h2> {filter.length > 0 ? filter : "All"} Shows</h2>
           </Pill>

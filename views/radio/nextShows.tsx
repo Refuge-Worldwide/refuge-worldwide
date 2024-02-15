@@ -8,7 +8,7 @@ export default function NextShows({
   upcomingShows: UpcomingShowType[];
 }) {
   return (
-    <section className="bg-orange border-2">
+    <section className="bg-orange border-b-2">
       <div className="p-4 sm:p-8">
         <Pill>
           <h2>Coming Soon</h2>
