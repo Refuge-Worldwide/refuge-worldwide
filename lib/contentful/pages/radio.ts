@@ -366,9 +366,7 @@ export async function getCollectionPageSingle(slug: string, preview: boolean) {
     "collectionCollection"
   );
 
-  collection.shows = collection.shows.items;
-
-  collection.shows.forEach((show) => {
+  collection.shows.items.forEach((show) => {
     show.genres = show.genresCollection.items.map((genre) => genre.name);
     show.coverImage = show.coverImage.url;
   });
@@ -379,7 +377,7 @@ export async function getCollectionPageSingle(slug: string, preview: boolean) {
 export async function getCollections(preview: boolean) {
   const CollectionsQuery = /* GraphQL */ `
     query CollectionsQuery($preview: Boolean) {
-      collectionCollection(preview: $preview) {
+      collectionCollection(preview: $preview, limit: 8) {
         items {
           sys {
             id
@@ -392,11 +390,23 @@ export async function getCollections(preview: boolean) {
           description
           shows: showsCollection(limit: 10) {
             items {
-              title
-              slug
-              mixcloudLink
               sys {
                 id
+              }
+              title
+              date
+              slug
+              mixcloudLink
+              coverImage {
+                sys {
+                  id
+                }
+                url
+              }
+              genresCollection(limit: 4) {
+                items {
+                  name
+                }
               }
             }
           }
@@ -410,5 +420,18 @@ export async function getCollections(preview: boolean) {
     preview,
   });
 
-  return extractCollection<CollectionInterface>(res, "collectionCollection");
+  const collections = extractCollection<CollectionInterface>(
+    res,
+    "collectionCollection"
+  );
+
+  collections.forEach((collection) => {
+    collection.shows.items.forEach((show) => {
+      console.log(show);
+      show.genres = show.genresCollection.items.map((genre) => genre.name);
+      show.coverImage = show.coverImage.url;
+    });
+  });
+
+  return collections;
 }

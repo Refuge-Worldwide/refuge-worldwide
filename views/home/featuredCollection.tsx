@@ -10,7 +10,7 @@ export default function FeaturedCollection({
   return (
     <section className="border-b-2">
       <Carousel
-        items={collection.shows}
+        items={collection.shows.items}
         title={collection.title}
         description={collection.description}
         viewAllLink={"/radio/collections/" + collection.slug}

@@ -23,7 +23,7 @@ export default function CollectionPage({
         <div className="h-4"></div>
         <h2 className="font-sans text-small mb-12">{description}</h2>
         <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-y-10 sm:gap-8">
-          {shows.map((show, i) => (
+          {shows.items.map((show, i) => (
             <li key={i}>
               <ShowPreview {...show} />
             </li>

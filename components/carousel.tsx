@@ -8,6 +8,7 @@ import "@splidejs/react-splide/css/core";
 import Link from "next/link";
 import { Arrow } from "../icons/arrow";
 import CollectionPreview from "./collectionPreview";
+import { useRouter } from "next/router";
 
 export default function Carousel({
   items,
@@ -22,6 +23,8 @@ export default function Carousel({
   description?: string;
   viewAllLink?: string;
 }) {
+  const router = useRouter();
+
   return (
     <Splide
       aria-label="Collections"
@@ -53,14 +56,23 @@ export default function Carousel({
       }}
     >
       <div className="px-4 sm:px-8 flex gap-4 items-center justify-between">
-        <div className="flex gap-4 items-end">
-          <Pill>
-            <h2>{title}</h2>
-          </Pill>
-          {description && (
-            <p className="font-sans text-small mb-1 mt-2">{description}</p>
-          )}
-        </div>
+        {router.pathname == "/radio/collections" ? (
+          <div>
+            <h3 className="font-sans font-medium">{title}</h3>
+            {description && (
+              <p className="font-sans text-small mb-1">{description}</p>
+            )}
+          </div>
+        ) : (
+          <div className="flex gap-4 items-end">
+            <Pill>
+              <h2>{title}</h2>
+            </Pill>
+            {description && (
+              <p className="font-sans text-small mb-1 mt-2">{description}</p>
+            )}
+          </div>
+        )}
 
         <div className="splide__arrows flex space-x-4 mt-4 ml-4 opacity-0 group-focus-within/section:opacity-100 group-hover/section:opacity-100 transition-all">
           <button className="splide__arrow splide__arrow--prev disabled:opacity-50 disabled:cursor-not-allowed">
@@ -73,7 +85,7 @@ export default function Carousel({
       </div>
       <div className="h-5 sm:h-8"></div>
 
-      <SplideTrack>
+      <SplideTrack className="cursor-grab active:cursor-grabbing">
         {items.map((item, i) => (
           <SplideSlide key={i}>
             {type == "show" && <ShowPreview {...item} />}

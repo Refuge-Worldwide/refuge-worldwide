@@ -325,5 +325,7 @@ export type CollectionInterface = {
   slug: string;
   description: string;
   image: CoverImage;
-  shows: Array<PastShowSchema>;
+  shows: {
+    items: Array<PastShowSchema>;
+  };
 };
