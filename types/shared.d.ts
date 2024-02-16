@@ -326,6 +326,6 @@ export type CollectionInterface = {
   description: string;
   image: CoverImage;
   shows: {
-    items: Array<PastShowSchema>;
+    items: ShowInterface[] | PastShowSchema[];
   };
 };
