@@ -181,7 +181,7 @@ export const ShowSubmissionEmail = ({
               margin: "16px auto",
             }}
           >
-            refugeworldwide.com refugeworldwide.com
+            refugeworldwide.com
           </Text>
         </Container>
       </Body>
@@ -217,7 +217,7 @@ const severityText = (level: string, date: string) => {
         >
           as soon as possible
         </span>{" "}
-        and no later than tomorrow and no later than tomorrow
+        and no later than tomorrow
       </span>
     );
   } else {
