@@ -9,7 +9,7 @@
     },
     {
       "path": "/api/cron/upcoming-featured-show-check",
-      "schedule": "27 9 * * *"
+      "schedule": "27 9 * * 1-5"
     }
   ]
 }
