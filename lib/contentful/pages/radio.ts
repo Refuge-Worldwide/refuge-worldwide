@@ -103,8 +103,8 @@ export type UpcomingShowType = Pick<
   | "genresCollection"
 >;
 
-export async function getUpcomingShows(preview: boolean) {
-  const today = dayjs().format("YYYY-MM-DD");
+export async function getUpcomingShows(preview?: boolean, date?: string) {
+  const today = dayjs(date ? date : undefined).format("YYYY-MM-DD");
 
   const UpcomingShowsQuery = /* GraphQL */ `
     query UpcomingShowsQuery($preview: Boolean, $today: DateTime) {

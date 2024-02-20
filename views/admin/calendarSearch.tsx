@@ -34,7 +34,7 @@ export default function CalendarSearch({ onView, onEdit, onToggle }) {
         status: show.status,
         published: show.published,
         artists: show.artists,
-        booker: show.booker ? show.booker : "",
+        isFeatured: show.isFeatured,
         email: show.email ? show.email : true,
         type: show.type ? show.type : "live",
       },
@@ -97,9 +97,10 @@ export default function CalendarSearch({ onView, onEdit, onToggle }) {
               <table className="table-fixed text-small text-left w-full">
                 <thead>
                   <tr className="border-b border-black/75 mb-4 text-black/75">
-                    <th className="font-light py-3 w-[40%]">Title</th>
-                    <th className="font-light py-3 w-[20%]">Artists</th>
-                    <th className="font-light py-3">Date/time</th>
+                    <th className="font-light py-3 w-[35%]">Title</th>
+                    <th className="font-light py-3 w-[15%]">Artists</th>
+                    <th className="font-light py-3 w-[25%]">Date/time</th>
+                    <th className="font-light py-3 w-[10%]">Status</th>
                     {/* <th className="font-light py-3 text-center">Status</th> */}
                   </tr>
                 </thead>
@@ -107,6 +108,7 @@ export default function CalendarSearch({ onView, onEdit, onToggle }) {
                   {data.map((show) => (
                     <tr className="my-2 border-black/20" key={show.id}>
                       <td className="py-3">
+                        {show.isFeatured}
                         <p className="line-clamp-2">{show.title}</p>
                       </td>
                       <td className="py-3">
@@ -127,12 +129,14 @@ export default function CalendarSearch({ onView, onEdit, onToggle }) {
                           <Date dateString={show.end} formatString="HH:mm" />
                         )}
                       </td>
-                      {/* <td className="py-3">
-                        <div className="bg-green/10 p-2 w-min text-tiny rounded-sm mx-auto">
-                          Published
+                      <td className="py-3">
+                        <div
+                          className={`bg-calendar-${show.status.toLowerCase()} p-2 w-min text-tiny rounded-lg`}
+                        >
+                          {show.status}
                         </div>
-                      </td> */}
-                      <td className="py-3 flex items-center gap-8 justify-end">
+                      </td>
+                      <td className="py-3 flex items-center gap-4 justify-end h-full">
                         <button
                           className="border-black/75 hover:bg-black hover:text-white border px-2 py-1 rounded-lg"
                           onClick={() => {

@@ -176,6 +176,9 @@ function Calendar() {
       },
     ],
     artistEmails: [{}],
+    isFeatured: selectedShow?.extendedProps?.isFeatured
+      ? selectedShow?.extendedProps?.isFeatured
+      : false,
   };
 
   const handleSubmit = async (values, actions) => {
@@ -300,6 +303,7 @@ function Calendar() {
       end: values.end,
       status: values.status.value,
       published: false,
+      isFeatured: values.isFeatured,
       backgroundColor:
         values.status.value == "TBC"
           ? "#e3e3e3"
@@ -685,11 +689,14 @@ function Calendar() {
                       </Dialog.Close>
                     </div>
                     <Form id="calendarShow">
+                      {/* <pre className="text-white bg-black">
+                        {JSON.stringify(values, null, 2)}
+                      </pre> */}
                       <div className="p-8">
                         <Field type="hidden" name="id" />
-                        <div className="mb-8">
+                        <div className="mb-8 flex items-center gap-6">
                           <RadioGroup.Root
-                            className="flex"
+                            className="flex flex-1"
                             name="Type of show"
                             onValueChange={(value: string) =>
                               setFieldValue("type", value)
@@ -709,13 +716,23 @@ function Calendar() {
                               </label>
                             </RadioGroup.Item>
                           </RadioGroup.Root>
+                          <CheckboxField
+                            name="isFeatured"
+                            label="🍊"
+                            className="mb-0"
+                          />
                         </div>
-                        <InputField
-                          name="title"
-                          label="Show name"
-                          required
-                          type="text"
-                        />
+                        <div>
+                          <div className="flex-1">
+                            <InputField
+                              name="title"
+                              label="Show name"
+                              required
+                              type="text"
+                            />
+                          </div>
+                        </div>
+
                         <ArtistMultiSelectField
                           label="Artist(s)"
                           name="artists"
