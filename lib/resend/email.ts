@@ -42,7 +42,6 @@ export async function sendConfirmationEmail(show) {
           const data = await resend.sendEmail({
             from: "Refuge Worldwide <noreply@mail.refugeworldwide.com>",
             to: artist.email,
-            bcc: ["jack@refugeworldwide.com"],
             subject:
               "Show confirmation - " + dayjs(show.start).format("MMM YYYY"),
             reply_to: [
