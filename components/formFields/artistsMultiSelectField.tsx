@@ -7,6 +7,7 @@ export default function ArtistMultiSelectField({
   description,
   limit,
   value,
+  includeEmail,
   ...props
 }: {
   label: string;
@@ -15,6 +16,7 @@ export default function ArtistMultiSelectField({
   required?: boolean;
   value?: Array<{ value: string; label: string; email?: [string] }>;
   limit?: number;
+  includeEmail?: boolean;
 }) {
   // const [ariaFocusMessage, setAriaFocusMessage] = useState("");
   const [selectedOptions, SetSelectedOptions] = useState(value ? value : []);
@@ -22,6 +24,9 @@ export default function ArtistMultiSelectField({
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [field, meta, helpers] = useField(props);
   const { setFieldValue } = useFormikContext();
+  const fetchUrl = includeEmail
+    ? `/api/admin/search?query=${query}&type=artists`
+    : `/api/artist-search?query=${query}`;
 
   const onSetSelectedOptions = (options) => {
     setFieldValue(props.name, options);
@@ -30,7 +35,7 @@ export default function ArtistMultiSelectField({
 
   const loadOptions = async () => {
     console.log("searching artists " + query);
-    const res = await fetch(`/api/admin/search?query=${query}&type=artists`);
+    const res = await fetch(fetchUrl);
     const data = await res.json();
 
     return {
