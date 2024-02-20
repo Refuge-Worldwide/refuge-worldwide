@@ -17,19 +17,20 @@ export default async function handler(
   }
 
   try {
+    const now = dayjs().format("YYYY-MM-DD");
     const twoWeekFromNow = dayjs().add(2, "week").format("YYYY-MM-DD");
     // get shows in upcoming shows orange section.
     // check again requirements.
     const upcomingShowsIn2Weeks = await getUpcomingShows(false, twoWeekFromNow);
 
     if (upcomingShowsIn2Weeks.length < 4) {
-      const upcomingShows = await getUpcomingShows();
-      const updateByDate = dayjs(upcomingShows[0].date)
+      const upcomingShows = await getUpcomingShows(false, now, 99);
+      const lastFour = upcomingShows.slice(-4);
+      const updateBy = dayjs(lastFour[0].date)
         .subtract(1, "day")
         .format("ddd D MMMM");
-      console.log(upcomingShows);
       sendSlackMessage(
-        `🍊 section will drop below the required 4 shows in the next 2 weeks. Please add another featured show by ${updateByDate}.`
+        `🍊 section will drop below the required 4 shows in the next 2 weeks. Please add more featured shows by ${updateBy}.`
       );
     }
     return res.status(200).json({ success: true });

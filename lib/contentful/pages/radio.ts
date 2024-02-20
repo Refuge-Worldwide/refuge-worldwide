@@ -103,11 +103,15 @@ export type UpcomingShowType = Pick<
   | "genresCollection"
 >;
 
-export async function getUpcomingShows(preview?: boolean, date?: string) {
+export async function getUpcomingShows(
+  preview?: boolean,
+  date?: string,
+  limit = 4
+) {
   const today = dayjs(date ? date : undefined).format("YYYY-MM-DD");
 
   const UpcomingShowsQuery = /* GraphQL */ `
-    query UpcomingShowsQuery($preview: Boolean, $today: DateTime) {
+    query UpcomingShowsQuery($preview: Boolean, $today: DateTime, $limit: Int) {
       showCollection(
         order: date_ASC
         where: {
@@ -117,7 +121,7 @@ export async function getUpcomingShows(preview?: boolean, date?: string) {
           isFeatured: true
         }
         preview: $preview
-        limit: 4
+        limit: $limit
       ) {
         items {
           title
@@ -146,7 +150,7 @@ export async function getUpcomingShows(preview?: boolean, date?: string) {
   `;
 
   const res = await graphql(UpcomingShowsQuery, {
-    variables: { preview, today },
+    variables: { preview, today, limit },
     preview,
   });
 
