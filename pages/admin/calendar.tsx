@@ -719,7 +719,7 @@ function Calendar() {
                           <CheckboxField
                             name="isFeatured"
                             label="🍊"
-                            className="mb-0"
+                            className="!mb-0"
                           />
                         </div>
                         <div>
