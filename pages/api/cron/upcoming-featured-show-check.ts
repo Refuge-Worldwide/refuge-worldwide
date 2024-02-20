@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import dayjs from "dayjs";
-import { getUpcomingShows } from "../../lib/contentful/pages/radio";
-import { sendSlackMessage } from "../../lib/slack";
+import { getUpcomingShows } from "../../../lib/contentful/pages/radio";
+import { sendSlackMessage } from "../../../lib/slack";
 
 export default async function handler(
   req: NextApiRequest,
@@ -9,12 +9,12 @@ export default async function handler(
 ) {
   const authHeader = req.headers.authorization;
 
-  // if (
-  //   !process.env.CRON_SECRET ||
-  //   authHeader !== `Bearer ${process.env.CRON_SECRET}`
-  // ) {
-  //   return res.status(401).json({ success: false });
-  // }
+  if (
+    !process.env.CRON_SECRET ||
+    authHeader !== `Bearer ${process.env.CRON_SECRET}`
+  ) {
+    return res.status(401).json({ success: false });
+  }
 
   try {
     const twoWeekFromNow = dayjs().add(2, "week").format("YYYY-MM-DD");

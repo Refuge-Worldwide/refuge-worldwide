@@ -1,14 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Resend } from "resend";
-import ShowSubmissionEmail from "../../emails/showSubmission";
 import dayjs from "dayjs";
-import { getUpcomingShowsByDate } from "../../lib/contentful/pages/radio";
-import { ShowInterface } from "../../types/shared";
-import { sendSlackMessage } from "../../lib/slack";
-import { sendEmail } from "../../lib/resend/email";
+import { getUpcomingShowsByDate } from "../../../lib/contentful/pages/radio";
+import { ShowInterface } from "../../../types/shared";
+import { sendSlackMessage } from "../../../lib/slack";
+import { sendEmail } from "../../../lib/resend/email";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-const slackURL = process.env.SLACK_WEBHOOK_URL;
 const contentfulSpaceId = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID;
 export default async function handler(
   req: NextApiRequest,
