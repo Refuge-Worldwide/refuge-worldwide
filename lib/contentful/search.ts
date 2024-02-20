@@ -115,7 +115,11 @@ export async function getCalendarSearchData(query: string, limit = 100) {
   };
 }
 
-export async function getArtistSearchData(query: string, limit = 20) {
+export async function getArtistSearchData(
+  query: string,
+  limit = 20,
+  includeEmail?: boolean
+) {
   const start = Date.now();
 
   const [artistsCollection] = await Promise.all([
@@ -136,7 +140,7 @@ export async function getArtistSearchData(query: string, limit = 20) {
     return {
       label: artist.fields.name,
       value: artist.sys.id,
-      email: artist.fields.email,
+      ...(includeEmail && { email: artist.fields.email }),
     };
   });
 

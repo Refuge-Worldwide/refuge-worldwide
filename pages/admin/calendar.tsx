@@ -721,6 +721,7 @@ function Calendar() {
                           name="artists"
                           limit={10}
                           value={initialValues.artists}
+                          includeEmail={true}
                         />
                         <EmailModal
                           artists={values.artists}
