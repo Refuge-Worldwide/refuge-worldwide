@@ -65,6 +65,11 @@ module.exports = {
         instagram: "#E4405F",
         whatsapp: "#25D366",
       },
+      calendar: {
+        tbc: "#e3e3e3",
+        confirmed: "#F1E2AF",
+        submitted: "#B3DCC1",
+      },
     },
     extend: {
       boxShadow: {

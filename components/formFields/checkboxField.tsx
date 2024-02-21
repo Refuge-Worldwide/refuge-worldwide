@@ -4,6 +4,7 @@ export default function CheckboxField({
   label,
   description,
   size,
+  className,
   ...props
 }: {
   label: string;
@@ -11,12 +12,13 @@ export default function CheckboxField({
   name: string;
   required?: boolean;
   size?: string;
+  className?: string;
 }) {
   const [field, meta, helpers] = useField(props);
 
   return (
     <div
-      className={`${
+      className={`${className} ${
         size == "small" ? "-mt-4" : ""
       } flex space-x-3 text-base mb-10 items-top`}
     >
@@ -25,6 +27,7 @@ export default function CheckboxField({
         id={props.name}
         {...field}
         {...props}
+        checked={field.value == true ? true : false}
         className="h-6 w-6 mt-1 rounded-full border-2 border-black text-black focus:ring-black"
       />
       <label

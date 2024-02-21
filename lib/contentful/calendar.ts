@@ -40,6 +40,7 @@ interface CalendarShow {
     url: string;
   };
   additionalImages: Array<string>;
+  isFeatured?: boolean;
 }
 
 interface fcCalendarShow {
@@ -72,7 +73,6 @@ export async function getCalendarShows(start, end, preview: boolean) {
           date
           dateEnd
           slug
-          booker
           sys {
             publishedVersion
             id
@@ -92,6 +92,7 @@ export async function getCalendarShows(start, end, preview: boolean) {
             url
           }
           additionalImages
+          isFeatured
         }
       }
     }
@@ -114,6 +115,7 @@ export async function getCalendarShows(start, end, preview: boolean) {
       end: show.dateEnd ? show.dateEnd.slice(0, -1) : null,
       status: show.status ? show.status : "Submitted",
       published: show.sys.publishedVersion ? true : false,
+      isFeatured: show.isFeatured,
       backgroundColor:
         show.status == "TBC"
           ? "#e3e3e3"
@@ -130,7 +132,6 @@ export async function getCalendarShows(start, end, preview: boolean) {
           : show.status == "Submitted"
           ? "#B3DCC1"
           : "#B3DCC1",
-      booker: show.booker ? show.booker : "",
       mixcloudLink: show.mixcloudLink,
       images: [
         show.coverImage?.url,
@@ -178,6 +179,7 @@ export async function searchCalendarShows(query, preview: boolean) {
             url
           }
           additionalImages
+          isFeatured
         }
       }
     }
@@ -200,7 +202,7 @@ export async function searchCalendarShows(query, preview: boolean) {
       status: show.status ? show.status : "Submitted",
       published: show.sys.publishedVersion ? true : false,
       artists: transformForDropdown(show.artistsCollection.items),
-      booker: show.booker ? show.booker : "",
+      isFeatured: show.isFeatured,
       images: [
         show.coverImage?.url,
         ...(show.additionalImages ? show.additionalImages : []),
@@ -299,6 +301,9 @@ export async function createCalendarShow(values, client) {
           type: {
             "en-US": values.type,
           },
+          ...(values.isFeatured && {
+            isFeatured: { "en-US": values.isFeatured },
+          }),
         },
       })
     )
@@ -375,13 +380,15 @@ export async function updateCalendarShow(values, client) {
         if (values.type && entry.fields.type) {
           entry.fields.type["en-US"] = values.type;
         }
+        if (values.isFeatured != null) {
+          entry.fields["isFeatured"] = { "en-US": values.isFeatured };
+        }
         return entry.update();
       })
       .then((entry) => {
         // if entry has already been published we want to publish updates
         console.log("is entry published: " + isPublished(entry));
         if (isPublished(entry)) {
-          entry.publish();
           entry.publish();
         }
         console.log(`Show ${entry.sys.id} updated.`);
@@ -392,7 +399,6 @@ export async function updateCalendarShow(values, client) {
       })
       .catch((error) => {
         console.log(error);
-        throw new Error(error);
         throw new Error(error);
       })
   );
