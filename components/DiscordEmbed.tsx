@@ -38,6 +38,7 @@ export default function DiscordEmbed() {
         server={DISCORD_SERVER_ID}
         channel={DISCORD_CHANNEL_ID}
         avatar={avatar}
+        shard="https://emerald.widgetbot.io"
       />
     );
   }
