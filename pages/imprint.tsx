@@ -23,7 +23,7 @@ export default function AccessPage({
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <Layout preview={preview}>
-      <PageMeta title="Access | Refuge Worldwide" path="access/" />
+      <PageMeta title="Imprint | Refuge Worldwide" path="imprint/" />
 
       <SinglePage coverImage={coverImage}>
         <section>
