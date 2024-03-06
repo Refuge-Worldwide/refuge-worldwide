@@ -21,6 +21,48 @@ export async function getNewsPageArticles(
         preview: $preview
         limit: $limit
         skip: $skip
+        where: {
+          AND: [
+            { title_not_contains: "Berlin Stories" }
+            { title_not_contains: "ICYMI" }
+          ]
+        }
+      ) {
+        items {
+          ...ArticlePreviewFragment
+        }
+      }
+    }
+
+    ${ArticlePreviewFragment}
+  `;
+
+  const NewsPageBSQuery = /* GraphQL */ `
+    query NewsPageArticlesQuery($preview: Boolean, $limit: Int, $skip: Int) {
+      articleCollection(
+        order: date_DESC
+        preview: $preview
+        limit: $limit
+        skip: $skip
+        where: { title_contains: "Berlin Stories" }
+      ) {
+        items {
+          ...ArticlePreviewFragment
+        }
+      }
+    }
+
+    ${ArticlePreviewFragment}
+  `;
+
+  const NewsPageICYMIQuery = /* GraphQL */ `
+    query NewsPageArticlesQuery($preview: Boolean, $limit: Int, $skip: Int) {
+      articleCollection(
+        order: date_DESC
+        preview: $preview
+        limit: $limit
+        skip: $skip
+        where: { title_contains: "Berlin Stories" }
       ) {
         items {
           ...ArticlePreviewFragment
