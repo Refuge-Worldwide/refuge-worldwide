@@ -232,8 +232,7 @@ const severityText = (level: string, date: string) => {
         >
           by the end of today{" "}
         </span>
-        otherwise we will have to sadly cancel your show otherwise we will have
-        to sadly cancel your show
+        otherwise we will have to sadly cancel your show
       </span>
     );
   }
