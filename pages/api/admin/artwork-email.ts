@@ -10,13 +10,13 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const values = req.body;
-  console.log("REQUEST METHOD: " + req.method);
   switch (req.method) {
     case "POST":
       try {
         const date = dayjs(values.date, "YYYY-MM-DD");
         console.log(date);
         const shows = await getUpcomingShowsByDate(date, true);
+        console.log(shows);
         await Promise.all(
           shows.map(async (show) => {
             let showEmailed = false;

@@ -308,7 +308,7 @@
 }
 
 .fc .fc-toolbar.fc-header-toolbar {
-  @apply mx-2 lg:mr-20 lg:ml-12;
+  @apply mx-2 lg:mr-28 lg:ml-12;
 }
 
 .fc-day-today {
