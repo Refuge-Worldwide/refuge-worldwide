@@ -38,7 +38,7 @@ export default function NextUp() {
             ) : (
               <Marquee
                 speed={0.5}
-                key={scheduleData.nextUp[0].title}
+                key={scheduleData.nextUp[0]?.title}
                 text={
                   <span className="h-10 flex items-center space-x-2 whitespace-nowrap px-2">
                     {scheduleData.nextUp.map((show) => (
