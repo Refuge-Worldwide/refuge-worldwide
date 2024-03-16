@@ -14,7 +14,7 @@ export default function NextUp() {
   const bgColour = bgOptions[Math.floor(Math.random() * bgOptions.length)];
 
   if (
-    (!isLoading && !scheduleData?.nextUp) ||
+    (!isLoading && !scheduleData?.nextUp[0]) ||
     error ||
     scheduleData?.liveNow.isMixedFeelings
   )
