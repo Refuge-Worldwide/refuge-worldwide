@@ -225,6 +225,48 @@ const addShow = async (values) => {
   }
 };
 
+const updateArtist = async (artist) => {
+  try {
+    const content = await richTextFromMarkdown(artist.bio);
+
+    client
+      .getSpace(spaceId)
+      .then((space) => space.getEnvironment(environmentId))
+      .then((environment) => environment.getEntry(artist.id))
+      //update fields with values from form
+      .then((entry) => {
+        entry.fields.content = {
+          "en-US": content,
+        };
+        entry.fields.pronouns = {
+          "en-US": artist.pronouns,
+        };
+        if (artist.imageId) {
+          entry.fields.photo = {
+            "en-US": {
+              sys: {
+                type: "Link",
+                linkType: "Asset",
+                id: artist.imageId,
+              },
+            },
+          };
+          entry.fields.coverImagePosition = {
+            "en-US": "center",
+          };
+        }
+        return entry.update();
+      })
+      .then((entry) => {
+        console.log(`Entry ${entry.sys.id} updated.`);
+        return entry;
+      });
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};
+
 const updateShow = async (values) => {
   try {
     const content = await richTextFromMarkdown(values.description);
@@ -385,6 +427,14 @@ export default async function handler(
           for (const genre of genres) {
             const contentfulNewGenre = await addGenre(genre);
             values.genres.push(contentfulNewGenre);
+          }
+        }
+        if (values.artistsAdditionalInfo) {
+          for (const artist of values.artistsAdditionalInfo) {
+            if (artist.image) {
+              artist.imageId = await uploadImage(artist.name, artist.image);
+            }
+            await updateArtist(artist);
           }
         }
         await updateShow(values);

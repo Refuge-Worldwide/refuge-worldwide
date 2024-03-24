@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MultiSelectField from "../formFields/multiSelectField";
 import ImageUploadField from "../formFields/imageUploadField";
 import { useFormikContext, Field, FieldArray, ErrorMessage } from "formik";
@@ -28,6 +28,24 @@ export default function ShowSubmissionStep3({
   const [micLevel, setMicLevel] = useState<boolean>(false);
   const { values } = useFormikContext<SubmissionFormValues>();
   const newSubmission = initial ? false : true;
+
+  // useEffect(() => {
+  //   console.log(values.artistsAdditionalInfo);
+  //   values.artistsAdditionalInfo = values.artists.reduce(
+  //     (reducedArtists, artist) => {
+  //       if (!artist.content) {
+  //         var someNewValue = {
+  //           id: artist.value,
+  //           name: artist.label,
+  //           requiresImage: !artist.image,
+  //         };
+  //         reducedArtists.push(someNewValue);
+  //       }
+  //       return reducedArtists;
+  //     }
+  //   );
+  // }, [values.artists]);
+
   return (
     <div>
       {env == "development" && (
@@ -125,6 +143,58 @@ export default function ShowSubmissionStep3({
                   >
                     Add another artist/guest
                   </button>
+                </div>
+              )}
+            />
+          </fieldset>
+        )}
+
+        {values.artistsAdditionalInfo && (
+          <fieldset className=" mb-8">
+            <FieldArray
+              name="artistsAdditionalInfo"
+              render={(arrayHelpers) => (
+                <div>
+                  {values.artistsAdditionalInfo.map((artist, index) => {
+                    return (
+                      <div
+                        className="mb-8 border border-black p-8 relative"
+                        key={"artistAdditionalInfo" + index}
+                      >
+                        <p className="font-medium !mt-0">
+                          Additional info required for {artist.name}
+                        </p>
+                        <InputField
+                          name={`artistsAdditionalInfo.${index}.pronouns`}
+                          type="text"
+                          label="Pronouns"
+                        />
+                        <TextareaField
+                          name={`artistsAdditionalInfo.${index}.bio`}
+                          rows={4}
+                          label="Bio"
+                          required
+                        />
+                        {artist.requiresImage && (
+                          <ImageUploadField
+                            label="Image"
+                            description="No logos and no flyers. Minimum dimensions: 1000x1000px, maximum file size: 3MB."
+                            required
+                            name={`artistsAdditionalInfo.${index}.image`}
+                          />
+                        )}
+                        <div className="flex gap-2 md:gap-3 items-center border border-black p-3 md:p-6 bg-orange">
+                          <AiOutlineInfoCircle className="w-5 sm:w-6 md:w-8 h-full" />
+                          <span className="flex-1 text-small">
+                            PLEASE NOTE: If you would like this image to be used
+                            for your show’s social media artwork please also add
+                            it to Show image(s) field towards the end of this
+                            form.
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             />

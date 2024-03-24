@@ -130,7 +130,7 @@ export async function getArtistSearchData(
 
       "fields.name[match]": query,
 
-      select: ["fields.name", "fields.email"],
+      select: ["fields.name", "fields.email", "fields.content", "fields.photo"],
     }),
   ]);
 
@@ -140,6 +140,8 @@ export async function getArtistSearchData(
     return {
       label: artist.fields.name,
       value: artist.sys.id,
+      content: artist.fields.content ? true : false,
+      image: artist.fields.photo ? true : false,
       ...(includeEmail && { email: artist.fields.email }),
     };
   });
