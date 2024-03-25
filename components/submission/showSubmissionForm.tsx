@@ -129,6 +129,20 @@ export default function ShowSubmissionForm({
         image: "",
       },
     ],
+    artistsAdditionalInfo: initial.artistsCollection.items.reduce(
+      (reducedArtists, artist) => {
+        if (!artist.content) {
+          var someNewValue = {
+            id: artist.sys.id,
+            name: artist.name,
+            requiresImage: artist.photo ? false : true,
+          };
+          reducedArtists.push(someNewValue);
+        }
+        return reducedArtists;
+      },
+      []
+    ),
   };
   const [currentStep, setCurrentStep] = useState<number>(1);
   const isLastStep = currentStep === 2;

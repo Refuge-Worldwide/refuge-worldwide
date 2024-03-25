@@ -140,6 +140,14 @@ export async function getShowById(id, preview) {
             sys {
               id
             }
+            photo {
+              sys {
+                id
+              }
+            }
+            content {
+              json
+            }
           }
         }
       }

@@ -284,6 +284,7 @@ export type SubmissionFormValues = {
     bio?: string;
     image?: string;
   }>;
+  artistsAdditionalInfo?: any[];
 };
 
 export type EventType =
