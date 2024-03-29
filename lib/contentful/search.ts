@@ -151,3 +151,22 @@ export async function getArtistSearchData(
     duration: end - start,
   };
 }
+
+export async function getArtistsWithoutBios() {
+  const [artistsCollection] = await Promise.all([
+    previewClient.getEntries<TypeArtistFields>({
+      content_type: "artist",
+      order: "fields.name",
+      "fields.content[exists]": false,
+      "fields.email[exists]": true,
+
+      select: ["fields.name", "fields.email", "fields.content"],
+    }),
+  ]);
+
+  const { items: artists } = artistsCollection;
+
+  return {
+    data: artists,
+  };
+}
