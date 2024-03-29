@@ -43,7 +43,8 @@ export default function NextUp() {
                   <span className="h-10 flex items-center space-x-2 whitespace-nowrap px-2">
                     {scheduleData.nextUp.map((show) => (
                       <p className="font-medium" key={show.title}>
-                        <LocalTime dateTime={show.date} /> {show.title}{" "}
+                        B2B Day{" "}
+                        {/* <LocalTime dateTime={show.date} /> {show.title}{" "} */}
                         &#47;&#47;{" "}
                       </p>
                     ))}
