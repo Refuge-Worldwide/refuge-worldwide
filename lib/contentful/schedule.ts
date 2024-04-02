@@ -1,17 +1,19 @@
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 import next from "next";
 import { graphql } from ".";
 import { ScheduleShow } from "../../types/shared";
 import { extractCollection } from "../../util";
 dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export async function getScheduleData() {
-  const cetAdjustment = 2;
+  const cetAdjustment = dayjs().tz("Europe/Berlin").utcOffset();
   let endScheduleAdjustment = 2;
   const start = Date.now();
   const nowUTC = dayjs.utc();
-  const nowCET = nowUTC.add(cetAdjustment, "hours");
+  const nowCET = nowUTC.add(cetAdjustment, "minutes");
   const startOfDay = nowCET.subtract(5, "hour").startOf("day").add(5, "hours");
   const startSchedule = startOfDay.toISOString();
   const dayOfWeek = startOfDay.day();
@@ -64,9 +66,11 @@ export async function getScheduleData() {
   let nextUp: Array<ScheduleShow>;
 
   schedule.forEach((show, index) => {
-    show.date = dayjs(show.date).subtract(cetAdjustment, "hours").toISOString();
+    show.date = dayjs(show.date)
+      .subtract(cetAdjustment, "minutes")
+      .toISOString();
     show.dateEnd = dayjs(show.dateEnd)
-      .subtract(cetAdjustment, "hours")
+      .subtract(cetAdjustment, "minutes")
       .toISOString();
     show.title = show.title.replace("|", "—");
     if (!nextUp && nowUTC.isBefore(dayjs(show.dateEnd))) {
