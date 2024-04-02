@@ -42,7 +42,7 @@ export default function ShowArtworkModal() {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
-        <button className="hidden lg:block hover:bg-black/10 rounded-lg">
+        <button className="hidden lg:block hover:bg-black/10 rounded-lg cursor-pointer">
           <RxDotsVertical />
         </button>
       </DropdownMenu.Trigger>
@@ -55,14 +55,13 @@ export default function ShowArtworkModal() {
           open={dialogOpen}
           onOpenChange={(dialogOpen) => setDialogOpen(dialogOpen)}
         >
-          <Dialog.Trigger asChild>
-            <DropdownMenu.Item
-              className="hover:bg-black/10 px-2 py-1 rounded-lg"
-              onSelect={(e) => e.preventDefault()}
-            >
-              Send artwork images
-            </DropdownMenu.Item>
-          </Dialog.Trigger>
+          <DropdownMenu.Item
+            asChild
+            className="hover:bg-black/10 px-2 py-1 rounded-lg"
+            onSelect={(e) => e.preventDefault()}
+          >
+            <Dialog.Trigger>Send artwork images</Dialog.Trigger>
+          </DropdownMenu.Item>
           <Dialog.Portal>
             <Dialog.Overlay className="data-[state=open]:animate-overlayShow  w-screen h-screen fixed top-0 left-0 bg-black/50 z-50 backdrop-blur-sm" />
             <Dialog.Content className="data-[state=open]:animate-contentShow bg-white w-full h-full lg:h-auto lg:max-w-3xl fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 border-black border">
