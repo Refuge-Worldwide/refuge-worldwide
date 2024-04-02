@@ -36,7 +36,7 @@ export default function ShowArtworkModal() {
   };
 
   const initialValues = {
-    date: dayjs().add(3, "days").format("YYYY-MM-DD"),
+    date: dayjs().add(2, "days").format("YYYY-MM-DD"),
   };
 
   return (
