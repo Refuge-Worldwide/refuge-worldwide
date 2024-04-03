@@ -106,9 +106,11 @@ export type UpcomingShowType = Pick<
 export async function getUpcomingShows(
   preview?: boolean,
   date?: string,
-  limit = 4
+  limit = 99
 ) {
-  const today = dayjs(date ? date : undefined).format("YYYY-MM-DD");
+  const today = dayjs(date ? date : undefined)
+    .add(1, "day")
+    .format("YYYY-MM-DD");
 
   const UpcomingShowsQuery = /* GraphQL */ `
     query UpcomingShowsQuery($preview: Boolean, $today: DateTime, $limit: Int) {
