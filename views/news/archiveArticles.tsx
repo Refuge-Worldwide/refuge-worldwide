@@ -1,15 +1,20 @@
 import ArticlePreview from "../../components/articlePreview";
-import useNewsArticles from "../../hooks/useNewsArticles";
+import useNewsArchiveArticles from "../../hooks/useNewsArchiveArticles";
 import { ArticleInterface } from "../../types/shared";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 
-export default function AllArticles({
+export default function ArchiveArticles({
   articles: fallbackData,
+  type,
 }: {
   articles: ArticleInterface[];
+  type: string;
 }) {
-  const { articles, loadMore, isReachingEnd } = useNewsArticles(fallbackData);
+  const { articles, loadMore, isReachingEnd } = useNewsArchiveArticles(
+    fallbackData,
+    type
+  );
 
   return (
     <section>
