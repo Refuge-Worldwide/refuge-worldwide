@@ -11,13 +11,13 @@ export default function useNewsArchiveArticles(
   type: string
 ) {
   const { data, setSize } = useSWRInfinite(
-    (pageIndex) => `${type}-${pageIndex}`,
-    async (pageIndex: number) =>
+    (pageIndex) => `${type}-${pageIndex * NEWS_ARTICLES_PAGE_SIZE}`,
+    async (skip) =>
       getArchiveArticles(
         false,
         type,
         NEWS_ARTICLES_PAGE_SIZE,
-        pageIndex * NEWS_ARTICLES_PAGE_SIZE
+        Number(skip.split("-")[1])
       ),
     {
       fallbackData: [fallbackData],
