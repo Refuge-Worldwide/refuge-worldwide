@@ -14,6 +14,9 @@ export async function getNewsPageArticles(
   limit?: number,
   skip?: number
 ) {
+  if (!skip) {
+    limit = 10;
+  }
   const NewsPageArticlesQuery = /* GraphQL */ `
     query NewsPageArticlesQuery($preview: Boolean, $limit: Int, $skip: Int) {
       articleCollection(
@@ -38,12 +41,12 @@ export async function getNewsPageArticles(
   `;
 
   const NewsPageBSQuery = /* GraphQL */ `
-    query NewsPageArticlesQuery($preview: Boolean, $limit: Int, $skip: Int) {
+    query NewsPageArticlesQuery($preview: Boolean) {
       articleCollection(
         order: date_DESC
         preview: $preview
-        limit: $limit
-        skip: $skip
+        limit: 1
+        skip: 0
         where: { title_contains: "Berlin Stories" }
       ) {
         items {
@@ -56,13 +59,13 @@ export async function getNewsPageArticles(
   `;
 
   const NewsPageICYMIQuery = /* GraphQL */ `
-    query NewsPageArticlesQuery($preview: Boolean, $limit: Int, $skip: Int) {
+    query NewsPageArticlesQuery($preview: Boolean) {
       articleCollection(
         order: date_DESC
         preview: $preview
-        limit: $limit
-        skip: $skip
-        where: { title_contains: "Berlin Stories" }
+        limit: 1
+        skip: 0
+        where: { title_contains: "ICYMI" }
       ) {
         items {
           ...ArticlePreviewFragment
@@ -75,6 +78,73 @@ export async function getNewsPageArticles(
 
   const res = await graphql(NewsPageArticlesQuery, {
     variables: { preview, limit, skip },
+    preview,
+  });
+  const mainNews = extractCollection<ArticleInterface>(
+    res,
+    "articleCollection"
+  );
+
+  // if we are at start of news page get two latest icymi and berlin stories articles and add them to news articles array
+  if (!skip) {
+    const icymi = await graphql(NewsPageBSQuery, {
+      variables: { preview },
+      preview,
+    });
+
+    const bs = await graphql(NewsPageICYMIQuery, {
+      variables: { preview },
+      preview,
+    });
+
+    const icymiNews = extractCollection<ArticleInterface>(
+      icymi,
+      "articleCollection"
+    );
+    const bsNews = extractCollection<ArticleInterface>(bs, "articleCollection");
+    mainNews.push(icymiNews[0]);
+    mainNews.push(bsNews[0]);
+
+    // sort main news by date.
+    mainNews.sort(function (a, b) {
+      return new Date(b.date).valueOf() - new Date(a.date).valueOf();
+    });
+  }
+
+  return mainNews;
+}
+
+export async function getArchiveArticles(
+  preview: boolean,
+  type: string,
+  limit?: number,
+  skip?: number
+) {
+  const NewsPageArticlesQuery = /* GraphQL */ `
+    query NewsPageArticlesQuery(
+      $preview: Boolean
+      $limit: Int
+      $skip: Int
+      $type: String
+    ) {
+      articleCollection(
+        order: date_DESC
+        preview: $preview
+        limit: $limit
+        skip: $skip
+        where: { title_contains: $type }
+      ) {
+        items {
+          ...ArticlePreviewFragment
+        }
+      }
+    }
+
+    ${ArticlePreviewFragment}
+  `;
+
+  const res = await graphql(NewsPageArticlesQuery, {
+    variables: { preview, type, limit, skip },
     preview,
   });
 
@@ -110,6 +180,12 @@ export async function getNewsPage(preview: boolean) {
   return {
     articles: await getNewsPageArticles(preview, NEWS_ARTICLES_PAGE_SIZE),
     featuredArticles: await getNewsPageFeaturedArticles(preview),
+  };
+}
+
+export async function getArchiveNewsPage(preview: boolean, type: string) {
+  return {
+    articles: await getArchiveArticles(preview, type, NEWS_ARTICLES_PAGE_SIZE),
   };
 }
 

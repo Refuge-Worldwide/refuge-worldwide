@@ -1,19 +1,18 @@
 import { ArticleInterface } from "../types/shared";
 import useSWRInfinite from "swr/infinite";
 import {
-  getNewsPageArticles,
+  getArchiveArticles,
   NEWS_ARTICLES_PAGE_SIZE,
 } from "../lib/contentful/pages/news";
 
-export default function useNewsArticles(
+export default function useNewsArchiveArticles(
   fallbackData: ArticleInterface[],
-  archive?: boolean,
-  type?: string
+  type: string
 ) {
   const { data, setSize } = useSWRInfinite(
     (pageIndex) => [pageIndex * NEWS_ARTICLES_PAGE_SIZE],
     async (skip) =>
-      getNewsPageArticles(false, NEWS_ARTICLES_PAGE_SIZE, skip[0]),
+      getArchiveArticles(false, type, NEWS_ARTICLES_PAGE_SIZE, skip[0]),
     {
       fallbackData: [fallbackData],
       revalidateFirstPage: false,
