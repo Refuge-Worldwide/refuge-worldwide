@@ -8,7 +8,7 @@ export async function getStaticProps({ preview = false }) {
   return {
     props: {
       preview,
-      ...(await getArchiveNewsPage(preview, "ICYMI")),
+      ...(await getArchiveNewsPage(preview, "Berlin Stories")),
     },
   };
 }
@@ -19,7 +19,7 @@ export default function ICYMIArchivePage({
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <Layout preview={preview}>
-      <PageMeta title="ICYMI | Refuge Worldwide" path="news/" />
+      <PageMeta title="Berlin Stories | Refuge Worldwide" path="news/" />
 
       <section className="block px-4 pt-4 sm:pt-8 sm:pl-8">
         <Pill>
