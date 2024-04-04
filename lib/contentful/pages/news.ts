@@ -15,7 +15,11 @@ export async function getNewsPageArticles(
   skip?: number
 ) {
   if (!skip) {
+    // remove 2 items as we are adding in latest icymi and berlin stories articles
     limit = 10;
+  } else {
+    // account for removing 2 items from initial page
+    skip = skip - 2;
   }
   const NewsPageArticlesQuery = /* GraphQL */ `
     query NewsPageArticlesQuery($preview: Boolean, $limit: Int, $skip: Int) {
