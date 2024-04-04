@@ -4,7 +4,6 @@ import {
   getArchiveArticles,
   NEWS_ARTICLES_PAGE_SIZE,
 } from "../lib/contentful/pages/news";
-import { useRouter } from "next/router";
 
 export default function useNewsArchiveArticles(
   fallbackData: ArticleInterface[],
