@@ -79,7 +79,7 @@ export default function ArticleBody({
             {title.includes("Berlin Stories") && (
               <div className="text-center mt-32">
                 <Link
-                  href="/news/archive/berlin stories"
+                  href="/news/archive/berlin-stories"
                   className="inline-flex items-center space-x-4 text-base font-medium"
                 >
                   <span className="underline">All Berlin Stories</span>
