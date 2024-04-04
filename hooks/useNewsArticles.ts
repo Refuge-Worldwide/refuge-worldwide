@@ -5,11 +5,7 @@ import {
   NEWS_ARTICLES_PAGE_SIZE,
 } from "../lib/contentful/pages/news";
 
-export default function useNewsArticles(
-  fallbackData: ArticleInterface[],
-  archive?: boolean,
-  type?: string
-) {
+export default function useNewsArticles(fallbackData: ArticleInterface[]) {
   const { data, setSize } = useSWRInfinite(
     (pageIndex) => [pageIndex * NEWS_ARTICLES_PAGE_SIZE],
     async (skip) =>

@@ -4,15 +4,21 @@ import {
   getArchiveArticles,
   NEWS_ARTICLES_PAGE_SIZE,
 } from "../lib/contentful/pages/news";
+import { useRouter } from "next/router";
 
 export default function useNewsArchiveArticles(
   fallbackData: ArticleInterface[],
   type: string
 ) {
   const { data, setSize } = useSWRInfinite(
-    (pageIndex) => [pageIndex * NEWS_ARTICLES_PAGE_SIZE],
-    async (skip) =>
-      getArchiveArticles(false, type, NEWS_ARTICLES_PAGE_SIZE, skip[0]),
+    (pageIndex) => `${type}-${pageIndex}`,
+    async (pageIndex: number) =>
+      getArchiveArticles(
+        false,
+        type,
+        NEWS_ARTICLES_PAGE_SIZE,
+        pageIndex * NEWS_ARTICLES_PAGE_SIZE
+      ),
     {
       fallbackData: [fallbackData],
       revalidateFirstPage: false,
