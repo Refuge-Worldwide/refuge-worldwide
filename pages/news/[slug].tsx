@@ -6,6 +6,7 @@ import { ArticleInterface } from "../../types/shared";
 import ArticleBody from "../../views/news/articleBody";
 import RelatedArticles from "../../views/news/relatedArticles";
 import SinglePage from "../../views/singlePage";
+import Link from "next/link";
 
 type ArticleProps = {
   article: ArticleInterface;
