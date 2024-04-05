@@ -5,7 +5,8 @@ import Pill from "../../components/pill";
 import Prose from "../../components/Prose";
 import { renderRichTextWithImages } from "../../lib/rich-text";
 import { ArticleInterface } from "../../types/shared";
-
+import Link from "next/link";
+import { Arrow } from "../../icons/arrow";
 const ShareButton = dynamic(() => import("../../components/shareButton"));
 
 export default function ArticleBody({
@@ -62,7 +63,31 @@ export default function ArticleBody({
 
           <div className="h-6" />
 
-          <Prose>{renderRichTextWithImages(content)}</Prose>
+          <Prose>
+            {renderRichTextWithImages(content)}{" "}
+            {title.includes("ICYMI") && (
+              <div className="text-center mt-32">
+                <Link
+                  href="/news/archive/icymi"
+                  className="inline-flex items-center space-x-4 text-base font-medium"
+                >
+                  <span className="underline">All ICYMI</span>
+                  <Arrow />
+                </Link>
+              </div>
+            )}
+            {title.includes("Berlin Stories") && (
+              <div className="text-center mt-32">
+                <Link
+                  href="/news/archive/berlin-stories"
+                  className="inline-flex items-center space-x-4 text-base font-medium"
+                >
+                  <span className="underline">All Berlin Stories</span>
+                  <Arrow />
+                </Link>
+              </div>
+            )}
+          </Prose>
 
           <div className="h-12 md:h-24" />
         </div>
