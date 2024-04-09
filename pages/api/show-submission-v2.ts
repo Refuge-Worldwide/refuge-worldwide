@@ -328,6 +328,9 @@ const updateShow = async (values) => {
         entry.fields.additionalImages = {
           "en-US": additionalImages,
         };
+        entry.fields.instagramHandles = {
+          "en-US": formatInstaHandles(values.instagram),
+        };
         return entry.update();
       })
       .then((entry) => {
@@ -371,10 +374,12 @@ const uploadImage = async (name, image) => {
 };
 
 const formatInstaHandles = (handles) => {
-  return handles
-    .split(", ")
-    .map((s) => "@" + s)
-    .join(" ");
+  if (handles != "")
+    return handles
+      .split(", ")
+      .map((s) => "@" + s)
+      .join(" ");
+  else return "";
 };
 
 export default async function handler(
