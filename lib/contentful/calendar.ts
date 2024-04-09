@@ -524,7 +524,7 @@ export async function getInstaInfo() {
     variables: { startSchedule, endSchedule },
   });
 
-  const instaInfo = extractCollection(res, "showCollection");
+  const instaInfo = extractCollection<CalendarShow>(res, "showCollection");
 
   instaInfo.forEach((show, index) => {
     show.date = dayjs(show.date)
