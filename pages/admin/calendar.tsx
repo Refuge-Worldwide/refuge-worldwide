@@ -40,6 +40,7 @@ import useWindowSize from "../../hooks/useWindowSize";
 import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/router";
 import CalendarSearch from "../../views/admin/calendarSearch";
+import CalendarInsta from "../../views/admin/calendarInsta";
 import EmailModal from "../../views/admin/emailModal";
 import TextareaField from "../../components/formFields/textareaField";
 import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
@@ -556,6 +557,7 @@ function Calendar() {
           onEdit={handleEventClick}
           onToggle={handleSearchDialogToggle}
         />
+        <CalendarInsta />
         <button
           className="absolute top-1 lg:top-2 right-2 lg:right-0 disabled:cursor-wait"
           onClick={reloadCalendar}
