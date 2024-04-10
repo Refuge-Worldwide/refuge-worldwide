@@ -33,7 +33,7 @@ const artworkLinks = [
   process.env.SHOW_ARTWORK_TUES,
   process.env.SHOW_ARTWORK_WED,
   process.env.SHOW_ARTWORK_THURS,
-  process.env.SHOW_RTWORK_FRI,
+  process.env.SHOW_ARTWORK_FRI,
   process.env.SHOW_ARTWORK_SAT,
 ];
 
@@ -83,21 +83,27 @@ export const ShowArtworkEmail = ({
                 </Text>
                 <Hr style={seperator} />
                 <Heading as="h2" style={paragraph}>
-                  <b>IMPORTANT NOTES</b>
+                  <b>IMPORTANT NOTES BELOW, PLEASE READ!</b>
                 </Heading>
                 <Text style={paragraph}>
-                  – When mentioning the station on air, our name is “Refuge
-                  Worldwide,” not “Refuge Radio,” “Refugee Worldwide” or
-                  similar.
-                  <br />– Please arrive at Weserstraße 166, 12045 at least 15
-                  minutes before your show, and let us know ASAP via Whatsapp on
-                  +4915231355804 if you’re going to be late.
+                  – Please arrive at Weserstraße 166, 12045 at least 15 minutes
+                  before your show, and let us know ASAP via Whatsapp on
+                  +4915231355804 if you&apos;re going to be late.
                   <br />– Artists / hosts receive 1x free house drink (softs /
                   wine / beer) before or after your show. All other menu items
                   at Oona Bar are 10% off on the day.
-                  <br />– Encourage people to join the chatroom by shouting out
-                  refugeworldwide.com/chat on the mic. Instructions on how to
-                  use the mic are in the DJ booth.
+                  <br />– When mentioning the station on air, our name is “
+                  <b>Refuge Worldwide</b>” not “Refuge Radio,” “Refugee
+                  Worldwide” or similar.
+                  <br />– Encourage people to join the chatroom by shouting out{" "}
+                  <Link style={link} href="https://refugeworldwide.com/chat">
+                    refugeworldwide.com/chat
+                  </Link>{" "}
+                  on the mic. Instructions on how to use the mic are in the DJ
+                  booth.
+                  <br />- If you need to play something from your laptop or
+                  phone, we have an AUX cable connected to Channel 4 on the
+                  mixer.
                   <br />– All shows will be uploaded to our{" "}
                   <Link
                     style={link}
@@ -113,6 +119,42 @@ export const ShowArtworkEmail = ({
                   for one month (shows may take up to three days from the date
                   of recording to appear here)
                 </Text>
+                <br />
+                <Heading as="h2" style={paragraph}>
+                  <b>MIXER OVERVIEW</b>
+                </Heading>
+                <Img
+                  src={`https://res.cloudinary.com/dqjn26pey/image/upload/v1712756321/DJM_Annotated_v2-pichi-1_fkkw36.jpg`}
+                  height={750}
+                  width={600}
+                  style={logo}
+                />
+                <Heading as="h2" style={paragraph}>
+                  <b>MIC INSTRUCTIONS, VERY IMPORTANT!</b>
+                </Heading>
+                <Text style={paragraph}>
+                  1. Put your headphones on.
+                  <br />
+                  2. Turn the MIXING knob (above the PHONES LEVEL knob) to
+                  MASTER, so you can hear yourself in the headphones.
+                  <br />
+                  3. Make sure the MASTER channel&apos;s CUE button is on.
+                  <br />
+                  4. Switch the mic to ON (light turns solid red).
+                  <br />
+                  5. Turn down the channel currently playing music to 3.
+                  <br />
+                  6. Speak closely and clearly into the front of the mic.
+                  <br />
+                </Text>
+                <Text style={paragraph}>
+                  When you&apos;re finished, just reverse the process above!
+                </Text>
+                <Text style={paragraph}>
+                  If you have any questions please don&apos;t hesitate to get in
+                  touch.
+                </Text>
+
                 <Hr style={seperator} />
                 <Text style={{ ...paragraph, marginTop: -5, marginBottom: 0 }}>
                   Best, <br />
