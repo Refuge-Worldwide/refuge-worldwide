@@ -5,6 +5,7 @@ import { Asset, Entry, Content } from "../types/shared";
 import Link from "next/link";
 import { ArticleShowPreview } from "../components/showPreview";
 import Pill from "../components/pill";
+import { useEffect, useState } from "react";
 interface EmbeddedAssetBlock extends Block {
   data: {
     target: {
@@ -21,7 +22,15 @@ const getAssetById = (id: string, assets: Asset[]) =>
 const getEntryById = (id: string, assets: Entry[]) =>
   assets.filter((asset) => asset.sys.id === id).pop();
 
-export function renderRichTextWithImages(content: Content) {
+export function RenderRichTextWithImages(content: Content) {
+  const [loaded, setLoaded] = useState(false);
+  useEffect(() => {
+    const scriptTag = document.createElement("script");
+    scriptTag.src = "https://tally.so/widgets/embed.js";
+    scriptTag.addEventListener("load", () => setLoaded(true));
+    document.body.appendChild(scriptTag);
+  }, []);
+
   if (content.links) {
     const blockAssets = content.links.assets.block;
     const blockEntries = content.links?.entries?.block;
@@ -58,11 +67,10 @@ export function renderRichTextWithImages(content: Content) {
             return (
               <div className="max-w-[750px] mx-auto">
                 <iframe
-                  title="Application form"
-                  src={uri}
+                  data-tally-src={uri}
                   width="100%"
-                  height="1650"
-                  loading="lazy"
+                  height="auto"
+                  title="Application form"
                 ></iframe>
               </div>
             );
