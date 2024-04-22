@@ -268,12 +268,11 @@ export async function createCalendarShow(values, client) {
     values.hasExtraArtists,
     values.extraArtists
   );
-  const internal =
-    values.title.split(" | ")[0] +
-    " - " +
-    artistsForInternal +
-    " - " +
-    dateFormatted;
+  const internal = values.title
+    ? values.title.split(" | ")[0] + " - "
+    : "" + artistsForInternal + " - " + dateFormatted;
+  console.log("title is....");
+  console.log(values.title);
   return client
     .getSpace(spaceId)
     .then((space) => space.getEnvironment(environmentId))
@@ -281,7 +280,7 @@ export async function createCalendarShow(values, client) {
       environment.createEntry(showContentTypeId, {
         fields: {
           title: {
-            "en-US": values.title,
+            "en-US": values.title ? values.title : "Awaiting show title",
           },
           internal: {
             "en-US": internal,
@@ -334,12 +333,9 @@ export async function updateCalendarShow(values, client) {
       values.hasExtraArtists,
       values.extraArtists
     );
-    internal =
-      values.title.split(" | ")[0] +
-      " - " +
-      artistsForInternal +
-      " - " +
-      dateFormatted;
+    internal = values.title
+      ? values.title.split(" | ")[0] + " - "
+      : "" + artistsForInternal + " - " + dateFormatted;
   }
 
   //fetch entry using id
