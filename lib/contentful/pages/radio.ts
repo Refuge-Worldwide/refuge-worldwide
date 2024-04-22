@@ -284,7 +284,7 @@ export async function getUpcomingShowsByDate(date, preview: boolean) {
           date_gte: $start
           dateEnd_lte: $end
           dateEnd_exists: true
-          status: "Confirmed"
+          status: "Submitted"
         }
         preview: $preview
         limit: 50
