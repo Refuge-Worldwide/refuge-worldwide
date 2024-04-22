@@ -47,7 +47,7 @@ export default function CalendarSearch({ onView, onEdit, onToggle }) {
       onOpenChange={(dialogOpen) => setDialogOpen(dialogOpen)}
     >
       <Dialog.Trigger asChild>
-        <button className="absolute top-1 lg:top-1.5 right-2 lg:right-9 hidden lg:block">
+        <button className="hidden lg:block">
           <TfiSearch />
         </button>
       </Dialog.Trigger>

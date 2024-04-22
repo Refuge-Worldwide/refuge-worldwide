@@ -1,5 +1,6 @@
 import { Resend } from "resend";
 import ShowSubmissionEmail from "../../emails/showSubmission";
+import { ShowArtworkEmail } from "../../emails/showArtwork";
 const resend = new Resend(process.env.RESEND_API_KEY);
 import { sendSlackMessage } from "../../lib/slack";
 import dayjs from "dayjs";
@@ -68,6 +69,25 @@ export async function sendConfirmationEmail(show) {
       }
     })
   );
+}
+
+export async function sendArtworkEmail(artist, date) {
+  const data = await resend.sendEmail({
+    from: "Refuge Worldwide <noreply@mail.refugeworldwide.com>",
+    to: artist.email,
+    cc: ["jack@refugeworldwide.com", "graeme@refugeworldwide.com"],
+    subject:
+      "Your show artwork for " + dayjs(date).format("dddd") + " is now ready",
+    reply_to: [
+      "leona@refugeworldwide.com",
+      "graeme@refugeworldwide.com",
+      "max@refugeworldwide.com",
+    ],
+    react: ShowArtworkEmail({
+      userName: artist.name,
+      showDate: date,
+    }),
+  });
 }
 
 function subject(severity: string) {

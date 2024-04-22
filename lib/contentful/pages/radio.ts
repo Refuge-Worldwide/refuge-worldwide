@@ -264,6 +264,7 @@ export async function getRelatedShows(
   return filteredShows;
 }
 
+// to do: add show status prop confirmed/submitted
 export async function getUpcomingShowsByDate(date, preview: boolean) {
   const s = date.startOf("day").add(5, "hour");
   const e = s.add(1, "day");
@@ -285,7 +286,7 @@ export async function getUpcomingShowsByDate(date, preview: boolean) {
           date_gte: $start
           dateEnd_lte: $end
           dateEnd_exists: true
-          status: "Confirmed"
+          status: "Submitted"
         }
         preview: $preview
         limit: 50
