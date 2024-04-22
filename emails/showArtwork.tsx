@@ -86,9 +86,15 @@ export const ShowArtworkEmail = ({
                   <b>IMPORTANT NOTES BELOW, PLEASE READ!</b>
                 </Heading>
                 <Text style={paragraph}>
-                  – Please arrive at Weserstraße 166, 12045 at least 15 minutes
-                  before your show, and let us know ASAP via Whatsapp on
-                  +4915231355804 if you&apos;re going to be late.
+                  – Please arrive at{" "}
+                  <Link
+                    href="https://goo.gl/maps/ZY1w74xS4ULk4B1z5"
+                    style={link}
+                  >
+                    Weserstraße 166, 12045
+                  </Link>{" "}
+                  at least 15 minutes before your show, and let us know ASAP via
+                  Whatsapp on +4915231355804 if you&apos;re going to be late.
                   <br />– Artists / hosts receive 1x free house drink (softs /
                   wine / beer) before or after your show. All other menu items
                   at Oona Bar are 10% off on the day.
@@ -130,31 +136,27 @@ export const ShowArtworkEmail = ({
                   style={logo}
                 />
                 <Heading as="h2" style={paragraph}>
-                  <b>MIC INSTRUCTIONS, VERY IMPORTANT!</b>
+                  <b>HOW TO USE THE MIC</b>
                 </Heading>
-                <Text style={paragraph}>
-                  1. Put your headphones on.
-                  <br />
+                <Img
+                  src={`https://res.cloudinary.com/dqjn26pey/image/upload/v1713795088/Refuge-studio-signage-mic-v5-mailer-auto2-pichi_e8psbu.jpg`}
+                  height={537}
+                  width={600}
+                  style={logo}
+                  alt="1. Put your headphones on.
                   2. Turn the MIXING knob (above the PHONES LEVEL knob) to
                   MASTER, so you can hear yourself in the headphones.
-                  <br />
-                  3. Make sure the MASTER channel&apos;s CUE button is on.
-                  <br />
+                  3. Make sure the MASTER channel's CUE button is on.
                   4. Switch the mic to ON (light turns solid red).
-                  <br />
                   5. Turn down the channel currently playing music to 3.
-                  <br />
                   6. Speak closely and clearly into the front of the mic.
-                  <br />
-                </Text>
-                <Text style={paragraph}>
-                  When you&apos;re finished, just reverse the process above!
-                </Text>
+                  When you're finished, just reverse the process above!"
+                />
+                <Text style={paragraph}></Text>
                 <Text style={paragraph}>
                   If you have any questions please don&apos;t hesitate to get in
                   touch.
                 </Text>
-
                 <Hr style={seperator} />
                 <Text style={{ ...paragraph, marginTop: -5, marginBottom: 0 }}>
                   Best, <br />
