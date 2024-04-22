@@ -46,7 +46,9 @@ export function RenderRichTextWithImages(content: Content) {
 
           if (
             uri.includes("youtube-nocookie.com/embed") ||
-            uri.includes("youtube.com/embed")
+            uri.includes("youtube.com/embed") ||
+            uri.includes("player.vimeo.com") ||
+            uri.includes("bandcamp.com/EmbeddedPlayer")
           ) {
             return (
               <div className="aspect-video">
