@@ -296,7 +296,7 @@ function Calendar() {
   const transformEventForFullCalendar = (values, id) => {
     return {
       id: id,
-      title: values.title ? values.title : "Awaiting show title",
+      title: values.title ? values.title : "",
       type: values.type ? values.type : "Live",
       artists: values.artists,
       start: values.start,

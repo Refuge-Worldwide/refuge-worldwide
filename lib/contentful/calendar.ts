@@ -280,7 +280,7 @@ export async function createCalendarShow(values, client) {
       environment.createEntry(showContentTypeId, {
         fields: {
           title: {
-            "en-US": values.title ? values.title : "Awaiting show title",
+            "en-US": values.title ? values.title : "",
           },
           internal: {
             "en-US": internal,
