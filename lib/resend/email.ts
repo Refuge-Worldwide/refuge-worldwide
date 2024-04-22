@@ -74,7 +74,7 @@ export async function sendConfirmationEmail(show) {
 export async function sendArtworkEmail(artist, date) {
   const data = await resend.sendEmail({
     from: "Refuge Worldwide <noreply@mail.refugeworldwide.com>",
-    to: "jack@refugeworldwide.com",
+    to: artist.email,
     subject:
       "Your show artwork for " + dayjs(date).format("dddd") + " is now ready",
     reply_to: [
