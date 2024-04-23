@@ -283,6 +283,7 @@ export async function getUpcomingShowsByDate(
       $start: DateTime
       $end: DateTime
       $preview: Boolean
+      $status: String
     ) {
       showCollection(
         order: date_ASC
