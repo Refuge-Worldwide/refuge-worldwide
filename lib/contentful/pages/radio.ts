@@ -265,7 +265,11 @@ export async function getRelatedShows(
 }
 
 // to do: add show status prop confirmed/submitted
-export async function getUpcomingShowsByDate(date, preview: boolean) {
+export async function getUpcomingShowsByDate(
+  date,
+  preview: boolean,
+  status = "Confirmed"
+) {
   const s = date.startOf("day").add(5, "hour");
   const e = s.add(1, "day");
   const start = s.toISOString();
@@ -286,7 +290,7 @@ export async function getUpcomingShowsByDate(date, preview: boolean) {
           date_gte: $start
           dateEnd_lte: $end
           dateEnd_exists: true
-          status: "Submitted"
+          status: $status
         }
         preview: $preview
         limit: 50
@@ -325,7 +329,7 @@ export async function getUpcomingShowsByDate(date, preview: boolean) {
   `;
 
   const res = await graphql(UpcomingShowsByDateQuery, {
-    variables: { start, end, preview },
+    variables: { start, end, preview, status },
     preview,
   });
   return extractCollection<ShowInterface>(res, "showCollection");

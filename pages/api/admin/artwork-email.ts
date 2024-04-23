@@ -15,7 +15,7 @@ export default async function handler(
       try {
         const date = dayjs(values.date, "YYYY-MM-DD");
         console.log(date);
-        const shows = await getUpcomingShowsByDate(date, true);
+        const shows = await getUpcomingShowsByDate(date, true, "Submitted");
         console.log(shows);
         await Promise.all(
           shows.map(async (show) => {
