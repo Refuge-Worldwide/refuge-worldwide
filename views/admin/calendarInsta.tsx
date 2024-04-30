@@ -7,21 +7,25 @@ import { TfiSearch } from "react-icons/tfi";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import { useRef } from "react";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
 export default function CalendarInsta() {
-  const [dialogOpen, setDialogOpen] = useState<boolean>(true);
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [data, setData] = useState(null);
   const [isLoading, setLoading] = useState(true);
+  const instaText = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
-    getInstaInfo().then((info) => {
-      setData(info);
-      setLoading(false);
-    });
-  }, []);
+    dialogOpen &&
+      getInstaInfo().then((info) => {
+        console.log("get insta info");
+        setData(info);
+        setLoading(false);
+      });
+  }, [dialogOpen]);
 
   // useEffect(() => {
   //   onToggle(dialogOpen);
@@ -32,10 +36,8 @@ export default function CalendarInsta() {
       open={dialogOpen}
       onOpenChange={(dialogOpen) => setDialogOpen(dialogOpen)}
     >
-      <Dialog.Trigger asChild>
-        <button className="absolute top-1 lg:top-1.5 right-2 lg:right-9 hidden lg:block">
-          <TfiSearch />
-        </button>
+      <Dialog.Trigger className="hover:bg-black/10 px-2 py-1 rounded-lg">
+        Instagram text
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className="data-[state=open]:animate-overlayShow w-screen h-screen fixed top-0 left-0 bg-black/50 backdrop-blur-sm z-50" />
@@ -45,41 +47,56 @@ export default function CalendarInsta() {
               <Cross />
             </button>
           </Dialog.Close>
+
           {isLoading ? (
             <Loading />
           ) : (
-            <p contentEditable={true}>
-              📻 {dayjs().format("dddd")}
-              <br />
-              <br />
-              {data.map((show) => (
-                <>
-                  {show.date} {show.title}
-                  <br />
-                </>
-              ))}
-              <br />
-              🎧 Listen live:
-              <br />
-              www.refugeworldwide.com
-              <br />
-              <br />
-              💬 Chatroom:
-              <br />
-              www.refugeworldwide.com/chat
-              <br />
-              <br />
-              🥂 Drinks: @oona.bar - Weserstr. 166, 12045 Berlin
-              <br />
-              <br />
-              🎙Roll call:
-              <br />
-              {data.map((show) => (
-                <>
-                  {show.instagramHandles} <br />
-                </>
-              ))}
-            </p>
+            <div className="relative">
+              <p
+                ref={instaText}
+                contentEditable={true}
+                suppressContentEditableWarning={true}
+              >
+                📻 {dayjs().format("dddd")}
+                <br />
+                <br />
+                {data.map((show) => (
+                  <>
+                    {show.date} {show.title}
+                    <br />
+                  </>
+                ))}
+                <br />
+                🎧 Listen live:
+                <br />
+                www.refugeworldwide.com
+                <br />
+                <br />
+                💬 Chatroom:
+                <br />
+                www.refugeworldwide.com/chat
+                <br />
+                <br />
+                🥂 Drinks: @oona.bar - Weserstr. 166, 12045 Berlin
+                <br />
+                <br />
+                🎙Roll call:
+                <br />
+                {data.map((show) => (
+                  <>
+                    {show.instagramHandles} <br />
+                  </>
+                ))}
+              </p>
+              <button
+                className="fixed top-2 right-2 z-10 hover:bg-black/10 px-2 py-1 rounded-lg border"
+                onClick={() => {
+                  navigator.clipboard.writeText(instaText.current?.innerText);
+                }}
+              >
+                Copy text
+              </button>
+            </div>
           )}
         </Dialog.Content>
       </Dialog.Portal>
