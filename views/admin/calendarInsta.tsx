@@ -75,7 +75,9 @@ export default function CalendarInsta() {
               🎙Roll call:
               <br />
               {data.map((show) => (
-                <>{show.instagramHandles}</>
+                <>
+                  {show.instagramHandles} <br />
+                </>
               ))}
             </p>
           )}
