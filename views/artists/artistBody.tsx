@@ -2,7 +2,7 @@ import dynamic from "next/dynamic";
 import { Fragment } from "react";
 import Pill from "../../components/pill";
 import Prose from "../../components/Prose";
-import { renderRichTextWithImages } from "../../lib/rich-text";
+import { RenderRichTextWithImages } from "../../lib/rich-text";
 import { ArtistEntry } from "../../types/shared";
 
 const ShareButton = dynamic(() => import("../../components/shareButton"));
@@ -41,7 +41,7 @@ export default function ArtistBody({
             <Fragment>
               <div className="h-6" />
 
-              <Prose>{renderRichTextWithImages(content)}</Prose>
+              <Prose>{RenderRichTextWithImages(content)}</Prose>
             </Fragment>
           )}
 

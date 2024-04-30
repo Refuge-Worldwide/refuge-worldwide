@@ -45,6 +45,7 @@ import EmailModal from "../../views/admin/emailModal";
 import TextareaField from "../../components/formFields/textareaField";
 import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { createClient } from "contentful-management";
+import ShowArtworkModal from "../../views/admin/showArtworkModal";
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL
   ? `${process.env.NEXT_PUBLIC_SITE_URL}`
@@ -297,7 +298,7 @@ function Calendar() {
   const transformEventForFullCalendar = (values, id) => {
     return {
       id: id,
-      title: values.title,
+      title: values.title ? values.title : "",
       type: values.type ? values.type : "Live",
       artists: values.artists,
       start: values.start,
@@ -540,6 +541,7 @@ function Calendar() {
           eventContent={renderEventContent}
           scrollTimeReset={false}
         />
+
         <input
           type="date"
           className="absolute top-0 lg:top-12 right-12 lg:left-0 p-0 h-9 w-32 lg:h-0 lg:w-0 z-10 bg-transparent border-black border-2 lg:border-0 rounded-full"
@@ -552,24 +554,25 @@ function Calendar() {
         >
           <AiOutlineCalendar size={25} />
         </button>
-        <CalendarSearch
-          onView={goToHighlightedShow}
-          onEdit={handleEventClick}
-          onToggle={handleSearchDialogToggle}
-        />
-        <CalendarInsta />
-        <button
-          className="absolute top-1 lg:top-2 right-2 lg:right-0 disabled:cursor-wait"
-          onClick={reloadCalendar}
-          disabled={calendarLoading}
-        >
-          {calendarLoading ? (
-            <AiOutlineLoading3Quarters size={20} className="animate-spin" />
-          ) : (
-            <TfiReload size={20} />
-          )}
-        </button>
-
+        <div className="flex items-center gap-2 absolute top-1.5 right-2 lg:right-0">
+          <CalendarSearch
+            onView={goToHighlightedShow}
+            onEdit={handleEventClick}
+            onToggle={handleSearchDialogToggle}
+          />
+          <button
+            className="disabled:cursor-wait"
+            onClick={reloadCalendar}
+            disabled={calendarLoading}
+          >
+            {calendarLoading ? (
+              <AiOutlineLoading3Quarters size={20} className="animate-spin" />
+            ) : (
+              <TfiReload size={20} />
+            )}
+          </button>
+          <ShowArtworkModal />
+        </div>
         {/* <DropdownMenu.Root
           open={addDropdownOpen}
           onOpenChange={setAddDropdownOpen}
@@ -729,7 +732,6 @@ function Calendar() {
                             <InputField
                               name="title"
                               label="Show name"
-                              required
                               type="text"
                             />
                           </div>

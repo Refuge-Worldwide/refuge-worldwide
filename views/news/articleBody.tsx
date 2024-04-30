@@ -3,7 +3,7 @@ import { Fragment } from "react";
 import Date from "../../components/date";
 import Pill from "../../components/pill";
 import Prose from "../../components/Prose";
-import { renderRichTextWithImages } from "../../lib/rich-text";
+import { RenderRichTextWithImages } from "../../lib/rich-text";
 import { ArticleInterface } from "../../types/shared";
 import Link from "next/link";
 import { Arrow } from "../../icons/arrow";
@@ -64,7 +64,7 @@ export default function ArticleBody({
           <div className="h-6" />
 
           <Prose>
-            {renderRichTextWithImages(content)}{" "}
+            {RenderRichTextWithImages(content)}{" "}
             {title.includes("ICYMI") && (
               <div className="text-center mt-32">
                 <Link

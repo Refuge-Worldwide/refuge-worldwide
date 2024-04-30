@@ -3,12 +3,16 @@ import ArticlePreview from "../../components/articlePreview";
 import Pill from "../../components/pill";
 import { Arrow } from "../../icons/arrow";
 import { ArticleInterface } from "../../types/shared";
+import { useState } from "react";
 
 export default function LatestNews({
   articles,
 }: {
   articles: ArticleInterface[];
 }) {
+  const [icymi, setIcymi] = useState(false);
+  const [bs, setBs] = useState(false);
+
   return (
     <section>
       <div className="p-4 sm:p-8">

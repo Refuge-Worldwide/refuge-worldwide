@@ -3,7 +3,7 @@ import Layout from "../../components/layout";
 import Prose from "../../components/Prose";
 import PageMeta from "../../components/seo/page";
 import { getTourPage } from "../../lib/contentful/pages/tour";
-import { renderRichTextWithImages } from "../../lib/rich-text";
+import { RenderRichTextWithImages } from "../../lib/rich-text";
 import SinglePage from "../../views/singlePage";
 import TourWorkshopForm from "../../views/tourWorkshopForm";
 
@@ -31,7 +31,7 @@ export default function AboutPage({
       <SinglePage coverImage={coverImage} objectPosition="top">
         <div className="container-md p-4 sm:p-8 bg-white">
           <div>
-            <Prose>{renderRichTextWithImages(content)}</Prose>
+            <Prose>{RenderRichTextWithImages(content)}</Prose>
           </div>
           <div className="mt-16">
             <TourWorkshopForm />
