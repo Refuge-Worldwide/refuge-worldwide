@@ -483,3 +483,51 @@ export async function updateArtistEmail(id, email, client) {
 function isPublished(entity) {
   return entity.sys.publishedVersion;
 }
+
+export async function getInstaInfo() {
+  const cetAdjustment = dayjs().tz("Europe/Berlin").utcOffset();
+  const start = Date.now();
+  const nowUTC = dayjs.utc();
+  const nowCET = nowUTC.add(cetAdjustment, "minutes");
+  const startOfDay = nowCET.subtract(5, "hour").startOf("day").add(5, "hours");
+  const startSchedule = startOfDay.toISOString();
+  const dayOfWeek = startOfDay.day();
+  // if (dayOfWeek == 6 || dayOfWeek == 0) {
+  //   endScheduleAdjustment = 3;
+  // }
+  const endSchedule = startOfDay.add(1, "day").toISOString();
+
+  const scheduleQuery = /* GraphQL */ `
+    query scheduleQuery($startSchedule: DateTime, $endSchedule: DateTime) {
+      showCollection(
+        order: date_ASC
+        where: {
+          date_gt: $startSchedule
+          dateEnd_lte: $endSchedule
+          dateEnd_exists: true
+        }
+      ) {
+        items {
+          title
+          date
+          instagramHandles
+        }
+      }
+    }
+  `;
+
+  const res = await graphql(scheduleQuery, {
+    variables: { startSchedule, endSchedule },
+  });
+
+  const instaInfo = extractCollection<CalendarShow>(res, "showCollection");
+
+  instaInfo.forEach((show, index) => {
+    show.date = dayjs(show.date)
+      .subtract(cetAdjustment, "minutes")
+      .format("HH:mm");
+    show.title = show.title.replace("|", "—");
+  });
+
+  return instaInfo;
+}

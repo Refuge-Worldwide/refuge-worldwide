@@ -40,11 +40,12 @@ import useWindowSize from "../../hooks/useWindowSize";
 import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/router";
 import CalendarSearch from "../../views/admin/calendarSearch";
+import CalendarInsta from "../../views/admin/calendarInsta";
 import EmailModal from "../../views/admin/emailModal";
 import TextareaField from "../../components/formFields/textareaField";
 import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { createClient } from "contentful-management";
-import ShowArtworkModal from "../../views/admin/showArtworkModal";
+import AdditionalMenu from "../../views/admin/additionalMenu";
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL
   ? `${process.env.NEXT_PUBLIC_SITE_URL}`
@@ -570,7 +571,7 @@ function Calendar() {
               <TfiReload size={20} />
             )}
           </button>
-          <ShowArtworkModal />
+          <AdditionalMenu />
         </div>
         {/* <DropdownMenu.Root
           open={addDropdownOpen}
