@@ -17,6 +17,7 @@ export default function CalendarInsta() {
   const [data, setData] = useState(null);
   const [isLoading, setLoading] = useState(true);
   const instaText = useRef<HTMLParagraphElement>(null);
+  const [copied, setCopied] = useState<boolean>(false);
 
   useEffect(() => {
     dialogOpen &&
@@ -26,6 +27,23 @@ export default function CalendarInsta() {
         setLoading(false);
       });
   }, [dialogOpen]);
+
+  const copyText = () => {
+    navigator.clipboard
+      .writeText(instaText.current?.innerText)
+      .then(() => {
+        setCopied(true);
+      })
+      .catch(() => {
+        alert("something went wrong");
+      });
+  };
+
+  useEffect(() => {
+    setTimeout(() => {
+      setCopied(false);
+    }, 1000);
+  }, [copied]);
 
   // useEffect(() => {
   //   onToggle(dialogOpen);
@@ -90,11 +108,9 @@ export default function CalendarInsta() {
               </p>
               <button
                 className="fixed top-2 right-2 z-10 hover:bg-black/10 px-2 py-1 rounded-lg border"
-                onClick={() => {
-                  navigator.clipboard.writeText(instaText.current?.innerText);
-                }}
+                onClick={() => copyText()}
               >
-                Copy text
+                {copied ? <span>Copied :)</span> : <span>Copy text</span>}
               </button>
             </div>
           )}
