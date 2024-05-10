@@ -85,8 +85,8 @@ export const ShowArtworkEmail = ({
                 <Heading as="h2" style={paragraph}>
                   <b>IMPORTANT NOTES BELOW, PLEASE READ!</b>
                 </Heading>
-                <Text style={paragraph}>
-                  – Please arrive at{" "}
+                <Text style={list}>
+                  ⏱️ Please arrive at{" "}
                   <Link
                     href="https://goo.gl/maps/ZY1w74xS4ULk4B1z5"
                     style={link}
@@ -95,22 +95,31 @@ export const ShowArtworkEmail = ({
                   </Link>{" "}
                   at least 15 minutes before your show, and let us know ASAP via
                   Whatsapp on +4915231355804 if you&apos;re going to be late.
-                  <br />– Artists / hosts receive 1x free house drink (softs /
-                  wine / beer) before or after your show. All other menu items
-                  at Oona Bar are 10% off on the day.
-                  <br />– When mentioning the station on air, our name is “
+                </Text>
+                <Text style={list}>
+                  🥃 Artists / hosts receive 1x free house drink (softs / wine /
+                  beer) before or after your show. All other menu items at Oona
+                  Bar are 10% off on the day.
+                </Text>
+                <Text style={list}>
+                  🗣️ When mentioning the station on air, our name is “
                   <b>Refuge Worldwide</b>” not “Refuge Radio,” “Refugee
                   Worldwide” or similar.
-                  <br />– Encourage people to join the chatroom by shouting out{" "}
+                </Text>
+                <Text style={list}>
+                  💬 Encourage people to join the chatroom by shouting out{" "}
                   <Link style={link} href="https://refugeworldwide.com/chat">
                     refugeworldwide.com/chat
                   </Link>{" "}
-                  on the mic. Instructions on how to use the mic are in the DJ
-                  booth.
-                  <br />- If you need to play something from your laptop or
-                  phone, we have an AUX cable connected to Channel 4 on the
-                  mixer.
-                  <br />– All shows will be uploaded to our{" "}
+                  on the mic. Instructions on how to use the mic are in this
+                  email and in the DJ booth.
+                </Text>
+                <Text style={list}>
+                  💻 If you need to play something from your laptop or phone, we
+                  have an AUX cable connected to Channel 4 on the mixer.
+                </Text>
+                <Text style={list}>
+                  🔄 All shows will be uploaded to our{" "}
                   <Link
                     style={link}
                     href="https://soundcloud.com/refugeworldwide"
@@ -118,7 +127,9 @@ export const ShowArtworkEmail = ({
                     SoundCloud
                   </Link>{" "}
                   a day or two after broadcast, feel free to repost!
-                  <br />– If you need to download your show, they’re kept{" "}
+                </Text>
+                <Text style={list}>
+                  📲 If you need to download your show, they’re kept{" "}
                   <Link style={link} href="https://bit.ly/refuge-show-dl">
                     here
                   </Link>{" "}
@@ -195,10 +206,11 @@ const paragraph = {
   margin: "16px 0px",
 };
 
-const link = {
+const link: React.CSSProperties = {
   fontSize: 16,
   color: "#000",
   textDecoration: "underline",
+  fontWeight: 500,
 };
 
 const logo = {
@@ -232,4 +244,9 @@ const containerImageFooter = {
 const seperator = {
   borderTop: "#000 solid 1px",
   margin: "24px 0",
+};
+
+const list = {
+  fontSize: 16,
+  margin: "0px 0px 12px 0px",
 };

@@ -265,6 +265,7 @@ const link = {
   fontSize: 16,
   color: "#000",
   textDecoration: "underline",
+  fontWeight: 500,
 };
 
 const logo = {
