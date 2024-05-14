@@ -97,9 +97,9 @@ export const ShowArtworkEmail = ({
                   Whatsapp on +4915231355804 if you&apos;re going to be late.
                 </Text>
                 <Text style={list}>
-                  🥃 Artists / hosts receive 1x free house drink (softs / wine /
-                  beer) before or after your show. All other menu items at Oona
-                  Bar are 10% off on the day.
+                  🥃 Hosts / guests receive 1x free drink (please ask at the bar
+                  which products are included) and a 15% discount on all other
+                  menu items on the day.
                 </Text>
                 <Text style={list}>
                   🗣️ When mentioning the station on air, our name is “
