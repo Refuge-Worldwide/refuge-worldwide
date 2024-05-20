@@ -1,8 +1,9 @@
 import create from "zustand";
 
 export enum ActivePlayer {
+  CH1,
+  CH2,
   MIXCLOUD,
-  RADIO_CO,
   SOUNDCLOUD,
 }
 

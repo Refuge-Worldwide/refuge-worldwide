@@ -8,23 +8,26 @@ import Marquee from "./marquee";
 import Link from "next/link";
 import { Cross } from "../icons/cross";
 import Image from "next/image";
+import { AiOutlineCalendar } from "react-icons/ai";
 
 const BroadcastingIndicator = ({
   status,
   isLoading,
   error,
   liveNow,
+  channel,
 }: {
   status: "online" | "offline";
   isLoading: boolean;
   error: Error;
   liveNow: any;
+  channel?: string;
 }) => {
   if (status === "online")
     return (
-      <div className="grow-0 items-center space-x-2 opacity-70 hidden md:flex border-white">
+      <div className="grow-0 items-center space-x-2 hidden md:flex border-white border px-4 pt-1.5 pb-2 rounded-full">
+        <p className="leading-none mt-1 text-xxs font-medium uppercase">LIVE</p>
         <div className="shrink-0 w-7 h-7 sm:h-3 sm:w-3 rounded-full bg-red animate-pulse mt-1" />
-        <p className="leading-none mt-1 text-tiny uppercase">LIVE</p>
       </div>
     );
   else if (isLoading)
@@ -47,22 +50,29 @@ const BroadcastingIndicator = ({
 };
 
 export default function LivePlayer() {
-  const REFUGE_WORLDWIDE = "s3699c5e49";
-
-  const AUDIO_SRC = `https://streaming.radio.co/${REFUGE_WORLDWIDE}/listen`;
+  const CH1 = "https://streaming.radio.co/s3699c5e49/listen";
+  const CH2 = "https://s4.radio.co/s69b281ac0/listen";
 
   const { scheduleData, isLoading, error } = useSchedule();
 
   const isOnline = scheduleData?.status === "online";
+  const ch2IsOnline = scheduleData?.ch2Status === "online";
 
   const player = useRef<HTMLAudioElement>(null);
   const source = useRef<HTMLSourceElement>(null);
 
-  const { isPlaying, play, pause } = usePlayerState({
+  const { isPlaying, play, play2, pause } = usePlayerState({
     audioRef: player,
     sourceRef: source,
-    url: AUDIO_SRC,
+    url: CH1,
+    urlCh2: CH2,
   });
+
+  // const { isPlaying2, play, pause } = usePlayerState({
+  //   audioRef: player2,
+  //   sourceRef: source2,
+  //   url: CH2,
+  // });
 
   const playerWrapperClassNames = cn(
     "bg-black text-white h-12 sm:h-16 pl-4 sm:pl-8 flex items-center space-x-3 sm:space-x-5",
@@ -94,47 +104,82 @@ export default function LivePlayer() {
 
   return (
     <section className={playerWrapperClassNames}>
-      {isOnline && (
-        <>
-          <button
-            className="grow-0 h-7 w-7 sm:h-8 sm:w-8 focus:outline-none focus:ring-4"
-            onClick={isPlaying ? pause : play}
-            aria-label={
-              isPlaying ? "Pause Live Broadcast" : "Play Live Broadcast"
-            }
-          >
-            {isPlaying ? <Pause /> : <Play />}
-          </button>
-        </>
-      )}
-
-      <BroadcastingIndicator
+      {/* <BroadcastingIndicator
         status={scheduleData?.status}
         isLoading={isLoading}
         error={error}
         liveNow={scheduleData?.liveNow}
       />
 
+      <div className="w-0.5 bg-white h-full"></div> */}
+
+      {isOnline && (
+        <>
+          <button
+            className="grow-0 h-7 w-7 sm:h-8 sm:w-8 focus:outline-none focus:ring-4"
+            onClick={isPlaying == 1 ? pause : play}
+            aria-label={
+              isPlaying == 1 ? "Pause Live Broadcast" : "Play Live Broadcast"
+            }
+          >
+            {isPlaying == 1 ? <Pause /> : <Play />}
+          </button>
+        </>
+      )}
+
       {!isLoading && !error && scheduleData?.liveNow?.title && (
         <Link
-          className="flex-1 truncate mt-0.5"
-          href={scheduleData?.liveNow.link}
+          className="flex-1 truncate mt-0.5 pr-14"
+          href={scheduleData?.liveNow?.link ? scheduleData.liveNow.link : ""}
         >
           <Marquee
             key={scheduleData?.liveNow.title}
-            text={<span className="pr-8">{scheduleData?.liveNow.title}</span>}
+            className="-mr-14"
+            text={
+              <span className="pr-8">
+                Live on 1: {scheduleData?.liveNow.title}
+              </span>
+            }
           />
         </Link>
+      )}
+      <div className="w-0.5 bg-white h-full !ml-0"></div>
+
+      {ch2IsOnline && (
+        <>
+          <button
+            className="grow-0 h-7 w-7 sm:h-8 sm:w-8 focus:outline-none focus:ring-4"
+            onClick={isPlaying == 2 ? pause : play2}
+            aria-label={
+              isPlaying == 2 ? "Pause Live Broadcast" : "Play Live Broadcast"
+            }
+          >
+            {isPlaying == 2 ? <Pause /> : <Play />}
+          </button>
+
+          {!isLoading && !error && scheduleData?.liveNow?.title && (
+            <Link className="flex-1 truncate mt-0.5" href={"/news/ploetzensee"}>
+              <Marquee
+                key={scheduleData?.liveNow.title}
+                text={
+                  <span className="pr-8">
+                    Live on 2: {scheduleData?.liveNow.title}
+                  </span>
+                }
+                speed={0.15}
+              />
+            </Link>
+          )}
+        </>
       )}
 
       {!isLoading && (
         <Link
-          className="pt-2 pb-2 sm:pt-4 sm:pb-4 px-4 md:px-8 !ml-0 self-stretch items-center flex bg-black border-white border-l-2 border-r-0 text-white"
+          className="pt-2 pb-2 sm:pt-4 sm:pb-4 px-4 !ml-0 self-stretch items-center flex bg-black border-white border-l-2 border-r-0 text-white"
           href="/schedule"
         >
-          Schedule
+          <AiOutlineCalendar />
           <span className="sr-only lg:hidden">Schedule</span>
-          <Cross className="rotate-45 lg:hidden" strokeWidth="3" size={15} />
         </Link>
       )}
 

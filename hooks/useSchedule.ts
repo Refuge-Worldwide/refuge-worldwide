@@ -3,6 +3,7 @@ import { ScheduleShow } from "../types/shared";
 
 type Schedule = {
   status: "online" | "offline";
+  ch2Status: "online" | "offline";
   liveNow: {
     title: string;
     artwork: string;

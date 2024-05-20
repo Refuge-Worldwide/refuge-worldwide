@@ -10,7 +10,7 @@ import MessageSquare from "../icons/message-square";
 import Search from "../icons/search";
 import NavigationLink from "./navigationLink";
 import { useUser } from "@supabase/auth-helpers-react";
-import { AiOutlineCalendar } from "react-icons/ai";
+import { AiTwotoneCalendar } from "react-icons/ai";
 
 export default function Navigation() {
   const [isOpen, isOpenSet] = useState(false);
@@ -31,7 +31,7 @@ export default function Navigation() {
         <div className="px-4 md:px-8 py-2.5">
           <ul className="flex items-center">
             <li>
-              <Link href="/" className="flex">
+              <Link href="/" className="flex gap-2">
                 <Image
                   src="/images/navigation-smile.svg"
                   width={66}
@@ -41,6 +41,9 @@ export default function Navigation() {
                   unoptimized
                   className="h-10 w-[4.125rem]"
                 />
+                <div className="grow-0 items-center space-x-2 hidden md:flex border-white border rounded-full">
+                  <div className="shrink-0 w-7 h-7 sm:h-3 sm:w-3 rounded-full bg-red animate-pulse mt-1" />
+                </div>
               </Link>
             </li>
 
@@ -150,7 +153,7 @@ export default function Navigation() {
                     <li>
                       {user ? (
                         <Link href="/admin/calendar">
-                          <AiOutlineCalendar />
+                          <AiTwotoneCalendar />
                         </Link>
                       ) : (
                         <a
