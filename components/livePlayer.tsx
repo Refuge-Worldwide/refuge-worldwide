@@ -133,20 +133,20 @@ export default function LivePlayer() {
           href={scheduleData?.liveNow?.link ? scheduleData.liveNow.link : ""}
         >
           <Marquee
-            key={scheduleData?.liveNow.title}
+            key={scheduleData?.liveNow.title + ch2IsOnline}
             className="-mr-14"
             text={
               <span className="pr-8">
-                Live on 1: {scheduleData?.liveNow.title}
+                {ch2IsOnline && <>Live on 1:</>} {scheduleData?.liveNow.title}
               </span>
             }
           />
         </Link>
       )}
-      <div className="w-0.5 bg-white h-full !ml-0"></div>
 
       {ch2IsOnline && (
         <>
+          <div className="w-0.5 bg-white h-full !ml-0"></div>
           <button
             className="grow-0 h-7 w-7 sm:h-8 sm:w-8 focus:outline-none focus:ring-4"
             onClick={isPlaying == 2 ? pause : play2}
@@ -160,7 +160,7 @@ export default function LivePlayer() {
           {!isLoading && !error && scheduleData?.liveNow?.title && (
             <Link className="flex-1 truncate mt-0.5" href={"/news/ploetzensee"}>
               <Marquee
-                key={scheduleData?.liveNow.title}
+                key={scheduleData?.liveNow.title + ch2IsOnline}
                 text={
                   <span className="pr-8">
                     Live on 2: {scheduleData?.liveNow.title}
