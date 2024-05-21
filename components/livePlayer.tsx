@@ -133,7 +133,7 @@ export default function LivePlayer() {
               <span className="font-medium text-small bg-white h-6 w-6 text-black rounded-sm">
                 1
               </span>
-              <div className="h-7 w-7 sm:h-8 sm:w-8">
+              <div className="h-6 w-6">
                 {isPlaying == 1 ? <Pause /> : <Play />}
               </div>
             </button>
@@ -209,7 +209,7 @@ export default function LivePlayer() {
             <span className="font-medium text-small bg-white h-6 w-6 text-black rounded-sm">
               2
             </span>
-            <div className="h-7 w-7 sm:h-8 sm:w-8">
+            <div className="h-6 w-6">
               {isPlaying == 2 ? <Pause /> : <Play />}
             </div>
           </button>
