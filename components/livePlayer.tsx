@@ -9,6 +9,8 @@ import Link from "next/link";
 import { Cross } from "../icons/cross";
 import Image from "next/image";
 import { AiOutlineCalendar } from "react-icons/ai";
+import { useRouter } from "next/router";
+import { Arrow } from "../icons/arrow";
 
 const BroadcastingIndicator = ({
   status,
@@ -53,6 +55,20 @@ export default function LivePlayer() {
   const CH1 = "https://streaming.radio.co/s3699c5e49/listen";
   const CH2 = "https://s4.radio.co/s69b281ac0/listen";
 
+  const router = useRouter();
+  const [isSchedulePage, setIsSchedulePage] = useState<boolean>(false);
+  const [hasBack, setHasBack] = useState(false);
+
+  useEffect(() => {
+    setIsSchedulePage(router.pathname == "/schedule");
+  }, [router]);
+
+  useEffect(() => {
+    if (window?.history?.length > 1) {
+      setHasBack(true);
+    }
+  }, []);
+
   const { scheduleData, isLoading, error } = useSchedule();
 
   const isOnline = scheduleData?.status === "online";
@@ -75,7 +91,7 @@ export default function LivePlayer() {
   // });
 
   const playerWrapperClassNames = cn(
-    "bg-black text-white h-12 sm:h-16 pl-4 sm:pl-8 flex items-center space-x-3 sm:space-x-5",
+    "bg-black text-white lg:flex items-center max-w-screen",
     {
       "sticky top-0 z-50": isOnline,
     }
@@ -104,51 +120,85 @@ export default function LivePlayer() {
 
   return (
     <section className={playerWrapperClassNames}>
-      {/* <BroadcastingIndicator
-        status={scheduleData?.status}
-        isLoading={isLoading}
-        error={error}
-        liveNow={scheduleData?.liveNow}
-      />
+      <div className="h-12 sm:h-16 flex items-center flex-1 truncate border-b-2 border-white lg:border-0 lg:min-w-[50%]">
+        {isOnline && (
+          <>
+            <button
+              className="ml-4 sm:ml-8 mr-3 sm:mr-5 grow-0 h-7 w-7 sm:h-8 sm:w-8 focus:outline-none focus:ring-4"
+              onClick={isPlaying == 1 ? pause : play}
+              aria-label={
+                isPlaying == 1 ? "Pause Live Broadcast" : "Play Live Broadcast"
+              }
+            >
+              {isPlaying == 1 ? <Pause /> : <Play />}
+            </button>
+          </>
+        )}
 
-      <div className="w-0.5 bg-white h-full"></div> */}
-
-      {isOnline && (
-        <>
-          <button
-            className="grow-0 h-7 w-7 sm:h-8 sm:w-8 focus:outline-none focus:ring-4"
-            onClick={isPlaying == 1 ? pause : play}
-            aria-label={
-              isPlaying == 1 ? "Pause Live Broadcast" : "Play Live Broadcast"
-            }
+        {!isLoading && !error && scheduleData?.liveNow?.title && (
+          <Link
+            className="flex-1 truncate mt-0.5"
+            href={scheduleData?.liveNow?.link ? scheduleData.liveNow.link : ""}
           >
-            {isPlaying == 1 ? <Pause /> : <Play />}
-          </button>
-        </>
-      )}
+            <Marquee
+              key={scheduleData?.liveNow.title + ch2IsOnline}
+              className="-mr-14"
+              text={
+                <span className="pr-8">
+                  {ch2IsOnline && <>Live on 1:</>} {scheduleData?.liveNow.title}
+                </span>
+              }
+              speed={ch2IsOnline ? 0.2 : 0.25}
+            />
+          </Link>
+        )}
 
-      {!isLoading && !error && scheduleData?.liveNow?.title && (
-        <Link
-          className="flex-1 truncate mt-0.5 pr-14"
-          href={scheduleData?.liveNow?.link ? scheduleData.liveNow.link : ""}
-        >
-          <Marquee
-            key={scheduleData?.liveNow.title + ch2IsOnline}
-            className="-mr-14"
-            text={
-              <span className="pr-8">
-                {ch2IsOnline && <>Live on 1:</>} {scheduleData?.liveNow.title}
-              </span>
-            }
-          />
-        </Link>
-      )}
+        {!isLoading && (
+          <>
+            {hasBack && isSchedulePage ? (
+              <button
+                className="lg:hidden flex pt-2 pb-2 sm:pt-4 sm:pb-4 px-4 !ml-0 self-stretch items-center bg-black border-white border-l-2 border-r-0 text-white"
+                onClick={() => router.back()}
+              >
+                {isSchedulePage ? (
+                  <Arrow
+                    colour="white"
+                    size={24}
+                    className="h-6 w-[24px] rotate-180 "
+                  />
+                ) : (
+                  <AiOutlineCalendar />
+                )}
+                <span className="sr-only lg:hidden">Back</span>
+              </button>
+            ) : (
+              <Link
+                className="lg:hidden flex pt-2 pb-2 sm:pt-4 sm:pb-4 px-4 !ml-0 self-stretch items-center bg-black border-white border-l-2 border-r-0 text-white"
+                href={isSchedulePage ? "/" : "/schedule"}
+              >
+                {isSchedulePage ? (
+                  <Arrow
+                    colour="white"
+                    size={24}
+                    className="h-6 w-[24px] rotate-180 "
+                  />
+                ) : (
+                  <AiOutlineCalendar />
+                )}
+                <span className="sr-only lg:hidden">
+                  {isSchedulePage ? "Back" : "Schedule"}
+                </span>
+              </Link>
+            )}
+          </>
+        )}
+      </div>
 
       {ch2IsOnline && (
-        <>
-          <div className="w-0.5 bg-white h-full !ml-0"></div>
+        <div className="h-12 sm:h-16 flex items-center flex-1 truncate">
+          <div className="w-0.5 bg-white h-full !ml-0 hidden lg:block"></div>
           <button
-            className="grow-0 h-7 w-7 sm:h-8 sm:w-8 focus:outline-none focus:ring-4"
+            className="grow-0 h-7 w-7 sm:h-8 sm:w-8 focus:outline-none focus:ring-4 ml-4 sm:ml-8 mr-3 sm:mr-5 lg:mx-5"
             onClick={isPlaying == 2 ? pause : play2}
             aria-label={
               isPlaying == 2 ? "Pause Live Broadcast" : "Play Live Broadcast"
@@ -166,21 +216,51 @@ export default function LivePlayer() {
                     Live on 2: {scheduleData?.liveNow.title}
                   </span>
                 }
-                speed={0.15}
+                speed={0.3}
               />
             </Link>
           )}
-        </>
+        </div>
       )}
 
       {!isLoading && (
-        <Link
-          className="pt-2 pb-2 sm:pt-4 sm:pb-4 px-4 !ml-0 self-stretch items-center flex bg-black border-white border-l-2 border-r-0 text-white"
-          href="/schedule"
-        >
-          <AiOutlineCalendar />
-          <span className="sr-only lg:hidden">Schedule</span>
-        </Link>
+        <>
+          {hasBack && isSchedulePage ? (
+            <button
+              className="hidden lg:flex pt-2 pb-2 sm:pt-4 sm:pb-4 px-4 !ml-0 self-stretch items-center bg-black border-white border-l-2 border-r-0 text-white"
+              onClick={() => router.back()}
+            >
+              {isSchedulePage ? (
+                <Arrow
+                  colour="white"
+                  size={24}
+                  className="h-6 w-[24px] rotate-180 "
+                />
+              ) : (
+                <AiOutlineCalendar />
+              )}
+              <span className="sr-only lg:hidden">Back</span>
+            </button>
+          ) : (
+            <Link
+              className="hidden lg:flex pt-2 pb-2 sm:pt-4 sm:pb-4 px-4 !ml-0 self-stretch items-center bg-black border-white border-l-2 border-r-0 text-white"
+              href={isSchedulePage ? "/" : "/schedule"}
+            >
+              {isSchedulePage ? (
+                <Arrow
+                  colour="white"
+                  size={24}
+                  className="h-6 w-[24px] rotate-180 "
+                />
+              ) : (
+                <AiOutlineCalendar />
+              )}
+              <span className="sr-only lg:hidden">
+                {isSchedulePage ? "Back" : "Schedule"}
+              </span>
+            </Link>
+          )}
+        </>
       )}
 
       <audio hidden id="refuge-live-player" preload="none" ref={player}>

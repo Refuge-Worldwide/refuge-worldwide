@@ -41,9 +41,6 @@ export default function Navigation() {
                   unoptimized
                   className="h-10 w-[4.125rem]"
                 />
-                <div className="grow-0 items-center space-x-2 hidden md:flex border-white border rounded-full">
-                  <div className="shrink-0 w-7 h-7 sm:h-3 sm:w-3 rounded-full bg-red animate-pulse mt-1" />
-                </div>
               </Link>
             </li>
 
