@@ -456,6 +456,7 @@ export async function createArtist(artist, client) {
 }
 
 export async function updateArtistEmail(id, email, client) {
+  const emailArray = email.split(", ");
   return (
     client
       .getSpace(spaceId)
@@ -464,7 +465,7 @@ export async function updateArtistEmail(id, email, client) {
       //update fields with values from form
       .then((entry) => {
         entry.fields.email = {
-          "en-US": [email],
+          "en-US": emailArray,
         };
         return entry.update();
       })

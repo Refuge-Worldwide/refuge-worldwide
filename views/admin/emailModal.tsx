@@ -9,6 +9,8 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { RiMailCheckFill, RiMailLine } from "react-icons/ri";
 import toast from "react-hot-toast";
 import { updateArtistEmail } from "../../lib/contentful/calendar";
+import * as Yup from "yup";
+const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 export default function EmailModal({ artists, client }) {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
@@ -49,8 +51,24 @@ export default function EmailModal({ artists, client }) {
 
   const initialValues = {
     id: artist?.value ? artist?.value : undefined,
-    email: artist?.email,
+    email: artist?.email.join(", "),
   };
+
+  const validationSchema = Yup.object().shape({
+    email: Yup.string().test(
+      "is-comma-space-separated-emails",
+      "The field should be a list of comma and space separated emails",
+      function (value) {
+        if (!value) return true; // Skip validation if the value is empty
+
+        // Split the value by comma and space
+        const emails = value.split(", ");
+
+        // Check if each email in the list is valid
+        return emails.every((email) => emailRegex.test(email));
+      }
+    ),
+  });
 
   return (
     <div className="-mt-6 mb-8">
@@ -87,6 +105,7 @@ export default function EmailModal({ artists, client }) {
                 form="artistEmailForm"
                 initialValues={initialValues}
                 onSubmit={handleEmailSubmit}
+                validationSchema={validationSchema}
               >
                 {({ values }) => (
                   <form id="artist-email">
