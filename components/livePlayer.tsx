@@ -130,7 +130,9 @@ export default function LivePlayer() {
                 isPlaying == 1 ? "Pause Live Broadcast" : "Play Live Broadcast"
               }
             >
-              <span className="font-medium mt-1 border-white">1</span>
+              <span className="font-medium text-small bg-white h-6 w-6 text-black rounded-sm">
+                1
+              </span>
               <div className="h-7 w-7 sm:h-8 sm:w-8">
                 {isPlaying == 1 ? <Pause /> : <Play />}
               </div>
@@ -140,7 +142,7 @@ export default function LivePlayer() {
 
         {!isLoading && !error && scheduleData?.liveNow?.title && (
           <Link
-            className="flex-1 truncate mt-0.5"
+            className="flex-1 truncate mt-0.5 relative"
             href={scheduleData?.liveNow?.link ? scheduleData.liveNow.link : ""}
           >
             <Marquee
@@ -149,6 +151,7 @@ export default function LivePlayer() {
               text={<span className="pr-8">{scheduleData?.liveNow.title}</span>}
               speed={ch2IsOnline ? 0.2 : 0.25}
             />
+            {/* <span className="absolute left-0 top-1 font-medium text-small flex items-center justify-center pt-0.5 bg-white h-7 w-7 text-black rounded-sm">1</span> */}
           </Link>
         )}
 
@@ -203,14 +206,19 @@ export default function LivePlayer() {
               isPlaying == 2 ? "Pause Live Broadcast" : "Play Live Broadcast"
             }
           >
-            <span className="font-medium mt-1">2</span>
+            <span className="font-medium text-small bg-white h-6 w-6 text-black rounded-sm">
+              2
+            </span>
             <div className="h-7 w-7 sm:h-8 sm:w-8">
               {isPlaying == 2 ? <Pause /> : <Play />}
             </div>
           </button>
 
           {!isLoading && !error && scheduleData?.liveNow?.title && (
-            <Link className="flex-1 truncate mt-0.5" href={"/news/ploetzensee"}>
+            <Link
+              className="flex-1 truncate mt-0.5 relative"
+              href={"/news/ploetzensee"}
+            >
               <Marquee
                 key={scheduleData?.liveNow.title + ch2IsOnline}
                 text={
@@ -218,6 +226,7 @@ export default function LivePlayer() {
                 }
                 speed={0.3}
               />
+              {/* <span className="absolute left-0 top-1 font-medium text-small flex items-center justify-center bg-white h-7 w-7 text-black rounded-sm">2</span> */}
             </Link>
           )}
         </div>
