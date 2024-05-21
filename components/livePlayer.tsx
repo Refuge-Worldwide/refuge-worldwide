@@ -130,9 +130,9 @@ export default function LivePlayer() {
                 isPlaying == 1 ? "Pause Live Broadcast" : "Play Live Broadcast"
               }
             >
-              <span className="font-medium text-small bg-white h-6 w-6 text-black rounded-sm">
+              {/* <span className="font-medium text-small bg-white h-6 w-6 text-black rounded-sm">
                 1
-              </span>
+              </span> */}
               <div className="h-6 w-6">
                 {isPlaying == 1 ? <Pause /> : <Play />}
               </div>
@@ -151,7 +151,9 @@ export default function LivePlayer() {
               text={<span className="pr-8">{scheduleData?.liveNow.title}</span>}
               speed={ch2IsOnline ? 0.2 : 0.25}
             />
-            {/* <span className="absolute left-0 top-1 font-medium text-small flex items-center justify-center pt-0.5 bg-white h-7 w-7 text-black rounded-sm">1</span> */}
+            <span className="absolute left-0 top-0.5 font-medium text-small flex items-center justify-center pt-0.5 bg-white h-8 w-8 text-black rounded-sm">
+              1
+            </span>
           </Link>
         )}
 
@@ -206,9 +208,9 @@ export default function LivePlayer() {
               isPlaying == 2 ? "Pause Live Broadcast" : "Play Live Broadcast"
             }
           >
-            <span className="font-medium text-small bg-white h-6 w-6 text-black rounded-sm">
+            {/* <span className="font-medium text-small bg-white h-6 w-6 text-black rounded-sm">
               2
-            </span>
+            </span> */}
             <div className="h-6 w-6">
               {isPlaying == 2 ? <Pause /> : <Play />}
             </div>
@@ -226,7 +228,9 @@ export default function LivePlayer() {
                 }
                 speed={0.3}
               />
-              {/* <span className="absolute left-0 top-1 font-medium text-small flex items-center justify-center bg-white h-7 w-7 text-black rounded-sm">2</span> */}
+              <span className="absolute left-0 top-0.5 font-medium text-small flex items-center justify-center pt-0.5 bg-white h-8 w-8 text-black rounded-sm">
+                2
+              </span>
             </Link>
           )}
         </div>
