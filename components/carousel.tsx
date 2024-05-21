@@ -65,21 +65,24 @@ export default function Carousel({
           </div>
         ) : (
           <div className="flex gap-4 items-end">
-            <Pill>
+            {/* <Pill>
               <h2>{title}</h2>
             </Pill>
             {description && (
               <p className="font-sans text-small mb-1 mt-2">{description}</p>
-            )}
+            )} */}
           </div>
         )}
 
         <div className="splide__arrows flex space-x-4 mt-4 ml-4 opacity-0 group-focus-within/section:opacity-100 group-hover/section:opacity-100 transition-all">
           <button className="splide__arrow splide__arrow--prev disabled:opacity-50 disabled:cursor-not-allowed">
-            <Arrow className="rotate-180" />
+            <Arrow
+              colour={router.pathname == "/" && "white"}
+              className="rotate-180"
+            />
           </button>
           <button className="splide__arrow splide__arrow--next disabled:opacity-50 disabled:cursor-not-allowed">
-            <Arrow />
+            <Arrow colour={router.pathname == "/" && "white"} />
           </button>
         </div>
       </div>
@@ -93,7 +96,7 @@ export default function Carousel({
           </SplideSlide>
         ))}
         {viewAllLink && (
-          <SplideSlide className="aspect-video border-black border hover:bg-black hover:text-white group duration-150">
+          <SplideSlide className="aspect-video border-black bg-white border hover:bg-black hover:text-white group duration-150">
             <Link
               href={viewAllLink}
               className="inline-flex items-center space-x-4 text-base font-medium w-full h-full justify-center"

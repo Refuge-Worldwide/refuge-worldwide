@@ -51,9 +51,13 @@ function CollectionImageWithPlayer({
         width={590}
         height={332}
         alt={alt}
-        className="bg-black/10 object-cover object-center aspect-video"
+        className="bg-black/25 object-cover object-center aspect-video"
       />
 
+      <div className="absolute bg-orange/50 w-full h-full flex items-center justify-center"></div>
+      <h2 className="font-sans text-base font-medium absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white">
+        {title}
+      </h2>
       <div className="inset-0 absolute bg-black/0 transition-colors duration-150 group-hover:bg-black/60 flex items-center justify-center text-white/0 group-hover:text-white/100">
         <div className="-mr-4">
           <PlayLarge />
@@ -99,9 +103,6 @@ export default function CollectionPreview({
         prefetch={false}
         aria-labelledby={`show-${slug}`}
       >
-        <h2 id={`show-${slug}`} className="font-sans font-medium">
-          {title}
-        </h2>
         <p>{description}</p>
       </Link>
     </article>

@@ -35,9 +35,9 @@ export default function HomePage({
 
       <FeaturedShows shows={featuredShows} />
 
-      <FeaturedArticles articles={featuredArticles} />
-
       <FeaturedCollection collection={featuredCollection} />
+
+      <FeaturedArticles articles={featuredArticles} />
 
       <LatestNews articles={latestArticles} />
     </Layout>
