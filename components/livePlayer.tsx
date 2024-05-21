@@ -124,13 +124,16 @@ export default function LivePlayer() {
         {isOnline && (
           <>
             <button
-              className="ml-4 sm:ml-8 mr-3 sm:mr-5 grow-0 h-7 w-7 sm:h-8 sm:w-8 focus:outline-none focus:ring-4"
+              className="ml-4 sm:ml-8 mr-3 sm:mr-5 grow-0 focus:outline-none focus:ring-4 flex items-center gap-4"
               onClick={isPlaying == 1 ? pause : play}
               aria-label={
                 isPlaying == 1 ? "Pause Live Broadcast" : "Play Live Broadcast"
               }
             >
-              {isPlaying == 1 ? <Pause /> : <Play />}
+              <span className="font-medium mt-1 border-white">1</span>
+              <div className="h-7 w-7 sm:h-8 sm:w-8">
+                {isPlaying == 1 ? <Pause /> : <Play />}
+              </div>
             </button>
           </>
         )}
@@ -143,11 +146,7 @@ export default function LivePlayer() {
             <Marquee
               key={scheduleData?.liveNow.title + ch2IsOnline}
               className="-mr-14"
-              text={
-                <span className="pr-8">
-                  {ch2IsOnline && <>Live on 1:</>} {scheduleData?.liveNow.title}
-                </span>
-              }
+              text={<span className="pr-8">{scheduleData?.liveNow.title}</span>}
               speed={ch2IsOnline ? 0.2 : 0.25}
             />
           </Link>
@@ -198,13 +197,16 @@ export default function LivePlayer() {
         <div className="h-12 sm:h-16 flex items-center flex-1 truncate">
           <div className="w-0.5 bg-white h-full !ml-0 hidden lg:block"></div>
           <button
-            className="grow-0 h-7 w-7 sm:h-8 sm:w-8 focus:outline-none focus:ring-4 ml-4 sm:ml-8 mr-3 sm:mr-5 lg:mx-5"
+            className="grow-0 focus:outline-none focus:ring-4 ml-4 sm:ml-8 mr-3 sm:mr-5 lg:mx-5 flex gap-4 items-center"
             onClick={isPlaying == 2 ? pause : play2}
             aria-label={
               isPlaying == 2 ? "Pause Live Broadcast" : "Play Live Broadcast"
             }
           >
-            {isPlaying == 2 ? <Pause /> : <Play />}
+            <span className="font-medium mt-1">2</span>
+            <div className="h-7 w-7 sm:h-8 sm:w-8">
+              {isPlaying == 2 ? <Pause /> : <Play />}
+            </div>
           </button>
 
           {!isLoading && !error && scheduleData?.liveNow?.title && (
@@ -212,9 +214,7 @@ export default function LivePlayer() {
               <Marquee
                 key={scheduleData?.liveNow.title + ch2IsOnline}
                 text={
-                  <span className="pr-8">
-                    Live on 2: {scheduleData?.liveNow.title}
-                  </span>
+                  <span className="pr-8">{scheduleData?.nextUp[2].title}</span>
                 }
                 speed={0.3}
               />
