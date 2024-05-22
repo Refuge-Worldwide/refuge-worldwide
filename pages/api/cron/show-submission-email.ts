@@ -54,30 +54,32 @@ async function sendEmails(
   shows: ShowInterface[],
   severity: "initial" | "follow-up" | "late"
 ) {
-  await Promise.all(
-    shows.map(async (show) => {
-      let showEmailed = false;
-      await Promise.all(
-        show.artistsCollection.items.map(async (artist) => {
-          if (artist.email) {
-            await sendEmail(artist, show, severity);
-            showEmailed = true;
-          } else {
-            // send message to slack saying artist does not have email address assigned to them.
-            console.log(artist.name + " does not have email");
-            sendSlackMessage(
-              `*${artist.name}* has no email assigned to them. <https://app.contentful.com/spaces/${contentfulSpaceId}/entries/${artist.sys.id}|Add email >`
-            );
-          }
-        })
-      );
-      if (!showEmailed) {
-        sendSlackMessage(
-          `Show *${show.title}* has no emails assigned. They did not recieve ${severity} email. <https://app.contentful.com/spaces/${contentfulSpaceId}/entries/${show.sys.id}|Edit show >`
+  const delay = 105; // 105 milliseconds delay
+
+  for (const show of shows) {
+    let showEmailed = false;
+
+    const emailPromises = show.artistsCollection.items.map(async (artist) => {
+      if (artist.email) {
+        await sendEmail(artist, show, severity);
+        showEmailed = true;
+        await new Promise((resolve) => setTimeout(resolve, delay)); // Respect the rate limit
+      } else {
+        console.log(`${artist.name} does not have an email`);
+        await sendSlackMessage(
+          `*${artist.name}* has no email assigned to them. <https://app.contentful.com/spaces/${contentfulSpaceId}/entries/${artist.sys.id}|Add email >`
         );
       }
-    })
-  );
+    });
+
+    await Promise.all(emailPromises);
+
+    if (!showEmailed) {
+      await sendSlackMessage(
+        `Show *${show.title}* has no emails assigned. They did not receive ${severity} email. <https://app.contentful.com/spaces/${contentfulSpaceId}/entries/${show.sys.id}|Edit show >`
+      );
+    }
+  }
 }
 
 function checkEmails(shows: ShowInterface[]) {
