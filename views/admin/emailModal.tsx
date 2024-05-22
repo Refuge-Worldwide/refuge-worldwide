@@ -51,7 +51,7 @@ export default function EmailModal({ artists, client }) {
 
   const initialValues = {
     id: artist?.value ? artist?.value : undefined,
-    email: artist?.email.join(", "),
+    email: artist?.email?.join(", "),
   };
 
   const validationSchema = Yup.object().shape({
