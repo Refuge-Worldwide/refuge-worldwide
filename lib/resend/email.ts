@@ -7,7 +7,7 @@ import dayjs from "dayjs";
 
 export async function sendEmail(artist, show, severity) {
   try {
-    const data = await resend.sendEmail({
+    const { data, error } = await resend.emails.send({
       from: "Refuge Worldwide <noreply@mail.refugeworldwide.com>",
       to: artist.email,
       subject: subject(severity),
@@ -25,11 +25,16 @@ export async function sendEmail(artist, show, severity) {
         showId: show.sys.id,
       }),
     });
+    if (error) {
+      throw new Error(error.name);
+    }
+
+    return data;
   } catch (error) {
     // send message to slack saying there was an issue sending the email
     console.log(error);
     sendSlackMessage(
-      `Failed to send email request to ${artist.name}(${artist.email}) on show *${show.title}*. ${error}. <@U04HG3VHHEW>`
+      `Failed to send email request to ${artist.name}(${artist.email}) on show *${show.title}*. ${error.name} - ${error.message}. <@U04HG3VHHEW>`
     );
     throw new Error(error);
   }
@@ -40,7 +45,7 @@ export async function sendConfirmationEmail(show) {
     show.artists.map(async (artist) => {
       if (artist.email) {
         try {
-          const data = await resend.sendEmail({
+          const { data, error } = await resend.emails.send({
             from: "Refuge Worldwide <noreply@mail.refugeworldwide.com>",
             to: artist.email,
             subject:
@@ -59,11 +64,17 @@ export async function sendConfirmationEmail(show) {
               showId: show.id,
             }),
           });
+
+          if (error) {
+            throw new Error(error.name);
+          }
+
+          return data;
         } catch (error) {
           // send message to slack saying there was an issue sending the email
           console.log(error);
           sendSlackMessage(
-            `Failed to send email request to ${artist.name}(${artist.email}) on show *${show.title}*. ${error}. <@U04HG3VHHEW>`
+            `Failed to send email request to ${artist.name}(${artist.email}) on show *${show.title}*. ${error.name} - ${error.message}. <@U04HG3VHHEW>`
           );
         }
       }
@@ -72,21 +83,35 @@ export async function sendConfirmationEmail(show) {
 }
 
 export async function sendArtworkEmail(artist, date) {
-  const data = await resend.sendEmail({
-    from: "Refuge Worldwide <noreply@mail.refugeworldwide.com>",
-    to: artist.email,
-    subject:
-      "Your show artwork for " + dayjs(date).format("dddd") + " is now ready",
-    reply_to: [
-      "leona@refugeworldwide.com",
-      "graeme@refugeworldwide.com",
-      "heloise@refugeworldwide.com",
-    ],
-    react: ShowArtworkEmail({
-      userName: artist.name,
-      showDate: date,
-    }),
-  });
+  try {
+    const { data, error } = await resend.emails.send({
+      from: "Refuge Worldwide <noreply@mail.refugeworldwide.com>",
+      to: artist.email,
+      subject:
+        "Your show artwork for " + dayjs(date).format("dddd") + " is now ready",
+      reply_to: [
+        "leona@refugeworldwide.com",
+        "graeme@refugeworldwide.com",
+        "heloise@refugeworldwide.com",
+      ],
+      react: ShowArtworkEmail({
+        userName: artist.name,
+        showDate: date,
+      }),
+    });
+
+    if (error) {
+      throw new Error(error.name);
+    }
+
+    return data;
+  } catch (error) {
+    // send message to slack saying there was an issue sending the email
+    console.log(error);
+    sendSlackMessage(
+      `Failed to send artwork email to ${artist.name}(${artist.email}). ${error.name} - ${error.message}. <@U04HG3VHHEW>`
+    );
+  }
 }
 
 function subject(severity: string) {

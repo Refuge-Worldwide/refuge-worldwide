@@ -79,7 +79,7 @@
     "react-player": "^2.13.0",
     "react-select": "^5.6.1",
     "react-select-async-paginate": "^0.7.3",
-    "resend": "^1.0.0",
+    "resend": "^3.2.0",
     "sharp": "^0.31.3",
     "smoothscroll-polyfill": "^0.4.4",
     "swr": "^2.1.1",
