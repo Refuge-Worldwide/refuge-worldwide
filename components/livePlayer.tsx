@@ -53,7 +53,7 @@ const BroadcastingIndicator = ({
 
 export default function LivePlayer() {
   const CH1 = "https://streaming.radio.co/s3699c5e49/listen";
-  const CH2 = "https://s4.radio.co/s69b281ac0/listen";
+  const CH2 = "https://s4.radio.co/s8ce53d687/listen";
 
   const router = useRouter();
   const [isSchedulePage, setIsSchedulePage] = useState<boolean>(false);
@@ -72,7 +72,7 @@ export default function LivePlayer() {
   const { scheduleData, isLoading, error } = useSchedule();
 
   const isOnline = scheduleData?.status === "online";
-  const ch2IsOnline = scheduleData?.ch2Status === "online";
+  const ch2IsOnline = scheduleData?.ch2.status === "online";
 
   const player = useRef<HTMLAudioElement>(null);
   const source = useRef<HTMLSourceElement>(null);
@@ -225,9 +225,7 @@ export default function LivePlayer() {
             >
               <Marquee
                 key={scheduleData?.liveNow.title + ch2IsOnline}
-                text={
-                  <span className="pr-8">{scheduleData?.nextUp[2].title}</span>
-                }
+                text={<span className="pr-8">{scheduleData?.ch2.liveNow}</span>}
                 speed={0.3}
               />
               {/* <span className="absolute left-0 top-0.5 font-medium text-small flex items-center justify-center pt-0.5 bg-white h-8 w-8 text-black rounded-sm">
