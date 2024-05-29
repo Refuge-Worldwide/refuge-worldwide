@@ -45,11 +45,6 @@ export default async function handler(
               `Failed to send email request to ${artist.name} (${artist.email}) for show *${show.title}*. Error: ${error.message}. <@U04HG3VHHEW>`
             );
           }
-        } else if (!artist.email) {
-          console.warn(`${artist.name} does not have an email`);
-          await sendSlackMessage(
-            `*${artist.name}* has no email assigned. <https://app.contentful.com/spaces/${contentfulSpaceId}/entries/${artist.sys.id}|Add email >`
-          );
         }
       }
 

@@ -64,11 +64,6 @@ async function sendEmails(
         await sendEmail(artist, show, severity);
         showEmailed = true;
         await new Promise((resolve) => setTimeout(resolve, delay)); // Respect the rate limit
-      } else {
-        console.log(`${artist.name} does not have an email`);
-        await sendSlackMessage(
-          `*${artist.name}* has no email assigned to them. <https://app.contentful.com/spaces/${contentfulSpaceId}/entries/${artist.sys.id}|Add email >`
-        );
       }
     });
 
