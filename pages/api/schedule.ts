@@ -75,7 +75,7 @@ export default async function handler(
       schedule: data.schedule,
       ch2: {
         status: radioCoDataCh2.status,
-        liveNow: radioCoDataCh2.current_track.title,
+        liveNow: "GISIRA Festival - Iain Chambers, Humanity, Nicky Böhm",
       },
     };
 
