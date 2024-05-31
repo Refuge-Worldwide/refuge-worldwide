@@ -221,7 +221,7 @@ export default function LivePlayer() {
           {!isLoading && !error && scheduleData?.liveNow?.title && (
             <Link
               className="flex-1 truncate mt-0.5 relative"
-              href={"/news/ploetzensee"}
+              href={"/news/gisira-festival"}
             >
               <Marquee
                 key={scheduleData?.liveNow.title + ch2IsOnline}
