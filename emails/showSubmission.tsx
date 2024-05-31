@@ -16,39 +16,48 @@ import {
 } from "@react-email/components";
 import * as React from "react";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 var advancedFormat = require("dayjs/plugin/advancedFormat");
 dayjs.extend(advancedFormat);
+dayjs.extend(utc);
+const env = process.env.NODE_ENV;
 
 interface EmailProps {
   userName: string;
   showDateStart: string;
   showDateEnd: string;
-  showType: "live" | "pre-record";
-  severity: "initial" | "follow-up" | "late";
+  showType: "Live" | "Pre-record";
+  severity: "confirmation" | "confirmation" | "initial" | "follow-up" | "late";
   showId: string;
 }
 
-const baseUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : "http://localhost:3000";
+// const baseUrl = process.env.NEXT_PUBLIC_SITE_URL
+//   ? `https://${process.env.NEXT_PUBLIC_SITE_URL}`
+//   : "http://localhost:3000/";
+
+const baseUrl = "https://refugeworldwide.com/";
 
 export const ShowSubmissionEmail = ({
-  userName = "No Plastic",
-  showDateStart = "2023-10-02T15:00:00.000Z",
-  showDateEnd = "2023-10-02T17:00:00.000Z",
-  showType = "live",
-  severity = "late",
-  showId = "3mJ2xrYzyd4NOwMry3wJJQ",
+  userName = "Gramrcy",
+  showDateStart = "2024-05-15T15:00:00.000Z",
+  showDateEnd = "2024-05-15T17:00:00.000Z",
+  showType = "Live",
+  severity = "confirmation",
+  showId = "7JIvNxsqyZcPZsw2PJGzIx",
 }: EmailProps) => {
-  const startDate = dayjs(showDateStart);
-  const formattedDate =
+  const startDate = dayjs(showDateStart).utc();
+  let formattedDate =
     startDate.format("dddd Do MMMM, HH:mm") +
     "-" +
-    dayjs(showDateEnd).format("HH:mm");
+    dayjs(showDateEnd).utc().format("HH:mm CET");
+  if (showType == "Pre-record") {
+    formattedDate = startDate.format("dddd Do MMMM");
+  }
   const submissionDeadlineDate = startDate
     .subtract(4, "day")
     .format("dddd Do MMMM");
-
+  const submitUrl = baseUrl + "submission-v2?id=" + showId;
+  const showFormLink = startDate.diff(dayjs(), "day") < 10;
   return (
     <Html>
       <Head />
@@ -57,7 +66,7 @@ export const ShowSubmissionEmail = ({
         <Container>
           <Section style={logo}>
             <Img
-              src={`https://res.cloudinary.com/dqjn26pey/image/upload/v1692697351/refuge-worldwide-logo_y2u1qh.png`}
+              src={`https://res.cloudinary.com/dqjn26pey/image/upload/v1706278328/Refuge-pichi_mg1jge.jpg`}
               height={89}
               width={146}
               style={logo}
@@ -78,30 +87,64 @@ export const ShowSubmissionEmail = ({
                   Hi {userName},{" "}
                 </Heading>
 
-                <Text style={paragraph}>
-                  {severity == "follow-up" && (
-                    <span style={{ fontWeight: "bold" }}>
-                      Final call for info!{" "}
-                    </span>
-                  )}
-                  {severity == "late" && (
-                    <span style={{ fontWeight: "bold" }}>
-                      Your submission is late!{" "}
-                    </span>
-                  )}
-                  You have a show with us on {formattedDate} and we need some
-                  info from you ahead of this. Please fill out{" "}
-                  <Link style={link}>this submission form</Link>{" "}
-                  {severityText(severity, submissionDeadlineDate)}
-                </Text>
-                <Button
-                  href={baseUrl + "/new-submission?id=" + showId}
-                  style={button}
-                  pY={9}
-                  pX={12}
-                >
-                  SHOW SUBMISSION FORM
-                </Button>
+                {severity == "confirmation" ? (
+                  <Text style={paragraph}>
+                    This email confirms your show on Refuge Worldwide on{" "}
+                    {formattedDate}.
+                    {!showFormLink && (
+                      <>
+                        {" "}
+                        You’ll receive an email from us closer to your show date
+                        – in the meantime, please feel free to add it to your
+                        calendar.
+                      </>
+                    )}{" "}
+                    We look forward to welcoming you to the station!
+                    {showFormLink && (
+                      <>
+                        {" "}
+                        Please fill out the{" "}
+                        <Link style={link} href={submitUrl}>
+                          submission form
+                        </Link>{" "}
+                        linked below as soon as possible and by{" "}
+                        <span
+                          style={{
+                            color: "#FF0000",
+                            display: "inline",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          {submissionDeadlineDate} at the latest
+                        </span>
+                        .
+                      </>
+                    )}
+                  </Text>
+                ) : (
+                  <Text style={paragraph}>
+                    {severity == "follow-up" && <>Final call for info! </>}
+                    {severity == "late" && (
+                      <span style={{ fontWeight: "bold" }}>
+                        Your submission is late!{" "}
+                      </span>
+                    )}
+                    We need some essential information ahead of your show on{" "}
+                    {formattedDate}. Please fill out the{" "}
+                    <Link style={link} href={submitUrl}>
+                      submission form
+                    </Link>{" "}
+                    linked below{" "}
+                    {severityText(severity, submissionDeadlineDate)}.
+                  </Text>
+                )}
+                {showFormLink && (
+                  <>
+                    <Button href={submitUrl} style={button} pY={9} pX={12}>
+                      SHOW SUBMISSION FORM
+                    </Button>
+                  </>
+                )}
                 <Hr style={seperator} />
                 <Heading as="h2" style={paragraph}>
                   <b>Your upcoming show</b>
@@ -109,16 +152,16 @@ export const ShowSubmissionEmail = ({
                 <Text style={{ ...paragraph, marginTop: -5 }}>
                   Date: {formattedDate}
                   <br />
-                  Location:{" "}
-                  {showType == "live" ? (
-                    <Link
-                      href="https://goo.gl/maps/ZY1w74xS4ULk4B1z5"
-                      style={link}
-                    >
-                      Weserstraße 166, 12045
-                    </Link>
-                  ) : (
-                    "Online"
+                  {showType == "Live" && (
+                    <>
+                      Location:{" "}
+                      <Link
+                        href="https://goo.gl/maps/ZY1w74xS4ULk4B1z5"
+                        style={link}
+                      >
+                        Weserstraße 166, 12045
+                      </Link>
+                    </>
                   )}
                 </Text>
                 <Hr style={seperator} />
@@ -138,7 +181,7 @@ export const ShowSubmissionEmail = ({
               margin: "16px auto",
             }}
           >
-            © 2023 | Location copyright info | refugeworldwide.com
+            refugeworldwide.com
           </Text>
         </Container>
       </Body>
@@ -150,7 +193,7 @@ const severityText = (level: string, date: string) => {
   if (level == "initial") {
     return (
       <span>
-        by{" "}
+        as soon as possible and by{" "}
         <span
           style={{
             color: "#FF0000",
@@ -158,7 +201,7 @@ const severityText = (level: string, date: string) => {
             fontWeight: "bold",
           }}
         >
-          {date}
+          {date} at the latest
         </span>
       </span>
     );
@@ -172,9 +215,9 @@ const severityText = (level: string, date: string) => {
             fontWeight: "bold",
           }}
         >
-          as soon as you can
+          as soon as possible
         </span>{" "}
-        and no later than tomorrow.
+        and no later than tomorrow
       </span>
     );
   } else {
@@ -189,7 +232,7 @@ const severityText = (level: string, date: string) => {
         >
           by the end of today{" "}
         </span>
-        otherwise we will have to sadly cancel your show.
+        otherwise we will have to sadly cancel your show
       </span>
     );
   }
@@ -222,6 +265,7 @@ const link = {
   fontSize: 16,
   color: "#000",
   textDecoration: "underline",
+  fontWeight: 500,
 };
 
 const logo = {

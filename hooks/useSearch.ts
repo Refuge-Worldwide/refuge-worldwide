@@ -13,3 +13,9 @@ export default function useSearchData(
     revalidateOnFocus: false,
   });
 }
+
+export function useCalendarSearchData(query: string) {
+  return useSWR(`/api/admin/search?query=${query}`, fetcher, {
+    revalidateOnFocus: false,
+  });
+}

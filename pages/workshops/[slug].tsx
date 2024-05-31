@@ -4,7 +4,7 @@ import Prose from "../../components/Prose";
 import WorkshopMeta from "../../components/seo/workshop";
 import { getWorkshopPageSingle } from "../../lib/contentful/pages/workshops";
 import { getWorkshopPathsToPreRender } from "../../lib/contentful/paths";
-import { renderRichTextWithImages } from "../../lib/rich-text";
+import { RenderRichTextWithImages } from "../../lib/rich-text";
 import SinglePage from "../../views/singlePage";
 import Script from "next/script";
 
@@ -28,7 +28,7 @@ export default function Workshop({
           </h1>
 
           <div>
-            <Prose>{renderRichTextWithImages(workshop.content)}</Prose>
+            <Prose>{RenderRichTextWithImages(workshop.content)}</Prose>
           </div>
           <div className="mt-16 max-w-[750px] mx-auto">
             <iframe

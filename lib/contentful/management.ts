@@ -24,7 +24,9 @@ export const formatArtistsForContenful = (
   //     artists.push({ label: guest.name });
   //   });
   // }
-  if (artists.length > 1) {
+  if (artists.length == 0) {
+    return "";
+  } else if (artists.length > 1) {
     const artistSimpleArray = artists.map((artist) => artist.label);
     const formattedArtists = [
       artistSimpleArray.slice(0, -1).join(", "),
@@ -32,6 +34,6 @@ export const formatArtistsForContenful = (
     ].join(artistSimpleArray.length < 2 ? "" : " & ");
     return formattedArtists;
   } else {
-    return artists[0].label.toString();
+    return artists[0]?.label?.toString();
   }
 };

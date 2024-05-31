@@ -1,21 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { assertError } from "ts-extras";
-import { getCalendarShows } from "../../lib/contentful/calendar";
-import { createClient } from "contentful-management";
-import {
-  formatArtistsForContenful,
-  createReferencesArray,
-} from "../../lib/contentful/management";
-import dayjs from "dayjs";
-
-const accesstoken = process.env.CONTENTFUL_MANAGEMENT_ACCESS_TOKEN;
-const spaceId = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID;
-const client = createClient({
-  accessToken: accesstoken,
-});
-const environmentId = process.env.NEXT_PUBLIC_CONTENTFUL_ENVIRONMENT_ID;
-const showContentTypeId = "show";
-const artistContentTypeId = "artist";
+import { getCalendarShows } from "../../../lib/contentful/calendar";
 
 export default async function handler(
   req: NextApiRequest,
@@ -36,7 +21,7 @@ export default async function handler(
 
         res
           .status(200)
-          .setHeader("Cache-Control", "s-maxage=1, stale-while-revalidate=59")
+          .setHeader("Cache-Control", "s-maxage=60, stale-while-revalidate=20")
           .json(shows);
         break;
       } catch (error) {

@@ -15,6 +15,7 @@ export async function getStaticProps({ preview = false }) {
       preview,
       guests: await getArtistsPage(false, 1000, 0),
       guestsTwo: await getArtistsPage(false, 1000, 1000),
+      guestsThree: await getArtistsPage(false, 1000, 2000),
     },
   };
 }
@@ -23,8 +24,9 @@ export default function GuestsPage({
   preview,
   guests,
   guestsTwo,
+  guestsThree,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const allGuests = guests.concat(guestsTwo);
+  const allGuests = guests.concat(guestsTwo, guestsThree);
   const sections = sortAndGroup(allGuests);
 
   return (

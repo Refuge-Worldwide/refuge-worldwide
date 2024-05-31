@@ -104,6 +104,16 @@ function ScheduleByDay({
                 )}
               </div>
             ))}
+            <div className="flex gap-3 px-3 my-2">
+              <div className="min-w-[50px] sm:min-w-[80px]">
+                <LocalTime
+                  dateTime={
+                    scheduleByDate[day][scheduleByDate[day].length - 1].dateEnd
+                  }
+                />
+              </div>
+              <p>Repeats Playlist</p>
+            </div>
           </div>
         </section>
       ))}

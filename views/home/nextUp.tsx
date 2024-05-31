@@ -13,7 +13,12 @@ export default function NextUp() {
 
   const bgColour = bgOptions[Math.floor(Math.random() * bgOptions.length)];
 
-  if ((!isLoading && !scheduleData?.nextUp) || error) return null;
+  if (
+    (!isLoading && !scheduleData?.nextUp) ||
+    error ||
+    scheduleData?.liveNow.isMixedFeelings
+  )
+    return null;
   else
     return (
       <section className={`${bgColour} border-b-2`}>
@@ -33,7 +38,7 @@ export default function NextUp() {
             ) : (
               <Marquee
                 speed={0.5}
-                key={scheduleData.nextUp[0].title}
+                key={scheduleData.nextUp[0]?.title}
                 text={
                   <span className="h-10 flex items-center space-x-2 whitespace-nowrap px-2">
                     {scheduleData.nextUp.map((show) => (

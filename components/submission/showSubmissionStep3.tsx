@@ -1,27 +1,50 @@
-import { useState } from "react";
-import MultiSelectField from "./formFields/multiSelectField";
-import ImageUploadField from "./formFields/imageUploadField";
+import { useState, useEffect } from "react";
+import MultiSelectField from "../formFields/multiSelectField";
+import ImageUploadField from "../formFields/imageUploadField";
 import { useFormikContext, Field, FieldArray, ErrorMessage } from "formik";
-import { Close } from "../icons/menu";
-import InputField from "./formFields/inputField";
-import TextareaField from "./formFields/textareaField";
-import CheckboxField from "./formFields/checkboxField";
-import { SubmissionFormValues } from "../types/shared";
-import { AiOutlineInfoCircle } from "react-icons/ai";
-import * as RadioGroup from "@radix-ui/react-radio-group";
+import { Close } from "../../icons/menu";
+import InputField from "../formFields/inputField";
+import TextareaField from "../formFields/textareaField";
+import CheckboxField from "../formFields/checkboxField";
+import ArtistMultiSelectField from "../formFields/artistsMultiSelectField";
+import { SubmissionFormValues } from "../../types/shared";
+import { AiOutlineCalendar, AiOutlineInfoCircle } from "react-icons/ai";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+var advancedFormat = require("dayjs/plugin/advancedFormat");
+dayjs.extend(advancedFormat);
+dayjs.extend(utc);
 
 const env = process.env.NODE_ENV;
 
 export default function ShowSubmissionStep3({
+  initial,
   genres,
-  artists,
   uploadLink,
   showType,
 }) {
   const [mp3, setMp3] = useState<boolean>(false);
   const [oneHr, setOneHr] = useState<boolean>(false);
   const [micLevel, setMicLevel] = useState<boolean>(false);
-  const { values, setFieldValue } = useFormikContext<SubmissionFormValues>();
+  const { values } = useFormikContext<SubmissionFormValues>();
+  const newSubmission = initial ? false : true;
+
+  // useEffect(() => {
+  //   console.log(values.artistsAdditionalInfo);
+  //   values.artistsAdditionalInfo = values.artists.reduce(
+  //     (reducedArtists, artist) => {
+  //       if (!artist.content) {
+  //         var someNewValue = {
+  //           id: artist.value,
+  //           name: artist.label,
+  //           requiresImage: !artist.image,
+  //         };
+  //         reducedArtists.push(someNewValue);
+  //       }
+  //       return reducedArtists;
+  //     }
+  //   );
+  // }, [values.artists]);
 
   return (
     <div>
@@ -30,26 +53,29 @@ export default function ShowSubmissionStep3({
           {JSON.stringify(values, null, 2)}
         </pre>
       )}
-      <fieldset className="mt-16">
-        <InputField
-          name="email"
-          type="email"
-          label="Email address"
-          required={true}
-        />
-        {showType === "live" && (
-          <InputField name="number" type="tel" label="Contact number" />
-        )}
-      </fieldset>
+      <div className="flex gap-2 md:gap-3 items-center border border-black p-3 md:p-6 bg-orange my-16">
+        <AiOutlineCalendar className="w-5 sm:w-6 md:w-8 h-full" />
+        <span className="flex-1">
+          Submitting for {showType.toLowerCase()} show on{" "}
+          {showType == "Live" ? (
+            <>
+              {dayjs(initial.date).utc().format("dddd Do MMMM, HH:mm")}-
+              {dayjs(initial.dateEnd).utc().format("HH:mm CET")}
+            </>
+          ) : (
+            <>{dayjs(initial.date).format("dddd Do MMMM")}</>
+          )}
+        </span>
+      </div>
+
       <fieldset>
-        <MultiSelectField
+        <ArtistMultiSelectField
           label="Artist(s)*"
           description="Please include guests, collectives and show hosts."
           name="artists"
-          options={artists}
           limit={10}
+          value={values.artists}
         />
-
         <CheckboxField
           name="hasExtraArtists"
           label="Click here to add any artists/guests/collectives not found above."
@@ -122,40 +148,64 @@ export default function ShowSubmissionStep3({
             />
           </fieldset>
         )}
+
+        {values.artistsAdditionalInfo && (
+          <fieldset className=" mb-8">
+            <FieldArray
+              name="artistsAdditionalInfo"
+              render={(arrayHelpers) => (
+                <div>
+                  {values.artistsAdditionalInfo.map((artist, index) => {
+                    return (
+                      <div
+                        className="mb-8 border border-black p-8 relative"
+                        key={"artistAdditionalInfo" + index}
+                      >
+                        <p className="font-medium !mt-0">
+                          Additional info required for {artist.name}
+                        </p>
+                        <InputField
+                          name={`artistsAdditionalInfo.${index}.pronouns`}
+                          type="text"
+                          label="Pronouns"
+                        />
+                        <TextareaField
+                          name={`artistsAdditionalInfo.${index}.bio`}
+                          rows={4}
+                          label="Bio"
+                          required
+                        />
+                        {artist.requiresImage && (
+                          <ImageUploadField
+                            label="Image"
+                            description="No logos and no flyers. Minimum dimensions: 1000x1000px, maximum file size: 3MB."
+                            required
+                            name={`artistsAdditionalInfo.${index}.image`}
+                          />
+                        )}
+                        <div className="flex gap-2 md:gap-3 items-center border border-black p-3 md:p-6 bg-orange">
+                          <AiOutlineInfoCircle className="w-5 sm:w-6 md:w-8 h-full" />
+                          <span className="flex-1 text-small">
+                            PLEASE NOTE: If you would like this image to be used
+                            for your show’s social media artwork please also add
+                            it to Show image(s) field towards the end of this
+                            form.
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            />
+          </fieldset>
+        )}
         <InputField
           name="instagram"
           type="text"
           label="Instagram @ handle(s)"
           description="For you and your guest(s). A comma seperated list NOT including the @ symbol."
         />
-        <InputField
-          name="datetime"
-          type={showType == "live" ? "datetime-local" : "date"}
-          label={showType == "live" ? "Show date / time (CET)" : "Show date"}
-          required={true}
-        />
-        <fieldset className="mb-10">
-          <legend>Show length</legend>
-          <RadioGroup.Root
-            className="flex"
-            name="Show length"
-            defaultValue="1"
-            onValueChange={(value: string) => setFieldValue("length", value)}
-          >
-            <RadioGroup.Item value="1" asChild>
-              <label className="data-[state=checked]:bg-black data-[state=checked]:text-white block cursor-pointer pill-input rounded-tr-none rounded-br-none py-3 text-center">
-                1hr
-              </label>
-            </RadioGroup.Item>
-
-            <RadioGroup.Item value="2" asChild>
-              <label className="data-[state=checked]:bg-black data-[state=checked]:text-white block cursor-pointer select-none pill-input rounded-tl-none rounded-bl-none py-3 text-center">
-                2hr
-              </label>
-            </RadioGroup.Item>
-          </RadioGroup.Root>
-          <ErrorMessage className="text-red" component="span" name="length" />
-        </fieldset>
         <InputField
           name="showName"
           type="text"
@@ -185,6 +235,7 @@ export default function ShowSubmissionStep3({
           label="Show description"
           required={true}
         />
+
         <MultiSelectField
           label="Genres"
           description="Up to 3. If you can't find a genre on this list please get in touch."
@@ -206,8 +257,8 @@ export default function ShowSubmissionStep3({
           />
         )}
 
-        {showType === "preRecord" && (
-          <fieldset>
+        {showType === "Pre-record" && (
+          <fieldset className="mb-10">
             <legend>
               Upload your show{" "}
               <a href={uploadLink} rel="noreferrer" target="_blank">
@@ -258,14 +309,14 @@ export default function ShowSubmissionStep3({
           </fieldset>
         )}
 
-        {showType === "live" && (
+        {showType === "Live" && (
           <CheckboxField
             name="additionalEq"
             label="Are you bringing additional DJ or live-performance equipment (including laptop or controllers)?"
           />
         )}
 
-        {showType === "live" && values.additionalEq && (
+        {showType === "Live" && values.additionalEq && (
           <InputField
             name="additionalEqDesc"
             type="text"
@@ -274,6 +325,11 @@ export default function ShowSubmissionStep3({
           />
         )}
       </fieldset>
+      <CheckboxField
+        name="imagesRights"
+        required
+        label="I confirm that I am the creator of the submitted images and / or have the usage rights thereof. Should there be any copyright infringement issues resulting from this upload, I accept full legal and financial responsibility."
+      />
     </div>
   );
 }

@@ -12,6 +12,8 @@ import { useRouter } from "next/router";
 import FeaturedEvents from "../../views/events/featuredEvents";
 import { Splide, SplideSlide, SplideTrack } from "@splidejs/react-splide";
 import { Chevron } from "../../icons/chevron";
+import Link from "next/link";
+import { Arrow } from "../../icons/arrow";
 
 export async function getStaticProps({ preview = false }) {
   return {
@@ -199,11 +201,21 @@ export default function NewsPage({
               </div>
             </div>
           )}
-          {pastEvents.length > 0 && (
-            <PastEvents title={title} events={pastEvents} />
-          )}
         </div>
       </div>
+      <div className="h-10 sm:h-16" />
+
+      <div className="text-center">
+        <Link
+          href="/events/archive"
+          className="inline-flex items-center space-x-4 text-base font-medium"
+        >
+          <span className="underline">Past events</span>
+          <Arrow />
+        </Link>
+      </div>
+
+      <div className="h-8 sm:h-10" />
     </Layout>
   );
 }

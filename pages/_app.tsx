@@ -13,7 +13,7 @@ import { SessionContextProvider, Session } from "@supabase/auth-helpers-react";
 import { useState } from "react";
 import "../styles/globals.css";
 
-const MixcloudPlayer = dynamic(() => import("../components/mixcloudPlayer"), {
+const ArchivePlayer = dynamic(() => import("../components/archivePlayer"), {
   ssr: false,
 });
 
@@ -46,7 +46,7 @@ function RefugeApp({ Component, pageProps }: AppProps) {
 
         {router.pathname != "/admin/calendar" && <Footer />}
 
-        <MixcloudPlayer />
+        <ArchivePlayer />
         {router.pathname != "/admin/calendar" && <JoinChat />}
       </SessionContextProvider>
     </Fragment>

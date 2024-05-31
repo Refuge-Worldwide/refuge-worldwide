@@ -129,21 +129,24 @@ export async function getShowById(id, preview) {
           id
         }
         title
+        type
         date
         dateEnd
         slug
         status
-        coverImage {
-          sys {
-            id
-          }
-          url
-        }
         artistsCollection(limit: 9) {
           items {
             name
             sys {
               id
+            }
+            photo {
+              sys {
+                id
+              }
+            }
+            content {
+              json
             }
           }
         }

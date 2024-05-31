@@ -103,11 +103,17 @@ export type UpcomingShowType = Pick<
   | "genresCollection"
 >;
 
-export async function getUpcomingShows(preview: boolean) {
-  const today = dayjs().format("YYYY-MM-DD");
+export async function getUpcomingShows(
+  preview?: boolean,
+  date?: string,
+  limit = 99
+) {
+  const today = dayjs(date ? date : undefined)
+    .add(1, "day")
+    .format("YYYY-MM-DD");
 
   const UpcomingShowsQuery = /* GraphQL */ `
-    query UpcomingShowsQuery($preview: Boolean, $today: DateTime) {
+    query UpcomingShowsQuery($preview: Boolean, $today: DateTime, $limit: Int) {
       showCollection(
         order: date_ASC
         where: {
@@ -117,7 +123,7 @@ export async function getUpcomingShows(preview: boolean) {
           isFeatured: true
         }
         preview: $preview
-        limit: 4
+        limit: $limit
       ) {
         items {
           title
@@ -146,7 +152,7 @@ export async function getUpcomingShows(preview: boolean) {
   `;
 
   const res = await graphql(UpcomingShowsQuery, {
-    variables: { preview, today },
+    variables: { preview, today, limit },
     preview,
   });
 
@@ -258,29 +264,44 @@ export async function getRelatedShows(
   return filteredShows;
 }
 
-export async function getUpcomingShowsByDate(preview: boolean) {
-  // const start = day.startOf("day");
-  // const end = start.add(1, "day");
-  // const startISO = start.toISOString();
-  // const endISO = end.toISOString();
+// to do: add show status prop confirmed/submitted
+export async function getUpcomingShowsByDate(
+  date,
+  preview: boolean,
+  status = "Confirmed"
+) {
+  const s = date.startOf("day").add(5, "hour");
+  const e = s.add(1, "day");
+  const start = s.toISOString();
+  const end = e.toISOString();
 
-  // console.log(startISO);
-  // console.log(endISO);
+  console.log(start);
+  console.log(end);
 
-  const UpcomingShowsQuery = /* GraphQL */ `
-    query upcomingShowsByDate {
+  const UpcomingShowsByDateQuery = /* GraphQL */ `
+    query upcomingShowsByDateQuery(
+      $start: DateTime
+      $end: DateTime
+      $preview: Boolean
+      $status: String
+    ) {
       showCollection(
         order: date_ASC
         where: {
-          date_gt: "2023-10-07T00:00:00.000Z"
-          dateEnd_lte: "2023-10-08T00:00:00.000Z"
+          date_gte: $start
+          dateEnd_lte: $end
           dateEnd_exists: true
+          status: $status
         }
-        preview: true
-        limit: 999
+        preview: $preview
+        limit: 50
       ) {
         items {
+          sys {
+            id
+          }
           title
+          type
           date
           dateEnd
           slug
@@ -295,6 +316,9 @@ export async function getUpcomingShowsByDate(preview: boolean) {
           }
           artistsCollection(limit: 9) {
             items {
+              sys {
+                id
+              }
               name
               slug
               email
@@ -305,7 +329,9 @@ export async function getUpcomingShowsByDate(preview: boolean) {
     }
   `;
 
-  const res = await graphql(UpcomingShowsQuery, { preview });
-
+  const res = await graphql(UpcomingShowsByDateQuery, {
+    variables: { start, end, preview, status },
+    preview,
+  });
   return extractCollection<ShowInterface>(res, "showCollection");
 }

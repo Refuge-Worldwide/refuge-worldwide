@@ -10,6 +10,7 @@ export default function InputField({
   name: string;
   required?: boolean;
   type: string;
+  value?: string;
 }) {
   const [field, meta, helpers] = useField(props);
 

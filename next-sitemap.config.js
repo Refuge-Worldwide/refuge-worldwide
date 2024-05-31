@@ -25,7 +25,15 @@ module.exports = {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/admin/", "/admin/calendar", "/signin", "/submission"],
+        disallow: [
+          "/admin/",
+          "/admin/calendar",
+          "/signin",
+          "/submission",
+          "/community-feedback",
+          "/residents-feedback",
+          "/submission-v2",
+        ],
       },
     ],
   },

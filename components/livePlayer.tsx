@@ -98,6 +98,10 @@ export default function LivePlayer() {
   );
 
   useEffect(() => {
+    console.log(isPlaying);
+  }, [isPlaying]);
+
+  useEffect(() => {
     if ("mediaSession" in navigator && scheduleData?.liveNow) {
       navigator.mediaSession.metadata = new MediaMetadata({
         title: scheduleData.liveNow.title,

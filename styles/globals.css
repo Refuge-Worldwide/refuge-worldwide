@@ -308,7 +308,7 @@
 }
 
 .fc .fc-toolbar.fc-header-toolbar {
-  @apply mx-2 lg:mx-11;
+  @apply mx-2 lg:mr-28 lg:ml-12;
 }
 
 .fc-day-today {
@@ -330,5 +330,84 @@
 }
 
 .fc-event {
-  cursor: pointer;
+  @apply cursor-pointer rounded-none transition-all;
+}
+
+.fc-highlighted-event {
+  outline: 3px #ff0000 solid;
+  animation: blink 0.5s;
+  animation-iteration-count: 3;
+  outline-offset: -2px;
+}
+
+@keyframes blink {
+  to {
+    outline-color: #fff;
+  }
+}
+
+@keyframes expandIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-5%);
+  }
+}
+
+@keyframes expandOut {
+  from {
+    opacity: 1;
+    transform: translateY(-5%);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-5%);
+  }
+}
+
+.animated-dialog-overlay[data-state="open"] {
+  animation: fadeIn 150ms ease-out;
+}
+
+.animated-dialog-overlay[data-state="closed"] {
+  animation: fadeOut 150ms ease-out;
+}
+
+.animated-dialog-content[data-state="open"] {
+  animation: expandIn 150ms ease-out;
+}
+
+.animated-dialog-content[data-state="closed"] {
+  animation: expandOut 150ms ease-out;
+}
+
+/* birthday special balloon */
+
+.balloon-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.balloon-float-2 {
+  animation: float 7s ease-in-out infinite;
+  animation-delay: 0.25;
+}
+
+.balloon-float-3 {
+  animation: float 8s ease-in-out infinite;
+  animation-delay: 0.5;
+}
+
+@keyframes float {
+  0% {
+    transform: translatey(0px);
+  }
+  50% {
+    transform: translatey(-6px);
+  }
+  100% {
+    transform: translatey(0px);
+  }
 }

@@ -55,7 +55,7 @@ export interface ArtistInterface {
   coverImagePosition: CoverImagePosition;
   isResident: boolean;
   content?: Content;
-  email?: string;
+  email?: string[];
 }
 
 export type ArtistEntry = {
@@ -109,6 +109,7 @@ export interface ShowInterface {
   title: string;
   date: string;
   dateEnd?: string;
+  type?: "Live" | "Pre-record";
   slug: string;
   coverImage: CoverImage;
   coverImagePosition: CoverImagePosition;
@@ -283,6 +284,7 @@ export type SubmissionFormValues = {
     bio?: string;
     image?: string;
   }>;
+  artistsAdditionalInfo?: any[];
 };
 
 export type EventType =

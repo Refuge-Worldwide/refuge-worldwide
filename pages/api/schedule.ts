@@ -62,6 +62,10 @@ export default async function handler(
       title: liveNowTitle(),
       artwork: liveNowArtwork,
       link: liveNowContentful ? "/radio/" + liveNowContentful.slug : null,
+      slug:
+        liveNowContentful && liveNowContentful.slug
+          ? liveNowContentful.slug
+          : null,
     };
 
     const scheduleData = {

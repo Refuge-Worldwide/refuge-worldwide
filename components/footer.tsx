@@ -103,7 +103,10 @@ export default function Footer() {
       <div className="px-4 md:px-8 border-t border-white py-4 md:py-8">
         <div className="font-medium text-center text-xxs leading-normal">
           <p>
-            Designed by{" "}
+            <Link className="underline" href="/imprint">
+              Imprint
+            </Link>
+            . Designed by{" "}
             <a
               className="underline"
               target="_blank"

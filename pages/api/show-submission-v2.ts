@@ -6,6 +6,12 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import ExtraArtists from "../../components/formFields/extraArtists";
+import {
+  formatArtistsForContenful,
+  createReferencesArray,
+} from "../../lib/contentful/management";
+import { getShowById } from "../../lib/contentful/pages/submission";
+import { sendSlackMessage } from "../../lib/slack";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -30,30 +36,17 @@ const showImages = [];
 
 // Append Function
 const appendToSpreadsheet = async (values) => {
-  // process guest images for sheet
   let guestImages = "";
-  if (values.hasExtraArtists) {
-    values.extraArtists.forEach((e, index) => {
-      console.log(e);
-      if (index > 0) {
-        guestImages += " + ";
+  if (values.hasGuests) {
+    values.guests.forEach((guest, index) => {
+      if (guest.image) {
+        if (index > 0) {
+          guestImages += " + ";
+        }
+        guestImages += guest.image.url;
       }
-      guestImages += e.image.url;
     });
   }
-  // process artist for sheet
-  let images = "";
-  values.image.forEach((e, index) => {
-    console.log(e);
-    if (index > 0) {
-      images += " + ";
-    }
-    images += e.url;
-  });
-
-  console.log(guestImages);
-  console.log(images);
-
   const newRow = {
     Timestamp: dayjs().tz("Europe/Berlin").format("DD/MM/YYYY HH:mm:ss"),
     "Show name": values.showName,
@@ -62,12 +55,9 @@ const appendToSpreadsheet = async (values) => {
     "Host name(s)": values.artists.map((x) => x.label).join(", "),
     // "Guest name(s)": values.guests.map((x) => x.name).join(", "),
     "Show genres (up to 3)": values.genres.map((x) => x.label).join(", "),
-    "Instagram @ handle(s)": values.instagram
-      .split(", ")
-      .map((s) => "@" + s)
-      .join(" "),
+    "Instagram @ handle(s)": formatInstaHandles(values.instagram),
     "Show / Host image - landscape format, ideally 1800x1450px or larger, 10MB max, no HEIC files. Please include show and host names in filename.":
-      images,
+      values.image.url,
     "Guest image  - landscape format, ideally 1800x1450px or larger, 10MB max, no HEIC files. Please include show and host names in filename.":
       guestImages,
     "Email address": values.email,
@@ -78,6 +68,8 @@ const appendToSpreadsheet = async (values) => {
     "If yes, please state what equipment you'll be bringing":
       values.additionalEqDesc,
   };
+
+  console.log(showImages);
 
   try {
     await doc.useServiceAccountAuth({
@@ -92,36 +84,6 @@ const appendToSpreadsheet = async (values) => {
   } catch (e) {
     console.error("Error: ", e);
   }
-};
-
-//transform array to array of references for contentful
-const createReferencesArray = (array) => {
-  let referencesArray = [];
-  array.forEach((element) => {
-    referencesArray.push({
-      sys: {
-        type: "Link",
-        linkType: "Entry",
-        id: element.value,
-      },
-    });
-  });
-  return referencesArray;
-};
-
-//transform array to array of images for contentful
-const createImagesReferencesArray = (array) => {
-  let referencesArray = [];
-  array.forEach((element) => {
-    referencesArray.push({
-      sys: {
-        type: "Link",
-        linkType: "Asset",
-        id: element,
-      },
-    });
-  });
-  return referencesArray;
 };
 
 const addArtist = async (artist) => {
@@ -168,30 +130,7 @@ const addArtist = async (artist) => {
     return addedArtist;
   } catch (err) {
     console.log(err);
-    throw 400;
-  }
-};
-
-const formatArtistsForContenful = (
-  artistsFromForm,
-  hasExtraArtists,
-  extraArtists
-) => {
-  let artists = [...artistsFromForm];
-  // if (hasExtraArtists) {
-  //   extraArtists.forEach((guest) => {
-  //     artists.push({ label: guest.name });
-  //   });
-  // }
-  if (artists.length > 1) {
-    const artistSimpleArray = artists.map((artist) => artist.label);
-    const formattedArtists = [
-      artistSimpleArray.slice(0, -1).join(", "),
-      artistSimpleArray.slice(-1)[0],
-    ].join(artistSimpleArray.length < 2 ? "" : " & ");
-    return formattedArtists;
-  } else {
-    return artists[0].label.toString();
+    throw err;
   }
 };
 
@@ -213,7 +152,7 @@ const addGenre = async (genre) => {
     return addedGenre;
   } catch (err) {
     console.log(err);
-    throw 400;
+    throw err;
   }
 };
 
@@ -282,7 +221,125 @@ const addShow = async (values) => {
     return entry;
   } catch (err) {
     console.log(err);
-    throw 400;
+    throw err;
+  }
+};
+
+const updateArtist = async (artist) => {
+  try {
+    const content = await richTextFromMarkdown(artist.bio);
+
+    client
+      .getSpace(spaceId)
+      .then((space) => space.getEnvironment(environmentId))
+      .then((environment) => environment.getEntry(artist.id))
+      //update fields with values from form
+      .then((entry) => {
+        entry.fields.content = {
+          "en-US": content,
+        };
+        entry.fields.pronouns = {
+          "en-US": artist.pronouns,
+        };
+        if (artist.imageId) {
+          entry.fields.photo = {
+            "en-US": {
+              sys: {
+                type: "Link",
+                linkType: "Asset",
+                id: artist.imageId,
+              },
+            },
+          };
+          entry.fields.coverImagePosition = {
+            "en-US": "center",
+          };
+        }
+        return entry.update();
+      })
+      .then((entry) => {
+        console.log(`Entry ${entry.sys.id} updated.`);
+        return entry;
+      });
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};
+
+const updateShow = async (values) => {
+  try {
+    const content = await richTextFromMarkdown(values.description);
+    const artists = createReferencesArray(values.artists);
+    const artistsForContentful = formatArtistsForContenful(
+      values.artists,
+      values.hasExtraArtists,
+      values.extraArtists
+    );
+    const dateFormatted = dayjs(values.datetime).format("DD MMM YYYY");
+    const genres = createReferencesArray(values.genres);
+    let additionalImages = [];
+    values.image.slice(1).forEach((image) => {
+      additionalImages.push(image.url);
+    });
+    Object.values(values.image).join(",");
+    console.log(genres);
+    client
+      .getSpace(spaceId)
+      .then((space) => space.getEnvironment(environmentId))
+      .then((environment) => environment.getEntry(values.id))
+      //update fields with values from form
+      .then((entry) => {
+        entry.fields.title = {
+          "en-US": values.showName + " | " + artistsForContentful,
+        };
+        entry.fields.internal = {
+          "en-US":
+            values.showName +
+            " - " +
+            artistsForContentful +
+            " - " +
+            dateFormatted,
+        };
+        entry.fields.content = {
+          "en-US": content,
+        };
+        entry.fields.coverImage = {
+          "en-US": {
+            sys: {
+              type: "Link",
+              linkType: "Asset",
+              id: values.imageId,
+            },
+          },
+        };
+        entry.fields.coverImagePosition = {
+          "en-US": "center",
+        };
+        entry.fields.artists = {
+          "en-US": artists,
+        };
+        entry.fields.genres = {
+          "en-US": genres,
+        };
+        entry.fields.status = {
+          "en-US": "Submitted",
+        };
+        entry.fields.additionalImages = {
+          "en-US": additionalImages,
+        };
+        entry.fields.instagramHandles = {
+          "en-US": formatInstaHandles(values.instagram),
+        };
+        return entry.update();
+      })
+      .then((entry) => {
+        console.log(`Entry ${entry.sys.id} updated.`);
+        return entry;
+      });
+  } catch (err) {
+    console.log(err);
+    throw err;
   }
 };
 
@@ -312,51 +369,89 @@ const uploadImage = async (name, image) => {
     return processedAsset.sys.id;
   } catch (err) {
     console.log(err);
-    throw 400;
+    throw err;
   }
+};
+
+const formatInstaHandles = (handles) => {
+  if (handles != "")
+    return handles
+      .split(", ")
+      .map((s) => "@" + s)
+      .join(" ");
+  else return "";
 };
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  // Get data submitted in request's body.
   const values = req.body;
-  console.log(values);
-  console.log(dayjs().utcOffset());
-  try {
-    values.imageId = await uploadImage(values.showName, values.image[0]);
-    // if (values.image.length > 1) {
-    //   console.log("additional images to upload")
-    //   values.additionalImages = []
-    //   let additionalImagesToUpload = values.images.slice(1)
-    //   console.log(additionalImagesToUpload)
-    //   for (var i = 0; i < additionalImagesToUpload.length; i++) {
-    //     console.log(additionalImagesToUpload[i])
-    //     const uploadedLoaded = await uploadImage(values.showName + "[" + i + "]", additionalImagesToUpload[i]);
-    //     console.log("image uploaded")
-    //     console.log(uploadedLoaded)
-    //     values.additionalImages.push(uploadedLoaded)
-    //   };
-    // }
-    if (values.hasExtraArtists) {
-      for (const artist of values.extraArtists) {
-        const contentfulNewArtist = await addArtist(artist);
-        values.artists.push(contentfulNewArtist);
+  console.log("REQUEST METHOD: " + req.method);
+  switch (req.method) {
+    case "GET":
+      //get show by id
+      try {
+        const { id } = req.query as typeof req.query & {
+          id: string;
+        };
+        console.log(id);
+
+        const show = await getShowById(id, true);
+        console.log(show);
+        if (!show) {
+          res.status(404).json({ message: "Show not found" });
+          break;
+        }
+        res.status(200).json(show);
+        break;
+      } catch (error) {
+        console.log(error);
+
+        res.status(400).json({ message: error.message });
       }
-    }
-    if (values.hasNewGenres) {
-      const genres = values.newGenres.split(", ");
-      for (const genre of genres) {
-        const contentfulNewGenre = await addGenre(genre);
-        values.genres.push(contentfulNewGenre);
+    case "PATCH":
+      //submit show update to contentful
+      console.log(values);
+      console.log("UPDATING");
+      console.log(dayjs().utcOffset());
+      try {
+        values.imageId = await uploadImage(values.showName, values.image[0]);
+        if (values.hasExtraArtists) {
+          for (const artist of values.extraArtists) {
+            // if ((artist.bio && artist.image) || (artist.bio !== "" && artist.image !== "")) {
+            console.log("adding artist to contentful: " + artist.name);
+            const contentfulNewArtist = await addArtist(artist);
+            console.log(contentfulNewArtist);
+            values.artists.push(contentfulNewArtist);
+            // }
+          }
+        }
+        if (values.hasNewGenres) {
+          const genres = values.newGenres.split(", ");
+          for (const genre of genres) {
+            const contentfulNewGenre = await addGenre(genre);
+            values.genres.push(contentfulNewGenre);
+          }
+        }
+        if (values.artistsAdditionalInfo) {
+          for (const artist of values.artistsAdditionalInfo) {
+            if (artist.image) {
+              artist.imageId = await uploadImage(artist.name, artist.image);
+            }
+            await updateArtist(artist);
+          }
+        }
+        await updateShow(values);
+        await appendToSpreadsheet(values);
+        console.log("form submitted successfully");
+        res.status(200).json({ data: "successfully updated show :)" });
+      } catch (err) {
+        const message = `⚠️ ERROR SUBMITTING FORM
+        \n\nShow: ${values.showName}
+        \nError: ${err}`;
+        sendSlackMessage(message, "dev");
+        res.status(400).json({ data: "issue submitting form" });
       }
-    }
-    await addShow(values);
-    await appendToSpreadsheet(values);
-    console.log("form submitted successfully");
-    res.status(200).json({ data: "successfully created show :)" });
-  } catch (err) {
-    res.status(400).json({ data: "issue submitting form" });
   }
 }

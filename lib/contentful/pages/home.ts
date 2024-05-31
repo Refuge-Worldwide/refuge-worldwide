@@ -35,7 +35,7 @@ export async function getHomePage() {
       latestArticles: articleCollection(
         order: date_DESC
         where: { isFeatured: false }
-        limit: 6
+        limit: 20
       ) {
         items {
           ...ArticlePreviewFragment
@@ -56,6 +56,34 @@ export async function getHomePage() {
 
   const data = await graphql(HomePageQuery);
 
+  let latestArticles = extractCollection<ArticleInterface>(
+    data,
+    "latestArticles"
+  );
+  let icymi = false;
+  let bs = false;
+
+  const filteredArticles = latestArticles.filter((article) => {
+    if (article.title.includes("ICYMI")) {
+      if (!icymi) {
+        icymi = true;
+        return true;
+      }
+      return false;
+    } else if (article.title.includes("Berlin Stories")) {
+      if (!bs) {
+        bs = true;
+        return true;
+      }
+      return false;
+    }
+    return true;
+  });
+
+  // latestArticles.filter(article => {
+  //   return article.title.includes("Berlin Stories") && !icymi
+  // })
+
   return {
     featuredArticles: extractCollection<ArticleInterface>(
       data,
@@ -63,7 +91,7 @@ export async function getHomePage() {
     ),
     featuredShows: extractPage<HomePageData>(data, "pageHome")
       .featuredShowsCollection.items,
-    latestArticles: extractCollection<ArticleInterface>(data, "latestArticles"),
+    latestArticles: filteredArticles.slice(0, 6),
     nextUp: extractPage<NextUpSection>(data, "nextUp"),
   };
 }

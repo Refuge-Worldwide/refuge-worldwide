@@ -31,7 +31,7 @@ export default function Navigation() {
         <div className="px-4 md:px-8 py-2.5">
           <ul className="flex items-center">
             <li>
-              <Link href="/" className="flex gap-2">
+              <Link href="/" className="flex relative">
                 <Image
                   src="/images/navigation-smile.svg"
                   width={66}

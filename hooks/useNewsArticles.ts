@@ -18,6 +18,8 @@ export default function useNewsArticles(fallbackData: ArticleInterface[]) {
 
   const articles = data.flat();
 
+  // const articles = filterArticles(allArticles);
+
   const loadMore = () => setSize((size) => size + 1);
 
   const isReachingEnd =

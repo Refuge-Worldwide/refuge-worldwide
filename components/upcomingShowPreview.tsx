@@ -19,6 +19,9 @@ export default function UpcomingShowPreview({
 
   const artists = formatArtistNames(artistsCollection.items);
 
+  // remove artists from title
+  const upcomingShowTitle = title.split(" | ")[0];
+
   return (
     <Link href={`/radio/${slug}`} aria-labelledby={`upcoming-${slug}`}>
       <article>
@@ -48,7 +51,7 @@ export default function UpcomingShowPreview({
         <div className="h-2" />
 
         <h2 id={`upcoming-${slug}`} className="text-base sm:text-large">
-          {title}
+          {upcomingShowTitle}
         </h2>
 
         <div className="h-2" />
