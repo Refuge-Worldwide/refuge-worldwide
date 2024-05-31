@@ -83,7 +83,10 @@ export default function usePlayerState({
   }, [audioRef]);
 
   useEffect(() => {
-    if (activePlayer !== ActivePlayer.RADIO_CO) {
+    if (
+      activePlayer !== ActivePlayer.CH1 &&
+      activePlayer !== ActivePlayer.CH2
+    ) {
       pause();
     }
   }, [activePlayer]);
