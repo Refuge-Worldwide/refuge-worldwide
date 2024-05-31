@@ -6,11 +6,16 @@ type Schedule = {
   liveNow: {
     title: string;
     artwork: string;
+    link?: string;
     slug?: string;
     isMixedFeelings?: boolean;
   };
   nextUp: Array<ScheduleShow>;
   schedule: Array<ScheduleShow>;
+  ch2: {
+    status: "online" | "offline";
+    liveNow: string;
+  };
 };
 
 async function getSchedule(url: URL) {

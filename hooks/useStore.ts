@@ -2,8 +2,9 @@ import create from "zustand";
 import Cookies from "js-cookie";
 
 export enum ActivePlayer {
+  CH1,
+  CH2,
   MIXCLOUD,
-  RADIO_CO,
   SOUNDCLOUD,
   YOUTUBE,
 }

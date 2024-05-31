@@ -10,7 +10,7 @@ import MessageSquare from "../icons/message-square";
 import Search from "../icons/search";
 import NavigationLink from "./navigationLink";
 import { useUser } from "@supabase/auth-helpers-react";
-import { AiOutlineCalendar } from "react-icons/ai";
+import { AiTwotoneCalendar } from "react-icons/ai";
 
 export default function Navigation() {
   const [isOpen, isOpenSet] = useState(false);
@@ -150,7 +150,7 @@ export default function Navigation() {
                     <li>
                       {user ? (
                         <Link href="/admin/calendar">
-                          <AiOutlineCalendar />
+                          <AiTwotoneCalendar />
                         </Link>
                       ) : (
                         <a

@@ -25,15 +25,6 @@ export default function SchedulePage() {
             Displayed in your timezone: {timezone}
           </p>
         </div>
-        <div>
-          <Link
-            href="/"
-            className="inline-flex items-center py-3 pr-4 sm:pr-6 pl-4 gap-3 font-light underline"
-          >
-            <Arrow size={24} className="h-5 w-5 sm:h-6 sm:w-6 rotate-180" />
-            <span className="hidden sm:inline leading-6">Back</span>
-          </Link>
-        </div>
       </section>
       <Schedule />
     </Layout>
