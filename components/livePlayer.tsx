@@ -124,7 +124,11 @@ export default function LivePlayer() {
 
   return (
     <section className={playerWrapperClassNames}>
-      <div className="h-12 sm:h-16 flex items-center flex-1 truncate border-b-2 border-white lg:border-0 lg:min-w-[50%]">
+      <div
+        className={`h-12 sm:h-16 flex items-center flex-1 truncate lg:border-0 lg:min-w-[50%] ${
+          ch2IsOnline && "border-b-2 border-white"
+        }`}
+      >
         {isOnline && (
           <>
             <button
@@ -167,7 +171,7 @@ export default function LivePlayer() {
           <>
             {hasBack && isSchedulePage ? (
               <button
-                className="lg:hidden flex pt-2 pb-2 sm:pt-4 sm:pb-4 px-4 !ml-0 self-stretch items-center bg-black border-white border-l-2 border-r-0 text-white"
+                className="lg:hidden flex pt-0.5 pb-0.5 sm:pt-4 sm:pb-4 px-4 !ml-0 self-stretch items-center bg-black border-white border-l-2 border-r-0 text-white"
                 onClick={() => router.back()}
               >
                 {isSchedulePage ? (
@@ -183,7 +187,7 @@ export default function LivePlayer() {
               </button>
             ) : (
               <Link
-                className="lg:hidden flex pt-2 pb-2 sm:pt-4 sm:pb-4 px-4 !ml-0 self-stretch items-center bg-black border-white border-l-2 border-r-0 text-white"
+                className="lg:hidden flex pt-0.5 pb-0.5 sm:pt-4 sm:pb-4 px-4 !ml-0 self-stretch items-center bg-black border-white border-l-2 border-r-0 text-white"
                 href={isSchedulePage ? "/" : "/schedule"}
               >
                 {isSchedulePage ? (
@@ -193,7 +197,7 @@ export default function LivePlayer() {
                     className="h-6 w-[24px] rotate-180 "
                   />
                 ) : (
-                  <AiOutlineCalendar />
+                  <AiOutlineCalendar className="h-[22px] w-[22px]" />
                 )}
                 <span className="sr-only lg:hidden">
                   {isSchedulePage ? "Back" : "Schedule"}
@@ -228,7 +232,7 @@ export default function LivePlayer() {
               href={"/news/gisira-festival"}
             >
               <Marquee
-                key={scheduleData?.liveNow.title + ch2IsOnline}
+                key={scheduleData?.ch2.liveNow + ch2IsOnline}
                 text={<span className="pr-8">{scheduleData?.ch2.liveNow}</span>}
                 speed={0.3}
               />
@@ -244,7 +248,7 @@ export default function LivePlayer() {
         <>
           {hasBack && isSchedulePage ? (
             <button
-              className="hidden lg:flex pt-2 pb-2 sm:pt-4 sm:pb-4 px-4 !ml-0 self-stretch items-center bg-black border-white border-l-2 border-r-0 text-white"
+              className="hidden lg:flex pt-0.5 pb-0.5 sm:pt-4 sm:pb-4 px-4 !ml-0 self-stretch items-center bg-black border-white border-l-2 border-r-0 text-white"
               onClick={() => router.back()}
             >
               {isSchedulePage ? (
@@ -260,7 +264,7 @@ export default function LivePlayer() {
             </button>
           ) : (
             <Link
-              className="hidden lg:flex pt-2 pb-2 sm:pt-4 sm:pb-4 px-4 !ml-0 self-stretch items-center bg-black border-white border-l-2 border-r-0 text-white"
+              className="hidden lg:flex pt-0.5 pb-0.5 sm:pt-4 sm:pb-4 px-4 !ml-0 self-stretch items-center bg-black border-white border-l-2 border-r-0 text-white"
               href={isSchedulePage ? "/" : "/schedule"}
             >
               {isSchedulePage ? (
