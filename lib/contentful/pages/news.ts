@@ -276,7 +276,7 @@ export async function getNewsPageSingle(slug: string, preview: boolean) {
         limit: 3
         where: { slug_not: $slug }
         order: date_DESC
-        preview: $preview
+        preview: false
       ) {
         items {
           ...RelatedArticleFragment
