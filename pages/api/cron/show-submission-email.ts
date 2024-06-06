@@ -59,15 +59,13 @@ async function sendEmails(
   for (const show of shows) {
     let showEmailed = false;
 
-    const emailPromises = show.artistsCollection.items.map(async (artist) => {
+    for (const artist of show.artistsCollection.items) {
       if (artist.email) {
         await sendEmail(artist, show, severity);
         showEmailed = true;
         await new Promise((resolve) => setTimeout(resolve, delay)); // Respect the rate limit
       }
-    });
-
-    await Promise.all(emailPromises);
+    }
 
     if (!showEmailed) {
       await sendSlackMessage(

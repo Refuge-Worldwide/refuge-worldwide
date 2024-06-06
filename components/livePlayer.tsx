@@ -71,8 +71,10 @@ export default function LivePlayer() {
 
   const { scheduleData, isLoading, error } = useSchedule();
 
+  console.log(error);
+
   const isOnline = scheduleData?.status === "online";
-  const ch2IsOnline = scheduleData?.ch2.status === "online";
+  const ch2IsOnline = scheduleData?.ch2?.status === "online";
 
   const player = useRef<HTMLAudioElement>(null);
   const source = useRef<HTMLSourceElement>(null);
@@ -121,6 +123,16 @@ export default function LivePlayer() {
       });
     }
   }, [scheduleData]);
+
+  if (error) {
+    return (
+      <section className={playerWrapperClassNames}>
+        <p className="p-2">
+          Sorry, an error occurred. We will be back online shortly.
+        </p>
+      </section>
+    );
+  }
 
   return (
     <section className={playerWrapperClassNames}>
