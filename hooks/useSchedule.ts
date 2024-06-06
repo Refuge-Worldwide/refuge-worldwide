@@ -21,6 +21,10 @@ type Schedule = {
 async function getSchedule(url: URL) {
   const res = await fetch(url);
 
+  if (!res.ok) {
+    throw new Error(`HTTP error! status: ${res.status}`);
+  }
+
   return res.json();
 }
 
@@ -36,6 +40,6 @@ export default function useSchedule() {
   return {
     scheduleData: data,
     isLoading,
-    error: error,
+    error,
   };
 }
