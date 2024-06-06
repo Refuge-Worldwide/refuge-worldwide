@@ -25,6 +25,7 @@ export async function sendEmail(artist, show, severity) {
         showId: show.sys.id,
       }),
     });
+
     if (error) {
       throw new Error(error.name);
     }
@@ -36,7 +37,6 @@ export async function sendEmail(artist, show, severity) {
     sendSlackMessage(
       `Failed to send email request to ${artist.name}(${artist.email}) on show *${show.title}*. ${error.name} - ${error.message}. <@U04HG3VHHEW>`
     );
-    throw new Error(error);
   }
 }
 
