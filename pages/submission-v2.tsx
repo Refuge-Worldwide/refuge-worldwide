@@ -106,7 +106,7 @@ function SubmissionForm({
       </div>
     );
 
-  if (!data.title || data.status == "TBC")
+  if (data.status == "TBC")
     return (
       <div className="my-32">
         <p>
