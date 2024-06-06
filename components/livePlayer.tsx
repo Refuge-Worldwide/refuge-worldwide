@@ -239,10 +239,7 @@ export default function LivePlayer() {
           </button>
 
           {!isLoading && !error && scheduleData?.liveNow?.title && (
-            <Link
-              className="flex-1 truncate mt-0.5 relative"
-              href={"/news/gisira-festival"}
-            >
+            <span className="flex-1 truncate mt-0.5 relative">
               <Marquee
                 key={scheduleData?.ch2.liveNow + ch2IsOnline}
                 text={<span className="pr-8">{scheduleData?.ch2.liveNow}</span>}
@@ -251,7 +248,7 @@ export default function LivePlayer() {
               {/* <span className="absolute left-0 top-0.5 font-medium text-small flex items-center justify-center pt-0.5 bg-white h-8 w-8 text-black rounded-sm">
                 2
               </span> */}
-            </Link>
+            </span>
           )}
         </div>
       )}
