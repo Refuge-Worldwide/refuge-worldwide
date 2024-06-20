@@ -74,7 +74,8 @@ export async function sendConfirmationEmail(show) {
           // send message to slack saying there was an issue sending the email
           console.log(error);
           sendSlackMessage(
-            `Failed to send email request to ${artist.name}(${artist.email}) on show *${show.title}*. ${error.name} - ${error.message}. <@U04HG3VHHEW>`
+            `Failed to send email request to ${artist.name}(${artist.email}) on show *${show.title}*. ${error.name} - ${error.message}. <@U04HG3VHHEW>`,
+            "error"
           );
         }
       }
@@ -109,7 +110,8 @@ export async function sendArtworkEmail(artist, date) {
     // send message to slack saying there was an issue sending the email
     console.log(error);
     sendSlackMessage(
-      `Failed to send artwork email to ${artist.name}(${artist.email}). ${error.name} - ${error.message}. <@U04HG3VHHEW>`
+      `Failed to send artwork email to ${artist.name}(${artist.email}). ${error.name} - ${error.message}. <@U04HG3VHHEW>`,
+      "error"
     );
   }
 }
