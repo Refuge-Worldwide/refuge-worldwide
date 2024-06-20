@@ -42,7 +42,8 @@ export default async function handler(
               error
             );
             await sendSlackMessage(
-              `Failed to send email request to ${artist.name} (${artist.email}) for show *${show.title}*. Error: ${error.message}. <@U04HG3VHHEW>`
+              `Failed to send email request to ${artist.name} (${artist.email}) for show *${show.title}*. Error: ${error.message}. <@U04HG3VHHEW>`,
+              "error"
             );
           }
         }
