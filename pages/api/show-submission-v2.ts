@@ -450,7 +450,7 @@ export default async function handler(
         const message = `⚠️ ERROR SUBMITTING FORM
         \n\nShow: ${values.showName}
         \nError: ${err}`;
-        sendSlackMessage(message, "dev");
+        sendSlackMessage(message, "error");
         res.status(400).json({ data: "issue submitting form" });
       }
   }
