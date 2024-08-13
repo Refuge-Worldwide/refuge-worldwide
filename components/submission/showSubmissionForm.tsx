@@ -85,6 +85,9 @@ const validationSchema = [
             .shape({
               name: Yup.string().required("Please add an artist name"),
               image: Yup.object().required("Please add an artist image"),
+              email: Yup.string()
+                .required("Please add an email")
+                .email("Invalid email"),
             })
         ),
     }),
@@ -125,6 +128,7 @@ export default function ShowSubmissionForm({
       {
         name: "",
         pronouns: "",
+        email: "",
         bio: "",
         image: "",
       },

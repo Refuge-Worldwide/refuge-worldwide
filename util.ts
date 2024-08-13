@@ -111,18 +111,18 @@ export const formatArtistNames = (data: ArtistInterface[]) => {
   const names = data.map(({ name }) => name);
 
   if (names.length === 1) {
-    return `With ${names[0]}`;
+    return `with ${names[0]}`;
   }
 
   if (names.length === 2) {
-    return `With ${names[0]} and ${names[1]}`;
+    return `with ${names[0]} and ${names[1]}`;
   }
 
   if (names.length === 3) {
-    return `With ${names.slice(0, 2).join(", ")} and ${names[3]}`;
+    return `with ${names.slice(0, 2).join(", ")} and ${names[3]}`;
   }
 
-  return `With ${names.slice(0, 2).join(", ")} and others`;
+  return `with ${names.slice(0, 2).join(", ")} and others`;
 };
 
 export const getMixcloudKey = (url: string) =>
