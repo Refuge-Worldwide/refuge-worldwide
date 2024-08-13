@@ -20,7 +20,7 @@ export default function Badge({
     small ? "px-2 py-1 text-xxs" : "px-3 py-2 text-tiny",
     invert
       ? "bg-black text-white border-white pr-3"
-      : "bg-transparent text-black border-black"
+      : "bg-transparent text-black border-black hover:bg-black hover:text-white"
   );
 
   return (
