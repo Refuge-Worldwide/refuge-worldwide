@@ -281,6 +281,7 @@ export type SubmissionFormValues = {
   extraArtists?: Array<{
     name: string;
     pronouns: string;
+    email: string;
     bio?: string;
     image?: string;
   }>;

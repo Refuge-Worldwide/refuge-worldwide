@@ -114,6 +114,12 @@ export default function ShowSubmissionStep3({
                           type="text"
                           label="Pronouns"
                         />
+                        <InputField
+                          name={`extraArtists.${index}.email`}
+                          type="email"
+                          label="Email"
+                          required
+                        />
                         <TextareaField
                           name={`extraArtists.${index}.bio`}
                           rows={4}

@@ -11,11 +11,7 @@ export async function sendEmail(artist, show, severity) {
       from: "Refuge Worldwide <noreply@mail.refugeworldwide.com>",
       to: artist.email,
       subject: subject(severity),
-      reply_to: [
-        "leona@refugeworldwide.com",
-        "graeme@refugeworldwide.com",
-        "heloise@refugeworldwide.com",
-      ],
+      reply_to: ["leona@refugeworldwide.com", "graeme@refugeworldwide.com"],
       react: ShowSubmissionEmail({
         userName: artist.name,
         showDateStart: show.date,
@@ -53,7 +49,6 @@ export async function sendConfirmationEmail(show) {
             reply_to: [
               "leona@refugeworldwide.com",
               "graeme@refugeworldwide.com",
-              "heloise@refugeworldwide.com",
             ],
             react: ShowSubmissionEmail({
               userName: artist.label,
@@ -93,7 +88,8 @@ export async function sendArtworkEmail(artist, date) {
       reply_to: [
         "leona@refugeworldwide.com",
         "graeme@refugeworldwide.com",
-        "heloise@refugeworldwide.com",
+        "maria@refugeworldwide.com",
+        "irene@refugeworldwide.com",
       ],
       react: ShowArtworkEmail({
         userName: artist.name,
