@@ -94,7 +94,7 @@ export const ShowArtworkEmail = ({
                     Weserstraße 166, 12045
                   </Link>{" "}
                   at least 15 minutes before your show, and let us know ASAP via
-                  Whatsapp on +4915231355804 if you&apos;re going to be late.
+                  Whatsapp on 015205492590 if you&apos;re going to be late.
                 </Text>
                 <Text style={list}>
                   🥃 Hosts / guests receive 1x free drink (please ask at the bar
