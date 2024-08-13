@@ -99,7 +99,12 @@ export default function ShowPreview({
         <ul className="w-full flex flex-wrap gap-2">
           {genres.map((genre, i) => (
             <li key={i}>
-              <Badge invert={className == "text-white"} small text={genre} />
+              <Link
+                href={`/radio?genre=${encodeURIComponent(genre)}#shows`}
+                legacyBehavior
+              >
+                <Badge invert={className == "text-white"} small text={genre} />
+              </Link>
             </li>
           ))}
         </ul>
@@ -148,7 +153,12 @@ export function ShowPreviewWithoutPlayer({
         <ul className="w-full flex flex-wrap gap-2">
           {parsedGenres.map((genre, i) => (
             <li key={i}>
-              <Badge small text={genre} />
+              <Link
+                href={`/radio?genre=${encodeURIComponent(genre)}#shows`}
+                legacyBehavior
+              >
+                <Badge small text={genre} />
+              </Link>
             </li>
           ))}
         </ul>
@@ -198,7 +208,12 @@ export function FeaturedShowPreview({
         <ul className="w-full flex flex-wrap gap-2">
           {genres.map((genre, i) => (
             <li key={i}>
-              <Badge small text={genre} />
+              <Link
+                href={`/radio?genre=${encodeURIComponent(genre)}#shows`}
+                legacyBehavior
+              >
+                <Badge small text={genre} />
+              </Link>
             </li>
           ))}
         </ul>
