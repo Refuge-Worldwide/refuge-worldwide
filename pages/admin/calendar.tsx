@@ -25,6 +25,7 @@ import { Arrow } from "../../icons/arrow";
 import CheckboxField from "../../components/formFields/checkboxField";
 import { Close } from "../../icons/menu";
 import { TfiReload } from "react-icons/tfi";
+import { RxLink1 } from "react-icons/rx";
 import { IoMdCheckmark, IoMdMusicalNote } from "react-icons/io";
 import {
   RxExternalLink,
@@ -647,6 +648,12 @@ function Calendar() {
                           >
                             <RxCopy />
                           </button>
+                          <button
+                            onClick={() => handleCopyFormLink(values.id)}
+                            className="hover:bg-black/10 px-2 py-1 rounded-lg"
+                          >
+                            <RxLink1 />
+                          </button>
                           <Link
                             className="hover:bg-black/10 px-2 py-1 rounded-lg"
                             target="_blank"
@@ -654,37 +661,6 @@ function Calendar() {
                           >
                             <RxExternalLink />
                           </Link>
-                          <Popover.Root>
-                            <Popover.Trigger asChild>
-                              <button className="hover:bg-black/10 p-2 rounded-lg">
-                                <RxDotsVertical />
-                              </button>
-                            </Popover.Trigger>
-                            <Popover.Content
-                              align="end"
-                              sideOffset={8}
-                              className="border border-black p-2 bg-white shadow-md text-small flex flex-col items-start"
-                            >
-                              <button
-                                type="button"
-                                className="hover:bg-black/10 px-2 py-1 rounded-lg"
-                                onClick={() => {
-                                  setFieldValue("id", undefined);
-                                  toast.success(
-                                    "Show duplicated. Please change necessary fields and hit the add button."
-                                  );
-                                }}
-                              >
-                                Duplicate (shallow)
-                              </button>
-                              <button
-                                onClick={() => handleCopyFormLink(values.id)}
-                                className="hover:bg-black/10 px-2 py-1 rounded-lg"
-                              >
-                                Copy form link
-                              </button>
-                            </Popover.Content>
-                          </Popover.Root>
                         </div>
                       )}
                       <Dialog.Close asChild>
