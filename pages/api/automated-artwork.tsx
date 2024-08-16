@@ -5,6 +5,13 @@ export const config = {
   runtime: "experimental-edge",
 };
 
+const imageHeight3 = "900px";
+const imageHeight4 = "827px";
+const imageHeight5 = "792px";
+
+const imageWidth2 = "516px";
+const imageWidth3 = "339px";
+
 async function handle(req: NextRequest) {
   const fontLight = await fetch(
     new URL("../../assets/VisueltLight.otf", import.meta.url)
@@ -18,7 +25,7 @@ async function handle(req: NextRequest) {
     (
       <div tw="flex w-full h-full flex-col bg-white p-4">
         <div tw="flex mb-4">
-          <div tw="flex flex-col grow bg-[#00CB0D] p-4 border-black border mr-4">
+          <div tw="flex flex-col grow max-w-[792px] bg-[#00CB0D] p-4 border-black border mr-4">
             <div
               tw="text-[2.75rem] font-bold"
               style={{ fontFamily: '"VisueltMedium"', lineHeight: "80%" }}
@@ -26,16 +33,21 @@ async function handle(req: NextRequest) {
               Discotheque International
             </div>
             <div
-              tw="text-[2.75rem] flex"
-              style={{ fontFamily: '"Visuelt"', lineHeight: "90%" }}
+              tw="text-[2.75rem] flex mt-0.5"
+              style={{
+                fontFamily: '"VisueltMedium"',
+                lineHeight: "90%",
+                whiteSpace: "pre-wrap",
+              }}
             >
-              with
-              <div
-                tw="text-[2.75rem] ml-2"
-                style={{ fontFamily: '"VisueltMedium"', lineHeight: "90%" }}
+              <span
+                tw="-mt-0.5"
+                style={{ fontFamily: '"Visuelt"', lineHeight: "90%" }}
               >
-                Haley
-              </div>
+                with
+              </span>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Haley,
+              some other artists, more artists & another artist
             </div>
             <div
               tw="text-[2.75rem]"
@@ -71,10 +83,15 @@ async function handle(req: NextRequest) {
             </svg>
           </div>
         </div>
-        <div tw="flex h-full w-full">
+        <div tw="flex h-[827px] w-full mb-4">
           <img
-            tw="flex border-black border mb-4 w-full h-83.1%"
+            tw="flex border-black border h-full w-[516px] mr-4"
             src="https://picsum.photos/1600/1600"
+            style={{ objectFit: "cover", objectPosition: "center" }}
+          />
+          <img
+            tw="flex border-black border h-full w-[516px] mr-4"
+            src="https://picsum.photos/1600/1600?grayscale"
             style={{ objectFit: "cover", objectPosition: "center" }}
           />
         </div>
@@ -101,6 +118,7 @@ async function handle(req: NextRequest) {
           style: "normal",
         },
       ],
+      // debug: true,
     }
   );
 }
