@@ -24,6 +24,7 @@
     ]
   },
   "dependencies": {
+    "@calcom/embed-react": "^1.5.0",
     "@contentful/rich-text-from-markdown": "^15.16.2",
     "@contentful/rich-text-plain-text-renderer": "^16.0.2",
     "@contentful/rich-text-react-renderer": "^15.16.2",
