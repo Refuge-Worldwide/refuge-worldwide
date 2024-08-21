@@ -21,6 +21,10 @@ async function handle(req: NextRequest) {
     new URL("../../assets/VisueltMedium.otf", import.meta.url)
   ).then((res) => res.arrayBuffer());
 
+  const fontArizona = await fetch(
+    new URL("../../assets/ABCArizonaFlare.otf", import.meta.url)
+  ).then((res) => res.arrayBuffer());
+
   return new ImageResponse(
     (
       <div tw="flex w-full h-full flex-col bg-white p-4">
@@ -96,8 +100,8 @@ async function handle(req: NextRequest) {
           />
         </div>
         <div
-          tw="flex absolute bottom-4 left-4 text-[1.5rem] bg-[#00CB0D] p-4 border-black border"
-          style={{ fontFamily: '"VisueltMedium"', lineHeight: "90%" }}
+          tw="flex absolute bottom-4 left-4 text-[1.75rem] bg-[#00CB0D] p-4 border-black border"
+          style={{ fontFamily: '"fontArizona"', lineHeight: "90%" }}
         >
           refugeworldwide.com
         </div>
@@ -115,6 +119,11 @@ async function handle(req: NextRequest) {
         {
           name: "VisueltMedium",
           data: fontMedium,
+          style: "normal",
+        },
+        {
+          name: "fontArizona",
+          data: fontArizona,
           style: "normal",
         },
       ],
