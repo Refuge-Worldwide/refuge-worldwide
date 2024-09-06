@@ -246,7 +246,9 @@ export async function getRelatedShows(
     slug: show.slug,
     mixcloudLink: show.mixcloudLink,
     coverImage: show.coverImage.url,
-    genres: show.genresCollection.items.map((genre) => genre.name),
+    genres: show.genresCollection.items
+      .map((genre) => genre?.name)
+      .filter(Boolean),
   }));
 
   // filter should only take first 2 genres.
