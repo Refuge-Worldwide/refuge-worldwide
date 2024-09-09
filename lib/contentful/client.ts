@@ -137,7 +137,7 @@ export async function getPastShows(
     slug: show.slug,
     mixcloudLink: show.mixcloudLink,
     coverImage: show.coverImage.url,
-    genres: show.genresCollection.items.map((genre) => genre.name),
+    genres: show.genresCollection.items.map((genre) => genre?.name),
   }));
 
   const filtered = processed.filter(
