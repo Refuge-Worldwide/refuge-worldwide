@@ -17,6 +17,8 @@ export default function UpcomingShowPreview({
 }: UpcomingShowType) {
   const genres = parseGenres(genresCollection);
 
+  console.log(artistsCollection.items);
+
   const artists = formatArtistNames(artistsCollection.items);
 
   // remove artists from title
