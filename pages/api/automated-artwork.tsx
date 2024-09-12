@@ -27,7 +27,7 @@ async function handle(req: NextRequest) {
 
   return new ImageResponse(
     (
-      <div tw="flex w-full h-full flex-col bg-white p-4">
+      <div tw="flex w-full h-full flex-col bg-[#00CB0D] p-4">
         <div tw="flex mb-4">
           <div tw="flex flex-col grow max-w-[792px] bg-[#00CB0D] p-4 border-black border mr-4">
             <div
@@ -37,7 +37,7 @@ async function handle(req: NextRequest) {
               Discotheque International
             </div>
             <div
-              tw="text-[2.75rem] flex mt-0.5"
+              tw="text-[2.75rem] flex mt-0.5 "
               style={{
                 fontFamily: '"VisueltMedium"',
                 lineHeight: "90%",
@@ -50,8 +50,7 @@ async function handle(req: NextRequest) {
               >
                 with
               </span>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Haley,
-              some other artists, more artists & another artist
+              &nbsp;Haley, some other artists
             </div>
             <div
               tw="text-[2.75rem]"
@@ -87,7 +86,7 @@ async function handle(req: NextRequest) {
             </svg>
           </div>
         </div>
-        <div tw="flex h-[827px] w-full mb-4">
+        <div tw="flex grow w-full">
           <img
             tw="flex border-black border h-full w-[516px] mr-4"
             src="https://picsum.photos/1600/1600"
@@ -100,7 +99,7 @@ async function handle(req: NextRequest) {
           />
         </div>
         <div
-          tw="flex absolute bottom-4 left-4 text-[1.75rem] bg-[#00CB0D] p-4 border-black border"
+          tw="flex absolute bottom-4 left-4 text-[2rem] bg-[#00CB0D] p-4 border-black border"
           style={{ fontFamily: '"fontArizona"', lineHeight: "90%" }}
         >
           refugeworldwide.com
