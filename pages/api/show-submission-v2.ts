@@ -334,6 +334,15 @@ const updateShow = async (values) => {
         entry.fields.instagramHandles = {
           "en-US": formatInstaHandles(values.instagram),
         };
+        entry.fields.socialImage = {
+          "en-US": {
+            sys: {
+              type: "Link",
+              linkType: "Asset",
+              id: values.socialImage,
+            },
+          },
+        };
         return entry.update();
       })
       .then((entry) => {
@@ -374,6 +383,60 @@ const uploadImage = async (name, image) => {
     console.log(err);
     throw err;
   }
+};
+
+const socialImage = async (values) => {
+  const images = encodeURIComponent(values.image[0].url);
+  const title = encodeURIComponent(values.showName);
+  const artists = encodeURIComponent(
+    values.artists.map((x) => x.label).join(", ")
+  );
+  const date = encodeURIComponent(
+    `${dayjs(values.date).utc().format("dddd DD MMMM, HH:mm")}-${dayjs(
+      values.dateEnd
+    )
+      .utc()
+      .format("HH:mm (CET)")}`
+  );
+
+  // set url for social image
+  const url = `https://1753-2a02-8109-b68b-5000-1c84-49b4-6706-f839.ngrok-free.app/api/automated-artwork?title=${title}&artists=${artists}&date=${date}&images=${images}`;
+
+  const socialImage = {
+    url: url,
+    type: "image/png",
+    filename: values.showName + "-social-image.png",
+  };
+
+  const socialImageId = await uploadImage(values.showName, socialImage);
+  return socialImageId;
+  // try {
+  //   const space = await client.getSpace(spaceId);
+  //   const environment = await space.getEnvironment(environmentId);
+  //   let asset = await environment.createAsset({
+  //     fields: {
+  //       title: {
+  //         "en-US": name,
+  //       },
+  //       file: {
+  //         "en-US": {
+  //           contentType: image.type,
+  //           fileName: image.filename,
+  //           upload: image.url,
+  //         },
+  //       },
+  //     },
+  //   });
+  //   const processedAsset = await asset.processForAllLocales();
+  //   await processedAsset.publish();
+  //   const imageURL = "https:" + processedAsset.fields.file["en-US"].url;
+  //   console.log(imageURL);
+  //   showImages.push(imageURL);
+  //   return processedAsset.sys.id;
+  // } catch (err) {
+  //   console.log(err);
+  //   throw err;
+  // }
 };
 
 const formatInstaHandles = (handles) => {
@@ -445,6 +508,7 @@ export default async function handler(
             await updateArtist(artist);
           }
         }
+        values.socialImage = await socialImage(values);
         await updateShow(values);
         await appendToSpreadsheet(values);
         console.log("form submitted successfully");

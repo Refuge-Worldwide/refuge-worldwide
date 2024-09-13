@@ -1,18 +1,23 @@
-import { NextRequest } from "next/server";
 import { ImageResponse } from "@vercel/og";
 
 export const config = {
   runtime: "experimental-edge",
 };
 
-const imageHeight3 = "900px";
-const imageHeight4 = "827px";
-const imageHeight5 = "792px";
+const imageWidths = ["1048px", "517px", "340px"];
 
-const imageWidth2 = "516px";
-const imageWidth3 = "339px";
+async function handle(request: Request) {
+  const { searchParams } = new URL(request.url);
 
-async function handle(req: NextRequest) {
+  const images =
+    searchParams.get("images") ||
+    "https://picsum.photos/1000/1000?grayscale,https://picsum.photos/1000/1000";
+  const imagesArray = decodeURIComponent(images).split(",");
+  const title = searchParams.get("title") || "Cultural Cadence: The Levant";
+  const artists =
+    searchParams.get("artists") || "Moehecan, Yasmine Acar & Udi Raz";
+  const date = searchParams.get("date") || "Thu 12 Sep / 15:00-16:00 (CET)";
+
   const fontLight = await fetch(
     new URL("../../assets/VisueltLight.otf", import.meta.url)
   ).then((res) => res.arrayBuffer());
@@ -25,38 +30,71 @@ async function handle(req: NextRequest) {
     new URL("../../assets/ABCArizonaFlare.otf", import.meta.url)
   ).then((res) => res.arrayBuffer());
 
+  // Create a hidden container to measure text width
+  const hiddenContainer = (
+    <div
+      style={{
+        visibility: "hidden",
+        whiteSpace: "nowrap",
+        fontFamily: '"VisueltMedium"',
+        fontSize: "2.75rem",
+      }}
+    >
+      {title}
+    </div>
+  );
+
+  // Render the hidden container to measure its width
+  const hiddenContainerWidth = hiddenContainer.props.children.length * 16; // Approximate width calculation
+
+  // Compare the width of the text to the width of the container
+  const containerWidth = 544; // Example container width
+  console.log(hiddenContainerWidth);
+  const isTitleWrapped = hiddenContainerWidth > containerWidth;
+  console.log(isTitleWrapped);
+
   return new ImageResponse(
     (
       <div tw="flex w-full h-full flex-col bg-[#00CB0D] p-4">
         <div tw="flex mb-4">
-          <div tw="flex flex-col grow max-w-[792px] bg-[#00CB0D] p-4 border-black border mr-4">
+          <div tw="flex flex-col grow max-w-[792px] bg-[#00CB0D] p-4 pt-2 pb-3 border-black border mr-4">
             <div
-              tw="text-[2.75rem] font-bold"
-              style={{ fontFamily: '"VisueltMedium"', lineHeight: "80%" }}
+              tw="text-[2.75rem] font-bold flex"
+              style={{ fontFamily: '"VisueltMedium"', lineHeight: "100%" }}
             >
-              Discotheque International
+              {title} {isTitleWrapped && ` with ${artists}`}
             </div>
             <div
-              tw="text-[2.75rem] flex mt-0.5 "
+              tw="text-[2.75rem] mt-0.5"
               style={{
                 fontFamily: '"VisueltMedium"',
                 lineHeight: "90%",
-                whiteSpace: "pre-wrap",
+                display: "flex",
+                flexWrap: "wrap",
+                gap: 2,
+              }}
+            ></div>
+            <div
+              tw="text-[2.75rem]"
+              style={{
+                fontFamily: '"VisueltMedium"',
+                lineHeight: "90%",
+                display: "flex",
+                flexWrap: "wrap",
+                gap: 2,
               }}
             >
-              <span
-                tw="-mt-0.5"
-                style={{ fontFamily: '"Visuelt"', lineHeight: "90%" }}
-              >
-                with
-              </span>
-              &nbsp;Haley, some other artists
+              {!isTitleWrapped && `with ${artists}`}
             </div>
             <div
               tw="text-[2.75rem]"
-              style={{ fontFamily: '"Visuelt"', lineHeight: "100%" }}
+              style={{
+                fontFamily: '"Visuelt"',
+                lineHeight: "100%",
+                display: "flex",
+              }}
             >
-              Tue 06 Feb / 14:00-15:00 (CET)
+              {date}
             </div>
           </div>
           <div tw="flex justify-center items-center w-[240px] border-black border bg-[#00CB0D]">
@@ -87,19 +125,23 @@ async function handle(req: NextRequest) {
           </div>
         </div>
         <div tw="flex grow w-full">
-          <img
-            tw="flex border-black border h-full w-[516px] mr-4"
-            src="https://picsum.photos/1600/1600"
-            style={{ objectFit: "cover", objectPosition: "center" }}
-          />
-          <img
-            tw="flex border-black border h-full w-[516px] mr-4"
-            src="https://picsum.photos/1600/1600?grayscale"
-            style={{ objectFit: "cover", objectPosition: "center" }}
-          />
+          {imagesArray.map((image) => {
+            return (
+              <img
+                key={image}
+                tw="flex border-black border h-full mr-3.5"
+                src={image}
+                style={{
+                  objectFit: "cover",
+                  objectPosition: "center",
+                  width: imageWidths[imagesArray.length - 1],
+                }}
+              />
+            );
+          })}
         </div>
         <div
-          tw="flex absolute bottom-4 left-4 text-[2rem] bg-[#00CB0D] p-4 border-black border"
+          tw="flex absolute bottom-4 left-4 text-[1.85rem] pb-3 bg-[#00CB0D] px-4 pt-2 border-black border"
           style={{ fontFamily: '"fontArizona"', lineHeight: "90%" }}
         >
           refugeworldwide.com
