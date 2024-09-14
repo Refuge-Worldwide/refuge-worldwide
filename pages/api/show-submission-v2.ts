@@ -386,21 +386,30 @@ const uploadImage = async (name, image) => {
 };
 
 const socialImage = async (values) => {
-  const images = encodeURIComponent(values.image[0].url);
+  const images = encodeURIComponent(
+    values.image
+      .map((img) => {
+        return img.url;
+      })
+      .join(",")
+  );
+  console.log(images);
   const title = encodeURIComponent(values.showName);
   const artists = encodeURIComponent(
     values.artists.map((x) => x.label).join(", ")
   );
+
+  // Parse the start time and calculate the end time
+  const startTime = dayjs(values.datetime).utc();
+  const endTime = startTime.add(values.length, "hour");
+
+  // Format the date and time
   const date = encodeURIComponent(
-    `${dayjs(values.date).utc().format("dddd DD MMMM, HH:mm")}-${dayjs(
-      values.dateEnd
-    )
-      .utc()
-      .format("HH:mm (CET)")}`
+    `${startTime.format("ddd DD MMM / HH:mm")}-${endTime.format("HH:mm")} (CET)`
   );
 
   // set url for social image
-  const url = `https://1753-2a02-8109-b68b-5000-1c84-49b4-6706-f839.ngrok-free.app/api/automated-artwork?title=${title}&artists=${artists}&date=${date}&images=${images}`;
+  const url = `https://dfe0-185-253-98-84.ngrok-free.app/api/automated-artwork?title=${title}&artists=${artists}&date=${date}&images=${images}`;
 
   const socialImage = {
     url: url,
@@ -408,7 +417,10 @@ const socialImage = async (values) => {
     filename: values.showName + "-social-image.png",
   };
 
-  const socialImageId = await uploadImage(values.showName, socialImage);
+  const socialImageId = await uploadImage(
+    values.showName + " - social image",
+    socialImage
+  );
   return socialImageId;
   // try {
   //   const space = await client.getSpace(spaceId);

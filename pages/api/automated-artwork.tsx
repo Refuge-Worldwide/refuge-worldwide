@@ -13,6 +13,17 @@ async function handle(request: Request) {
     searchParams.get("images") ||
     "https://picsum.photos/1000/1000?grayscale,https://picsum.photos/1000/1000";
   const imagesArray = decodeURIComponent(images).split(",");
+  const aspects = ["12:10", "59:100", "35:100"];
+  const cloudinaryTransform = `ar_${
+    aspects[imagesArray.length - 1]
+  },c_fill,g_auto:face`;
+  const transformedImages = imagesArray.map((img) => {
+    const [baseUrl, rest] = img.split("/upload/");
+    const transformedUrl = `${baseUrl}/upload/${cloudinaryTransform}/${rest}`;
+    console.log(transformedUrl);
+    return transformedUrl;
+  });
+
   const title = searchParams.get("title") || "Cultural Cadence: The Levant";
   const artists =
     searchParams.get("artists") || "Moehecan, Yasmine Acar & Udi Raz";
@@ -125,7 +136,7 @@ async function handle(request: Request) {
           </div>
         </div>
         <div tw="flex grow w-full">
-          {imagesArray.map((image) => {
+          {transformedImages.map((image) => {
             return (
               <img
                 key={image}
