@@ -119,7 +119,7 @@ export const formatArtistNames = (data: ArtistInterface[]) => {
   }
 
   if (names.length === 3) {
-    return `with ${names.slice(0, 2).join(", ")} and ${names[3]}`;
+    return `with ${names.slice(0, 2).join(", ")} and ${names[2]}`;
   }
 
   return `with ${names.slice(0, 2).join(", ")} and others`;
