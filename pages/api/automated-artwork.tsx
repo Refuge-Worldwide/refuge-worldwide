@@ -11,12 +11,14 @@ async function handle(request: Request) {
 
   const images =
     searchParams.get("images") ||
-    "https://picsum.photos/1000/1000?grayscale,https://picsum.photos/1000/1000";
+    "https://res.cloudinary.com/dqjn26pey/image/upload/v1726483539/default_image-pichi_u9id7o.jpg,https://res.cloudinary.com/dqjn26pey/image/upload/v1726483539/default_image-pichi_u9id7o.jpg,https://res.cloudinary.com/dqjn26pey/image/upload/v1726483539/default_image-pichi_u9id7o.jpg,https://res.cloudinary.com/dqjn26pey/image/upload/v1726483539/default_image-pichi_u9id7o.jpg";
   const imagesArray = decodeURIComponent(images).split(",");
   const aspects = ["12:10", "59:100", "35:100"];
   const cloudinaryTransform = `ar_${
-    aspects[imagesArray.length - 1]
-  },c_fill,g_auto:face`;
+    imagesArray.length > 3
+      ? aspects[aspects.length - 1]
+      : aspects[imagesArray.length - 1]
+  },c_fill,g_face:auto`;
   const transformedImages = imagesArray.map((img) => {
     const [baseUrl, rest] = img.split("/upload/");
     const transformedUrl = `${baseUrl}/upload/${cloudinaryTransform}/${rest}`;
@@ -145,7 +147,10 @@ async function handle(request: Request) {
                 style={{
                   objectFit: "cover",
                   objectPosition: "center",
-                  width: imageWidths[imagesArray.length - 1],
+                  width:
+                    imagesArray.length > 3
+                      ? imageWidths[imageWidths.length - 1]
+                      : imageWidths[imagesArray.length - 1],
                 }}
               />
             );
