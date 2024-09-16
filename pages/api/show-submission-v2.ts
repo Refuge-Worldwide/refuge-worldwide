@@ -401,13 +401,13 @@ const socialImage = async (values) => {
     values.artists.map((x) => x.label).join(", ")
   );
 
-  // Parse the start time and calculate the end time
-  const startTime = dayjs(values.datetime).utc();
-  const endTime = startTime.add(values.length, "hour");
-
   // Format the date and time
   const date = encodeURIComponent(
-    `${startTime.format("ddd DD MMM / HH:mm")}-${endTime.format("HH:mm")} (CET)`
+    `${dayjs(values.datetime).utc().format("ddd DD MMM / HH:mm")}-${dayjs(
+      values.datetimeEnd
+    )
+      .utc()
+      .format("HH:mm")} (CET)`
   );
 
   // Determine the base URL based on the environment

@@ -113,6 +113,7 @@ export default function ShowSubmissionForm({
     number: "",
     showName: "",
     datetime: initial ? initial.date : "",
+    datetimeEnd: initial ? initial.dateEnd : "",
     length: "1",
     genres: [],
     hasNewGenres: false,
