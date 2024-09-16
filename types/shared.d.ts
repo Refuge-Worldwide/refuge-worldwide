@@ -267,6 +267,7 @@ export type SubmissionFormValues = {
   number: string;
   showName: string;
   datetime: string;
+  datetimeEnd: string;
   length: string;
   genres: Array<{ value: string; label: string }>;
   hasNewGenres: Boolean;

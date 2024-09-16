@@ -334,6 +334,17 @@ const updateShow = async (values) => {
         entry.fields.instagramHandles = {
           "en-US": formatInstaHandles(values.instagram),
         };
+        if (values.socialImage) {
+          entry.fields.socialImage = {
+            "en-US": {
+              sys: {
+                type: "Link",
+                linkType: "Asset",
+                id: values.socialImage,
+              },
+            },
+          };
+        }
         return entry.update();
       })
       .then((entry) => {
@@ -374,6 +385,78 @@ const uploadImage = async (name, image) => {
     console.log(err);
     throw err;
   }
+};
+
+const socialImage = async (values) => {
+  const images = encodeURIComponent(
+    values.image
+      .map((img) => {
+        return img.url;
+      })
+      .join(",")
+  );
+  console.log(images);
+  const title = encodeURIComponent(values.showName);
+  const artists = encodeURIComponent(
+    values.artists.map((x) => x.label).join(", ")
+  );
+
+  // Format the date and time
+  const date = encodeURIComponent(
+    `${dayjs(values.datetime).utc().format("ddd DD MMM / HH:mm")}-${dayjs(
+      values.datetimeEnd
+    )
+      .utc()
+      .format("HH:mm")} (CET)`
+  );
+
+  // Determine the base URL based on the environment
+  const baseUrl =
+    process.env.NODE_ENV === "development"
+      ? "https://dfe0-185-253-98-84.ngrok-free.app"
+      : process.env.NEXT_PUBLIC_WEBSITE_URL;
+
+  // Set URL for social image
+  const url = `${baseUrl}/api/automated-artwork?title=${title}&artists=${artists}&date=${date}&images=${images}`;
+
+  const socialImage = {
+    url: url,
+    type: "image/png",
+    filename: values.showName + "-social-image.png",
+  };
+
+  const socialImageId = await uploadImage(
+    values.showName + " - social image",
+    socialImage
+  );
+  return socialImageId;
+  // try {
+  //   const space = await client.getSpace(spaceId);
+  //   const environment = await space.getEnvironment(environmentId);
+  //   let asset = await environment.createAsset({
+  //     fields: {
+  //       title: {
+  //         "en-US": name,
+  //       },
+  //       file: {
+  //         "en-US": {
+  //           contentType: image.type,
+  //           fileName: image.filename,
+  //           upload: image.url,
+  //         },
+  //       },
+  //     },
+  //   });
+  //   const processedAsset = await asset.processForAllLocales();
+  //   await processedAsset.publish();
+  //   const imageURL = "https:" + processedAsset.fields.file["en-US"].url;
+  //   console.log(imageURL);
+  //   showImages.push(imageURL);
+  //   return processedAsset.sys.id;
+  // } catch (err) {
+  //   console.log(err);
+  //   throw err;
+  // }
 };
 
 const formatInstaHandles = (handles) => {
@@ -444,6 +527,15 @@ export default async function handler(
             }
             await updateArtist(artist);
           }
+        }
+        // wrap social image in another try block so it doesnt blcok the main submission
+        try {
+          values.socialImage = await socialImage(values);
+        } catch (err) {
+          sendSlackMessage(
+            "Error generating social image for " + values.name,
+            "error"
+          );
         }
         await updateShow(values);
         await appendToSpreadsheet(values);

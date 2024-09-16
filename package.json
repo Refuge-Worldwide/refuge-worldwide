@@ -50,6 +50,7 @@
     "@supabase/auth-ui-shared": "^0.1.8",
     "@supabase/supabase-js": "^2.38.1",
     "@use-it/interval": "^1.0.0",
+    "@vercel/og": "^0.6.2",
     "@widgetbot/crate": "^3.5.4",
     "@widgetbot/react-embed": "^1.7.0",
     "add-to-calendar-button-react": "^2.4.3",
