@@ -334,15 +334,17 @@ const updateShow = async (values) => {
         entry.fields.instagramHandles = {
           "en-US": formatInstaHandles(values.instagram),
         };
-        entry.fields.socialImage = {
-          "en-US": {
-            sys: {
-              type: "Link",
-              linkType: "Asset",
-              id: values.socialImage,
+        if (values.socialImage) {
+          entry.fields.socialImage = {
+            "en-US": {
+              sys: {
+                type: "Link",
+                linkType: "Asset",
+                id: values.socialImage,
+              },
             },
-          },
-        };
+          };
+        }
         return entry.update();
       })
       .then((entry) => {
@@ -408,8 +410,14 @@ const socialImage = async (values) => {
     `${startTime.format("ddd DD MMM / HH:mm")}-${endTime.format("HH:mm")} (CET)`
   );
 
-  // set url for social image
-  const url = `https://dfe0-185-253-98-84.ngrok-free.app/api/automated-artwork?title=${title}&artists=${artists}&date=${date}&images=${images}`;
+  // Determine the base URL based on the environment
+  const baseUrl =
+    process.env.NODE_ENV === "development"
+      ? "https://dfe0-185-253-98-84.ngrok-free.app"
+      : process.env.NEXT_PUBLIC_WEBSITE_URL;
+
+  // Set URL for social image
+  const url = `${baseUrl}/api/automated-artwork?title=${title}&artists=${artists}&date=${date}&images=${images}`;
 
   const socialImage = {
     url: url,
@@ -520,7 +528,15 @@ export default async function handler(
             await updateArtist(artist);
           }
         }
-        values.socialImage = await socialImage(values);
+        // wrap social image in another try block so it doesnt blcok the main submission
+        try {
+          values.socialImage = await socialImage(values);
+        } catch (err) {
+          sendSlackMessage(
+            "Error generating social image for " + values.name,
+            "error"
+          );
+        }
         await updateShow(values);
         await appendToSpreadsheet(values);
         console.log("form submitted successfully");
