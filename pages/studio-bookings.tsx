@@ -5,6 +5,7 @@ import Layout from "../components/layout";
 import PageMeta from "../components/seo/page";
 import Cal, { getCalApi } from "@calcom/embed-react";
 import { useEffect } from "react";
+import Head from "next/head";
 
 export default function BookingsPage() {
   const [passwordCorrect, passwordCorrectSet] = useState(false);
@@ -25,6 +26,9 @@ export default function BookingsPage() {
 
   return (
     <Layout>
+      <Head>
+        <meta name="robots" content="noindex,nofollow" />
+      </Head>
       <PageMeta title="Bookings | Refuge Worldwide" path="studio-bookings/" />
       {passwordCorrect ? (
         <section>
