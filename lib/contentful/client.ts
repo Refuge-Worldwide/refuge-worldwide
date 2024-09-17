@@ -59,7 +59,7 @@ export const createPastShowSchema = (show: TypeShow): PastShowSchema => ({
   slug: show.fields.slug,
   mixcloudLink: show.fields.mixcloudLink,
   coverImage: show.fields.coverImage.fields.file.url,
-  genres: show.fields.genres.map((genre) => genre.fields.name),
+  genres: show.fields.genres.map((genre) => genre.fields?.name).filter(Boolean),
 });
 
 export async function getPastShows(
@@ -137,7 +137,7 @@ export async function getPastShows(
     slug: show.slug,
     mixcloudLink: show.mixcloudLink,
     coverImage: show.coverImage.url,
-    genres: show.genresCollection.items.map((genre) => genre.name),
+    genres: show.genresCollection.items.map((genre) => genre?.name),
   }));
 
   const filtered = processed.filter(

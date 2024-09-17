@@ -140,7 +140,9 @@ export async function getArtistsPageSingle(slug: string, preview: boolean) {
     slug: show.slug,
     mixcloudLink: show.mixcloudLink,
     coverImage: show.coverImage.url,
-    genres: show.genresCollection.items.map((genre) => genre.name),
+    genres: show.genresCollection.items
+      .map((genre) => genre?.name)
+      .filter(Boolean),
   }));
 
   if (processed.length > 0) {

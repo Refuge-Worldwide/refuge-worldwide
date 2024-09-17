@@ -113,18 +113,6 @@ export default function ShowBody({
           <Prose>{documentToReactComponents(content?.json)}</Prose>
         </div>
       </section>
-
-      <section className="border-t-2 bg-white">
-        <div className="container-md p-4 md:p-8">
-          <Pill>
-            <span className="font-serif">Persons</span>
-          </Pill>
-
-          <div className="h-8" />
-
-          <p className="font-medium">{persons}</p>
-        </div>
-      </section>
     </Fragment>
   );
 }

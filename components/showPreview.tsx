@@ -117,10 +117,12 @@ export function ShowPreviewWithoutPlayer({
   fields: { genres, coverImage, title, slug, date },
 }: TypeShow) {
   const parsedGenres = parseGenres({
-    items: genres.map((genre) => ({
-      name: genre.fields.name,
-      sys: { id: genre.sys.id },
-    })),
+    items: genres
+      .filter((genre) => genre.fields)
+      .map((genre) => ({
+        name: genre.fields.name,
+        sys: { id: genre.sys.id },
+      })),
   }).slice(0, 3);
 
   return (
