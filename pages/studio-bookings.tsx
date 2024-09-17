@@ -29,7 +29,10 @@ export default function BookingsPage() {
       <Head>
         <meta name="robots" content="noindex,nofollow" />
       </Head>
-      <PageMeta title="Bookings | Refuge Worldwide" path="studio-bookings/" />
+      <PageMeta
+        title="Studio Bookings | Refuge Worldwide"
+        path="studio-bookings/"
+      />
       {passwordCorrect ? (
         <section>
           <section className="">
