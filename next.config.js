@@ -12,4 +12,13 @@ module.exports = {
     scrollRestoration: true,
   },
   transpilePackages: ["@radix-ui"],
+  async redirects() {
+    return [
+      {
+        source: '/bookings',
+        destination: '/studio-bookings',
+        permanent: false,
+      },
+    ];
+  },
 };
