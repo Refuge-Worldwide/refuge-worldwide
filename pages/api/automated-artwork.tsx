@@ -11,7 +11,7 @@ async function handle(request: Request) {
 
   const images =
     searchParams.get("images") ||
-    "https://res.cloudinary.com/dqjn26pey/image/upload/v1726483539/default_image-pichi_u9id7o.jpg,https://res.cloudinary.com/dqjn26pey/image/upload/v1726483539/default_image-pichi_u9id7o.jpg,https://res.cloudinary.com/dqjn26pey/image/upload/v1726483539/default_image-pichi_u9id7o.jpg,https://res.cloudinary.com/dqjn26pey/image/upload/v1726483539/default_image-pichi_u9id7o.jpg";
+    "https://res.cloudinary.com/dqjn26pey/image/upload/v1726483539/default_image-pichi_u9id7o.jpg,https://res.cloudinary.com/dqjn26pey/image/upload/v1726483539/default_image-pichi_u9id7o.jpg,https://res.cloudinary.com/dqjn26pey/image/upload/v1726483539/default_image-pichi_u9id7o.jpg";
   const imagesArray = decodeURIComponent(images).split(",");
   const aspects = ["12:10", "59:100", "35:100"];
   const cloudinaryTransform = `ar_${
@@ -30,6 +30,7 @@ async function handle(request: Request) {
   const artists =
     searchParams.get("artists") || "Moehecan, Yasmine Acar & Udi Raz";
   const date = searchParams.get("date") || "Thu 12 Sep / 15:00-16:00 (CET)";
+  const colour = searchParams.get("colour") || "#00CB0D";
 
   const fontLight = await fetch(
     new URL("../../assets/VisueltLight.otf", import.meta.url)
@@ -68,9 +69,9 @@ async function handle(request: Request) {
 
   return new ImageResponse(
     (
-      <div tw="flex w-full h-full flex-col bg-[#00CB0D] p-4">
+      <div tw={`flex w-full h-full flex-col bg-[${colour}] p-4`}>
         <div tw="flex mb-4">
-          <div tw="flex flex-col grow max-w-[792px] bg-[#00CB0D] p-4 pt-2 pb-3 border-black border mr-4">
+          <div tw="flex flex-col grow max-w-[792px] p-4 pt-2 pb-3 border-black border mr-4">
             <div
               tw="text-[2.75rem] font-bold flex"
               style={{ fontFamily: '"VisueltMedium"', lineHeight: "100%" }}
@@ -110,7 +111,7 @@ async function handle(request: Request) {
               {date}
             </div>
           </div>
-          <div tw="flex justify-center items-center w-[240px] border-black border bg-[#00CB0D]">
+          <div tw="flex justify-center items-center w-[240px] border-black border">
             <svg
               width="209"
               height="125"
@@ -157,7 +158,7 @@ async function handle(request: Request) {
           })}
         </div>
         <div
-          tw="flex absolute bottom-4 left-4 text-[1.85rem] pb-3 bg-[#00CB0D] px-4 pt-2 border-black border"
+          tw={`flex absolute bottom-4 left-4 text-[1.85rem] pb-3 px-4 pt-2 border-black border bg-[${colour}]`}
           style={{ fontFamily: '"fontArizona"', lineHeight: "90%" }}
         >
           refugeworldwide.com

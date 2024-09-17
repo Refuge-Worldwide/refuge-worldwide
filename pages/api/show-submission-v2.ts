@@ -397,8 +397,11 @@ const socialImage = async (values) => {
   );
   console.log(images);
   const title = encodeURIComponent(values.showName);
-  const artists = encodeURIComponent(
-    values.artists.map((x) => x.label).join(", ")
+  const formattedArtists = encodeURIComponent(
+    values.artists
+      .map((x) => x.label)
+      .join(", ")
+      .replace(/, ([^,]*)$/, " & $1")
   );
 
   // Format the date and time
@@ -410,14 +413,49 @@ const socialImage = async (values) => {
       .format("HH:mm")} (CET)`
   );
 
+  const colours = [
+    "#cd46fd",
+    "#fd339b",
+    "#ff96ff",
+    "#f94646",
+    "#fe6301",
+    "#ff9d1d",
+    "#fffe49",
+    "#defc32",
+    "#b0b02b",
+    "#00cb0d",
+    "#32fe95",
+    "#4ac8f4",
+    "#5a60fe",
+    "#1a4afc",
+    "#ffa2b5",
+    "#facc7f",
+    "#99fffc",
+    "#99e9ff",
+    "#ab8dff",
+    "#ffd9f0",
+    "#fbffb3",
+    "#ccffd1",
+    "#ffedd9",
+    "#ccd2ff",
+  ];
+
+  // Get the day of the month
+  const dayOfMonth = dayjs(values.datetime).utc().date();
+
+  // Get a color from the colours array based on the day of the month
+  const colour = colours[dayOfMonth % colours.length];
+
   // Determine the base URL based on the environment
   const baseUrl =
     process.env.NODE_ENV === "development"
-      ? "https://dfe0-185-253-98-84.ngrok-free.app"
+      ? "https://473c-2a02-8109-b68b-5000-74e9-8d05-bbf3-936d.ngrok-free.app"
       : process.env.NEXT_PUBLIC_WEBSITE_URL;
 
   // Set URL for social image
-  const url = `${baseUrl}/api/automated-artwork?title=${title}&artists=${artists}&date=${date}&images=${images}`;
+  const url = `${baseUrl}/api/automated-artwork?title=${title}&artists=${formattedArtists}&date=${date}&images=${images}&colour=${encodeURIComponent(
+    colour
+  )}`;
 
   const socialImage = {
     url: url,
