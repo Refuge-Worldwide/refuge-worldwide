@@ -56,11 +56,10 @@ export default function EventRow({
           <p className="lg:col-span-1 text-small flex-initial md:min-w-[140px] lg:min-w-[206px]">
             {event.location}
           </p>
-          <div className="h-3 md:hidden" />
           <div className="md:col-span-1 md:justify-self-end flex-initial md:min-w-[106px]">
             {/* <Arrow className="group-open:-rotate-90 rotate-90 transition-all duration-300 ease-in-out ml-auto" /> */}
-            <BiPlus className="group-open:hidden ml-auto" />
-            <BiMinus className="hidden group-open:block ml-auto" />
+            <BiPlus className="group-open:hidden ml-auto text-medium md:text-base -mt-9 md:mt-0" />
+            <BiMinus className="hidden group-open:block ml-auto text-medium md:text-base -mt-9 md:mt-0" />
           </div>
         </summary>
         {/* </EventLink> */}
