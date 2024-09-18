@@ -719,6 +719,7 @@ function Calendar() {
                           limit={10}
                           value={initialValues.artists}
                           includeEmail={true}
+                          showStatus={true}
                         />
                         <EmailModal
                           artists={values.artists}

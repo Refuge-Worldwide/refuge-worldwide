@@ -8,15 +8,16 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    const { query, type } = req.query as typeof req.query & {
+    const { query, type, showStatus } = req.query as typeof req.query & {
       query: string;
       type?: string;
+      showStatus?: boolean;
     };
 
     let items = [];
 
     if (type == "artists") {
-      const artists = await getArtistSearchData(query, 20, true);
+      const artists = await getArtistSearchData(query, 20, true, showStatus);
       items = artists.items;
     } else {
       const shows = await searchCalendarShows(query, true);

@@ -9,6 +9,7 @@ import type {
 } from "../../types/contentful";
 import { client } from "./client";
 import { previewClient } from "./client";
+import { s } from "@fullcalendar/core/internal-common";
 export interface SearchData {
   shows: TypeShow[];
   articles: TypeArticle[];
@@ -118,7 +119,8 @@ export async function getCalendarSearchData(query: string, limit = 100) {
 export async function getArtistSearchData(
   query: string,
   limit = 20,
-  includeEmail?: boolean
+  includeEmail?: boolean,
+  showStatus?: boolean
 ) {
   const start = Date.now();
 
@@ -130,15 +132,25 @@ export async function getArtistSearchData(
 
       "fields.name[match]": query,
 
-      select: ["fields.name", "fields.email", "fields.content", "fields.photo"],
+      select: [
+        "sys.revision",
+        "fields.name",
+        "fields.email",
+        "fields.content",
+        "fields.photo",
+      ],
     }),
   ]);
 
   const end = Date.now();
 
   const items = artistsCollection.items.map((artist) => {
+    let label = artist.fields.name;
+    if (!artist.sys.revision && showStatus) {
+      label += " (draft)";
+    }
     return {
-      label: artist.fields.name,
+      label: label,
       value: artist.sys.id,
       content: artist.fields.content ? true : false,
       image: artist.fields.photo ? true : false,
