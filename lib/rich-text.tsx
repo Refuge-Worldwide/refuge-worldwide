@@ -38,7 +38,7 @@ export function RenderRichTextWithImages(content: Content) {
     return documentToReactComponents(content.json, {
       renderNode: {
         [INLINES.HYPERLINK]: function InlineHyperlink(node: Inline, children) {
-          const uri = node.data.uri as string;
+          let uri = node.data.uri as string;
 
           if (uri.includes("mixcloud.com/widget")) {
             return <iframe width="100%" height="120" src={uri} />;
@@ -66,6 +66,17 @@ export function RenderRichTextWithImages(content: Content) {
           }
 
           if (uri.includes("tally.so/embed")) {
+            const url = new URL(uri);
+            const params = url.searchParams;
+
+            if (!params.has("hideTitle")) params.append("hideTitle", "1");
+            if (!params.has("transparentBackground"))
+              params.append("transparentBackground", "1");
+            if (!params.has("dynamicHeight"))
+              params.append("dynamicHeight", "1");
+
+            uri = url.toString();
+
             return (
               <div className="max-w-[750px] mx-auto">
                 <iframe

@@ -31,8 +31,7 @@ export default function AboutPage({
       <SinglePage coverImage={coverImage}>
         <section>
           <div className="container-md p-4 sm:p-8 bg-white">
-            {/* <Prose>{RenderRichTextWithImages(content)}</Prose> */}
-            <p>Page under development</p>
+            <Prose>{RenderRichTextWithImages(content)}</Prose>
           </div>
         </section>
       </SinglePage>
