@@ -72,6 +72,7 @@ export default function EventRow({
                 <span className="font-medium">Where:</span> {event.location}
               </p>
               <p className="text-small max-w-prose">
+                {/* to do: if an article is linked then get a extract from the content of the article. */}
                 Event description goes here. Lorem ipsum dolor sit amet,
                 consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
                 labore et dolore magna aliqua. Ut enim ad minim veniam, quis
