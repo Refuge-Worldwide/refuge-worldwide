@@ -6,7 +6,7 @@ import Date from "../../components/date";
 import { EventBadge } from "../../components/badge";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/react-splide/css/core";
-import { EventLink } from "../../components/eventRow";
+import { FeaturedEventLink } from "../../components/eventRow";
 
 export default function FeaturedEvents({
   events,
@@ -44,7 +44,7 @@ export default function FeaturedEvents({
               }`}
               key={i}
             >
-              <EventLink event={event}>
+              <FeaturedEventLink event={event}>
                 <div className="flex flex-col md:w-auto md:h-auto">
                   <Image
                     key={event.coverImage.sys.id}
@@ -82,7 +82,7 @@ export default function FeaturedEvents({
                   {" "}
                   <Date dateString={event.date} />
                 </p>
-              </EventLink>
+              </FeaturedEventLink>
             </SplideSlide>
           ))}
         </Splide>
