@@ -31,7 +31,7 @@ export default function Show({
   );
 }
 
-export async function getStaticProps({ params, preview = false }) {
+export async function getStaticProps({ params, preview = true }) {
   return {
     props: { preview, ...(await getRadioPageSingle(params.slug, preview)) },
   };

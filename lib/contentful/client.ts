@@ -72,6 +72,7 @@ export async function getPastShows(
   if (filter.length == 0) {
     const { items } = await client.getEntries<TypeShowFields>({
       "fields.mixcloudLink[exists]": true,
+      "fields.coverImage[exists]": true,
       "fields.date[lte]": now,
       order: "-fields.date,fields.title",
       content_type: "show",
