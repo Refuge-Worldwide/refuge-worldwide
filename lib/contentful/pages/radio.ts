@@ -12,6 +12,15 @@ import {
   sort,
 } from "../../../util";
 
+const placeholderImage = {
+  sys: { id: "4njwdSvfwFLNoSZ6j1jE2G" },
+  title: "",
+  description: "",
+  url: "/images/placeholder.jpg",
+  width: 2000,
+  height: 1340,
+};
+
 export const RADIO_SHOWS_PAGE_SIZE = 20;
 
 export async function getRadioPageSingle(slug: string, preview: boolean) {
@@ -81,6 +90,10 @@ export async function getRadioPageSingle(slug: string, preview: boolean) {
 
   if (!entry) {
     throw new Error(`No Show found for slug '${slug}'`);
+  }
+
+  if (!entry.coverImage) {
+    entry.coverImage = placeholderImage;
   }
 
   console.log(entry.genresCollection);
@@ -247,7 +260,9 @@ export async function getRelatedShows(
     date: show.date,
     slug: show.slug,
     mixcloudLink: show.mixcloudLink,
-    coverImage: show.coverImage.url,
+    coverImage: show.coverImage?.url
+      ? show.coverImage.url
+      : placeholderImage.url,
     genres: show.genresCollection.items
       .map((genre) => genre?.name)
       .filter(Boolean),

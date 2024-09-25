@@ -71,7 +71,7 @@ export default function ShowBody({
               <div className="h-3 block md:hidden" />
 
               <p className="text-small text-center">
-                <Date dateString={date} />
+                {date && <Date dateString={date} />}
               </p>
 
               <div className="h-6" />
@@ -80,22 +80,26 @@ export default function ShowBody({
 
               <div className="h-6" />
 
-              <ul className="w-full flex flex-wrap justify-center gap-2">
-                {genres.map((genre, i) => (
-                  <li className="cursor-pointer" key={i}>
-                    <Link
-                      href={`/radio?genre=${encodeURIComponent(genre)}#shows`}
-                      legacyBehavior
-                    >
-                      <Badge as="a" text={genre} />
-                    </Link>
-                  </li>
-                ))}
-              </ul>
+              {genres.length > 0 && (
+                <ul className="w-full flex flex-wrap justify-center gap-2">
+                  {genres.map((genre, i) => (
+                    <li className="cursor-pointer" key={i}>
+                      <Link
+                        href={`/radio?genre=${encodeURIComponent(genre)}#shows`}
+                        legacyBehavior
+                      >
+                        <Badge as="a" text={genre} />
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
 
               <div className="h-6" />
 
-              <p className="font-medium text-center">With {persons}</p>
+              {artists.length > 0 && (
+                <p className="font-medium text-center">With {persons}</p>
+              )}
             </div>
 
             <div className="flex">
@@ -110,7 +114,7 @@ export default function ShowBody({
 
           <div className="h-6" />
 
-          <Prose>{documentToReactComponents(content?.json)}</Prose>
+          {content && <Prose>{documentToReactComponents(content?.json)}</Prose>}
         </div>
       </section>
     </Fragment>
