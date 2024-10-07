@@ -6,6 +6,8 @@ import { EventInterface } from "../types/shared";
 import dayjs from "dayjs";
 import { BiPlus, BiMinus } from "react-icons/bi";
 import { useRef } from "react";
+import { RenderRichTextWithImages } from "../lib/rich-text";
+import Prose from "./Prose";
 
 export default function EventRow({
   event,
@@ -60,27 +62,24 @@ export default function EventRow({
         </summary>
         <div
           ref={contentRef}
-          className="overflow-hidden transition-height duration-300 ease-in-out"
+          className="overflow-hidden transition-height duration-200 ease-in-out"
           style={{ height: "0px" }}
         >
           <div className="mt-4 mb-8">
             <div className="space-y-4 mb-4">
               <p className="text-small">
-                <span className="font-medium">When:</span> {EventDate(event)}
+                <span className="font-medium">When:</span>{" "}
+                {EventDate(event, true)}
               </p>
               <p className="text-small">
                 <span className="font-medium">Where:</span> {event.location}
               </p>
               <p className="text-small max-w-prose">
-                {/* to do: if an article is linked then get a extract from the content of the article. */}
-                Event description goes here. Lorem ipsum dolor sit amet,
-                consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-                nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                commodo consequat. Duis aute irure dolor in reprehenderit in
-                voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                Excepteur sint occaecat cupidatat non proident, sunt in culpa
-                qui officia deserunt mollit anim id est laborum.
+                {event.description && (
+                  <Prose lg={false}>
+                    {RenderRichTextWithImages(event.description)}
+                  </Prose>
+                )}
               </p>
             </div>
             <EventLink event={event} />
@@ -135,12 +134,61 @@ function EventLink({ event }) {
     );
 }
 
-function EventDate(event) {
+function EventDate(event, expanded = false) {
+  const start = dayjs(event.date);
+  const end = dayjs(event.endDate);
+  const isSameDay = start.isSame(end, "day");
+  const isSameMonth = start.isSame(end, "month");
   return (
     <span className="text-small">
       {event.endDate ? (
         <span>
-          {sameMonth(event.date, event.endDate) ? (
+          {isSameDay ? (
+            <span>
+              <Date dateString={event.date} formatString="DD MMM" />
+              {expanded && (
+                <>
+                  {", "}
+                  <Date dateString={event.date} formatString="HH:mm" />-
+                  <Date dateString={event.endDate} formatString="HH:mm" />
+                </>
+              )}
+            </span>
+          ) : isSameMonth ? (
+            <span>
+              <Date dateString={event.date} formatString="DD" />—
+              <Date dateString={event.endDate} />
+            </span>
+          ) : (
+            <span>
+              <Date dateString={event.date} formatString="DD MMM" />
+              —
+              <br className="hidden md:block" />
+              <Date dateString={event.endDate} />
+            </span>
+          )}
+        </span>
+      ) : (
+        <Date dateString={event.date} />
+      )}
+    </span>
+  );
+}
+
+function EventDateExpanded(event) {
+  const start = dayjs(event.date);
+  const end = dayjs(event.endDate);
+  const isSameDay = start.isSame(end, "day");
+  const isSameMonth = start.isSame(end, "month");
+  return (
+    <span className="text-small">
+      {event.endDate ? (
+        <span>
+          {isSameDay ? (
+            <span>
+              <Date dateString={event.date} formatString="DD MMM" />
+            </span>
+          ) : isSameMonth ? (
             <span>
               <Date dateString={event.date} formatString="DD" />—
               <Date dateString={event.endDate} />
