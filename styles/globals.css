@@ -411,3 +411,9 @@
     transform: translatey(0px);
   }
 }
+
+/* events accordion */
+
+.event-accordion > summary::-webkit-details-marker {
+  display: none;
+}
