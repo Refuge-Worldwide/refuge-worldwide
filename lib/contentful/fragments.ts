@@ -115,6 +115,7 @@ export const EventFragment = /* GraphQL */ `
     description {
       json
     }
+    price
     article {
       ... on Article {
         type: __typename

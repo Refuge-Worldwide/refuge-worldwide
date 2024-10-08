@@ -74,6 +74,11 @@ export default function EventRow({
               <p className="text-small">
                 <span className="font-medium">Where:</span> {event.location}
               </p>
+              {event.price && (
+                <p className="text-small">
+                  <span className="font-medium">Entry:</span> {event.price}
+                </p>
+              )}
               <p className="text-small max-w-prose">
                 {event.description && (
                   <Prose lg={false}>

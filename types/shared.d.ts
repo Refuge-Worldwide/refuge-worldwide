@@ -308,7 +308,8 @@ export interface EventInterface {
   ticketLink: string;
   linkText: string;
   article: Object<{ slug: string }>;
-  description: Content;
+  description?: Content;
+  price?: string;
 }
 
 export interface WorkshopInterface {
