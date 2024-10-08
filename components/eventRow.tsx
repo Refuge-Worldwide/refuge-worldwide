@@ -150,7 +150,10 @@ function EventDate(event, expanded = false) {
         <span>
           {isSameDay ? (
             <span>
-              <Date dateString={event.date} formatString="DD MMM" />
+              <Date
+                dateString={event.date}
+                formatString={expanded ? "DD MMM" : "DD MMM YYYY"}
+              />
               {expanded && (
                 <>
                   {", "}
