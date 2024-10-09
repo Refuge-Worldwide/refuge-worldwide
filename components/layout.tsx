@@ -1,6 +1,7 @@
 import { Fragment } from "react";
 import Alert from "./alert";
 import Edit from "./edit";
+import Stickers from "./stickers";
 
 export default function Layout({
   className,
@@ -18,6 +19,7 @@ export default function Layout({
       {preview && <Alert />}
       <Edit id={pageId} />
       <main className={className}>{children}</main>
+      <Stickers />
     </Fragment>
   );
 }
