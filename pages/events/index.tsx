@@ -100,7 +100,6 @@ export default function NewsPage({
       }
       if (!reachedPastEvents && dayjs(eventEndDate).isAfter(now)) {
         const month = dayjs(event.date).format("MMMM");
-        console.log(event);
         if (uEvents[month]) {
           uEvents[month].unshift(event);
         } else {

@@ -140,8 +140,8 @@ function EventLink({ event }) {
 }
 
 function EventDate(event, expanded = false) {
-  const start = dayjs(event.date);
-  const end = dayjs(event.endDate);
+  const start = dayjs(event.date.replace("Z", ""));
+  const end = dayjs(event.endDate?.replace("Z", ""));
   const isSameDay = start.isSame(end, "day");
   const isSameMonth = start.isSame(end, "month");
   return (
