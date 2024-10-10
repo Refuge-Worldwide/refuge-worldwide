@@ -30,6 +30,7 @@ const ScheduleArtworkPage: NextPage & {
     >
       {imageUrl ? (
         <img
+          className="border border-white"
           src={imageUrl}
           alt="Schedule Artwork"
           style={{ maxWidth: "100%", maxHeight: "80vh" }}
