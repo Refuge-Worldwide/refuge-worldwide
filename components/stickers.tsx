@@ -16,6 +16,10 @@ const getRandomPosition = () => {
   return { x, y };
 };
 
+const getRandomInterval = () => {
+  return Math.random() * (2000 - 500) + 500;
+};
+
 const Stickers = () => {
   const [showStickers, setShowStickers] = useState([]);
   const [inactiveTime, setInactiveTime] = useState(0);
@@ -23,6 +27,16 @@ const Stickers = () => {
   useEffect(() => {
     let timeout;
     let interval;
+    let inactiveTimeout;
+
+    const addStickerWithRandomInterval = () => {
+      const newSticker = {
+        src: getRandomSticker(),
+        position: getRandomPosition(),
+      };
+      setShowStickers((prevStickers) => [...prevStickers, newSticker]);
+      interval = setTimeout(addStickerWithRandomInterval, getRandomInterval());
+    };
 
     const handleUserInteraction = () => {
       clearTimeout(timeout);
@@ -30,13 +44,7 @@ const Stickers = () => {
       setShowStickers([]);
       setInactiveTime(0);
       timeout = setTimeout(() => {
-        interval = setInterval(() => {
-          const newSticker = {
-            src: getRandomSticker(),
-            position: getRandomPosition(),
-          };
-          setShowStickers((prevStickers) => [...prevStickers, newSticker]);
-        }, 1000);
+        addStickerWithRandomInterval();
       }, 30000);
     };
 
