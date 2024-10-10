@@ -13,6 +13,17 @@ const ScheduleArtworkPage: NextPage & {
     setImageUrl(url);
   };
 
+  const downloadImage = () => {
+    if (imageUrl) {
+      const link = document.createElement("a");
+      link.href = imageUrl;
+      link.download = "schedule-artwork.png";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
+
   useEffect(() => {
     fetchImage();
   }, []);
@@ -28,28 +39,47 @@ const ScheduleArtworkPage: NextPage & {
         alignItems: "center",
       }}
     >
-      {imageUrl ? (
-        <img
-          className="border border-white"
-          src={imageUrl}
-          alt="Schedule Artwork"
-          style={{ maxWidth: "100%", maxHeight: "80vh" }}
-        />
-      ) : (
-        <p>Loading...</p>
-      )}
-      <button
-        className="bg-white border-white p-4 border mt-4 rounded"
-        onClick={fetchImage}
-        style={{
-          marginTop: "20px",
-          padding: "10px 20px",
-          fontSize: "16px",
-          cursor: "pointer",
-        }}
-      >
-        Regenerate Artwork
-      </button>
+      <div className="h-[80vh]">
+        {imageUrl ? (
+          <img
+            className="border border-white"
+            src={imageUrl}
+            alt="Schedule Artwork"
+            style={{ maxWidth: "100%", maxHeight: "80vh" }}
+          />
+        ) : (
+          <p>Loading...</p>
+        )}
+        <div />
+      </div>
+      <div className="flex gap-4">
+        <button
+          className="bg-white border-white p-4 border mt-4 rounded text-large"
+          onClick={fetchImage}
+          style={{
+            marginTop: "20px",
+            padding: "10px 20px",
+            fontSize: "16px",
+            cursor: "pointer",
+          }}
+        >
+          Regenerate
+        </button>
+        {imageUrl && (
+          <button
+            className="bg-white border-white p-4 border mt-4 rounded text-large"
+            onClick={downloadImage}
+            style={{
+              marginTop: "20px",
+              padding: "10px 20px",
+              fontSize: "16px",
+              cursor: "pointer",
+            }}
+          >
+            Download
+          </button>
+        )}
+      </div>
     </div>
   );
 };

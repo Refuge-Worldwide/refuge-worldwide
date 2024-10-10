@@ -11,7 +11,7 @@ async function handle(request: Request) {
     : "http://localhost:3000";
 
   const stickers = Array.from(
-    { length: 28 },
+    { length: 27 },
     (_, i) => `${BASE_URL}/images/stickers/Stickers-${i}.svg`
   );
 
