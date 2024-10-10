@@ -172,6 +172,9 @@ async function handle(request: Request) {
     {
       width: 1080,
       height: 1920,
+      headers: {
+        "Cache-Control": "no-store",
+      },
       fonts: [
         {
           name: "Visuelt",
