@@ -6,7 +6,9 @@ export const config = {
 };
 
 async function handle(request: Request) {
-  const BASE_URL = "http://localhost:3000";
+  const BASE_URL = process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : "http://localhost:3000";
 
   const stickers = Array.from(
     { length: 28 },
