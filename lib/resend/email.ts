@@ -88,7 +88,7 @@ export async function sendArtworkEmail(artist, date) {
       reply_to: [
         "leona@refugeworldwide.com",
         "graeme@refugeworldwide.com",
-        "maria@refugeworldwide.com",
+        "assistant@refugeworldwide.com",
         "irene@refugeworldwide.com",
       ],
       react: ShowArtworkEmail({
