@@ -41,6 +41,7 @@ interface CalendarShow {
   };
   additionalImages: Array<string>;
   isFeatured?: boolean;
+  channel?: string;
 }
 
 interface fcCalendarShow {
@@ -93,6 +94,7 @@ export async function getCalendarShows(start, end, preview: boolean) {
           }
           additionalImages
           isFeatured
+          channel
         }
       }
     }
@@ -116,6 +118,7 @@ export async function getCalendarShows(start, end, preview: boolean) {
       status: show.status ? show.status : "Submitted",
       published: show.sys.publishedVersion ? true : false,
       isFeatured: show.isFeatured,
+      channel: show.channel,
       backgroundColor:
         show.status == "TBC"
           ? "#e3e3e3"

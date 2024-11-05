@@ -326,6 +326,7 @@ function Calendar() {
       status: values.status.value,
       published: false,
       isFeatured: values.isFeatured,
+      channel: values.channel,
       backgroundColor:
         values.status.value == "TBC"
           ? "#e3e3e3"
@@ -560,8 +561,8 @@ function Calendar() {
           events={getEvents}
           eventContent={renderEventContent}
           scrollTimeReset={false}
+          eventOrder="extendedProps.channel"
         />
-
         <input
           type="date"
           className="absolute top-0 lg:top-12 right-12 lg:left-0 p-0 h-9 w-32 lg:h-0 lg:w-0 z-10 bg-transparent border-black border-2 lg:border-0 rounded-full"
@@ -929,7 +930,7 @@ function renderEventContent(eventInfo) {
   return (
     <div className="p-1" id={eventInfo.event.id}>
       <div className="mt-1 flex justify-between gap-2">
-        <p className="text-xxs font-medium grow">{eventInfo.timeText} </p>
+        <p className="text-xxs font-medium grow">{eventInfo.timeText}</p>
         {eventInfo.event.extendedProps.type == "Pre-record" && (
           <p className="text-xxs border border-black/20 opacity-80 bg-black text-white px-1 rounded">
             Pre-rec
