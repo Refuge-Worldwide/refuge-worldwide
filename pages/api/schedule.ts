@@ -88,6 +88,11 @@ export default async function handler(
           : null,
     };
 
+    const liveNowCh2 = {
+      title: data.ch2.liveNow?.title,
+      slug: data.ch2.liveNow?.slug,
+    };
+
     const scheduleData = {
       ch1: {
         status: radioCoData.status,
@@ -97,7 +102,7 @@ export default async function handler(
       },
       ch2: {
         status: radioCoDataCh2?.status,
-        liveNow: data.ch2.liveNow,
+        liveNow: liveNowCh2,
         schedule: data.ch2.schedule,
       },
     };
