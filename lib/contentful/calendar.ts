@@ -301,7 +301,7 @@ export async function createCalendarShow(values, client) {
             "en-US": values.type,
           },
           channel: {
-            "en-US": values.channel,
+            "en-US": values.channel.value,
           },
           ...(values.isFeatured && {
             isFeatured: { "en-US": values.isFeatured },
@@ -383,7 +383,7 @@ export async function updateCalendarShow(values, client) {
           entry.fields["isFeatured"] = { "en-US": values.isFeatured };
         }
         if (values.channel != null) {
-          entry.fields["channel"] = { "en-US": values.channel };
+          entry.fields["channel"] = { "en-US": values.channel.value };
         }
         return entry.update();
       })

@@ -71,6 +71,7 @@ function Schedule() {
         <ScheduleByDay
           schedule={scheduleData.ch2.schedule}
           liveNow={scheduleData.ch2.liveNow.title}
+          repeats={false}
         />
       </Tabs.Content>
     </Tabs.Root>
@@ -80,9 +81,11 @@ function Schedule() {
 function ScheduleByDay({
   liveNow,
   schedule,
+  repeats = true,
 }: {
   liveNow?: String;
   schedule: Array<ScheduleShow>;
+  repeats?: boolean;
 }) {
   const scheduleByDate: any = {};
   schedule.forEach((show) => {
@@ -137,16 +140,19 @@ function ScheduleByDay({
                 )}
               </div>
             ))}
-            <div className="flex gap-3 px-3 my-2">
-              <div className="min-w-[50px] sm:min-w-[80px]">
-                <LocalTime
-                  dateTime={
-                    scheduleByDate[day][scheduleByDate[day].length - 1].dateEnd
-                  }
-                />
+            {repeats && (
+              <div className="flex gap-3 px-3 my-2">
+                <div className="min-w-[50px] sm:min-w-[80px]">
+                  <LocalTime
+                    dateTime={
+                      scheduleByDate[day][scheduleByDate[day].length - 1]
+                        .dateEnd
+                    }
+                  />
+                </div>
+                <p>Repeats Playlist</p>
               </div>
-              <p>Repeats Playlist</p>
-            </div>
+            )}
           </div>
         </section>
       ))}

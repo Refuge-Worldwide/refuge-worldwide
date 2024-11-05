@@ -33,6 +33,7 @@ export async function getScheduleData() {
           dateEnd_lte: $endSchedule
           dateEnd_exists: true
         }
+        preview: true
       ) {
         items {
           title
@@ -59,9 +60,12 @@ export async function getScheduleData() {
 
   const res = await graphql(scheduleQuery, {
     variables: { startSchedule, endSchedule },
+    preview: true,
   });
 
   const schedule = extractCollection<ScheduleShow>(res, "showCollection");
+
+  console.log(schedule);
 
   let liveNowCh1: ScheduleShow;
   let liveNowCh2: ScheduleShow;

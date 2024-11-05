@@ -71,8 +71,9 @@ export default function LivePlayer() {
 
   const { scheduleData, isLoading, error } = useSchedule();
 
-  const isOnline = scheduleData?.ch1.status === "online";
-  const ch2IsOnline = scheduleData?.ch2.status === "online";
+  const ch1Online = scheduleData?.ch1.status === "online";
+  // const ch2Online = scheduleData?.ch2.status === "online";
+  const ch2Online = true;
 
   const player = useRef<HTMLAudioElement>(null);
   const source = useRef<HTMLSourceElement>(null);
@@ -93,7 +94,7 @@ export default function LivePlayer() {
   const playerWrapperClassNames = cn(
     "bg-black text-white lg:flex items-center max-w-screen",
     {
-      "sticky top-0 z-50": isOnline,
+      "sticky top-0 z-50": ch1Online,
     }
   );
 
@@ -140,10 +141,10 @@ export default function LivePlayer() {
     <section className={playerWrapperClassNames}>
       <div
         className={`h-12 sm:h-16 flex items-center flex-1 truncate lg:border-0 lg:min-w-[50%] ${
-          ch2IsOnline && "border-b-2 border-white"
+          ch2Online && "border-b-2 border-white"
         }`}
       >
-        {isOnline && (
+        {ch1Online && (
           <>
             <button
               className="pl-4 sm:pl-8 pr-3 sm:pr-5 h-full grow-0 focus:outline-none focus:ring-4 flex items-center gap-4"
@@ -152,12 +153,12 @@ export default function LivePlayer() {
                 isPlaying == 1 ? "Pause Live Broadcast" : "Play Live Broadcast"
               }
             >
-              {ch2IsOnline && (
+              {ch2Online && (
                 <span className="font-medium text-small bg-white h-6 w-6 text-black rounded-sm">
                   1
                 </span>
               )}
-              <div className={`h-6 w-6 ${!ch2IsOnline && "sm:h-8 sm:w-8"}`}>
+              <div className={`h-6 w-6 ${!ch2Online && "sm:h-8 sm:w-8"}`}>
                 {isPlaying == 1 ? <Pause /> : <Play />}
               </div>
             </button>
@@ -174,12 +175,12 @@ export default function LivePlayer() {
             }
           >
             <Marquee
-              key={scheduleData?.ch1.liveNow.title + ch2IsOnline}
+              key={scheduleData?.ch1.liveNow.title + ch2Online}
               className="-mr-14"
               text={
                 <span className="pr-8">{scheduleData?.ch1.liveNow.title}</span>
               }
-              speed={ch2IsOnline ? 0.2 : 0.25}
+              speed={ch2Online ? 0.2 : 0.25}
             />
             {/* <span className="absolute left-0 top-0.5 font-medium text-small flex items-center justify-center pt-0.5 bg-white h-8 w-8 text-black rounded-sm">
               1
@@ -228,7 +229,7 @@ export default function LivePlayer() {
         )}
       </div>
 
-      {!ch2IsOnline && (
+      {ch2Online && (
         <div className="h-12 sm:h-16 flex items-center flex-1 truncate">
           <div className="w-0.5 bg-white h-full !ml-0 hidden lg:block"></div>
           <button
@@ -247,12 +248,15 @@ export default function LivePlayer() {
           </button>
 
           {!isLoading && !error && scheduleData?.ch1.liveNow?.title && (
-            <span className="flex-1 truncate mt-0.5 relative">
+            <Link
+              href={"/radio/" + scheduleData.ch2.liveNow.slug}
+              className="flex-1 truncate mt-0.5 relative"
+            >
               <Marquee
-                key={scheduleData.ch2.liveNow.title + ch2IsOnline.toString()}
+                key={scheduleData.ch2.liveNow.title + ch2Online.toString()}
                 text={
                   <span className="pr-8">
-                    {scheduleData?.ch1.liveNow.title}
+                    {scheduleData?.ch2.liveNow.title}
                   </span>
                 }
                 speed={0.3}
@@ -260,7 +264,7 @@ export default function LivePlayer() {
               {/* <span className="absolute left-0 top-0.5 font-medium text-small flex items-center justify-center pt-0.5 bg-white h-8 w-8 text-black rounded-sm">
                 2
               </span> */}
-            </span>
+            </Link>
           )}
         </div>
       )}
