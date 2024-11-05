@@ -71,10 +71,8 @@ export default function LivePlayer() {
 
   const { scheduleData, isLoading, error } = useSchedule();
 
-  console.log(error);
-
-  const isOnline = scheduleData?.status === "online";
-  const ch2IsOnline = scheduleData?.ch2?.status === "online";
+  const isOnline = scheduleData?.ch1.status === "online";
+  const ch2IsOnline = scheduleData?.ch2.status === "online";
 
   const player = useRef<HTMLAudioElement>(null);
   const source = useRef<HTMLSourceElement>(null);
@@ -104,18 +102,22 @@ export default function LivePlayer() {
   }, [isPlaying]);
 
   useEffect(() => {
-    if ("mediaSession" in navigator && scheduleData?.liveNow) {
+    if ("mediaSession" in navigator && scheduleData?.ch1.liveNow) {
       navigator.mediaSession.metadata = new MediaMetadata({
-        title: scheduleData.liveNow.title,
+        title: scheduleData.ch1.liveNow.title,
         artist: "Refuge Worldwide",
         artwork: [
           {
-            src: scheduleData.liveNow.artwork + "?w=384&h=384&fit=fill&f=faces",
+            src:
+              scheduleData.ch1.liveNow.artwork +
+              "?w=384&h=384&fit=fill&f=faces",
             sizes: "384x384",
             type: "image/png",
           },
           {
-            src: scheduleData.liveNow.artwork + "?w=512&h=512&fit=fill&f=faces",
+            src:
+              scheduleData.ch1.liveNow.artwork +
+              "?w=512&h=512&fit=fill&f=faces",
             sizes: "512x512",
             type: "image/png",
           },
@@ -162,15 +164,21 @@ export default function LivePlayer() {
           </>
         )}
 
-        {!isLoading && !error && scheduleData?.liveNow?.title && (
+        {!isLoading && !error && scheduleData?.ch1.liveNow?.title && (
           <Link
             className="flex-1 truncate mt-0.5 relative"
-            href={scheduleData?.liveNow?.link ? scheduleData.liveNow.link : ""}
+            href={
+              scheduleData?.ch1.liveNow?.link
+                ? scheduleData.ch1.liveNow.link
+                : ""
+            }
           >
             <Marquee
-              key={scheduleData?.liveNow.title + ch2IsOnline}
+              key={scheduleData?.ch1.liveNow.title + ch2IsOnline}
               className="-mr-14"
-              text={<span className="pr-8">{scheduleData?.liveNow.title}</span>}
+              text={
+                <span className="pr-8">{scheduleData?.ch1.liveNow.title}</span>
+              }
               speed={ch2IsOnline ? 0.2 : 0.25}
             />
             {/* <span className="absolute left-0 top-0.5 font-medium text-small flex items-center justify-center pt-0.5 bg-white h-8 w-8 text-black rounded-sm">
@@ -220,7 +228,7 @@ export default function LivePlayer() {
         )}
       </div>
 
-      {ch2IsOnline && (
+      {!ch2IsOnline && (
         <div className="h-12 sm:h-16 flex items-center flex-1 truncate">
           <div className="w-0.5 bg-white h-full !ml-0 hidden lg:block"></div>
           <button
@@ -238,11 +246,15 @@ export default function LivePlayer() {
             </div>
           </button>
 
-          {!isLoading && !error && scheduleData?.liveNow?.title && (
+          {!isLoading && !error && scheduleData?.ch1.liveNow?.title && (
             <span className="flex-1 truncate mt-0.5 relative">
               <Marquee
-                key={scheduleData?.ch2.liveNow + ch2IsOnline}
-                text={<span className="pr-8">{scheduleData?.ch2.liveNow}</span>}
+                key={scheduleData.ch2.liveNow.title + ch2IsOnline.toString()}
+                text={
+                  <span className="pr-8">
+                    {scheduleData?.ch1.liveNow.title}
+                  </span>
+                }
                 speed={0.3}
               />
               {/* <span className="absolute left-0 top-0.5 font-medium text-small flex items-center justify-center pt-0.5 bg-white h-8 w-8 text-black rounded-sm">

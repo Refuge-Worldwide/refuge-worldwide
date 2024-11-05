@@ -2,19 +2,28 @@ import useSWR from "swr";
 import { ScheduleShow } from "../types/shared";
 
 type Schedule = {
-  status: "online" | "offline";
-  liveNow: {
-    title: string;
-    artwork: string;
-    link?: string;
-    slug?: string;
-    isMixedFeelings?: boolean;
+  ch1: {
+    status: "online" | "offline";
+    liveNow: {
+      title: string;
+      artwork: string;
+      link?: string;
+      slug?: string;
+      isMixedFeelings?: boolean;
+    };
+    nextUp: Array<ScheduleShow>;
+    schedule: Array<ScheduleShow>;
   };
-  nextUp: Array<ScheduleShow>;
-  schedule: Array<ScheduleShow>;
   ch2: {
     status: "online" | "offline";
-    liveNow: string;
+    liveNow: {
+      title: string;
+      artwork: string;
+      link?: string;
+      slug?: string;
+      isMixedFeelings?: boolean;
+    };
+    schedule: Array<ScheduleShow>;
   };
 };
 
@@ -36,6 +45,8 @@ export default function useSchedule() {
       refreshInterval: 30 * 1000,
     }
   );
+
+  console.log(data);
 
   return {
     scheduleData: data,

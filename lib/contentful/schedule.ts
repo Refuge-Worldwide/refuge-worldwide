@@ -39,6 +39,7 @@ export async function getScheduleData() {
           date
           dateEnd
           slug
+          channel
           coverImage {
             sys {
               id
@@ -62,8 +63,11 @@ export async function getScheduleData() {
 
   const schedule = extractCollection<ScheduleShow>(res, "showCollection");
 
-  let liveNow: ScheduleShow;
-  let nextUp: Array<ScheduleShow>;
+  let liveNowCh1: ScheduleShow;
+  let liveNowCh2: ScheduleShow;
+  let nextUpCh1: Array<ScheduleShow>;
+  let ch1Schedule: Array<ScheduleShow> = [];
+  let ch2Schedule: Array<ScheduleShow> = [];
 
   schedule.forEach((show, index) => {
     show.date = dayjs(show.date)
@@ -73,13 +77,31 @@ export async function getScheduleData() {
       .subtract(cetAdjustment, "minutes")
       .toISOString();
     show.title = show.title.replace("|", "—");
-    if (!nextUp && nowUTC.isBefore(dayjs(show.dateEnd))) {
+
+    if (show.channel === "2") {
+      ch2Schedule.push(show);
+    } else {
+      ch1Schedule.push(show);
+    }
+
+    if (nowUTC.isBefore(dayjs(show.dateEnd))) {
       if (nowUTC.isAfter(dayjs(show.date))) {
-        liveNow = show;
-        nextUp = schedule.slice(index + 1, index + 5);
-        show.live = true;
+        if (show.channel !== "2" && !liveNowCh1) {
+          liveNowCh1 = show;
+          nextUpCh1 = schedule
+            .slice(index + 1, index + 5)
+            .filter((s) => s.channel !== "2");
+          show.live = true;
+        } else if (show.channel === "2" && !liveNowCh2) {
+          liveNowCh2 = show;
+          show.live = true;
+        }
       } else {
-        nextUp = schedule.slice(index, index + 4);
+        if (show.channel !== "2" && nextUpCh1.length === 0) {
+          nextUpCh1 = schedule
+            .slice(index, index + 4)
+            .filter((s) => s.channel !== "2");
+        }
       }
     }
   });
@@ -88,9 +110,16 @@ export async function getScheduleData() {
 
   return {
     data: {
-      liveNow: liveNow,
-      nextUp: nextUp,
-      schedule: schedule,
+      ch1: {
+        liveNow: liveNowCh1 || null,
+        nextUp: nextUpCh1,
+        schedule: ch1Schedule,
+      },
+      ch2: {
+        liveNow: liveNowCh2 || null,
+        nextUp: [],
+        schedule: ch2Schedule,
+      },
     },
     duration: end - start,
   };

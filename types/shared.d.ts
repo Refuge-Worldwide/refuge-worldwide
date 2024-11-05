@@ -149,6 +149,7 @@ export type ScheduleShow = {
     items: ArtistInterface[];
   };
   live?: boolean;
+  channel?: string;
 };
 
 export enum ArticleType {

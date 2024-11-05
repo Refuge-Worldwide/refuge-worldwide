@@ -60,7 +60,7 @@ export default async function handler(
     }
 
     let liveNowArtwork = radioCoData?.current_track.artwork_url;
-    const liveNowContentful = data.schedule.find((show) => {
+    const liveNowContentful = data.ch1.schedule.find((show) => {
       return show.live;
     });
 
@@ -89,13 +89,37 @@ export default async function handler(
     };
 
     const scheduleData = {
-      status: radioCoData.status,
-      liveNow: liveNow,
-      nextUp: data.nextUp,
-      schedule: data.schedule,
+      ch1: {
+        status: radioCoData.status,
+        liveNow: liveNow,
+        nextUp: data.ch1.nextUp,
+        schedule: data.ch1.schedule,
+      },
       ch2: {
         status: radioCoDataCh2?.status,
         liveNow: radioCoDataCh2?.current_track?.title,
+        schedule: [
+          {
+            title: "Channel 2 Show",
+            date: "2024-11-01T09:00:00.000Z",
+            dateEnd: "2024-11-01T11:00:00.000Z",
+            slug: "the-breakfast-show-ella-victoria-01-nov-2024",
+            artistsCollection: {
+              items: [
+                {
+                  name: "Ella Victoria",
+                  slug: "ella-victoria",
+                },
+              ],
+            },
+            coverImage: {
+              sys: {
+                id: "52GPUxEyJCP4EnQeu9G6HI",
+              },
+              url: "https://images.ctfassets.net/taoiy3h84mql/52GPUxEyJCP4EnQeu9G6HI/f2767249a2aefc04d97fc1ae369e88c3/632548a4-7365-4cab-bb55-9f8dff4e577a.JPG",
+            },
+          },
+        ],
       },
     };
 

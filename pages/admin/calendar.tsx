@@ -145,6 +145,17 @@ function Calendar() {
     },
   ];
 
+  const channelOptions = [
+    {
+      value: "1",
+      label: "1",
+    },
+    {
+      value: "2",
+      label: "2",
+    },
+  ];
+
   // useEffect(() => {
   // const interval = setInterval(() => reloadCalendar(), 30000);
   // return () => {
@@ -170,6 +181,14 @@ function Calendar() {
       label: selectedShow?.extendedProps?.status
         ? selectedShow?.extendedProps?.status
         : "TBC",
+    },
+    channel: {
+      value: selectedShow?.extendedProps?.channel
+        ? selectedShow?.extendedProps?.channel
+        : "1",
+      label: selectedShow?.extendedProps?.channel
+        ? selectedShow?.extendedProps?.channel
+        : "1",
     },
     hasExtraArtists: false,
     extraArtists: [
@@ -849,6 +868,13 @@ function Calendar() {
                           limit={1}
                           value={[initialValues.status]}
                         />
+                        <MultiSelectField
+                          label="Channel"
+                          name="channel"
+                          options={channelOptions}
+                          limit={1}
+                          value={[initialValues.channel]}
+                        />
                       </div>
                       <div className="flex justify-between items-center lg:sticky lg:bottom-0 lg:bg-white py-4 px-8 border-t border-black">
                         <button
@@ -902,11 +928,16 @@ function Calendar() {
 function renderEventContent(eventInfo) {
   return (
     <div className="p-1" id={eventInfo.event.id}>
-      <div className="mt-1 flex justify-between">
-        <p className="text-xxs font-medium">{eventInfo.timeText} </p>
+      <div className="mt-1 flex justify-between gap-2">
+        <p className="text-xxs font-medium grow">{eventInfo.timeText} </p>
         {eventInfo.event.extendedProps.type == "Pre-record" && (
           <p className="text-xxs border border-black/20 opacity-80 bg-black text-white px-1 rounded">
             Pre-rec
+          </p>
+        )}
+        {eventInfo.event.extendedProps.channel == "2" && (
+          <p className="text-xxs h-fit border border-black/20 opacity-80 bg-black text-white px-1 rounded">
+            CH2
           </p>
         )}
       </div>

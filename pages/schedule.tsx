@@ -8,7 +8,8 @@ import utc from "dayjs/plugin/utc";
 import Pill from "../components/pill";
 import Link from "next/link";
 import Loading from "../components/loading";
-import { Arrow } from "../icons/arrow";
+import * as Tabs from "@radix-ui/react-tabs";
+
 dayjs.extend(utc);
 
 export default function SchedulePage() {
@@ -16,16 +17,19 @@ export default function SchedulePage() {
   return (
     <Layout className="bg-orange">
       <PageMeta title="Schedule | Refuge Worldwide" path="schedule" />
-      <section className="p-4 sm:p-8 flex justify-between">
-        <div>
-          <Pill outline>
-            <h1>Schedule</h1>
-          </Pill>
-          <p className="mt-4 md:mt-8 text-small">
-            Displayed in your timezone: {timezone}
-          </p>
+      <section className="p-4 sm:p-8">
+        <div className="flex justify-between">
+          <div>
+            <Pill outline>
+              <h1>Schedule</h1>
+            </Pill>
+            <p className="mt-4 md:mt-8 text-small">
+              Displayed in your timezone: {timezone}
+            </p>
+          </div>
         </div>
       </section>
+
       <Schedule />
     </Layout>
   );
@@ -36,10 +40,40 @@ function Schedule() {
   if (isLoading) return <Loading />;
   if (error) return <div>Failed to Load Schedule</div>;
   return (
-    <ScheduleByDay
-      schedule={scheduleData.schedule}
-      liveNow={scheduleData.liveNow.title}
-    />
+    <Tabs.Root defaultValue="1">
+      <Tabs.List className="flex gap-4 px-4 sm:px-8">
+        <Tabs.Trigger
+          className="flex items-center gap-2 border-b-2 border-b-orange data-[state=active]:border-b-black"
+          value="1"
+        >
+          Channel{" "}
+          <span className="font-medium text-small bg-black h-6 w-6 text-white rounded-sm">
+            1
+          </span>
+        </Tabs.Trigger>
+        <Tabs.Trigger
+          className="flex items-center gap-2 border-b-2 border-b-orange data-[state=active]:border-b-black"
+          value="2"
+        >
+          Channel{" "}
+          <span className="font-medium text-small bg-black h-6 w-6 text-white rounded-sm">
+            2
+          </span>
+        </Tabs.Trigger>
+      </Tabs.List>
+      <Tabs.Content value="1">
+        <ScheduleByDay
+          schedule={scheduleData.ch1.schedule}
+          liveNow={scheduleData.ch1.liveNow.title}
+        />
+      </Tabs.Content>
+      <Tabs.Content value="2">
+        <ScheduleByDay
+          schedule={scheduleData.ch2.schedule}
+          liveNow={scheduleData.ch2.liveNow.title}
+        />
+      </Tabs.Content>
+    </Tabs.Root>
   );
 }
 
@@ -51,7 +85,6 @@ function ScheduleByDay({
   schedule: Array<ScheduleShow>;
 }) {
   const scheduleByDate: any = {};
-
   schedule.forEach((show) => {
     const utc = dayjs(show.date).utc();
     let local = utc.local();
