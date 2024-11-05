@@ -14,9 +14,9 @@ export default function NextUp() {
   const bgColour = bgOptions[Math.floor(Math.random() * bgOptions.length)];
 
   if (
-    (!isLoading && !scheduleData?.nextUp) ||
+    (!isLoading && !scheduleData?.ch1.nextUp) ||
     error ||
-    scheduleData?.liveNow.isMixedFeelings
+    scheduleData?.ch1.liveNow.isMixedFeelings
   )
     return null;
   else
@@ -38,10 +38,10 @@ export default function NextUp() {
             ) : (
               <Marquee
                 speed={0.5}
-                key={scheduleData.nextUp[0]?.title}
+                key={scheduleData.ch1.nextUp[0]?.title}
                 text={
                   <span className="h-10 flex items-center space-x-2 whitespace-nowrap px-2">
-                    {scheduleData.nextUp.map((show) => (
+                    {scheduleData.ch1.nextUp.map((show) => (
                       <p className="font-medium" key={show.title}>
                         <LocalTime dateTime={show.date} /> {show.title}{" "}
                         &#47;&#47;{" "}
