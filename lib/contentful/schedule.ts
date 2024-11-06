@@ -65,11 +65,11 @@ export async function getScheduleData() {
 
   const schedule = extractCollection<ScheduleShow>(res, "showCollection");
 
-  console.log(schedule);
+  // console.log(schedule);
 
   let liveNowCh1: ScheduleShow;
   let liveNowCh2: ScheduleShow;
-  let nextUpCh1: Array<ScheduleShow>;
+  let nextUpCh1: Array<ScheduleShow> = [];
   let ch1Schedule: Array<ScheduleShow> = [];
   let ch2Schedule: Array<ScheduleShow> = [];
 
@@ -101,7 +101,7 @@ export async function getScheduleData() {
           show.live = true;
         }
       } else {
-        if (show.channel !== "2" && nextUpCh1.length === 0) {
+        if (show.channel !== "2" && nextUpCh1.length == 0) {
           nextUpCh1 = schedule
             .slice(index, index + 4)
             .filter((s) => s.channel !== "2");
