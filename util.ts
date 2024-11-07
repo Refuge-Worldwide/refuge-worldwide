@@ -108,7 +108,9 @@ export const sortAndGroup = (data: AllArtistEntry[]): GroupedArtists[] => {
 };
 
 export const formatArtistNames = (data: ArtistInterface[]) => {
-  const names = data.map(({ name }) => name);
+  // remove null artists who are unpublished on a published show
+  const filteredData = data.filter((artist) => artist !== null);
+  const names = filteredData.map(({ name }) => name);
 
   if (names.length === 1) {
     return `with ${names[0]}`;
