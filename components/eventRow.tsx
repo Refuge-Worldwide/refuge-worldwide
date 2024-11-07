@@ -46,16 +46,16 @@ export default function EventRow({
             <div className="flex-grow text-left">{EventDate(event)}</div>
             <EventBadge eventType={event.eventType} text={event.eventType} />
           </div>
-          <div className="hidden md:block flex-initial max-w-[106px] w-full lg:col-span-1">
-            <EventBadge eventType={event.eventType} text={event.eventType} />
-          </div>
           <p className="font-medium text-smedium lg:col-span-4 md:text-small flex-grow mb-1 md:mb-0 mr-28 md:mr-0">
             {event.title}
           </p>
           <p className="lg:col-span-1 text-small flex-initial md:min-w-[140px] lg:min-w-[206px]">
             {event.location}
           </p>
-          <div className="md:col-span-1 md:justify-self-end flex-initial md:min-w-[106px]">
+          <div className="hidden md:block flex-initial max-w-[125px] w-full lg:col-span-1">
+            <EventBadge eventType={event.eventType} text={event.eventType} />
+          </div>
+          <div className="md:col-span-1 md:justify-self-end flex-initial md:min-w-[50px]">
             <BiPlus className="group-open:hidden ml-auto text-medium md:text-base -mt-9 md:mt-0" />
             <BiMinus className="hidden group-open:block ml-auto text-medium md:text-base -mt-9 md:mt-0" />
           </div>
