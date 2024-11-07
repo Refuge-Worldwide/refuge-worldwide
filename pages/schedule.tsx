@@ -41,26 +41,28 @@ function Schedule() {
   if (error) return <div>Failed to Load Schedule</div>;
   return (
     <Tabs.Root defaultValue="1">
-      <Tabs.List className="flex gap-4 px-4 sm:px-8">
-        <Tabs.Trigger
-          className="flex items-center gap-2 border-b-2 border-b-orange data-[state=active]:border-b-black"
-          value="1"
-        >
-          Channel{" "}
-          <span className="font-medium text-small bg-black h-6 w-6 text-white rounded-sm">
-            1
-          </span>
-        </Tabs.Trigger>
-        <Tabs.Trigger
-          className="flex items-center gap-2 border-b-2 border-b-orange data-[state=active]:border-b-black"
-          value="2"
-        >
-          Channel{" "}
-          <span className="font-medium text-small bg-black h-6 w-6 text-white rounded-sm">
-            2
-          </span>
-        </Tabs.Trigger>
-      </Tabs.List>
+      {scheduleData.ch2.status == "online" && (
+        <Tabs.List className="flex gap-4 px-4 sm:px-8">
+          <Tabs.Trigger
+            className="flex items-center gap-2 border-b-2 border-b-orange data-[state=active]:border-b-black"
+            value="1"
+          >
+            Channel{" "}
+            <span className="font-medium text-small bg-black h-6 w-6 text-white rounded-sm">
+              1
+            </span>
+          </Tabs.Trigger>
+          <Tabs.Trigger
+            className="flex items-center gap-2 border-b-2 border-b-orange data-[state=active]:border-b-black"
+            value="2"
+          >
+            Channel{" "}
+            <span className="font-medium text-small bg-black h-6 w-6 text-white rounded-sm">
+              2
+            </span>
+          </Tabs.Trigger>
+        </Tabs.List>
+      )}
       <Tabs.Content value="1">
         <ScheduleByDay
           schedule={scheduleData.ch1.schedule}
