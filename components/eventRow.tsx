@@ -39,7 +39,7 @@ export default function EventRow({
     <li className="block border-b border-black transition-all duration-100 px-4 sm:px-8">
       <details className="group event-accordion" onToggle={handleToggle}>
         <summary className="py-5 lg:grid-cols-8 md:flex md:gap-x-6 lg:gap-x-12 xl:gap-x-24 md:items-center cursor-pointer list-none">
-          <div className="hidden md:block lg:col-span-1 text-small flex-initial md:max-w-[100px] md:min-w-[100px] lg:min-w-[116px] ">
+          <div className="hidden md:block lg:col-span-1 text-small flex-initial md:max-w-[100px] md:min-w-[135px] ">
             {EventDate(event)}
           </div>
           <div className="flex distance-between md:hidden content-center w-full">
