@@ -89,11 +89,21 @@ export default async function handler(
     };
 
     let liveNowCh2 = {
-      title: data.ch2.liveNow
-        ? data.ch2.liveNow.title
-        : radioCoDataCh2?.current_track?.title,
-      slug: data.ch2.liveNow ? data.ch2.liveNow.slug : null,
+      title: null,
+      slug: null,
     };
+
+    if (data.ch2.liveNow) {
+      liveNowCh2 = {
+        title: data.ch2.liveNow.title,
+        slug: data.ch2.liveNow.slug,
+      };
+    } else if (radioCoDataCh2?.current_track) {
+      liveNowCh2 = {
+        title: radioCoDataCh2.current_track.title,
+        slug: null,
+      };
+    }
 
     const scheduleData = {
       ch1: {
