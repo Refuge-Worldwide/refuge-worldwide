@@ -62,6 +62,10 @@ export default function NewsPage({
       label: "Concerts",
       value: "Concert",
     },
+    {
+      label: "Film screenings",
+      value: "Film screening",
+    },
   ];
 
   const updateFilter = (value: string, label) => () => {
