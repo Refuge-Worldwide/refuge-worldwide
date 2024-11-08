@@ -11,7 +11,7 @@ async function handle(request: Request) {
 
   const images =
     searchParams.get("images") ||
-    "https://res.cloudinary.com/dqjn26pey/image/upload/v1726483539/default_image-pichi_u9id7o.jpg,https://res.cloudinary.com/dqjn26pey/image/upload/v1726483539/default_image-pichi_u9id7o.jpg,https://res.cloudinary.com/dqjn26pey/image/upload/v1726483539/default_image-pichi_u9id7o.jpg";
+    "https://res.cloudinary.com/dqjn26pey/image/upload/v1726483539/default_image-pichi_u9id7o.jpg";
   const imagesArray = decodeURIComponent(images).split(",");
   const aspects = ["12:10", "59:100", "35:100"];
   const cloudinaryTransform = `ar_${
@@ -26,11 +26,12 @@ async function handle(request: Request) {
     return transformedUrl;
   });
 
-  const title = searchParams.get("title") || "Cultural Cadence: The Levant";
-  const artists =
-    searchParams.get("artists") || "Moehecan, Yasmine Acar & Udi Raz";
+  const title = searchParams.get("title") || "Show title";
+  const artists = searchParams.get("artists") || "Moehecan";
   const date = searchParams.get("date") || "Thu 12 Sep / 15:00-16:00 (CET)";
   const colour = searchParams.get("colour") || "#00CB0D";
+
+  const isResidency = title.toLowerCase() === "residency";
 
   const fontLight = await fetch(
     new URL("../../assets/VisueltLight.otf", import.meta.url)
@@ -76,7 +77,9 @@ async function handle(request: Request) {
               tw="text-[2.75rem] font-bold flex"
               style={{ fontFamily: '"VisueltMedium"', lineHeight: "100%" }}
             >
-              {title} {isTitleWrapped && ` with ${artists}`}
+              {isResidency
+                ? artists
+                : `${title} ${isTitleWrapped ? ` with ${artists}` : ""}`}
             </div>
             <div
               tw="text-[2.75rem] mt-0.5"
@@ -98,7 +101,9 @@ async function handle(request: Request) {
                 gap: 2,
               }}
             >
-              {!isTitleWrapped && `with ${artists}`}
+              {isResidency
+                ? "Residency"
+                : `${!isTitleWrapped ? ` with ${artists}` : ""}`}
             </div>
             <div
               tw="text-[2.75rem]"
