@@ -171,3 +171,89 @@ export const transformForDropdown = (array) => {
     ...item,
   }));
 };
+
+export const socialImageURL = (values, useExtraArtists) => {
+  const images = encodeURIComponent(
+    values.image
+      .map((img) => {
+        return img.url;
+      })
+      .join(",")
+  );
+  const title = encodeURIComponent(values.showName);
+
+  let formattedArtists = values.artists
+    .map((x) => x.label)
+    .join(", ")
+    .replace(/, ([^,]*)$/, " & $1");
+
+  if (useExtraArtists && values.hasExtraArtists) {
+    console.log("using additional artists");
+    const additionalArtists = values.extraArtists
+      .map((x) => x.name)
+      .join(", ")
+      .replace(/, ([^,]*)$/, " & $1");
+
+    formattedArtists = `${formattedArtists}, ${additionalArtists}`.replace(
+      /, ([^,]*)$/,
+      " & $1"
+    );
+  }
+
+  formattedArtists = encodeURIComponent(formattedArtists);
+
+  // Format the date and time
+  const date = encodeURIComponent(
+    `${dayjs(values.datetime).utc().format("ddd DD MMM / HH:mm")}-${dayjs(
+      values.datetimeEnd
+    )
+      .utc()
+      .format("HH:mm")} (CET)`
+  );
+
+  const colours = [
+    "#cd46fd",
+    "#fd339b",
+    "#ff96ff",
+    "#f94646",
+    "#fe6301",
+    "#ff9d1d",
+    "#fffe49",
+    "#defc32",
+    "#b0b02b",
+    "#00cb0d",
+    "#32fe95",
+    "#4ac8f4",
+    "#5a60fe",
+    "#1a4afc",
+    "#ffa2b5",
+    "#facc7f",
+    "#99fffc",
+    "#99e9ff",
+    "#ab8dff",
+    "#ffd9f0",
+    "#fbffb3",
+    "#ccffd1",
+    "#ffedd9",
+    "#ccd2ff",
+  ];
+
+  // Get the day of the month
+  const dayOfMonth = dayjs(values.datetime).utc().date();
+
+  // Get a color from the colours array based on the day of the month
+  const colour = colours[dayOfMonth % colours.length];
+
+  // Determine the base URL based on the environment
+  const baseUrl =
+    process.env.NODE_ENV === "development"
+      ? "http://localhost:3000"
+      : process.env.NEXT_PUBLIC_WEBSITE_URL;
+
+  // Set URL for social image
+  const url = `${baseUrl}/api/automated-artwork?title=${title}&artists=${formattedArtists}&date=${date}&images=${images}&colour=${encodeURIComponent(
+    colour
+  )}`;
+
+  return url;
+};

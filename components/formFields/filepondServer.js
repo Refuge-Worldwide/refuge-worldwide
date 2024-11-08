@@ -42,4 +42,12 @@ export const serverOptions = {
     };
   },
   revert: null,
+  load: (source, load, error, progress, abort, headers) => {
+    var myRequest = new Request(source);
+    fetch(myRequest).then(function (response) {
+      response.blob().then(function (myBlob) {
+        load(myBlob);
+      });
+    });
+  },
 };

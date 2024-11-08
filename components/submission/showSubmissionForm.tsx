@@ -1,7 +1,8 @@
 import ShowSubmissionStep1 from "./showSubmissionStep1";
-import ShowSubmissionStep2 from "./showSubmissionStep2";
-import ShowSubmissionStep3 from "./showSubmissionStep3";
-import ShowSubmissionStep4 from "./showSubmissionStep4";
+import ShowSubmissionStepInfo from "./showSubmissionStepInfo";
+import ShowSubmissionStepForm from "./showSubmissionStepForm";
+import ShowSubmissionStepArtwork from "./showSubmissionStepArtwork";
+import ShowSubmissionStepSubmitted from "./showSubmissionStepSubmitted";
 import {
   Dropdown,
   ShowInterface,
@@ -92,6 +93,12 @@ const validationSchema = [
         ),
     }),
   }),
+  Yup.object().shape({
+    artwork: Yup.boolean().oneOf(
+      [true],
+      "Please confirm you are happy with your show artwork."
+    ),
+  }),
 ];
 
 export default function ShowSubmissionForm({
@@ -150,7 +157,7 @@ export default function ShowSubmissionForm({
     ),
   };
   const [currentStep, setCurrentStep] = useState<number>(1);
-  const isLastStep = currentStep === 2;
+  const isLastStep = currentStep === 3;
   const currentValidationSchema = validationSchema[currentStep];
   const [submissionError, setSubmissionError] = useState<boolean>(false);
 
@@ -215,14 +222,14 @@ export default function ShowSubmissionForm({
         return <ShowSubmissionStep1 />;
       case 1:
         return (
-          <ShowSubmissionStep2
+          <ShowSubmissionStepInfo
             importantInfo={importantInfo}
             showType={values.showType}
           />
         );
       case 2:
         return (
-          <ShowSubmissionStep3
+          <ShowSubmissionStepForm
             initial={initial}
             showType={values.showType}
             genres={genres}
@@ -230,7 +237,9 @@ export default function ShowSubmissionForm({
           />
         );
       case 3:
-        return <ShowSubmissionStep4 initial={initial} />;
+        return <ShowSubmissionStepArtwork />;
+      case 4:
+        return <ShowSubmissionStepSubmitted initial={initial} />;
       default:
         return <ShowSubmissionStep1 />;
     }
@@ -241,7 +250,7 @@ export default function ShowSubmissionForm({
       {/* <pre className="text-white bg-black">
         {JSON.stringify(initial, null, 2)}
       </pre> */}
-      {currentStep != 3 && (
+      {currentStep != 4 && (
         <div className="flex flex-col md:flex-row text-center items-center justify-center space-y sm:space-y-2 md:space-y-0 md:space-x-4">
           {/* <button
             onClick={() => setCurrentStep(0)}
@@ -259,8 +268,16 @@ export default function ShowSubmissionForm({
             1. Important info
           </button>
           <Arrow className="hidden md:block" />
-          <span className={currentStep == 2 ? "font-medium" : ""}>
+          <button
+            onClick={() => setCurrentStep(2)}
+            disabled={currentStep <= 2}
+            className={currentStep == 2 ? "font-medium" : ""}
+          >
             2. Submission
+          </button>
+          <Arrow className="hidden md:block" />
+          <span className={currentStep == 3 ? "font-medium" : ""}>
+            3. Artwork
           </span>
         </div>
       )}
@@ -272,7 +289,7 @@ export default function ShowSubmissionForm({
         {({ values, isSubmitting }) => (
           <Form id="showSubmissionForm">
             {step(values)}
-            {currentStep != 3 && (
+            {currentStep != 4 && (
               <div>
                 <div className="flex space-x-6 mt-6">
                   {currentStep > 1 && (

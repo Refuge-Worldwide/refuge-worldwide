@@ -26,7 +26,9 @@ async function handle(request: Request) {
     return transformedUrl;
   });
 
-  const title = searchParams.get("title") || "Show title";
+  let title = searchParams.get("title") || "Softboi Hour w/ Yāri";
+  title = title.replace(/w\/.*/, "").trim();
+
   const artists = searchParams.get("artists") || "Moehecan";
   const date = searchParams.get("date") || "Thu 12 Sep / 15:00-16:00 (CET)";
   const colour = searchParams.get("colour") || "#00CB0D";

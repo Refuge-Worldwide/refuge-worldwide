@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FilePond, registerPlugin } from "react-filepond";
 import { useField, useFormikContext } from "formik";
 import { serverOptions } from "./filepondServer";
@@ -24,6 +24,7 @@ export default function ImageUploadField({
   label,
   multi = false,
   description,
+  value,
   ...props
 }: {
   label: string;
@@ -31,9 +32,37 @@ export default function ImageUploadField({
   multi?: boolean;
   required?: boolean;
   description?: string;
+  value?: any;
 }) {
   const [field, meta, helpers] = useField(props);
   const { values, setFieldValue } = useFormikContext<any>();
+  const [files, setFiles] = useState([]);
+
+  useEffect(() => {
+    console.log(value);
+    console.log(props.name);
+    if (value) {
+      let initialImages;
+      if (multi) {
+        initialImages = value.map((image) => ({
+          source: image.url,
+          options: {
+            type: "local",
+          },
+        }));
+      } else {
+        initialImages = [
+          {
+            source: value.url,
+            options: {
+              type: "local",
+            },
+          },
+        ];
+      }
+      setFiles(initialImages);
+    }
+  }, []);
 
   // const setFieldValue(field, value){
   const imageUploaded = (file) => {
@@ -78,7 +107,7 @@ export default function ImageUploadField({
         {...field}
         {...props}
         className="min-h-36"
-        // files={files}
+        files={files}
         allowMultiple={multi}
         credits={false}
         server={serverOptions}
@@ -91,6 +120,8 @@ export default function ImageUploadField({
           }
         }}
         onupdatefiles={(files) => {
+          setFiles(files);
+          console.log(files);
           // only fire handler when image is removed.
           if (files.length < values.image.length) {
             _reorderDeleteHandler(files);

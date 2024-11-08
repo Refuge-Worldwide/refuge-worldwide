@@ -2,7 +2,7 @@ import { documentToReactComponents } from "@contentful/rich-text-react-renderer"
 import Prose from "../Prose";
 import { Field, ErrorMessage } from "formik";
 
-export default function ShowSubmissionStep2({ importantInfo, showType }) {
+export default function ShowSubmissionStepInfo({ importantInfo, showType }) {
   const importantInfoToShow = () => {
     if (showType == "Live") {
       return (
