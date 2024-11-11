@@ -122,6 +122,7 @@ export interface ShowInterface {
   };
   content: Content;
   status?: string;
+  socialImage?: CoverImage;
 }
 
 export type PastShowSchema = {

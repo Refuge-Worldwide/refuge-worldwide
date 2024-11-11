@@ -343,6 +343,12 @@ export async function getUpcomingShowsByDate(
               email
             }
           }
+          socialImage {
+            sys {
+              id
+            }
+            url
+          }
         }
       }
     }
