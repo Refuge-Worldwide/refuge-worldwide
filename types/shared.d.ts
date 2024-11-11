@@ -287,6 +287,7 @@ export type SubmissionFormValues = {
     image?: string;
   }>;
   artistsAdditionalInfo?: any[];
+  artwork: Boolean;
 };
 
 export type EventType =

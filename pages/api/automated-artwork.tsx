@@ -26,7 +26,7 @@ async function handle(request: Request) {
     return transformedUrl;
   });
 
-  let title = searchParams.get("title") || "Softboi Hour w/ Yāri";
+  let title = searchParams.get("title") || "Guest Show w/ Yāri";
   title = title.replace(/w\/.*/, "").trim();
 
   const artists = searchParams.get("artists") || "Moehecan";
@@ -34,6 +34,7 @@ async function handle(request: Request) {
   const colour = searchParams.get("colour") || "#00CB0D";
 
   const isResidency = title.toLowerCase() === "residency";
+  const isGuestShow = title.toLowerCase() === "guest show";
 
   const fontLight = await fetch(
     new URL("../../assets/VisueltLight.otf", import.meta.url)
@@ -46,6 +47,17 @@ async function handle(request: Request) {
   const fontArizona = await fetch(
     new URL("../../assets/ABCArizonaFlare.otf", import.meta.url)
   ).then((res) => res.arrayBuffer());
+
+  const lineOne = () => {
+    if (isResidency || isGuestShow) return artists;
+    else return `${title} ${isTitleWrapped ? ` with ${artists}` : ""}`;
+  };
+
+  const lineTwo = () => {
+    if (isGuestShow) return "Guest Show";
+    else if (isResidency) return "Residency";
+    else return `${!isTitleWrapped ? ` with ${artists}` : ""}`;
+  };
 
   // Create a hidden container to measure text width
   const hiddenContainer = (
@@ -79,9 +91,7 @@ async function handle(request: Request) {
               tw="text-[2.75rem] font-bold flex"
               style={{ fontFamily: '"VisueltMedium"', lineHeight: "100%" }}
             >
-              {isResidency
-                ? artists
-                : `${title} ${isTitleWrapped ? ` with ${artists}` : ""}`}
+              {lineOne()}
             </div>
             <div
               tw="text-[2.75rem] mt-0.5"
@@ -103,9 +113,7 @@ async function handle(request: Request) {
                 gap: 2,
               }}
             >
-              {isResidency
-                ? "Residency"
-                : `${!isTitleWrapped ? ` with ${artists}` : ""}`}
+              {lineTwo()}
             </div>
             <div
               tw="text-[2.75rem]"

@@ -155,6 +155,7 @@ export default function ShowSubmissionForm({
       },
       []
     ),
+    artwork: false,
   };
   const [currentStep, setCurrentStep] = useState<number>(1);
   const isLastStep = currentStep === 3;
