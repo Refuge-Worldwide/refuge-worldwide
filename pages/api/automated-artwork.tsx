@@ -205,4 +205,6 @@ async function handle(request: Request) {
   );
 }
 
+// to do. save image as png so its smaller in file size.
+
 export default handle;
