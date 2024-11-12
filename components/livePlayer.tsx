@@ -144,7 +144,7 @@ export default function LivePlayer() {
         {isOnline && (
           <>
             <button
-              className="pl-4 sm:pl-8 pr-3 sm:pr-5 h-full grow-0 outline-white flex items-center gap-4"
+              className="pl-4 sm:pl-8 pr-3 sm:pr-5 h-full grow-0 flex items-center gap-4"
               onClick={isPlaying == 1 ? pause : play}
               aria-label={
                 isPlaying == 1 ? "Pause Live Broadcast" : "Play Live Broadcast"
