@@ -17,8 +17,6 @@ export default function UpcomingShowPreview({
 }: UpcomingShowType) {
   const genres = parseGenres(genresCollection);
 
-  console.log(artistsCollection.items);
-
   const artists = formatArtistNames(artistsCollection.items);
 
   // remove artists from title
@@ -45,7 +43,6 @@ export default function UpcomingShowPreview({
           <Pill size="small">
             <span className="font-serif text-tiny sm:text-small">
               <Date dateString={date} formatString="DD MMM" />
-              {/* {date} */}
             </span>
           </Pill>
         </div>
