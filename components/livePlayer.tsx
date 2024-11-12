@@ -144,7 +144,7 @@ export default function LivePlayer() {
         {isOnline && (
           <>
             <button
-              className="pl-4 sm:pl-8 pr-3 sm:pr-5 h-full grow-0 focus:outline-none focus:ring-4 flex items-center gap-4"
+              className="pl-4 sm:pl-8 pr-3 sm:pr-5 h-full grow-0 outline-white flex items-center gap-4"
               onClick={isPlaying == 1 ? pause : play}
               aria-label={
                 isPlaying == 1 ? "Pause Live Broadcast" : "Play Live Broadcast"
@@ -224,7 +224,7 @@ export default function LivePlayer() {
         <div className="h-12 sm:h-16 flex items-center flex-1 truncate">
           <div className="w-0.5 bg-white h-full !ml-0 hidden lg:block"></div>
           <button
-            className="grow-0 focus:outline-none focus:ring-4 pl-4 sm:pl-8 pr-3 sm:pr-5 lg:px-5 h-full flex gap-4 items-center"
+            className="grow-0 pl-4 sm:pl-8 pr-3 sm:pr-5 lg:px-5 h-full flex gap-4 items-center"
             onClick={isPlaying == 2 ? pause : play2}
             aria-label={
               isPlaying == 2 ? "Pause Live Broadcast" : "Play Live Broadcast"
