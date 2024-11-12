@@ -24,7 +24,7 @@ export default function ShowBody({
 }: ShowInterface) {
   const genres = parseGenres(genresCollection);
 
-  const artists = artistsCollection.items;
+  const artists = artistsCollection.items.filter((artist) => artist !== null);
 
   const persons = (
     <Fragment>
