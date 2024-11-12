@@ -4,14 +4,14 @@ import type {
   TypeArticleFields,
   TypeArtist,
   TypeArtistFields,
-  TypeShow,
   TypeShowFields,
 } from "../../types/contentful";
 import { client } from "./client";
 import { previewClient } from "./client";
 import { s } from "@fullcalendar/core/internal-common";
+import { PastShowSchema } from "../../types/shared";
 export interface SearchData {
-  shows: TypeShow[];
+  shows: PastShowSchema[];
   articles: TypeArticle[];
   artists: TypeArtist[];
 }
@@ -36,12 +36,14 @@ export async function getSearchData(
         query: query,
 
         select: [
+          "sys.id",
           "fields.title",
           "fields.slug",
           "fields.date",
           "fields.artists",
           "fields.genres",
           "fields.coverImage",
+          "fields.mixcloudLink",
         ],
       }),
       client.getEntries<TypeArticleFields>({
@@ -74,9 +76,13 @@ export async function getSearchData(
 
   const end = Date.now();
 
-  const { items: shows } = showsCollection;
+  console.log("showsCollection", showsCollection.items);
+
+  const shows = showsCollection.items.map(parseShowToPastShowSchema);
   const { items: articles } = articlesCollection;
   const { items: artists } = artistsCollection;
+
+  console.log("shows", shows);
 
   return {
     data: { shows, articles, artists } as SearchData,
@@ -161,5 +167,17 @@ export async function getArtistSearchData(
   return {
     items,
     duration: end - start,
+  };
+}
+
+function parseShowToPastShowSchema(show): PastShowSchema {
+  return {
+    date: show.fields?.date,
+    id: show.sys?.id,
+    title: show.fields?.title,
+    slug: show.fields?.slug,
+    coverImage: show.fields?.coverImage?.fields.file.url,
+    mixcloudLink: show.fields?.mixcloudLink,
+    genres: show.fields?.genres.map((genre) => genre.fields.name),
   };
 }
