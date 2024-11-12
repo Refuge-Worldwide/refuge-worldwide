@@ -62,20 +62,18 @@ export default function NewsPage({
       label: "Concerts",
       value: "Concert",
     },
+    {
+      label: "Film screenings",
+      value: "Film screening",
+    },
   ];
 
   const updateFilter = (value: string, label) => () => {
     if (value == filter) {
-      // router.push(`/events`, undefined, {
-      //   shallow: true,
-      // });
       setFilter("");
       setTitle("events");
       sortEvents(events);
     } else {
-      // router.push(`/events?type=${encodeURIComponent(value)}`, undefined, {
-      //   shallow: true,
-      // });
       setFilter(value);
       setTitle(label.toLowerCase());
       sortEvents(filterEvents(value));
@@ -187,8 +185,6 @@ export default function NewsPage({
 
       <div className="">
         <div className="max-w-screen-xl mx-auto">
-          {/* <pre>{JSON.stringify(upcomingEvents, null, 2)}</pre> */}
-          {/* <pre>{JSON.stringify(pastEvents, null, 2)}</pre> */}
           {Object.keys(upcomingEvents).length > 0 ? (
             <UpcomingEvents events={upcomingEvents} />
           ) : (

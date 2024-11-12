@@ -298,7 +298,8 @@ export type EventType =
   | "Hang out"
   | "Exhibition"
   | "Festival"
-  | "Concert";
+  | "Concert"
+  | "Film screening";
 export interface EventInterface {
   title: string;
   coverImage?: CoverImage;
