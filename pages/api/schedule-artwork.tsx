@@ -46,27 +46,17 @@ async function handle(request: Request) {
   const response = await fetch(`${BASE_URL}/api/schedule`);
   const schedule = await response.json();
 
-  const limitedSchedule = schedule.schedule.slice(0, 9);
-  limitedSchedule.push({
-    date: "2024-09-09T22:00:00Z",
-    title: "Repeats Playlist",
+  let todaysSchedule = [];
+
+  schedule.schedule.forEach((show) => {
+    const date = dayjs(show.date);
+    const adjustedDate = date.subtract(5, "hour");
+    if (adjustedDate.isSame(dayjs(), "day")) {
+      todaysSchedule.push(show);
+    }
   });
 
-  // const schedule = [
-  //   { time: "10:00", show: "The Breakfast Show Nordberg" },
-  //   { time: "11:00", show: "Morning Jazz with Alice" },
-  //   { time: "12:00", show: "Noon Beats by DJ Mike" },
-  //   { time: "13:00", show: "Afternoon Groove with Sarah" },
-  //   { time: "14:00", show: "Rock Hour with John" },
-  //   { time: "15:00", show: "Electronic Vibes by Emma" },
-  //   { time: "16:00", show: "Evening Chill with Dave" },
-  //   { time: "17:00", show: "Night Tunes by DJ Luna" },
-  //   { time: "18:00", show: "Hip Hop Hour with Chris" },
-  //   { time: "19:00", show: "Classical Evening with Anna" },
-  //   { time: "20:00", show: "Indie Hour with Ben" },
-  //   { time: "21:00", show: "Late Night Jazz with Ella" },
-  //   { time: "22:00", show: "Repeats Playlist" },
-  // ]
+  const longSchedule = todaysSchedule.length > 10;
 
   const fontLight = await fetch(
     new URL("../../assets/VisueltLight.otf", import.meta.url)
@@ -82,20 +72,35 @@ async function handle(request: Request) {
 
   return new ImageResponse(
     (
-      <div tw="flex flex-col w-full h-full px-[15px] pt-[147px] pb-[20px] text-white bg-opacity-0	">
+      <div
+        tw={`flex flex-col w-full h-full px-[15px] pb-[20px] text-white bg-opacity-0 ${
+          longSchedule ? "pt-[73.5px]" : "pt-[147px]"
+        }`}
+      >
+        <div
+          tw="flex justify-center items-center mt-4"
+          style={{
+            position: "absolute",
+            [randomPosition.topOrBottom]: "10px",
+            left: `${randomPosition.left}px`,
+            transform: `rotate(${randomPosition.rotation}deg)`,
+          }}
+        >
+          <img src={randomSticker} alt="Random Sticker" tw="w-[285px]" />
+        </div>
         <div tw="flex">
           <div tw="flex flex-col grow border border-white px-4 py-2">
             <div
               tw="text-[50px] font-bold flex"
               style={{ fontFamily: '"VisueltMedium"', lineHeight: "100%" }}
             >
-              Today on the radio
+              Today On The Radio
             </div>
             <div
               tw="text-[50px] font-bold flex"
               style={{ fontFamily: '"fontArizona"', lineHeight: "90%" }}
             >
-              {dayjs().format("d MMMM YYYY")}
+              {dayjs().format("D MMMM YYYY")}
             </div>
           </div>
           <div tw="flex justify-center items-center w-[206px] border-white border ml-[9.6px] py-[13px]">
@@ -131,7 +136,7 @@ async function handle(request: Request) {
             gap: 30,
           }}
         >
-          {limitedSchedule.map((item, index) => (
+          {todaysSchedule.map((item, index) => (
             <div tw="flex pl-[27px]" key={item.date}>
               <div
                 tw="text-[50px] font-bold flex w-[266px]"
@@ -147,6 +152,22 @@ async function handle(request: Request) {
               </div>
             </div>
           ))}
+          <div tw="flex pl-[27px]">
+            <div
+              tw="text-[50px] font-bold flex w-[266px]"
+              style={{ fontFamily: '"VisueltMedium"', lineHeight: "100%" }}
+            >
+              {dayjs(todaysSchedule[todaysSchedule.length - 1].dateEnd).format(
+                "HH:mm"
+              )}
+            </div>
+            <div
+              tw="text-[50px] font-bold flex w-[615px]"
+              style={{ fontFamily: '"VisueltMedium"', lineHeight: "100%" }}
+            >
+              Repeats Playlist
+            </div>
+          </div>
         </div>
         <div tw={`flex justify-center`}>
           <div
@@ -155,17 +176,6 @@ async function handle(request: Request) {
           >
             refugeworldwide.com
           </div>
-        </div>
-        <div
-          tw="flex justify-center items-center mt-4"
-          style={{
-            position: "absolute",
-            [randomPosition.topOrBottom]: "10px",
-            left: `${randomPosition.left}px`,
-            transform: `rotate(${randomPosition.rotation}deg)`,
-          }}
-        >
-          <img src={randomSticker} alt="Random Sticker" tw="w-[285px]" />
         </div>
       </div>
     ),

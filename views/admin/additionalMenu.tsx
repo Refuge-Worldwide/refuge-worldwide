@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 import dayjs from "dayjs";
 import { RxDotsVertical } from "react-icons/rx";
 import CalendarInsta from "./calendarInsta";
+import Link from "next/link";
 
 export default function ShowArtworkModal() {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
@@ -110,6 +111,11 @@ export default function ShowArtworkModal() {
         </DropdownMenu.Item>
         <DropdownMenu.Item asChild onSelect={(e) => e.preventDefault()}>
           <CalendarInsta />
+        </DropdownMenu.Item>
+        <DropdownMenu.Item className="hover:bg-black/10 px-2 py-1 rounded-lg">
+          <Link href="/admin/daily-schedule-generator">
+            Daily Schedule Artwork
+          </Link>
         </DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu.Root>
