@@ -1,5 +1,12 @@
 import { ImageResponse } from "@vercel/og";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
+const cetAdjustment = dayjs().tz("Europe/Berlin").utcOffset();
 
 export const config = {
   runtime: "experimental-edge",
@@ -142,7 +149,9 @@ async function handle(request: Request) {
                 tw="text-[50px] font-bold flex w-[266px]"
                 style={{ fontFamily: '"VisueltMedium"', lineHeight: "100%" }}
               >
-                {dayjs(item.date).format("HH:mm")}
+                {dayjs(item.date.slice(0, -1))
+                  .add(cetAdjustment, "minutes")
+                  .format("HH:mm")}
               </div>
               <div
                 tw="text-[50px] font-bold flex w-[615px]"
@@ -157,9 +166,11 @@ async function handle(request: Request) {
               tw="text-[50px] font-bold flex w-[266px]"
               style={{ fontFamily: '"VisueltMedium"', lineHeight: "100%" }}
             >
-              {dayjs(todaysSchedule[todaysSchedule.length - 1].dateEnd).format(
-                "HH:mm"
-              )}
+              {dayjs(
+                todaysSchedule[todaysSchedule.length - 1].dateEnd.slice(0, -1)
+              )
+                .add(cetAdjustment, "minutes")
+                .format("HH:mm")}
             </div>
             <div
               tw="text-[50px] font-bold flex w-[615px]"
