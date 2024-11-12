@@ -24,12 +24,13 @@ export default function ShowBody({
 }: ShowInterface) {
   const genres = parseGenres(genresCollection);
 
-  const artists = artistsCollection.items;
+  const artists = artistsCollection.items.filter((artist) => artist !== null);
 
   const persons = (
     <Fragment>
       {artists?.map((artist, i) => {
         const isLast = artists.length === i + 1;
+        const isSecondLast = artists.length === i + 2;
 
         const a = (
           <Link key={i} href={`/artists/${artist.slug}`} className="underline">
@@ -40,6 +41,8 @@ export default function ShowBody({
         if (artists.length === 1) return a;
 
         if (isLast) return <Fragment key={i}>and {a}</Fragment>;
+
+        if (isSecondLast) return <Fragment key={i}>{a} </Fragment>;
 
         return <Fragment key={i}>{a}, </Fragment>;
       })}
