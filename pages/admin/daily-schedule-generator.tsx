@@ -44,7 +44,7 @@ const ScheduleArtworkPage: NextPage & {
         alignItems: "center",
       }}
     >
-      <div className="h-[80vh]">
+      <div className="h-[80vh] flex items-center align-middle">
         {imageUrl ? (
           <img
             className="border border-white"
@@ -53,7 +53,7 @@ const ScheduleArtworkPage: NextPage & {
             style={{ maxWidth: "100%", maxHeight: "80vh" }}
           />
         ) : (
-          <p>Loading...</p>
+          <p className="text-white animate-pulse">Loading...</p>
         )}
         <div />
       </div>
