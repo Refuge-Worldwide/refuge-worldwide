@@ -37,7 +37,9 @@ export default async function handler(
     let radioCoDataCh2: RadioCo;
 
     try {
-      const ch1 = await fetch("https://public.radio.co/stations/s36e49/status");
+      const ch1 = await fetch(
+        "https://public.radio.co/stations/s3699c5e49/status"
+      );
 
       if (!ch1.ok) {
         throw new Error(`HTTP error! status: ${ch1.status}`);
