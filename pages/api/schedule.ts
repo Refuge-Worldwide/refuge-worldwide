@@ -33,33 +33,36 @@ export default async function handler(
 ) {
   try {
     const { data, duration } = await getScheduleData();
-    let radioCoData: RadioCo;
+    let radioCoDataCh1: RadioCo;
     let radioCoDataCh2: RadioCo;
 
     try {
-      const r = await fetch(
-        "https://public.radio.co/stations/s3699c5e49/status"
-      );
+      const ch1 = await fetch("https://public.radio.co/stations/s36e49/status");
 
-      if (!r.ok) {
-        throw new Error(`HTTP error! status: ${r.status}`);
+      if (!ch1.ok) {
+        throw new Error(`HTTP error! status: ${ch1.status}`);
       }
 
-      radioCoData = await r.json();
+      radioCoDataCh1 = await ch1.json();
     } catch (error) {
-      throw new Error(error.message);
+      console.error("Failed to fetch ch1 data:", error);
     }
 
     try {
       const ch2 = await fetch(
         "https://public.radio.co/stations/s8ce53d687/status"
       );
+
+      if (!ch2.ok) {
+        throw new Error(`HTTP error! status: ${ch2.status}`);
+      }
+
       radioCoDataCh2 = await ch2.json();
     } catch (error) {
-      console.log("error loading channel 2: " + error.message);
+      console.log("Failed to fetch ch1 data:" + error);
     }
 
-    let liveNowArtwork = radioCoData?.current_track.artwork_url;
+    let liveNowArtwork = radioCoDataCh1?.current_track.artwork_url;
     const liveNowContentful = data.schedule.find((show) => {
       return show.live;
     });
@@ -69,12 +72,14 @@ export default async function handler(
     }
 
     const liveNowTitle = () => {
-      if (radioCoData.current_track.title.includes("!OVERWRITE!")) {
-        return radioCoData.current_track.title.replace("!OVERWRITE!", "");
+      if (radioCoDataCh1?.current_track.title.includes("!OVERWRITE!")) {
+        return radioCoDataCh1?.current_track.title.replace("!OVERWRITE!", "");
       } else if (liveNowContentful) {
         return liveNowContentful.title;
+      } else if (radioCoDataCh1?.current_track.title) {
+        return radioCoDataCh1.current_track.title;
       } else {
-        return radioCoData.current_track.title;
+        return "Refuge Worldwide";
       }
     };
 
@@ -89,12 +94,12 @@ export default async function handler(
     };
 
     const scheduleData = {
-      status: radioCoData.status,
+      status: radioCoDataCh1 ? radioCoDataCh1?.status : "online",
       liveNow: liveNow,
       nextUp: data.nextUp,
       schedule: data.schedule,
       ch2: {
-        status: radioCoDataCh2?.status,
+        status: radioCoDataCh2 ? radioCoDataCh2?.status : "online",
         liveNow: radioCoDataCh2?.current_track?.title,
       },
     };
