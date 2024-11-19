@@ -64,6 +64,7 @@ async function handle(request: Request) {
   });
 
   const longSchedule = todaysSchedule.length > 10;
+  const extraLongSchedule = todaysSchedule.length > 11;
 
   const fontLight = await fetch(
     new URL("../../assets/VisueltLight.otf", import.meta.url)
@@ -79,11 +80,7 @@ async function handle(request: Request) {
 
   return new ImageResponse(
     (
-      <div
-        tw={`flex flex-col w-full h-full px-[15px] pb-[20px] text-white bg-opacity-0 ${
-          longSchedule ? "pt-[73.5px]" : "pt-[147px]"
-        }`}
-      >
+      <div tw="flex flex-col w-full h-full px-[15px] pb-[20px] text-white bg-opacity-0 pt-[147px]">
         <div
           tw="flex justify-center items-center mt-4"
           style={{
@@ -138,15 +135,21 @@ async function handle(request: Request) {
           </div>
         </div>
         <div
-          tw="flex flex-col grow w-full grow pt-[78.5px]"
+          tw={`flex flex-col grow w-full grow  ${
+            longSchedule ? "justify-center" : "pt-[78.5px]"
+          }`}
           style={{
-            gap: 30,
+            gap: extraLongSchedule ? 24 : 30,
           }}
         >
           {todaysSchedule.map((item, index) => (
             <div tw="flex pl-[27px]" key={item.date}>
               <div
-                tw="text-[50px] font-bold flex w-[266px]"
+                tw={`font-bold flex ${
+                  extraLongSchedule
+                    ? "w-[200px] text-[45px]"
+                    : "w-[266px] text-[50px]"
+                }`}
                 style={{ fontFamily: '"VisueltMedium"', lineHeight: "100%" }}
               >
                 {dayjs(item.date.slice(0, -1))
@@ -154,7 +157,11 @@ async function handle(request: Request) {
                   .format("HH:mm")}
               </div>
               <div
-                tw="text-[50px] font-bold flex w-[615px]"
+                tw={` font-bold flex ${
+                  extraLongSchedule
+                    ? "w-[750px] text-[45px]"
+                    : "w-[615px] text-[50px]"
+                }`}
                 style={{ fontFamily: '"VisueltMedium"', lineHeight: "100%" }}
               >
                 {item.title}
@@ -163,7 +170,11 @@ async function handle(request: Request) {
           ))}
           <div tw="flex pl-[27px]">
             <div
-              tw="text-[50px] font-bold flex w-[266px]"
+              tw={`font-bold flex ${
+                extraLongSchedule
+                  ? "w-[200px] text-[45px]"
+                  : "w-[266px] text-[50px]"
+              }`}
               style={{ fontFamily: '"VisueltMedium"', lineHeight: "100%" }}
             >
               {dayjs(
@@ -173,7 +184,11 @@ async function handle(request: Request) {
                 .format("HH:mm")}
             </div>
             <div
-              tw="text-[50px] font-bold flex w-[615px]"
+              tw={` font-bold flex ${
+                extraLongSchedule
+                  ? "w-[750px] text-[45px]"
+                  : "w-[615px] text-[50px]"
+              }`}
               style={{ fontFamily: '"VisueltMedium"', lineHeight: "100%" }}
             >
               Repeats Playlist
@@ -182,7 +197,7 @@ async function handle(request: Request) {
         </div>
         <div tw={`flex justify-center`}>
           <div
-            tw={`flex text-[46px] pb-3 px-4 pt-2 border-white border`}
+            tw={`flex text-[45px] pb-3 px-4 pt-2 border-white border`}
             style={{ fontFamily: '"fontArizona"', lineHeight: "90%" }}
           >
             refugeworldwide.com
