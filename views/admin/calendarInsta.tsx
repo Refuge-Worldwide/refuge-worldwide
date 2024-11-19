@@ -8,6 +8,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import { useRef } from "react";
+import toast from "react-hot-toast";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -17,6 +18,7 @@ export default function CalendarInsta() {
   const [data, setData] = useState(null);
   const [isLoading, setLoading] = useState(true);
   const instaText = useRef<HTMLParagraphElement>(null);
+  const instaHandles = useRef<HTMLDivElement>(null);
   const [copied, setCopied] = useState<boolean>(false);
 
   useEffect(() => {
@@ -32,10 +34,21 @@ export default function CalendarInsta() {
     navigator.clipboard
       .writeText(instaText.current?.innerText)
       .then(() => {
-        setCopied(true);
+        toast.success("Copied to your clipboard");
       })
       .catch(() => {
-        alert("something went wrong");
+        toast.error("Uh oh, something went wrong :/");
+      });
+  };
+
+  const copyHandles = () => {
+    navigator.clipboard
+      .writeText(instaHandles.current?.innerText)
+      .then(() => {
+        toast.success("Copied to your clipboard");
+      })
+      .catch(() => {
+        toast.error("Uh oh, something went wrong :/");
       });
   };
 
@@ -100,18 +113,28 @@ export default function CalendarInsta() {
                 <br />
                 🎙Roll call:
                 <br />
-                {data.map((show) => (
-                  <>
-                    {show.instagramHandles} <br />
-                  </>
-                ))}
+                <div ref={instaHandles}>
+                  {data.map((show) => (
+                    <>
+                      {show.instagramHandles} <br />
+                    </>
+                  ))}
+                </div>
               </p>
-              <button
-                className="fixed top-2 right-2 z-10 hover:bg-black/10 px-2 py-1 rounded-lg border"
-                onClick={() => copyText()}
-              >
-                {copied ? <span>Copied :)</span> : <span>Copy text</span>}
-              </button>
+              <div className="flex gap-2 fixed top-2 right-2 z-10">
+                <button
+                  className="hover:bg-black/10 px-2 py-1 rounded-lg border"
+                  onClick={() => copyHandles()}
+                >
+                  <span>Copy handles</span>
+                </button>
+                <button
+                  className="hover:bg-black/10 px-2 py-1 rounded-lg border"
+                  onClick={() => copyText()}
+                >
+                  <span>Copy it all</span>
+                </button>
+              </div>
             </div>
           )}
         </Dialog.Content>
