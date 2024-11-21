@@ -27,7 +27,7 @@ interface EmailProps {
   showDateStart: string;
   showDateEnd: string;
   showType: "Live" | "Pre-record";
-  severity: "confirmation" | "confirmation" | "initial" | "follow-up" | "late";
+  severity: "confirmation" | "initial" | "follow-up" | "late";
   showId: string;
 }
 
@@ -39,10 +39,10 @@ const baseUrl = "https://refugeworldwide.com/";
 
 export const ShowSubmissionEmail = ({
   userName = "Gramrcy",
-  showDateStart = "2024-05-15T15:00:00.000Z",
-  showDateEnd = "2024-05-15T17:00:00.000Z",
+  showDateStart = "2025-05-15T15:00:00.000Z",
+  showDateEnd = "2025-05-15T17:00:00.000Z",
   showType = "Live",
-  severity = "confirmation",
+  severity = "late",
   showId = "7JIvNxsqyZcPZsw2PJGzIx",
 }: EmailProps) => {
   const startDate = dayjs(showDateStart).utc();
@@ -58,6 +58,24 @@ export const ShowSubmissionEmail = ({
     .format("dddd Do MMMM");
   const submitUrl = baseUrl + "submission-v2?id=" + showId;
   const showFormLink = startDate.diff(dayjs(), "day") < 10;
+
+  const emailContent = () => {
+    switch (severity) {
+      case "initial":
+        return initialText(formattedDate, submitUrl, submissionDeadlineDate);
+      case "follow-up":
+        return followUpText(formattedDate, submitUrl, submissionDeadlineDate);
+      case "late":
+        return lateText(formattedDate, submitUrl, submissionDeadlineDate);
+      default:
+        return confirmationText(
+          formattedDate,
+          showFormLink,
+          submitUrl,
+          submissionDeadlineDate
+        );
+    }
+  };
   return (
     <Html>
       <Head />
@@ -86,65 +104,7 @@ export const ShowSubmissionEmail = ({
                 >
                   Hi {userName},{" "}
                 </Heading>
-
-                {severity == "confirmation" ? (
-                  <Text style={paragraph}>
-                    This email confirms your show on Refuge Worldwide on{" "}
-                    {formattedDate}.
-                    {!showFormLink && (
-                      <>
-                        {" "}
-                        You’ll receive an email from us closer to your show date
-                        – in the meantime, please feel free to add it to your
-                        calendar.
-                      </>
-                    )}{" "}
-                    We look forward to welcoming you to the station!
-                    {showFormLink && (
-                      <>
-                        {" "}
-                        Please fill out the{" "}
-                        <Link style={link} href={submitUrl}>
-                          submission form
-                        </Link>{" "}
-                        linked below as soon as possible and by{" "}
-                        <span
-                          style={{
-                            color: "#FF0000",
-                            display: "inline",
-                            fontWeight: "bold",
-                          }}
-                        >
-                          {submissionDeadlineDate} at the latest
-                        </span>
-                        .
-                      </>
-                    )}
-                  </Text>
-                ) : (
-                  <Text style={paragraph}>
-                    {severity == "follow-up" && <>Final call for info! </>}
-                    {severity == "late" && (
-                      <span style={{ fontWeight: "bold" }}>
-                        Your submission is late!{" "}
-                      </span>
-                    )}
-                    We need some essential information ahead of your show on{" "}
-                    {formattedDate}. Please fill out the{" "}
-                    <Link style={link} href={submitUrl}>
-                      submission form
-                    </Link>{" "}
-                    linked below{" "}
-                    {severityText(severity, submissionDeadlineDate)}.
-                  </Text>
-                )}
-                {showFormLink && (
-                  <>
-                    <Button href={submitUrl} style={button} pY={9} pX={12}>
-                      SHOW SUBMISSION FORM
-                    </Button>
-                  </>
-                )}
+                {emailContent()}
                 <Hr style={seperator} />
                 <Heading as="h2" style={paragraph}>
                   <b>Your upcoming show</b>
@@ -189,11 +149,68 @@ export const ShowSubmissionEmail = ({
   );
 };
 
-const severityText = (level: string, date: string) => {
-  if (level == "initial") {
-    return (
-      <span>
-        as soon as possible and by{" "}
+const confirmationText = (
+  formattedDate: string,
+  showFormLink: boolean,
+  submitUrl: string,
+  submissionDeadlineDate: string
+) => {
+  return (
+    <>
+      <Text style={paragraph}>
+        This email confirms your show on Refuge Worldwide on {formattedDate}.
+        {!showFormLink && (
+          <>
+            {" "}
+            You’ll receive an email from us closer to your show date – in the
+            meantime, please feel free to add it to your calendar.
+          </>
+        )}{" "}
+        We look forward to welcoming you to the station!
+      </Text>
+      {showFormLink && (
+        <>
+          <Text style={paragraph}>
+            Please fill out the{" "}
+            <Link style={link} href={submitUrl}>
+              submission form
+            </Link>{" "}
+            linked below as soon as possible and by{" "}
+            <span
+              style={{
+                color: "#FF0000",
+                display: "inline",
+                fontWeight: "bold",
+              }}
+            >
+              {submissionDeadlineDate} at the latest
+            </span>
+          </Text>
+          {submissionButton(submitUrl)}
+        </>
+      )}
+      <Text style={paragraph}>
+        Please note: Any previously confirmed shows taking place before this one
+        are still happening!
+      </Text>
+    </>
+  );
+};
+
+const initialText = (
+  formattedDate: string,
+  submitUrl: string,
+  submissionDeadlineDate: string
+) => {
+  return (
+    <>
+      <Text style={paragraph}>
+        We need some essential information ahead of your show on {formattedDate}
+        . Please fill out the{" "}
+        <Link style={link} href={submitUrl}>
+          submission form
+        </Link>{" "}
+        linked below as soon as possible and by{" "}
         <span
           style={{
             color: "#FF0000",
@@ -201,13 +218,38 @@ const severityText = (level: string, date: string) => {
             fontWeight: "bold",
           }}
         >
-          {date} at the latest
+          {submissionDeadlineDate} at the latest.
         </span>
-      </span>
-    );
-  } else if (level == "follow-up") {
-    return (
-      <span>
+      </Text>
+      {submissionButton(submitUrl)}
+      <Text style={paragraph}>
+        Completion of the submission form is required to confirm your attendance
+        in person on the day (or that you will submit your pre-recorded show on
+        time). Failure to complete the form by the specified date will result in
+        your show being rescheduled or cancelled.
+      </Text>
+      <Text style={paragraph}>
+        Please get in touch by replying to this email if there are any questions
+        or issues!
+      </Text>
+    </>
+  );
+};
+
+const followUpText = (
+  formattedDate: string,
+  submitUrl: string,
+  submissionDeadlineDate: string
+) => {
+  return (
+    <>
+      <Text style={paragraph}>
+        Final call for info! We need some essential information ahead of your
+        show on {formattedDate}. Please fill out the{" "}
+        <Link style={link} href={submitUrl}>
+          submission form
+        </Link>{" "}
+        linked below as soon as possible and{" "}
         <span
           style={{
             color: "#FF0000",
@@ -215,14 +257,51 @@ const severityText = (level: string, date: string) => {
             fontWeight: "bold",
           }}
         >
-          as soon as possible
+          no later than the end of the day tomorrow.
+        </span>
+      </Text>
+      {submissionButton(submitUrl)}
+      <Text style={paragraph}>
+        <span
+          style={{
+            color: "#FF0000",
+            display: "inline",
+            fontWeight: "bold",
+          }}
+        >
+          Please remember:
         </span>{" "}
-        and no later than tomorrow
-      </span>
-    );
-  } else {
-    return (
-      <span>
+        Completion of the submission form is required to confirm your attendance
+        in person on the day (or that you will submit your pre-recorded show on
+        time). Failure to complete the form by the specified date will result in
+        your show being rescheduled or cancelled.
+      </Text>
+      <Text style={paragraph}>
+        Please get in touch by replying to this email if there are any questions
+        or issues!
+      </Text>
+    </>
+  );
+};
+
+const lateText = (
+  formattedDate: string,
+  submitUrl: string,
+  submissionDeadlineDate: string
+) => {
+  return (
+    <>
+      <Text style={paragraph}>
+        Your submission is late! We need some essential information ahead of
+        your show on {formattedDate}. Please fill out the{" "}
+        <Link style={link} href={submitUrl}>
+          submission form
+        </Link>{" "}
+        linked below by the end of the day today. Failure to complete the form
+        will result in your show being rescheduled or cancelled.
+      </Text>
+      {submissionButton(submitUrl)}
+      <Text style={paragraph}>
         <span
           style={{
             color: "#FF0000",
@@ -230,12 +309,26 @@ const severityText = (level: string, date: string) => {
             fontWeight: "bold",
           }}
         >
-          by the end of today{" "}
-        </span>
-        otherwise we will have to sadly cancel your show
-      </span>
-    );
-  }
+          Please remember:
+        </span>{" "}
+        Failure to complete the form by the specified date will result in your
+        show being rescheduled or cancelled. Consistent late submissions will
+        count against the possibility of future shows – we hope you understand.
+      </Text>
+      <Text style={paragraph}>
+        Please get in touch by replying to this email if there are any questions
+        or issues!
+      </Text>
+    </>
+  );
+};
+
+const submissionButton = (submitUrl: string) => {
+  return (
+    <Button href={submitUrl} style={button} pY={9} pX={12}>
+      SHOW SUBMISSION FORM
+    </Button>
+  );
 };
 
 export const preview = (severity: string) => {
