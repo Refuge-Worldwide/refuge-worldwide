@@ -12,7 +12,7 @@ import {
 } from "../../lib/contentful/management";
 import { getShowById } from "../../lib/contentful/pages/submission";
 import { sendSlackMessage } from "../../lib/slack";
-import { socialImageURL } from "../../util";
+import { showArtworkURL } from "../../util";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -388,21 +388,21 @@ const uploadImage = async (name, image) => {
   }
 };
 
-const socialImage = async (values) => {
+const showArtwork = async (values) => {
   // Get URL for social image
-  const url = socialImageURL(values);
+  const url = showArtworkURL(values);
 
-  const socialImage = {
+  const showArtwork = {
     url: url,
     type: "image/png",
     filename: values.showName + "-show-artwork.png",
   };
 
-  const socialImageId = await uploadImage(
+  const showArtworkId = await uploadImage(
     values.showName + " - show artwork",
-    socialImage
+    showArtwork
   );
-  return socialImageId;
+  return showArtworkId;
 };
 
 const formatInstaHandles = (handles) => {
@@ -476,7 +476,7 @@ export default async function handler(
         }
         // wrap social image in another try block so it doesnt blcok the main submission
         try {
-          values.socialImage = await socialImage(values);
+          values.showArtwork = await showArtwork(values);
         } catch (err) {
           sendSlackMessage(
             "Error generating social image for " + values.name,

@@ -1,6 +1,6 @@
 import { useFormikContext, Field, ErrorMessage } from "formik";
 import { useState, useEffect } from "react";
-import { socialImageURL } from "../../util";
+import { showArtworkURL } from "../../util";
 import { SubmissionFormValues } from "../../types/shared";
 
 export default function ShowSubmissionStepArtwork() {
@@ -11,7 +11,7 @@ export default function ShowSubmissionStepArtwork() {
 
   const fetchImage = async () => {
     setLoading(true);
-    const surl = socialImageURL(values, true);
+    const surl = showArtworkURL(values, true);
     console.log(surl);
     const response = await fetch(surl);
     const blob = await response.blob();

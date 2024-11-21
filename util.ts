@@ -172,7 +172,7 @@ export const transformForDropdown = (array) => {
   }));
 };
 
-export const socialImageURL = (values, useExtraArtists = false) => {
+export const showArtworkURL = (values, useExtraArtists = false) => {
   const images = encodeURIComponent(
     values.image
       .map((img) => {
