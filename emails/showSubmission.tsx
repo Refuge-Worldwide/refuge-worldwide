@@ -42,7 +42,7 @@ export const ShowSubmissionEmail = ({
   showDateStart = "2025-05-15T15:00:00.000Z",
   showDateEnd = "2025-05-15T17:00:00.000Z",
   showType = "Live",
-  severity = "late",
+  severity = "confirmation",
   showId = "7JIvNxsqyZcPZsw2PJGzIx",
 }: EmailProps) => {
   const startDate = dayjs(showDateStart).utc();
@@ -162,8 +162,9 @@ const confirmationText = (
         {!showFormLink && (
           <>
             {" "}
-            You’ll receive an email from us closer to your show date – in the
-            meantime, please feel free to add it to your calendar.
+            You’ll receive an email from us closer to the date of your show – in
+            the meantime, please feel free to add it to your calendar. We look
+            forward to welcoming you to the station!
           </>
         )}{" "}
         We look forward to welcoming you to the station!
