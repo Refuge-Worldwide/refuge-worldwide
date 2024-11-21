@@ -13,7 +13,7 @@
     },
     {
       "path": "/api/cron/artwork-email",
-      "schedule": "15 9 * * *"
+      "schedule": "30 17 * * *"
     }
   ]
 }

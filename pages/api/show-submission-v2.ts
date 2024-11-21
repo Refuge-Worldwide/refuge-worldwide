@@ -395,11 +395,11 @@ const socialImage = async (values) => {
   const socialImage = {
     url: url,
     type: "image/png",
-    filename: values.showName + "-social-image.png",
+    filename: values.showName + "-show-artwork.png",
   };
 
   const socialImageId = await uploadImage(
-    values.showName + " - social image",
+    values.showName + " - show artwork",
     socialImage
   );
   return socialImageId;
