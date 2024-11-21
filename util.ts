@@ -224,8 +224,6 @@ export const showArtworkURL = (values, useExtraArtists = false) => {
     "#00cb0d",
     "#32fe95",
     "#4ac8f4",
-    "#5a60fe",
-    "#1a4afc",
     "#ffa2b5",
     "#facc7f",
     "#99fffc",
