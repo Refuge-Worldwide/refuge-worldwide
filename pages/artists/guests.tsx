@@ -6,10 +6,8 @@ import Layout from "../../components/layout";
 import Pill from "../../components/pill";
 import PageMeta from "../../components/seo/page";
 import { getArtistsPage } from "../../lib/contentful/pages/artists";
-import { ALPHABET } from "../../constants";
 import { sortAndGroup } from "../../util";
 import useArtistsGuests from "../../hooks/useArtistsGuests";
-import Image from "next/image";
 import { ARTISTS_GUESTS_PAGE_SIZE } from "../../lib/contentful/pages/artists";
 import LoadMore from "../../components/loadMore";
 
@@ -83,33 +81,6 @@ export default function GuestsPage({
           </div>
         )}
       </div>
-
-      {/* <aside className="border-b-2 sm:border-b-0 sm:border-r-2">
-        <ul className="sm:sticky sm:top-16 p-4 overflow-scroll hide-scrollbar flex sm:block space-x-4 sm:space-x-0 text-small text-center whitespace-nowrap">
-          {ALPHABET.map((letter, i) => {
-            const letterHasArtists =
-              sections.filter((section) => section.alphabet === letter).length >
-              0;
-
-            if (letterHasArtists)
-              return (
-                <li key={i}>
-                  <a className="text-black font-medium" href={`#${letter}`}>
-                    <span>{letter}</span>
-                  </a>
-                </li>
-              );
-
-            return (
-              <li key={i}>
-                <span className="text-black/25">{letter}</span>
-              </li>
-            );
-          })}
-
-          <li>&nbsp;</li>
-        </ul>
-      </aside> */}
     </Layout>
   );
 }
