@@ -6,7 +6,7 @@ import {
 import { AllArtistEntry } from "../types/shared";
 
 export default function useArtistsGuests(fallbackData: AllArtistEntry[]) {
-  const { data, setSize, error } = useSWRInfinite(
+  const { data, setSize, error, isValidating, isLoading } = useSWRInfinite(
     (pageIndex) => [pageIndex * ARTISTS_GUESTS_PAGE_SIZE],
     async (skip) => {
       const r = await fetch(
@@ -33,7 +33,8 @@ export default function useArtistsGuests(fallbackData: AllArtistEntry[]) {
     guests,
     loadMore,
     isReachingEnd,
-    isLoading: !error && !data,
+    isValidating,
+    isLoading,
     isError: error,
   };
 }

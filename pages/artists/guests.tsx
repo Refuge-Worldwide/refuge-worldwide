@@ -11,6 +11,7 @@ import { sortAndGroup } from "../../util";
 import useArtistsGuests from "../../hooks/useArtistsGuests";
 import Image from "next/image";
 import { ARTISTS_GUESTS_PAGE_SIZE } from "../../lib/contentful/pages/artists";
+import LoadMore from "../../components/loadMore";
 
 export async function getStaticProps({ preview = false }) {
   return {
@@ -25,7 +26,7 @@ export default function GuestsPage({
   preview,
   guests: fallbackData,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const { guests, loadMore, isReachingEnd, isLoading, isError } =
+  const { guests, loadMore, isReachingEnd, isValidating, isLoading, isError } =
     useArtistsGuests(fallbackData);
   const sections = sortAndGroup(guests);
 
@@ -72,15 +73,7 @@ export default function GuestsPage({
               className="inline-flex focus:outline-none rounded-full items-center justify-center group"
               aria-label="Load more guests"
             >
-              <Image
-                src="/images/load-more-button.svg"
-                unoptimized
-                aria-hidden
-                width={128}
-                height={128}
-                priority
-                alt=""
-              />
+              <LoadMore loading={isValidating} />
 
               <span
                 className="absolute rounded-full h-20 w-20 group-focus-visible:ring-4"
