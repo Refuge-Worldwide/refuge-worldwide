@@ -6,7 +6,7 @@ import useRadioShows from "../../hooks/useRadioShows";
 import { PastShowSchema } from "../../types/shared";
 import Image from "next/image";
 import { useState } from "react";
-
+import LoadMore from "../../components/loadMore";
 export default function AllShows({
   genres,
   pastShows: fallbackData,
@@ -16,10 +16,8 @@ export default function AllShows({
 }) {
   const { filter, filterSet } = useGenreFilter();
 
-  const { shows, loadMore, isRefreshing, isReachingEnd } = useRadioShows(
-    fallbackData,
-    filter
-  );
+  const { shows, loadMore, isReachingEnd, isValidating, isLoading, isError } =
+    useRadioShows(fallbackData, filter);
 
   return (
     <section>
@@ -36,7 +34,7 @@ export default function AllShows({
 
         <div className="h-5 sm:h-8" />
 
-        {isRefreshing && (
+        {isLoading && (
           <span className="block mx-auto h-96 mt-24 text-center animate-pulse font-medium text-base">
             Loading...
           </span>
@@ -50,25 +48,17 @@ export default function AllShows({
           ))}
         </ul>
 
-        {!isReachingEnd && !isRefreshing && (
+        {!isReachingEnd && (
           <div className="flex justify-center mt-10 sm:mt-8">
             <button
               onClick={loadMore}
+              disabled={isValidating}
               className="inline-flex focus:outline-none rounded-full items-center justify-center group"
               aria-label="Load more shows"
             >
-              <Image
-                src="/images/load-more-button.svg"
-                unoptimized
-                aria-hidden
-                width={128}
-                height={128}
-                priority
-                alt=""
-              />
-
+              <LoadMore loading={isValidating} />
               <span
-                className="absolute rounded-full h-20 w-20 group-focus:ring-4"
+                className="absolute rounded-full h-20 w-20 group-focus-visible:ring-4"
                 aria-hidden
               />
             </button>
