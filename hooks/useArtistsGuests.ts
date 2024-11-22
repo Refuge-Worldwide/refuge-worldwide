@@ -6,17 +6,22 @@ import {
 import { AllArtistEntry } from "../types/shared";
 
 export default function useArtistsGuests(fallbackData: AllArtistEntry[]) {
-  const { data, setSize } = useSWRInfinite(
-    (pageIndex) => ["ArtistsGuests", pageIndex * ARTISTS_GUESTS_PAGE_SIZE],
-    async (_, skip) =>
-      getArtistsPage(false, ARTISTS_GUESTS_PAGE_SIZE, skip as number),
+  const { data, setSize, error } = useSWRInfinite(
+    (pageIndex) => [pageIndex * ARTISTS_GUESTS_PAGE_SIZE],
+    async (skip) => {
+      const r = await fetch(
+        `/api/artists?limit=${ARTISTS_GUESTS_PAGE_SIZE}&skip=${skip}&role=false`
+      );
+
+      return await r.json();
+    },
     {
       fallbackData: [fallbackData],
       revalidateFirstPage: false,
     }
   );
 
-  const guests = data.flat();
+  const guests = data ? data.flat() : [];
 
   const loadMore = () => setSize((size) => size + 1);
 
@@ -28,5 +33,7 @@ export default function useArtistsGuests(fallbackData: AllArtistEntry[]) {
     guests,
     loadMore,
     isReachingEnd,
+    isLoading: !error && !data,
+    isError: error,
   };
 }

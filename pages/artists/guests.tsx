@@ -8,32 +8,29 @@ import PageMeta from "../../components/seo/page";
 import { getArtistsPage } from "../../lib/contentful/pages/artists";
 import { ALPHABET } from "../../constants";
 import { sortAndGroup } from "../../util";
+import useArtistsGuests from "../../hooks/useArtistsGuests";
+import Image from "next/image";
+import { ARTISTS_GUESTS_PAGE_SIZE } from "../../lib/contentful/pages/artists";
 
 export async function getStaticProps({ preview = false }) {
   return {
     props: {
       preview,
-      guests: await getArtistsPage(false, 1000, 0),
-      guestsTwo: await getArtistsPage(false, 1000, 1000),
-      guestsThree: await getArtistsPage(false, 1000, 2000),
+      guests: await getArtistsPage(false, ARTISTS_GUESTS_PAGE_SIZE, 0),
     },
   };
 }
 
 export default function GuestsPage({
   preview,
-  guests,
-  guestsTwo,
-  guestsThree,
+  guests: fallbackData,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const allGuests = guests.concat(guestsTwo, guestsThree);
-  const sections = sortAndGroup(allGuests);
+  const { guests, loadMore, isReachingEnd, isLoading, isError } =
+    useArtistsGuests(fallbackData);
+  const sections = sortAndGroup(guests);
 
   return (
-    <Layout
-      preview={preview}
-      className="bg-purple flex flex-col-reverse sm:flex-row-reverse"
-    >
+    <Layout preview={preview} className="bg-purple">
       <PageMeta title="Guests | Refuge Worldwide" path="guests/" />
 
       <div>
@@ -61,12 +58,40 @@ export default function GuestsPage({
           </ul>
         </section>
 
-        {sections.map((section, i) => (
-          <GuestRow key={i} {...section} />
-        ))}
+        {sections.map(
+          (section, i) =>
+            (section.alphabet !== "#" || isReachingEnd) && (
+              <GuestRow key={i} {...section} />
+            )
+        )}
+
+        {!isReachingEnd && (
+          <div className="flex justify-center mt-10 sm:mt-8">
+            <button
+              onClick={loadMore}
+              className="inline-flex focus:outline-none rounded-full items-center justify-center group"
+              aria-label="Load more guests"
+            >
+              <Image
+                src="/images/load-more-button.svg"
+                unoptimized
+                aria-hidden
+                width={128}
+                height={128}
+                priority
+                alt=""
+              />
+
+              <span
+                className="absolute rounded-full h-20 w-20 group-focus-visible:ring-4"
+                aria-hidden
+              />
+            </button>
+          </div>
+        )}
       </div>
 
-      <aside className="border-b-2 sm:border-b-0 sm:border-r-2">
+      {/* <aside className="border-b-2 sm:border-b-0 sm:border-r-2">
         <ul className="sm:sticky sm:top-16 p-4 overflow-scroll hide-scrollbar flex sm:block space-x-4 sm:space-x-0 text-small text-center whitespace-nowrap">
           {ALPHABET.map((letter, i) => {
             const letterHasArtists =
@@ -91,7 +116,7 @@ export default function GuestsPage({
 
           <li>&nbsp;</li>
         </ul>
-      </aside>
+      </aside> */}
     </Layout>
   );
 }

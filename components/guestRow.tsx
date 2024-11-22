@@ -10,7 +10,7 @@ type ArtistRowProps = {
 export default function GuestRow({ alphabet, artists }: ArtistRowProps) {
   return (
     <section id={alphabet} className="border-t-2 border-black">
-      <div className="p-4 sm:p-8">
+      <div className="p-4 sm:p-8 relative">
         <Pill>
           <h2>{alphabet}</h2>
         </Pill>

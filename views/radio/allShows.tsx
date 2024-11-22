@@ -50,7 +50,7 @@ export default function AllShows({
           ))}
         </ul>
 
-        {!isReachingEnd && !isRefreshing && (
+        {!isReachingEnd && (
           <div className="flex justify-center mt-10 sm:mt-8">
             <button
               onClick={loadMore}
@@ -65,10 +65,11 @@ export default function AllShows({
                 height={128}
                 priority
                 alt=""
+                className={isRefreshing ? "animate-pulse" : ""}
               />
 
               <span
-                className="absolute rounded-full h-20 w-20 group-focus:ring-4"
+                className="absolute rounded-full h-20 w-20 group-focus-visible:ring-4"
                 aria-hidden
               />
             </button>
