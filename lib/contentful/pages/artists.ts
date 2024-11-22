@@ -8,13 +8,16 @@ import {
 import { extractCollection, extractCollectionItem, sort } from "../../../util";
 import { AllArtistFragment } from "../fragments";
 
-export const ARTISTS_GUESTS_PAGE_SIZE = 50;
+export const ARTISTS_GUESTS_PAGE_SIZE = 500;
 
 export async function getArtistsPage(
   role: boolean,
   limit: number,
   skip: number
 ) {
+  console.log("role", role);
+  console.log("limit", limit);
+  console.log("skip", skip);
   const ArtistsPageQuery = /* GraphQL */ `
     query ArtistsPageQuery($limit: Int, $skip: Int, $role: Boolean) {
       artistCollection(
