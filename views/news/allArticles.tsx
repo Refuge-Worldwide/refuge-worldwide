@@ -3,13 +3,15 @@ import useNewsArticles from "../../hooks/useNewsArticles";
 import { ArticleInterface } from "../../types/shared";
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import LoadMore from "../../components/loadMore";
 
 export default function AllArticles({
   articles: fallbackData,
 }: {
   articles: ArticleInterface[];
 }) {
-  const { articles, loadMore, isReachingEnd } = useNewsArticles(fallbackData);
+  const { articles, loadMore, isReachingEnd, isValidating } =
+    useNewsArticles(fallbackData);
 
   return (
     <section>
@@ -26,21 +28,13 @@ export default function AllArticles({
           <div className="flex justify-center mt-10 sm:mt-8">
             <button
               onClick={loadMore}
+              disabled={isValidating}
               className="inline-flex focus:outline-none rounded-full items-center justify-center group"
               aria-label="Load more shows"
             >
-              <Image
-                src="/images/load-more-button.svg"
-                unoptimized
-                aria-hidden
-                width={128}
-                height={128}
-                priority
-                alt=""
-              />
-
+              <LoadMore loading={isValidating} />
               <span
-                className="absolute rounded-full h-20 w-20 group-focus:ring-4"
+                className="absolute rounded-full h-20 w-20 group-focus-visible:ring-4"
                 aria-hidden
               />
             </button>

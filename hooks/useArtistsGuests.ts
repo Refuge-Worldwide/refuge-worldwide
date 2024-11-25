@@ -5,16 +5,21 @@ import {
 } from "../lib/contentful/pages/artists";
 import { AllArtistEntry } from "../types/shared";
 
+const fetcher = async (url) => {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error("An error occurred while fetching the data.");
+  }
+  return await response.json();
+};
+
 export default function useArtistsGuests(fallbackData: AllArtistEntry[]) {
   const { data, setSize, error, isValidating, isLoading } = useSWRInfinite(
-    (pageIndex) => [pageIndex * ARTISTS_GUESTS_PAGE_SIZE],
-    async (skip) => {
-      const r = await fetch(
-        `/api/artists?limit=${ARTISTS_GUESTS_PAGE_SIZE}&skip=${skip}&role=false`
-      );
-
-      return await r.json();
-    },
+    (pageIndex) =>
+      `/api/artists?limit=${ARTISTS_GUESTS_PAGE_SIZE}&skip=${
+        pageIndex * ARTISTS_GUESTS_PAGE_SIZE
+      }&role=false`,
+    fetcher,
     {
       fallbackData: [fallbackData],
       revalidateFirstPage: false,
