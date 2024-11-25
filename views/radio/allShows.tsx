@@ -48,7 +48,7 @@ export default function AllShows({
           ))}
         </ul>
 
-        {!isReachingEnd && (
+        {!isReachingEnd && !isLoading && (
           <div className="flex justify-center mt-10 sm:mt-8">
             <button
               onClick={loadMore}

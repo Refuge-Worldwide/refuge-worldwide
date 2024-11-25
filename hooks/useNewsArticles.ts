@@ -6,7 +6,7 @@ import {
 } from "../lib/contentful/pages/news";
 
 export default function useNewsArticles(fallbackData: ArticleInterface[]) {
-  const { data, setSize } = useSWRInfinite(
+  const { data, setSize, isValidating } = useSWRInfinite(
     (pageIndex) => [pageIndex * NEWS_ARTICLES_PAGE_SIZE],
     async (skip) =>
       getNewsPageArticles(false, NEWS_ARTICLES_PAGE_SIZE, skip[0]),
@@ -30,5 +30,6 @@ export default function useNewsArticles(fallbackData: ArticleInterface[]) {
     articles,
     loadMore,
     isReachingEnd,
+    isValidating,
   };
 }
