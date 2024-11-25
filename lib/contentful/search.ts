@@ -76,13 +76,9 @@ export async function getSearchData(
 
   const end = Date.now();
 
-  console.log("showsCollection", showsCollection.items);
-
   const shows = showsCollection.items.map(parseShowToPastShowSchema);
-  const { items: articles } = articlesCollection;
-  const { items: artists } = artistsCollection;
-
-  console.log("shows", shows);
+  const articles = articlesCollection.items;
+  const artists = artistsCollection.items;
 
   return {
     data: { shows, articles, artists } as SearchData,
@@ -170,6 +166,7 @@ export async function getArtistSearchData(
   };
 }
 
+// TODO: move to shared function alongside shows page.
 function parseShowToPastShowSchema(show): PastShowSchema {
   return {
     date: show.fields?.date,
@@ -178,6 +175,8 @@ function parseShowToPastShowSchema(show): PastShowSchema {
     slug: show.fields?.slug,
     coverImage: show.fields?.coverImage?.fields.file.url,
     mixcloudLink: show.fields?.mixcloudLink,
-    genres: show.fields?.genres.map((genre) => genre.fields.name),
+    genres: show.fields.genres
+      .map((genre) => genre.fields?.name)
+      .filter(Boolean),
   };
 }
