@@ -73,12 +73,6 @@ export default function CalendarInsta() {
       <Dialog.Portal>
         <Dialog.Overlay className="data-[state=open]:animate-overlayShow w-screen h-screen fixed top-0 left-0 bg-black/50 backdrop-blur-sm z-50" />
         <Dialog.Content className="bg-white w-full h-full lg:h-auto lg:max-w-7xl lg:max-h-[80vh] overflow-auto fixed top-16 left-1/2 transform -translate-x-1/2 z-50 border-black border p-4">
-          <Dialog.Close asChild>
-            <button className="float-right lg:hidden" aria-label="Close">
-              <Cross />
-            </button>
-          </Dialog.Close>
-
           {isLoading ? (
             <Loading />
           ) : (
@@ -134,6 +128,11 @@ export default function CalendarInsta() {
                 >
                   <span>Copy it all</span>
                 </button>
+                <Dialog.Close asChild>
+                  <button className="float-right lg:hidden" aria-label="Close">
+                    <Cross />
+                  </button>
+                </Dialog.Close>
               </div>
             </div>
           )}
