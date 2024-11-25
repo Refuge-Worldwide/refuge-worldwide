@@ -80,7 +80,7 @@ async function handle(request: Request) {
 
   return new ImageResponse(
     (
-      <div tw="flex flex-col w-full h-full px-[15px] pb-[20px] text-white bg-opacity-0 pt-[147px]">
+      <div tw="flex flex-col w-full h-full px-[15px] pb-[20px] text-white bg-opacity-0 pt-[147px] border-2 border-white bg-black/25">
         <div
           tw="flex justify-center items-center mt-4"
           style={{
