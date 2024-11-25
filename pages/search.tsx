@@ -6,7 +6,7 @@ import ArtistPreview from "../components/artistPreview";
 import Layout from "../components/layout";
 import Pill from "../components/pill";
 import PageMeta from "../components/seo/page";
-import { ShowPreviewWithoutPlayer } from "../components/showPreview";
+import ShowPreview from "../components/showPreview";
 import useSearchData from "../hooks/useSearch";
 import { getSearchData } from "../lib/contentful/search";
 import { useRouter } from "next/router";
@@ -130,8 +130,8 @@ export default function SearchPage({
 
                 <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-y-10 sm:gap-8">
                   {data.shows.map((show) => (
-                    <li key={show.fields.slug}>
-                      <ShowPreviewWithoutPlayer {...show} />
+                    <li key={show.slug}>
+                      <ShowPreview {...show} />
                     </li>
                   ))}
                 </ul>
