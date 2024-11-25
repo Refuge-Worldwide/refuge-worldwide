@@ -44,7 +44,7 @@ export default function ShowArtworkModal() {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
-        <button className="hidden lg:block hover:bg-black/10 rounded-lg cursor-pointer">
+        <button className="hover:bg-black/10 rounded-lg cursor-pointer">
           <RxDotsVertical />
         </button>
       </DropdownMenu.Trigger>

@@ -545,7 +545,7 @@ function Calendar() {
 
         <input
           type="date"
-          className="absolute top-0 lg:top-12 right-12 lg:left-0 p-0 h-9 w-32 lg:h-0 lg:w-0 z-10 bg-transparent border-black border-2 lg:border-0 rounded-full"
+          className="absolute top-0 lg:top-12 right-20 lg:left-0 p-0 h-9 w-32 lg:h-0 lg:w-0 z-10 bg-transparent border-black border-2 lg:border-0 rounded-full"
           ref={datePicker}
           onChange={handleDatePickerChange}
         ></input>
