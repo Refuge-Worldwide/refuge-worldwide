@@ -64,7 +64,6 @@ async function handle(request: Request) {
   });
 
   const longSchedule = todaysSchedule.length > 10;
-  const extraLongSchedule = todaysSchedule.length > 11;
 
   const fontLight = await fetch(
     new URL("../../assets/VisueltLight.otf", import.meta.url)
@@ -78,9 +77,16 @@ async function handle(request: Request) {
     new URL("../../assets/ABCArizonaFlare.otf", import.meta.url)
   ).then((res) => res.arrayBuffer());
 
+  const randomWidth = Math.floor(Math.random() * (600 - 285 + 1)) + 285;
+
+  let responsiveFontSize = 50;
+  if (longSchedule) {
+    responsiveFontSize = 68 - todaysSchedule.length * 1.8;
+  }
+
   return new ImageResponse(
     (
-      <div tw="flex flex-col w-full h-full px-[15px] pb-[20px] text-white bg-opacity-0 pt-[147px]">
+      <div tw="flex flex-col w-full h-full px-[15px] pb-[20px] text-white bg-opacity-0 pt-[147px] border-2 border-white bg-black/25">
         <div
           tw="flex justify-center items-center mt-4"
           style={{
@@ -90,7 +96,13 @@ async function handle(request: Request) {
             transform: `rotate(${randomPosition.rotation}deg)`,
           }}
         >
-          <img src={randomSticker} alt="Random Sticker" tw="w-[285px]" />
+          <img
+            src={randomSticker}
+            alt="Random Sticker"
+            style={{
+              width: `${randomWidth}px`,
+            }}
+          />
         </div>
         <div tw="flex">
           <div tw="flex flex-col grow border border-white px-4 py-2">
@@ -135,22 +147,24 @@ async function handle(request: Request) {
           </div>
         </div>
         <div
-          tw={`flex flex-col grow w-full grow  ${
-            longSchedule ? "justify-center" : "pt-[78.5px]"
+          tw={`flex flex-col grow w-full grow ${
+            todaysSchedule.length > 13 ? "justify-center" : "pt-[78.5px]"
           }`}
           style={{
-            gap: extraLongSchedule ? 24 : 30,
+            gap: longSchedule ? 24 : 30,
           }}
         >
           {todaysSchedule.map((item, index) => (
             <div tw="flex pl-[27px]" key={item.date}>
               <div
                 tw={`font-bold flex ${
-                  extraLongSchedule
-                    ? "w-[200px] text-[45px]"
-                    : "w-[266px] text-[50px]"
+                  longSchedule ? "w-[200px]" : "w-[266px]"
                 }`}
-                style={{ fontFamily: '"VisueltMedium"', lineHeight: "100%" }}
+                style={{
+                  fontFamily: '"VisueltMedium"',
+                  lineHeight: "100%",
+                  fontSize: responsiveFontSize,
+                }}
               >
                 {dayjs(item.date.slice(0, -1))
                   .add(cetAdjustment, "minutes")
@@ -158,11 +172,13 @@ async function handle(request: Request) {
               </div>
               <div
                 tw={` font-bold flex ${
-                  extraLongSchedule
-                    ? "w-[750px] text-[45px]"
-                    : "w-[615px] text-[50px]"
+                  longSchedule ? "w-[700px]" : "w-[615px]"
                 }`}
-                style={{ fontFamily: '"VisueltMedium"', lineHeight: "100%" }}
+                style={{
+                  fontFamily: '"VisueltMedium"',
+                  lineHeight: "100%",
+                  fontSize: responsiveFontSize,
+                }}
               >
                 {item.title}
               </div>
@@ -170,12 +186,12 @@ async function handle(request: Request) {
           ))}
           <div tw="flex pl-[27px]">
             <div
-              tw={`font-bold flex ${
-                extraLongSchedule
-                  ? "w-[200px] text-[45px]"
-                  : "w-[266px] text-[50px]"
-              }`}
-              style={{ fontFamily: '"VisueltMedium"', lineHeight: "100%" }}
+              tw={`font-bold flex ${longSchedule ? "w-[200px]" : "w-[266px]"}`}
+              style={{
+                fontFamily: '"VisueltMedium"',
+                lineHeight: "100%",
+                fontSize: responsiveFontSize,
+              }}
             >
               {dayjs(
                 todaysSchedule[todaysSchedule.length - 1].dateEnd.slice(0, -1)
@@ -184,12 +200,12 @@ async function handle(request: Request) {
                 .format("HH:mm")}
             </div>
             <div
-              tw={` font-bold flex ${
-                extraLongSchedule
-                  ? "w-[750px] text-[45px]"
-                  : "w-[615px] text-[50px]"
-              }`}
-              style={{ fontFamily: '"VisueltMedium"', lineHeight: "100%" }}
+              tw={` font-bold flex ${longSchedule ? "w-[700px]" : "w-[615px]"}`}
+              style={{
+                fontFamily: '"VisueltMedium"',
+                lineHeight: "100%",
+                fontSize: responsiveFontSize,
+              }}
             >
               Repeats Playlist
             </div>
