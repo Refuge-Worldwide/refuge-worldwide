@@ -5,29 +5,35 @@ import * as contentful from "contentful-ui-extensions-sdk";
 
 const ContentfulRevalidateArtwork = () => {
   const [sdk, setSdk] = useState(null);
-  const [entryData, setEntryData] = useState(null);
   const [message, setMessage] = useState("");
 
   useEffect(() => {
     // Initialize Contentful SDK on component mount
     contentful.init((sdkInstance) => {
       setSdk(sdkInstance);
-
-      // Get entry fields and set them as state
-      // @ts-ignore: Ignore sdk type error for now
-      const fields = sdkInstance.entry.fields;
-      const data = {};
-      Object.keys(fields).forEach((fieldId) => {
-        data[fieldId] = fields[fieldId].getValue();
-      });
-      // @ts-ignore: Ignore sdk type error for now
-      data.id = sdkInstance.entry.getSys().id;
-      setEntryData(data);
     });
   }, []);
 
+  const fetchEntryData = () => {
+    if (!sdk) return null;
+
+    // Get entry fields and set them as state
+    const fields = sdk.entry.fields;
+    const data = {
+      id: sdk.entry.getSys().id,
+      title: sdk.entry.fields.title.getValue(),
+      coverImage: sdk.entry.fields.coverImage.getValue(),
+      additionalImages: sdk.entry.fields.additionalImages.getValue(),
+      artists: sdk.entry.fields.artists.getValue(),
+      date: sdk.entry.fields.date.getValue(),
+      dateEnd: sdk.entry.fields.dateEnd.getValue(),
+    };
+    return data;
+  };
+
   const handleButtonClick = async () => {
-    if (!entryData) {
+    const data = fetchEntryData();
+    if (!data) {
       setMessage("Entry data is not available yet.");
       return;
     }
@@ -41,7 +47,7 @@ const ContentfulRevalidateArtwork = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(entryData),
+        body: JSON.stringify(data),
       });
 
       if (response.ok) {

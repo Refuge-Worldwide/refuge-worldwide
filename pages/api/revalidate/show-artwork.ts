@@ -22,6 +22,8 @@ export default async function handler(
     try {
       const show = req.body;
 
+      console.log(show);
+
       // Add your revalidation logic here
       const coverImageId = show.coverImage.sys.id;
 
@@ -33,6 +35,15 @@ export default async function handler(
 
       // Upload the image to Cloudinary using regular upload
       const result = await cloudinary.v2.uploader.upload(coverImageUrl);
+
+      let images = [{ url: result.url }];
+      if (show.additionalImages) {
+        show.additionalImages.forEach((image) => {
+          images.push({ url: image });
+        });
+      }
+
+      console.log(images);
 
       // Fetch the artist entries from Contentful
       const artistIds = show.artists.map((artist) => artist.sys.id);
@@ -47,7 +58,7 @@ export default async function handler(
       const showTitle = show.title.split(" | ")[0];
 
       const values = {
-        image: [{ url: result.url }],
+        image: images,
         showName: showTitle,
         artists: artists,
         datetime: show.date,
