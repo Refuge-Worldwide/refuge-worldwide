@@ -5,7 +5,6 @@ import { GoogleSpreadsheet } from "google-spreadsheet";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import ExtraArtists from "../../components/formFields/extraArtists";
 import {
   formatArtistsForContenful,
   createReferencesArray,
@@ -13,6 +12,7 @@ import {
 import { getShowById } from "../../lib/contentful/pages/submission";
 import { sendSlackMessage } from "../../lib/slack";
 import { showArtworkURL } from "../../util";
+import { uploadImage } from "../../lib/contentful/management";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -33,7 +33,6 @@ const GOOGLE_CLIENT_EMAIL = process.env.GOOGLE_CLIENT_EMAIL;
 const GOOGLE_SERVICE_PRIVATE_KEY = process.env.GOOGLE_SERVICE_PRIVATE_KEY;
 
 const doc = new GoogleSpreadsheet(SPREADSHEET_ID);
-const showImages = [];
 
 // Append Function
 const appendToSpreadsheet = async (values) => {
@@ -69,8 +68,6 @@ const appendToSpreadsheet = async (values) => {
     "If yes, please state what equipment you'll be bringing":
       values.additionalEqDesc,
   };
-
-  console.log(showImages);
 
   try {
     await doc.useServiceAccountAuth({
@@ -154,75 +151,6 @@ const addGenre = async (genre) => {
       label: genre,
     };
     return addedGenre;
-  } catch (err) {
-    console.log(err);
-    throw err;
-  }
-};
-
-const addShow = async (values) => {
-  try {
-    const content = await richTextFromMarkdown(values.description);
-    const artists = createReferencesArray(values.artists);
-    const artistsForContentful = formatArtistsForContenful(
-      values.artists,
-      values.hasExtraArtists,
-      values.extraArtists
-    );
-    const dateFormatted = dayjs(values.datetime).format("DD MMM YYYY");
-    const genres = createReferencesArray(values.genres);
-    const space = await client.getSpace(spaceId);
-    const environment = await space.getEnvironment(environmentId);
-    const startDateTime = dayjs(values.datetime + "Z").toISOString();
-    const endDateTime = dayjs(values.datetime + "Z")
-      .add(parseInt(values.length), "hour")
-      .toISOString();
-    console.log("start: " + startDateTime);
-    console.log("end: " + endDateTime);
-    const entry = await environment.createEntry(showContentTypeId, {
-      fields: {
-        title: {
-          "en-US": values.showName + " | " + artistsForContentful,
-        },
-        internal: {
-          "en-US":
-            values.showName +
-            " - " +
-            artistsForContentful +
-            " - " +
-            dateFormatted,
-        },
-        date: {
-          "en-US": startDateTime,
-        },
-        dateEnd: {
-          "en-US": endDateTime,
-        },
-        content: {
-          "en-US": content,
-        },
-        coverImage: {
-          "en-US": {
-            sys: {
-              type: "Link",
-              linkType: "Asset",
-              id: values.imageId,
-            },
-          },
-        },
-        coverImagePosition: {
-          "en-US": "center",
-        },
-        artists: {
-          "en-US": artists,
-        },
-        genres: {
-          "en-US": genres,
-        },
-      },
-    });
-    console.log(entry);
-    return entry;
   } catch (err) {
     console.log(err);
     throw err;
@@ -352,36 +280,6 @@ const updateShow = async (values) => {
         console.log(`Entry ${entry.sys.id} updated.`);
         return entry;
       });
-  } catch (err) {
-    console.log(err);
-    throw err;
-  }
-};
-
-const uploadImage = async (name, image) => {
-  try {
-    const space = await client.getSpace(spaceId);
-    const environment = await space.getEnvironment(environmentId);
-    let asset = await environment.createAsset({
-      fields: {
-        title: {
-          "en-US": name,
-        },
-        file: {
-          "en-US": {
-            contentType: image.type,
-            fileName: image.filename,
-            upload: image.url,
-          },
-        },
-      },
-    });
-    const processedAsset = await asset.processForAllLocales();
-    await processedAsset.publish();
-    const imageURL = "https:" + processedAsset.fields.file["en-US"].url;
-    console.log(imageURL);
-    showImages.push(imageURL);
-    return processedAsset.sys.id;
   } catch (err) {
     console.log(err);
     throw err;
