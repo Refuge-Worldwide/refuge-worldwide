@@ -32,7 +32,7 @@ const ContentfulRevalidateArtwork = () => {
       return;
     }
 
-    setMessage("Sending entry data...");
+    setMessage("Regenerating artwork...");
 
     try {
       // Send entry data to the API
@@ -45,16 +45,16 @@ const ContentfulRevalidateArtwork = () => {
       });
 
       if (response.ok) {
-        setMessage("Entry data sent successfully!");
+        setMessage("Artwork successfully regenerated!");
       } else {
         const errorData = await response.json();
         setMessage(
-          `Failed to send data: ${errorData.error || "Unknown error"}`
+          `Failed to regenerate: ${errorData.error || "Unknown error"}`
         );
       }
     } catch (error) {
-      console.error("Error sending entry data:", error);
-      setMessage("An error occurred while sending the data.");
+      console.error("Error generating artwork:", error);
+      setMessage("An error occurred while regenerating artwork.");
     }
   };
 
