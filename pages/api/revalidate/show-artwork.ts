@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { managementClient, client } from "../../../lib/contentful/client";
+import { client } from "../../../lib/contentful/client";
 import cloudinary from "cloudinary";
 import { showArtworkURL } from "../../../util";
 import { uploadImage, updateArtwork } from "../../../lib/contentful/management";
@@ -14,9 +14,12 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  // if (process.env.CF_WEBHOOK_SECRET !== req.headers["webhook_secret"]) {
-  //   return res.status(401).json({ message: "Invalid Secret" });
-  // }
+  const origin = req.headers.origin;
+  const allowedOrigin = process.env.NEXT_PUBLIC_SITE_URL;
+
+  if (origin !== allowedOrigin) {
+    return res.status(403).json({ error: "Forbidden" });
+  }
 
   if (req.method === "POST") {
     try {

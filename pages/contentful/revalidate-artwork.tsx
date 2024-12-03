@@ -41,25 +41,42 @@ const ContentfulRevalidateArtwork = () => {
     setMessage("Regenerating artwork...");
 
     try {
-      // Send entry data to the API
-      const response = await fetch("/api/revalidate/show-artwork", {
+      // Define request
+      const req = {
         method: "POST",
+        url: `${window.location.origin}/api/revalidate/show-artwork`,
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
-      });
+      };
+
+      // Get and apply the signed headers
+      const { additionalHeaders } = await sdk.cma.appSignedRequest.create(
+        {
+          appDefinitionId: sdk.ids.app,
+        },
+        {
+          method: req.method,
+          headers: req.headers,
+          body: req.body,
+          path: new URL(req.url).pathname,
+        }
+      );
+      Object.assign(req.headers, additionalHeaders);
+
+      const response = await fetch(req.url, req);
 
       if (response.ok) {
         setMessage("Artwork successfully regenerated!");
       } else {
         const errorData = await response.json();
         setMessage(
-          `Failed to regenerate: ${errorData.error || "Unknown error"}`
+          `Failed to regenerate: ${errorData.message || "Unknown error"}`
         );
       }
     } catch (error) {
-      console.error("Error generating artwork:", error);
+      console.error("Error generating artwork:", error.message);
       setMessage("An error occurred while regenerating artwork.");
     }
   };
@@ -75,7 +92,7 @@ const ContentfulRevalidateArtwork = () => {
         style={{ fontSize: "15px" }}
         onClick={handleButtonClick}
       >
-        Regenerate Artwork
+        Regenerate Artwork {process.env.API_SECRET}
       </button>
       <div style={{ marginTop: "10px", fontSize: "14px", color: "gray" }}>
         {message}
