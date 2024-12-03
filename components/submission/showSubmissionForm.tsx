@@ -315,7 +315,9 @@ export default function ShowSubmissionForm({
                       <span className="underline">
                         {!isSubmitting
                           ? `${isLastStep ? "Submit" : "Next"}`
-                          : "Submitting"}
+                          : `${
+                              isLastStep ? "Submitting" : "Processing images"
+                            }`}
                       </span>
                       {!isSubmitting && <Arrow />}
                       {isSubmitting && (

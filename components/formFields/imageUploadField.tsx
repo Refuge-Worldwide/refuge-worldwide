@@ -35,8 +35,9 @@ export default function ImageUploadField({
   value?: any;
 }) {
   const [field, meta, helpers] = useField(props);
-  const { values, setFieldValue } = useFormikContext<any>();
+  const { values, setFieldValue, setSubmitting } = useFormikContext<any>();
   const [files, setFiles] = useState([]);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     if (value) {
@@ -120,11 +121,17 @@ export default function ImageUploadField({
         }}
         onupdatefiles={(files) => {
           setFiles(files);
-          console.log(files);
           // only fire handler when image is removed.
           if (files.length < values.image.length) {
             _reorderDeleteHandler(files);
           }
+        }}
+        onprocessfilestart={() => {
+          console.log("uploading");
+          setSubmitting(true);
+        }}
+        onprocessfiles={() => {
+          setSubmitting(false);
         }}
         allowReorder={multi}
         labelIdle='Drag & Drop your image or <span class="filepond--label-action">Browse</span>'
@@ -147,6 +154,7 @@ export default function ImageUploadField({
         className="pill-input"
         required
       /> */}
+      {uploading && <span className="text-sm text-gray-500">Uploading...</span>}
     </div>
   );
 }
