@@ -89,7 +89,7 @@ export const updateArtwork = async (id, artworkId) => {
       .then((environment) => environment.getEntry(id))
       //update fields with values from form
       .then((entry) => {
-        entry.fields.socialImage = {
+        entry.fields.showArtwork = {
           "en-US": {
             sys: {
               type: "Link",
