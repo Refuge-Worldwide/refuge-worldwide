@@ -36,7 +36,7 @@ export default async function handler(
 
     for (const show of shows) {
       let showEmailed = false;
-      let artwork = show.socialImage.url;
+      let artwork = show.socialImage.url + "?fm=jpg";
 
       for (const artist of show.artistsCollection.items) {
         if (artist.email && !emailedArtists.has(artist.email)) {
