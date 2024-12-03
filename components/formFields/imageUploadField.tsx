@@ -39,8 +39,6 @@ export default function ImageUploadField({
   const [files, setFiles] = useState([]);
 
   useEffect(() => {
-    console.log(value);
-    console.log(props.name);
     if (value) {
       let initialImages;
       if (multi) {
@@ -66,10 +64,11 @@ export default function ImageUploadField({
 
   // const setFieldValue(field, value){
   const imageUploaded = (file) => {
+    const url = file.serverId.replace("http", "https");
     const image = {
       filename: file.filename,
       type: file.fileType,
-      url: file.serverId,
+      url: url,
     };
     if (multi) {
       let images = values[props.name];
