@@ -11,8 +11,13 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ message: "Method not allowed" });
+  const authHeader = req.headers.authorization;
+
+  if (
+    !process.env.CRON_SECRET ||
+    authHeader !== `Bearer ${process.env.CRON_SECRET}`
+  ) {
+    return res.status(401).json({ success: false });
   }
 
   const values = req.body;
@@ -36,7 +41,7 @@ export default async function handler(
 
     for (const show of shows) {
       let showEmailed = false;
-      let artwork = show.socialImage.url + "?fm=jpg";
+      let artwork = show.showArtwork.url + "?fm=jpg";
 
       for (const artist of show.artistsCollection.items) {
         if (artist.email && !emailedArtists.has(artist.email)) {

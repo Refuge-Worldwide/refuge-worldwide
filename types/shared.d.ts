@@ -122,7 +122,7 @@ export interface ShowInterface {
   };
   content: Content;
   status?: string;
-  socialImage?: CoverImage;
+  showArtwork?: CoverImage;
 }
 
 export type PastShowSchema = {
