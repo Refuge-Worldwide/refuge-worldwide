@@ -164,10 +164,9 @@ const confirmationText = (
             {" "}
             You’ll receive an email from us closer to the date of your show – in
             the meantime, please feel free to add it to your calendar. We look
-            forward to welcoming you to the station!
+            forward to welcoming you to the station.
           </>
         )}{" "}
-        We look forward to welcoming you to the station!
       </Text>
       {showFormLink && (
         <>
@@ -192,7 +191,7 @@ const confirmationText = (
       )}
       <Text style={paragraph}>
         Please note: Any previously confirmed shows taking place before this one
-        are still happening!
+        are still happening.
       </Text>
     </>
   );
