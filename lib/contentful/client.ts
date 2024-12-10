@@ -153,3 +153,19 @@ export async function getPastShows(
 
   return sorted.slice(skip, skip + take);
 }
+
+export async function getShowByTime(time) {
+  console.log(time);
+  const { items } = await client.getEntries<TypeShowFields>({
+    "fields.date[lte]": time,
+    "fields.dateEnd[gte]": time,
+    content_type: "show",
+    limit: 1,
+  });
+
+  const processed = (items as Entry<TypeShowFields>[]).map(
+    createPastShowSchema
+  );
+
+  return processed;
+}
