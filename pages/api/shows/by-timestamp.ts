@@ -14,7 +14,7 @@ export default async function handler(
 
   if (
     !process.env.CRON_SECRET ||
-    authHeader !== `Bearer ${process.env.CRON_SECRET}`
+    authHeader !== `Bearer ${process.env.API_SECRET}`
   ) {
     return res.status(401).json({ message: "Unauthorized" });
   }
