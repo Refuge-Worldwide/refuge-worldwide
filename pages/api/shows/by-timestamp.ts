@@ -3,19 +3,28 @@
 
 import { NextApiRequest, NextApiResponse } from "next";
 import { assertError } from "ts-extras";
-import { getShowByTime } from "../../lib/contentful/client";
-import { PastShowSchema } from "../../types/shared";
+import { getShowByTime } from "../../../lib/contentful/client";
+import { PastShowSchema } from "../../../types/shared";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<PastShowSchema[] | { message: string }>
 ) {
+  const authHeader = req.headers.authorization;
+
+  if (
+    !process.env.CRON_SECRET ||
+    authHeader !== `Bearer ${process.env.CRON_SECRET}`
+  ) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
   try {
-    const { time } = req.query as typeof req.query & {
-      time: string;
+    const { t } = req.query as typeof req.query & {
+      t: string;
     };
 
-    const show = await getShowByTime(time);
+    const show = await getShowByTime(t);
 
     res
       .setHeader("Cache-Control", "s-maxage=1, stale-while-revalidate=59")
