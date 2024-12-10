@@ -71,8 +71,6 @@ export default function LivePlayer() {
 
   const { scheduleData, isLoading, error } = useSchedule();
 
-  console.log(error);
-
   const isOnline = scheduleData?.status === "online";
   const ch2IsOnline = scheduleData?.ch2?.status === "online";
 
@@ -98,10 +96,6 @@ export default function LivePlayer() {
       "sticky top-0 z-50": isOnline,
     }
   );
-
-  useEffect(() => {
-    console.log(isPlaying);
-  }, [isPlaying]);
 
   useEffect(() => {
     if ("mediaSession" in navigator && scheduleData?.liveNow) {

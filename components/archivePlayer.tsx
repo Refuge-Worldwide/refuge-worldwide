@@ -12,7 +12,6 @@ export default function ArchivePlayer() {
   const [showKey, setShowKey] = useState(null);
 
   useEffect(() => {
-    console.log("player changed");
     if (activePlayer === ActivePlayer.MIXCLOUD) {
       setShowKey(getMixcloudKey(showUrl));
     } else if (activePlayer === ActivePlayer.SOUNDCLOUD) {
