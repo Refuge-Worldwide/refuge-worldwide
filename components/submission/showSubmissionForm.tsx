@@ -93,12 +93,6 @@ const validationSchema = [
         ),
     }),
   }),
-  Yup.object().shape({
-    artwork: Yup.boolean().oneOf(
-      [true],
-      "Please confirm you are happy with your show artwork."
-    ),
-  }),
 ];
 
 export default function ShowSubmissionForm({

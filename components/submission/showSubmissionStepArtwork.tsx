@@ -32,34 +32,27 @@ export default function ShowSubmissionStepArtwork() {
       </legend>
       <div className="aspect-square max-w-3xl bg-black text-white flex items-center justify-center h-full w-full mx-auto">
         {imageUrl ? (
-          <div
-            className="border border-white bg-cover bg-center"
-            style={{
-              backgroundImage: `url(${imageUrl})`,
-              width: "100%",
-              height: "100%",
-              maxHeight: "80vh",
-            }}
-          ></div>
+          <>
+            <div
+              className="border border-white bg-cover bg-center"
+              style={{
+                backgroundImage: `url(${imageUrl})`,
+                width: "100%",
+                height: "100%",
+                maxHeight: "80vh",
+              }}
+            ></div>
+          </>
         ) : (
           <span className="animate-pulse">Generating artwork...</span>
         )}
       </div>
-      <div className="space-x-3 text-base mt-12 mb-2">
-        <Field
-          type="checkbox"
-          id="artwork"
-          name="artwork"
-          className="h-6 w-6 rounded-full border-2 border-black text-black focus:ring-black"
-        />
-        <label
-          htmlFor="artwork"
-          className="sm:mt-0.5 text-small sm:text-base sm:leading-none"
-        >
-          I confirm I am happy with the show artwork above
-        </label>
-      </div>
-      <ErrorMessage className="text-red" component="span" name="artwork" />
+      {imageUrl && (
+        <p>
+          Please press ‘submit’ if you’re happy with the artwork. If you need to
+          make changes please go back.
+        </p>
+      )}
     </div>
   );
 }
