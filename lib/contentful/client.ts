@@ -60,6 +60,7 @@ export const createPastShowSchema = (show: TypeShow): PastShowSchema => ({
   mixcloudLink: show.fields.mixcloudLink,
   coverImage: show.fields.coverImage.fields.file.url,
   genres: show.fields.genres.map((genre) => genre.fields?.name).filter(Boolean),
+  showArtwork: show.fields.socialImage?.fields.file.url,
 });
 
 export async function getPastShows(
@@ -156,7 +157,7 @@ export async function getPastShows(
 
 export async function getShowByTime(time) {
   console.log(time);
-  const { items } = await client.getEntries<TypeShowFields>({
+  const { items } = await previewClient.getEntries<TypeShowFields>({
     "fields.date[lte]": time,
     "fields.dateEnd[gte]": time,
     content_type: "show",
