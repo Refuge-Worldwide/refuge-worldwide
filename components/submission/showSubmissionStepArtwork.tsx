@@ -28,7 +28,7 @@ export default function ShowSubmissionStepArtwork() {
     // We pass the event to the handleSubmit() function on submit.
     <div className="mt-16">
       <legend className="font-sans mb-12 text-large font-medium text-center">
-        Show artwork
+        Preview artwork
       </legend>
       <div className="aspect-square max-w-3xl bg-black text-white flex items-center justify-center h-full w-full mx-auto">
         {imageUrl ? (
@@ -42,16 +42,25 @@ export default function ShowSubmissionStepArtwork() {
                 maxHeight: "80vh",
               }}
             ></div>
+            <span className="absolute text-white opacity-50 text-[6rem] pointer-events-none">
+              PREVIEW
+            </span>
           </>
         ) : (
-          <span className="animate-pulse">Generating artwork...</span>
+          <span className="animate-pulse">Generating preview artwork...</span>
         )}
       </div>
       {imageUrl && (
-        <p>
-          Please press ‘submit’ if you’re happy with the artwork. If you need to
-          make changes please go back.
-        </p>
+        <>
+          <p>
+            This is a preview only and your final artwork will be sent to you
+            via email.
+          </p>
+          <p>
+            Please press ‘submit’ if you’re happy with the artwork. If you need
+            to make changes please go back.
+          </p>
+        </>
       )}
     </div>
   );
