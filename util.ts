@@ -245,7 +245,7 @@ export const showArtworkURL = (values, useExtraArtists = false) => {
   // Determine the base URL based on the environment
   const baseUrl =
     process.env.NODE_ENV === "development"
-      ? "https://fee1-87-184-162-122.ngrok-free.app"
+      ? "https://ddfb-2a02-8109-b68b-5000-3c3f-2a69-5101-d2e4.ngrok-free.app/"
       : process.env.NEXT_PUBLIC_WEBSITE_URL;
 
   // Set URL for social image

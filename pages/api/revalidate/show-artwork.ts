@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { client } from "../../../lib/contentful/client";
+import { previewClient } from "../../../lib/contentful/client";
 import cloudinary from "cloudinary";
 import { showArtworkURL } from "../../../util";
 import { uploadImage, updateArtwork } from "../../../lib/contentful/management";
@@ -27,11 +27,10 @@ export default async function handler(
 
       console.log(show);
 
-      // Add your revalidation logic here
       const coverImageId = show.coverImage.sys.id;
 
       // Fetch the asset details from Contentful
-      const asset = await client.getAsset(coverImageId);
+      const asset = await previewClient.getAsset(coverImageId);
 
       // Extract the URL of the cover image
       const coverImageUrl = `https:${asset.fields.file.url}`;
@@ -51,7 +50,7 @@ export default async function handler(
       // Fetch the artist entries from Contentful
       const artistIds = show.artists.map((artist) => artist.sys.id);
       const artistEntries = await Promise.all(
-        artistIds.map((id) => client.getEntry(id))
+        artistIds.map((id) => previewClient.getEntry(id))
       );
 
       const artists = artistEntries.map((entry) => ({
