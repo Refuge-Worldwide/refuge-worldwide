@@ -487,15 +487,10 @@ function isPublished(entity) {
 
 export async function getInstaInfo() {
   const cetAdjustment = dayjs().tz("Europe/Berlin").utcOffset();
-  const start = Date.now();
   const nowUTC = dayjs.utc();
   const nowCET = nowUTC.add(cetAdjustment, "minutes");
   const startOfDay = nowCET.subtract(5, "hour").startOf("day").add(5, "hours");
   const startSchedule = startOfDay.toISOString();
-  const dayOfWeek = startOfDay.day();
-  // if (dayOfWeek == 6 || dayOfWeek == 0) {
-  //   endScheduleAdjustment = 3;
-  // }
   const endSchedule = startOfDay.add(1, "day").toISOString();
 
   const scheduleQuery = /* GraphQL */ `
@@ -524,8 +519,8 @@ export async function getInstaInfo() {
   const instaInfo = extractCollection<CalendarShow>(res, "showCollection");
 
   instaInfo.forEach((show, index) => {
-    show.date = dayjs(show.date)
-      .subtract(cetAdjustment, "minutes")
+    show.date = dayjs(show.date.slice(0, -1))
+      // .subtract(cetAdjustment, "minutes")
       .format("HH:mm");
     show.title = show.title.replace("|", "—");
   });
