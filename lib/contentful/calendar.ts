@@ -506,6 +506,7 @@ export async function getInstaInfo() {
         items {
           title
           date
+          dateEnd
           instagramHandles
         }
       }
@@ -522,6 +523,7 @@ export async function getInstaInfo() {
     show.date = dayjs(show.date.slice(0, -1))
       // .subtract(cetAdjustment, "minutes")
       .format("HH:mm");
+    show.dateEnd = dayjs(show.dateEnd.slice(0, -1)).format("HH:mm");
     show.title = show.title.replace("|", "—");
   });
 
