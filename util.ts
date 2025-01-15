@@ -1,4 +1,6 @@
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+dayjs.extend(utc);
 import { REGEX } from "./constants";
 import {
   AllArtistEntry,
@@ -7,6 +9,8 @@ import {
   ShowInterface,
   PastShowSchema,
 } from "./types/shared";
+
+dayjs.extend(utc);
 
 interface PageResponse {
   data: {
@@ -172,7 +176,11 @@ export const transformForDropdown = (array) => {
   }));
 };
 
-export const showArtworkURL = (values, useExtraArtists = false) => {
+export const showArtworkURL = (
+  values,
+  useExtraArtists = false,
+  regenerate = false
+) => {
   const images = encodeURIComponent(
     values.image
       .map((img) => {
@@ -182,22 +190,26 @@ export const showArtworkURL = (values, useExtraArtists = false) => {
   );
   const title = encodeURIComponent(values.showName);
 
-  let formattedArtists = values.artists
-    .map((x) => x.label)
-    .join(", ")
-    .replace(/, ([^,]*)$/, " & $1");
+  let formattedArtists = values.artists;
 
-  if (useExtraArtists && values.hasExtraArtists) {
-    console.log("using additional artists");
-    const additionalArtists = values.extraArtists
-      .map((x) => x.name)
+  if (!regenerate) {
+    formattedArtists = values.artists
+      .map((x) => x.label)
       .join(", ")
       .replace(/, ([^,]*)$/, " & $1");
 
-    formattedArtists = `${formattedArtists}, ${additionalArtists}`.replace(
-      /, ([^,]*)$/,
-      " & $1"
-    );
+    if (useExtraArtists && values.hasExtraArtists) {
+      console.log("using additional artists");
+      const additionalArtists = values.extraArtists
+        .map((x) => x.name)
+        .join(", ")
+        .replace(/, ([^,]*)$/, " & $1");
+
+      formattedArtists = `${formattedArtists}, ${additionalArtists}`.replace(
+        /, ([^,]*)$/,
+        " & $1"
+      );
+    }
   }
 
   formattedArtists = encodeURIComponent(formattedArtists);
@@ -245,7 +257,7 @@ export const showArtworkURL = (values, useExtraArtists = false) => {
   // Determine the base URL based on the environment
   const baseUrl =
     process.env.NODE_ENV === "development"
-      ? "https://ddfb-2a02-8109-b68b-5000-3c3f-2a69-5101-d2e4.ngrok-free.app/"
+      ? "https://055a-2a02-8109-b68b-5000-a93d-b89a-5989-3996.ngrok-free.app/"
       : process.env.NEXT_PUBLIC_WEBSITE_URL;
 
   // Set URL for social image

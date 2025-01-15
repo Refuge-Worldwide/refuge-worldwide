@@ -44,7 +44,7 @@ const ContentfulRevalidateArtwork = () => {
       // Define request
       const req = {
         method: "POST",
-        url: `${window.location.origin}/api/revalidate/show-artwork`,
+        url: `${window.location.origin}/api/revalidate/show-artwork?regenerate=true`,
         headers: {
           "Content-Type": "application/json",
         },

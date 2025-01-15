@@ -24,9 +24,7 @@ export default async function handler(
   if (req.method === "POST") {
     try {
       const show = req.body;
-
-      console.log(show);
-
+      const regenerate = req.query.regenerate ? true : false;
       const coverImageId = show.coverImage.sys.id;
 
       // Fetch the asset details from Contentful
@@ -45,17 +43,19 @@ export default async function handler(
         });
       }
 
-      console.log(images);
+      let artists = show.title.split(" | ")[1];
 
-      // Fetch the artist entries from Contentful
-      const artistIds = show.artists.map((artist) => artist.sys.id);
-      const artistEntries = await Promise.all(
-        artistIds.map((id) => previewClient.getEntry(id))
-      );
+      if (!regenerate) {
+        // Fetch the artist entries from Contentful
+        const artistIds = show.artists.map((artist) => artist.sys.id);
+        const artistEntries = await Promise.all(
+          artistIds.map((id) => previewClient.getEntry(id))
+        );
 
-      const artists = artistEntries.map((entry) => ({
-        label: entry.fields.name,
-      }));
+        artists = artistEntries.map((entry) => ({
+          label: entry.fields.name,
+        }));
+      }
 
       const showTitle = show.title.split(" | ")[0];
 
@@ -67,7 +67,7 @@ export default async function handler(
         datetimeEnd: show.dateEnd,
       };
 
-      const url = showArtworkURL(values, false);
+      const url = showArtworkURL(values, false, regenerate);
 
       const artwork = {
         type: "image/png",
@@ -82,10 +82,10 @@ export default async function handler(
       console.log(artworkId);
       await updateArtwork(show.id, artworkId);
 
-      res.status(200).json({ message: "Revalidation triggered successfully!" });
+      res.status(200).json({ message: "Regeneration triggered successfully!" });
     } catch (error) {
       console.error("Revalidation error:", error);
-      res.status(500).json({ error: "Failed to revalidate." });
+      res.status(500).json({ error: "Failed to regenerate." });
     }
   } else {
     res.status(405).json({ error: "Method not allowed." });
