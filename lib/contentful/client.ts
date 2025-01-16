@@ -60,6 +60,7 @@ export const createPastShowSchema = (show: TypeShow): PastShowSchema => ({
   mixcloudLink: show.fields.mixcloudLink,
   coverImage: show.fields.coverImage.fields.file.url,
   genres: show.fields.genres.map((genre) => genre.fields?.name).filter(Boolean),
+  // TODO: check if this field can be removed.
   artwork: show.fields.artwork ? show.fields.artwork.fields.file.url : null,
 });
 
