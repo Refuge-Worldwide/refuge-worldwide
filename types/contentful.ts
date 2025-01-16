@@ -109,7 +109,7 @@ export interface TypeShowFields {
   artists: Contentful.Entry<TypeArtistFields>[];
   genres: Contentful.Entry<TypeGenreFields>[];
   content?: CFRichTextTypes.Block | CFRichTextTypes.Inline;
-  socialImage?: Contentful.Asset;
+  artwork?: Contentful.Asset;
 }
 
 export type TypeShow = Contentful.Entry<TypeShowFields>;
