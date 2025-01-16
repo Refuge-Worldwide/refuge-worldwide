@@ -58,10 +58,6 @@ export default function CalendarInsta() {
     }, 1000);
   }, [copied]);
 
-  // useEffect(() => {
-  //   onToggle(dialogOpen);
-  // }, [dialogOpen]);
-
   return (
     <Dialog.Root
       open={dialogOpen}
@@ -82,7 +78,7 @@ export default function CalendarInsta() {
                 contentEditable={true}
                 suppressContentEditableWarning={true}
               >
-                📻 {dayjs().format("dddd")}
+                📻 {dayjs().format("dddd")} (all times CET)
                 <br />
                 <br />
                 {data.map((show) => (
@@ -91,6 +87,10 @@ export default function CalendarInsta() {
                     <br />
                   </>
                 ))}
+                <>
+                  {data[data.length - 1].dateEnd} Repeats Playlist
+                  <br />
+                </>
                 <br />
                 🎧 Listen live:
                 <br />

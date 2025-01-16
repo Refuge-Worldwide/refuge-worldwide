@@ -5,6 +5,11 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 import { sendSlackMessage } from "../../lib/slack";
 import dayjs from "dayjs";
 
+const replyToEmails = [
+  "leona@refugeworldwide.com",
+  "assistants@refugeworldwide.com",
+];
+
 export async function sendEmail(artist, show, severity) {
   try {
     const { data, error } = await resend.emails.send({
@@ -14,7 +19,7 @@ export async function sendEmail(artist, show, severity) {
           ? "jack@refugeworldwide.com"
           : artist.email,
       subject: subject(severity),
-      reply_to: ["leona@refugeworldwide.com", "graeme@refugeworldwide.com"],
+      reply_to: replyToEmails,
       react: ShowSubmissionEmail({
         userName: artist.name,
         showDateStart: show.date,
@@ -52,10 +57,7 @@ export async function sendConfirmationEmail(show) {
                 : artist.email,
             subject:
               "Show confirmation - " + dayjs(show.start).format("MMM YYYY"),
-            reply_to: [
-              "leona@refugeworldwide.com",
-              "graeme@refugeworldwide.com",
-            ],
+            reply_to: replyToEmails,
             react: ShowSubmissionEmail({
               userName: artist.label,
               showDateStart: show.start,
@@ -96,8 +98,7 @@ export async function sendArtworkEmail(artist, date, artwork) {
         "Your show artwork for " + dayjs(date).format("dddd") + " is now ready",
       reply_to: [
         "leona@refugeworldwide.com",
-        "graeme@refugeworldwide.com",
-        "assistant@refugeworldwide.com",
+        "assistants@refugeworldwide.com",
         "irene@refugeworldwide.com",
       ],
       react: ShowArtworkEmail({
