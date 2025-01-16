@@ -14,12 +14,12 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const origin = req.headers.origin;
-  const allowedOrigin = process.env.NEXT_PUBLIC_SITE_URL;
+  // const origin = req.headers.origin;
+  // const allowedOrigin = process.env.NEXT_PUBLIC_SITE_URL;
 
-  if (origin !== allowedOrigin) {
-    return res.status(403).json({ error: "Forbidden" });
-  }
+  // if (origin !== allowedOrigin) {
+  //   return res.status(403).json({ error: "Forbidden" });
+  // }
 
   if (req.method === "POST") {
     try {
