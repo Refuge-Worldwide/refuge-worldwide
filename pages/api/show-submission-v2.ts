@@ -263,13 +263,13 @@ const updateShow = async (values) => {
         entry.fields.instagramHandles = {
           "en-US": formatInstaHandles(values.instagram),
         };
-        if (values.showArtwork) {
-          entry.fields.showArtwork = {
+        if (values.artwork) {
+          entry.fields.artwork = {
             "en-US": {
               sys: {
                 type: "Link",
                 linkType: "Asset",
-                id: values.showArtwork,
+                id: values.artwork,
               },
             },
           };

@@ -27,7 +27,11 @@ export default function ShowArtworkModal() {
     const zip = new JSZip();
 
     const imagePromises = shows.shows.map(async (show) => {
-      const response = await fetch(show.socialImage.url);
+      // if there is no artwork then skip
+      if (show.artwork === null) return;
+
+      // download image and add to zip file
+      const response = await fetch(show.artwork.url);
       const blob = await response.blob();
       zip.file(`${show.title}.jpeg`, blob);
     });

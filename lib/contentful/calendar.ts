@@ -39,7 +39,7 @@ interface CalendarShow {
   coverImage: {
     url: string;
   };
-  socialImage?: {
+  artwork?: {
     url: string;
   };
   additionalImages: Array<string>;
@@ -140,7 +140,6 @@ export async function getCalendarShows(start, end, preview: boolean) {
         show.coverImage?.url,
         ...(show.additionalImages ? show.additionalImages : []),
       ],
-      artwork: show.socialImage ? show.socialImage.url : null,
     };
   });
 
@@ -166,7 +165,7 @@ export async function getTodaysArtwork() {
       ) {
         items {
           title
-          socialImage {
+          artwork {
             url
           }
         }
