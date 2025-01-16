@@ -16,12 +16,14 @@ export default function ArchivePlayer() {
     if (activePlayer === ActivePlayer.MIXCLOUD) {
       setShowKey(getMixcloudKey(showUrl));
     } else if (activePlayer === ActivePlayer.SOUNDCLOUD) {
+      // TODO: move this soundcloud show id extraction to its own function (possibly api endpoint)
       const encodedShowUrl = encodeURI(showUrl);
-      const scResolveUrl = "/api/soundcloud-resolve?url=" + encodedShowUrl;
-      fetch(scResolveUrl)
+      const embedResolveURL = `https://soundcloud.com/oembed?url=${encodedShowUrl}&format=json`;
+      fetch(embedResolveURL)
         .then((res) => res.json())
         .then((data) => {
-          setShowKey(data);
+          const showId = extractShowIdFromIframe(data.html);
+          setShowKey(showId);
         });
     } else if (activePlayer === ActivePlayer.YOUTUBE) {
       var video_id = showUrl.split("v=")[1];
@@ -102,4 +104,23 @@ export default function ArchivePlayer() {
       <Script src="https://widget.mixcloud.com/media/js/widgetApi.js" />
     </>
   );
+}
+
+// TODO: move this function to a better place.
+function extractShowIdFromIframe(iframeString) {
+  // Use a regular expression to extract the src attribute
+  const srcMatch = iframeString.match(/src="([^"]+)"/);
+  if (srcMatch) {
+    const srcUrl = srcMatch[1]; // Extract the src URL
+    const urlParam = new URL(srcUrl).searchParams.get("url");
+    if (urlParam) {
+      // Decode the URL and extract the ID after '/tracks/'
+      const decodedUrl = decodeURIComponent(urlParam);
+      const match = decodedUrl.match(/\/tracks\/(\d+)/);
+      if (match) {
+        return match[1]; // Return the extracted ID
+      }
+    }
+  }
+  return null; // Return null if no ID is found
 }
