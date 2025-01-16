@@ -133,7 +133,7 @@ export type PastShowSchema = {
   coverImage: string;
   mixcloudLink: string;
   genres: string[];
-  showArtwork?: string;
+  artwork?: string;
 };
 
 export type ScheduleShow = {
