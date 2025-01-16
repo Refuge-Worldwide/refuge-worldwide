@@ -14,11 +14,20 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const origin = req.headers.origin;
-  const allowedOrigin = process.env.NEXT_PUBLIC_SITE_URL;
+  // const origin = req.headers.origin;
+  // const allowedOrigin = process.env.NEXT_PUBLIC_SITE_URL;
 
-  if (origin !== allowedOrigin) {
-    return res.status(403).json({ error: "Forbidden" });
+  // if (origin !== allowedOrigin) {
+  //   return res.status(403).json({ error: "Forbidden" });
+  // }
+
+  res.setHeader("Access-Control-Allow-Origin", "https://app.contentful.com");
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "*");
+
+  // Handle preflight requests
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
   }
 
   if (req.method === "POST") {

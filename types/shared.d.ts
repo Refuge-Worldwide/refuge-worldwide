@@ -122,7 +122,7 @@ export interface ShowInterface {
   };
   content: Content;
   status?: string;
-  showArtwork?: CoverImage;
+  artwork?: CoverImage;
 }
 
 export type PastShowSchema = {
