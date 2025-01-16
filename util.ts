@@ -1,4 +1,6 @@
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+dayjs.extend(utc);
 import { REGEX } from "./constants";
 import {
   AllArtistEntry,
@@ -7,6 +9,8 @@ import {
   ShowInterface,
   PastShowSchema,
 } from "./types/shared";
+
+dayjs.extend(utc);
 
 interface PageResponse {
   data: {
@@ -170,4 +174,96 @@ export const transformForDropdown = (array) => {
     // to do: remove sys and name from spread to reduce size of object
     ...item,
   }));
+};
+
+export const showArtworkURL = (
+  values,
+  useExtraArtists = false,
+  regenerate = false
+) => {
+  const images = encodeURIComponent(
+    values.image
+      .map((img) => {
+        return img.url;
+      })
+      .join(",")
+  );
+  const title = encodeURIComponent(values.showName);
+
+  let formattedArtists = values.artists;
+
+  if (!regenerate) {
+    formattedArtists = values.artists
+      .map((x) => x.label)
+      .join(", ")
+      .replace(/, ([^,]*)$/, " & $1");
+
+    if (useExtraArtists && values.hasExtraArtists) {
+      console.log("using additional artists");
+      const additionalArtists = values.extraArtists
+        .map((x) => x.name)
+        .join(", ")
+        .replace(/, ([^,]*)$/, " & $1");
+
+      formattedArtists = `${formattedArtists}, ${additionalArtists}`.replace(
+        /, ([^,]*)$/,
+        " & $1"
+      );
+    }
+  }
+
+  formattedArtists = encodeURIComponent(formattedArtists);
+
+  // Format the date and time
+  const date = encodeURIComponent(
+    `${dayjs(values.datetime).utc().format("ddd DD MMM / HH:mm")}-${dayjs(
+      values.datetimeEnd
+    )
+      .utc()
+      .format("HH:mm")} (CET)`
+  );
+
+  const colours = [
+    "#cd46fd",
+    "#defc32",
+    "#ff96ff",
+    "#f94646",
+    "#ffedd9",
+    "#ff9d1d",
+    "#fffe49",
+    "#fd339b",
+    "#b0b02b",
+    "#32fe95",
+    "#4ac8f4",
+    "#ffa2b5",
+    "#facc7f",
+    "#99fffc",
+    "#00cb0d",
+    "#99e9ff",
+    "#ab8dff",
+    "#ffd9f0",
+    "#fbffb3",
+    "#ccffd1",
+    "#fe6301",
+    "#ccd2ff",
+  ];
+
+  // Get the day of the month
+  const dayOfMonth = dayjs(values.datetime).utc().date();
+
+  // Get a color from the colours array based on the day of the month
+  const colour = colours[dayOfMonth % colours.length];
+
+  // Determine the base URL based on the environment
+  const baseUrl =
+    process.env.NODE_ENV === "development"
+      ? "https://055a-2a02-8109-b68b-5000-a93d-b89a-5989-3996.ngrok-free.app/"
+      : process.env.NEXT_PUBLIC_WEBSITE_URL;
+
+  // Set URL for social image
+  const url = `${baseUrl}/api/automated-artwork?title=${title}&artists=${formattedArtists}&date=${date}&images=${images}&colour=${encodeURIComponent(
+    colour
+  )}`;
+
+  return url;
 };

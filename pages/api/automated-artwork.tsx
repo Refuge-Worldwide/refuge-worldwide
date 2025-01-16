@@ -11,7 +11,7 @@ async function handle(request: Request) {
 
   const images =
     searchParams.get("images") ||
-    "https://res.cloudinary.com/dqjn26pey/image/upload/v1726483539/default_image-pichi_u9id7o.jpg,https://res.cloudinary.com/dqjn26pey/image/upload/v1726483539/default_image-pichi_u9id7o.jpg,https://res.cloudinary.com/dqjn26pey/image/upload/v1726483539/default_image-pichi_u9id7o.jpg";
+    "https://res.cloudinary.com/dqjn26pey/image/upload/v1726483539/default_image-pichi_u9id7o.jpg";
   const imagesArray = decodeURIComponent(images).split(",");
   const aspects = ["12:10", "59:100", "35:100"];
   const cloudinaryTransform = `ar_${
@@ -26,11 +26,15 @@ async function handle(request: Request) {
     return transformedUrl;
   });
 
-  const title = searchParams.get("title") || "Cultural Cadence: The Levant";
-  const artists =
-    searchParams.get("artists") || "Moehecan, Yasmine Acar & Udi Raz";
+  let title = searchParams.get("title") || "Guest Show w/ Yāri";
+  title = title.replace(/w\/.*/, "").trim();
+
+  const artists = searchParams.get("artists") || "Moehecan";
   const date = searchParams.get("date") || "Thu 12 Sep / 15:00-16:00 (CET)";
   const colour = searchParams.get("colour") || "#00CB0D";
+
+  const isResidency = title.toLowerCase() === "residency";
+  const isGuestShow = title.toLowerCase() === "guest show";
 
   const fontLight = await fetch(
     new URL("../../assets/VisueltLight.otf", import.meta.url)
@@ -43,6 +47,17 @@ async function handle(request: Request) {
   const fontArizona = await fetch(
     new URL("../../assets/ABCArizonaFlare.otf", import.meta.url)
   ).then((res) => res.arrayBuffer());
+
+  const lineOne = () => {
+    if (isResidency || isGuestShow) return artists;
+    else return `${title} ${isTitleWrapped ? ` with ${artists}` : ""}`;
+  };
+
+  const lineTwo = () => {
+    if (isGuestShow) return "Guest Show";
+    else if (isResidency) return "Residency";
+    else return `${!isTitleWrapped ? ` with ${artists}` : ""}`;
+  };
 
   // Create a hidden container to measure text width
   const hiddenContainer = (
@@ -76,7 +91,7 @@ async function handle(request: Request) {
               tw="text-[2.75rem] font-bold flex"
               style={{ fontFamily: '"VisueltMedium"', lineHeight: "100%" }}
             >
-              {title} {isTitleWrapped && ` with ${artists}`}
+              {lineOne()}
             </div>
             <div
               tw="text-[2.75rem] mt-0.5"
@@ -98,7 +113,7 @@ async function handle(request: Request) {
                 gap: 2,
               }}
             >
-              {!isTitleWrapped && `with ${artists}`}
+              {lineTwo()}
             </div>
             <div
               tw="text-[2.75rem]"
@@ -189,5 +204,7 @@ async function handle(request: Request) {
     }
   );
 }
+
+// to do. save image as png so its smaller in file size.
 
 export default handle;

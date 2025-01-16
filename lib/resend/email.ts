@@ -14,7 +14,10 @@ export async function sendEmail(artist, show, severity) {
   try {
     const { data, error } = await resend.emails.send({
       from: "Refuge Worldwide <noreply@mail.refugeworldwide.com>",
-      to: artist.email,
+      to:
+        process.env.NODE_ENV === "development"
+          ? "jack@refugeworldwide.com"
+          : artist.email,
       subject: subject(severity),
       reply_to: replyToEmails,
       react: ShowSubmissionEmail({
@@ -48,7 +51,10 @@ export async function sendConfirmationEmail(show) {
         try {
           const { data, error } = await resend.emails.send({
             from: "Refuge Worldwide <noreply@mail.refugeworldwide.com>",
-            to: artist.email,
+            to:
+              process.env.NODE_ENV === "development"
+                ? "jack@refugeworldwide.com"
+                : artist.email,
             subject:
               "Show confirmation - " + dayjs(show.start).format("MMM YYYY"),
             reply_to: replyToEmails,
@@ -80,11 +86,14 @@ export async function sendConfirmationEmail(show) {
   );
 }
 
-export async function sendArtworkEmail(artist, date) {
+export async function sendArtworkEmail(artist, date, artwork) {
   try {
     const { data, error } = await resend.emails.send({
       from: "Refuge Worldwide <noreply@mail.refugeworldwide.com>",
-      to: artist.email,
+      to:
+        process.env.NODE_ENV === "development"
+          ? "jack@refugeworldwide.com"
+          : artist.email,
       subject:
         "Your show artwork for " + dayjs(date).format("dddd") + " is now ready",
       reply_to: [
@@ -95,6 +104,7 @@ export async function sendArtworkEmail(artist, date) {
       react: ShowArtworkEmail({
         userName: artist.name,
         showDate: date,
+        artwork: artwork,
       }),
     });
 

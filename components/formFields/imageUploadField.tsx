@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FilePond, registerPlugin } from "react-filepond";
 import { useField, useFormikContext } from "formik";
 import { serverOptions } from "./filepondServer";
@@ -24,6 +24,7 @@ export default function ImageUploadField({
   label,
   multi = false,
   description,
+  value,
   ...props
 }: {
   label: string;
@@ -31,16 +32,44 @@ export default function ImageUploadField({
   multi?: boolean;
   required?: boolean;
   description?: string;
+  value?: any;
 }) {
   const [field, meta, helpers] = useField(props);
-  const { values, setFieldValue } = useFormikContext<any>();
+  const { values, setFieldValue, setSubmitting } = useFormikContext<any>();
+  const [files, setFiles] = useState([]);
+  const [uploading, setUploading] = useState(false);
+
+  useEffect(() => {
+    if (value) {
+      let initialImages;
+      if (multi) {
+        initialImages = value.map((image) => ({
+          source: image.url,
+          options: {
+            type: "local",
+          },
+        }));
+      } else {
+        initialImages = [
+          {
+            source: value.url,
+            options: {
+              type: "local",
+            },
+          },
+        ];
+      }
+      setFiles(initialImages);
+    }
+  }, []);
 
   // const setFieldValue(field, value){
   const imageUploaded = (file) => {
+    const url = file.serverId.replace("http", "https");
     const image = {
       filename: file.filename,
       type: file.fileType,
-      url: file.serverId,
+      url: url,
     };
     if (multi) {
       let images = values[props.name];
@@ -78,7 +107,7 @@ export default function ImageUploadField({
         {...field}
         {...props}
         className="min-h-36"
-        // files={files}
+        files={files}
         allowMultiple={multi}
         credits={false}
         server={serverOptions}
@@ -91,10 +120,18 @@ export default function ImageUploadField({
           }
         }}
         onupdatefiles={(files) => {
+          setFiles(files);
           // only fire handler when image is removed.
           if (files.length < values.image.length) {
             _reorderDeleteHandler(files);
           }
+        }}
+        onprocessfilestart={() => {
+          console.log("uploading");
+          setSubmitting(true);
+        }}
+        onprocessfiles={() => {
+          setSubmitting(false);
         }}
         allowReorder={multi}
         labelIdle='Drag & Drop your image or <span class="filepond--label-action">Browse</span>'
@@ -117,6 +154,7 @@ export default function ImageUploadField({
         className="pill-input"
         required
       /> */}
+      {uploading && <span className="text-sm text-gray-500">Uploading...</span>}
     </div>
   );
 }

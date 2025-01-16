@@ -11,28 +11,42 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ message: "Method not allowed" });
+  const authHeader = req.headers.authorization;
+
+  if (
+    !process.env.CRON_SECRET ||
+    authHeader !== `Bearer ${process.env.CRON_SECRET}`
+  ) {
+    return res.status(401).json({ success: false });
   }
 
   const values = req.body;
 
   try {
-    const date = dayjs(values.date, "YYYY-MM-DD");
-    console.log(`Processing emails for date: ${date.format("YYYY-MM-DD")}`);
+    const now = dayjs();
 
-    const shows = await getUpcomingShowsByDate(date, true, "Submitted");
+    const artworkEmailDate = now.add(2, "days");
+    console.log(
+      `Processing emails for date: ${artworkEmailDate.format("YYYY-MM-DD")}`
+    );
+
+    const shows = await getUpcomingShowsByDate(
+      artworkEmailDate,
+      false,
+      "Submitted"
+    );
     console.log(`Found ${shows.length} shows to process`);
 
     const emailedArtists = new Set(); // Set to track emailed artist emails
 
     for (const show of shows) {
       let showEmailed = false;
+      let artwork = show.showArtwork.url + "?fm=jpg";
 
       for (const artist of show.artistsCollection.items) {
         if (artist.email && !emailedArtists.has(artist.email)) {
           try {
-            await sendArtworkEmail(artist, date);
+            await sendArtworkEmail(artist, artworkEmailDate, artwork);
             emailedArtists.add(artist.email); // Add artist email to the set after emailing
             showEmailed = true;
             await new Promise((resolve) => setTimeout(resolve, rateLimitDelay)); // Respect the rate limit

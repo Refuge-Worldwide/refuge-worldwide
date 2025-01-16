@@ -39,6 +39,9 @@ interface CalendarShow {
   coverImage: {
     url: string;
   };
+  artwork?: {
+    url: string;
+  };
   additionalImages: Array<string>;
   isFeatured?: boolean;
 }
@@ -142,6 +145,42 @@ export async function getCalendarShows(start, end, preview: boolean) {
 
   return {
     processed,
+  };
+}
+
+export async function getTodaysArtwork() {
+  const cetAdjustment = dayjs().tz("Europe/Berlin").utcOffset();
+  const nowUTC = dayjs.utc();
+  const nowCET = nowUTC.add(cetAdjustment, "minutes");
+  const startOfDay = nowCET.subtract(5, "hour").startOf("day").add(5, "hours");
+  const start = startOfDay.toISOString();
+  const end = startOfDay.add(1, "day").toISOString();
+
+  const calendarQuery = /* GraphQL */ `
+    query calendarQuery($start: DateTime, $end: DateTime) {
+      showCollection(
+        order: date_ASC
+        where: { date_gte: $start, dateEnd_lte: $end, dateEnd_exists: true }
+        limit: 999
+      ) {
+        items {
+          title
+          artwork {
+            url
+          }
+        }
+      }
+    }
+  `;
+
+  const res = await graphql(calendarQuery, {
+    variables: { start, end },
+  });
+
+  const shows = extractCollection<CalendarShow>(res, "showCollection");
+
+  return {
+    shows,
   };
 }
 

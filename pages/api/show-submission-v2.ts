@@ -5,13 +5,14 @@ import { GoogleSpreadsheet } from "google-spreadsheet";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import ExtraArtists from "../../components/formFields/extraArtists";
 import {
   formatArtistsForContenful,
   createReferencesArray,
 } from "../../lib/contentful/management";
 import { getShowById } from "../../lib/contentful/pages/submission";
 import { sendSlackMessage } from "../../lib/slack";
+import { showArtworkURL } from "../../util";
+import { uploadImage } from "../../lib/contentful/management";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -32,7 +33,6 @@ const GOOGLE_CLIENT_EMAIL = process.env.GOOGLE_CLIENT_EMAIL;
 const GOOGLE_SERVICE_PRIVATE_KEY = process.env.GOOGLE_SERVICE_PRIVATE_KEY;
 
 const doc = new GoogleSpreadsheet(SPREADSHEET_ID);
-const showImages = [];
 
 // Append Function
 const appendToSpreadsheet = async (values) => {
@@ -68,8 +68,6 @@ const appendToSpreadsheet = async (values) => {
     "If yes, please state what equipment you'll be bringing":
       values.additionalEqDesc,
   };
-
-  console.log(showImages);
 
   try {
     await doc.useServiceAccountAuth({
@@ -153,75 +151,6 @@ const addGenre = async (genre) => {
       label: genre,
     };
     return addedGenre;
-  } catch (err) {
-    console.log(err);
-    throw err;
-  }
-};
-
-const addShow = async (values) => {
-  try {
-    const content = await richTextFromMarkdown(values.description);
-    const artists = createReferencesArray(values.artists);
-    const artistsForContentful = formatArtistsForContenful(
-      values.artists,
-      values.hasExtraArtists,
-      values.extraArtists
-    );
-    const dateFormatted = dayjs(values.datetime).format("DD MMM YYYY");
-    const genres = createReferencesArray(values.genres);
-    const space = await client.getSpace(spaceId);
-    const environment = await space.getEnvironment(environmentId);
-    const startDateTime = dayjs(values.datetime + "Z").toISOString();
-    const endDateTime = dayjs(values.datetime + "Z")
-      .add(parseInt(values.length), "hour")
-      .toISOString();
-    console.log("start: " + startDateTime);
-    console.log("end: " + endDateTime);
-    const entry = await environment.createEntry(showContentTypeId, {
-      fields: {
-        title: {
-          "en-US": values.showName + " | " + artistsForContentful,
-        },
-        internal: {
-          "en-US":
-            values.showName +
-            " - " +
-            artistsForContentful +
-            " - " +
-            dateFormatted,
-        },
-        date: {
-          "en-US": startDateTime,
-        },
-        dateEnd: {
-          "en-US": endDateTime,
-        },
-        content: {
-          "en-US": content,
-        },
-        coverImage: {
-          "en-US": {
-            sys: {
-              type: "Link",
-              linkType: "Asset",
-              id: values.imageId,
-            },
-          },
-        },
-        coverImagePosition: {
-          "en-US": "center",
-        },
-        artists: {
-          "en-US": artists,
-        },
-        genres: {
-          "en-US": genres,
-        },
-      },
-    });
-    console.log(entry);
-    return entry;
   } catch (err) {
     console.log(err);
     throw err;
@@ -334,13 +263,13 @@ const updateShow = async (values) => {
         entry.fields.instagramHandles = {
           "en-US": formatInstaHandles(values.instagram),
         };
-        if (values.socialImage) {
-          entry.fields.socialImage = {
+        if (values.artwork) {
+          entry.fields.artwork = {
             "en-US": {
               sys: {
                 type: "Link",
                 linkType: "Asset",
-                id: values.socialImage,
+                id: values.artwork,
               },
             },
           };
@@ -357,144 +286,21 @@ const updateShow = async (values) => {
   }
 };
 
-const uploadImage = async (name, image) => {
-  try {
-    const space = await client.getSpace(spaceId);
-    const environment = await space.getEnvironment(environmentId);
-    let asset = await environment.createAsset({
-      fields: {
-        title: {
-          "en-US": name,
-        },
-        file: {
-          "en-US": {
-            contentType: image.type,
-            fileName: image.filename,
-            upload: image.url,
-          },
-        },
-      },
-    });
-    const processedAsset = await asset.processForAllLocales();
-    await processedAsset.publish();
-    const imageURL = "https:" + processedAsset.fields.file["en-US"].url;
-    console.log(imageURL);
-    showImages.push(imageURL);
-    return processedAsset.sys.id;
-  } catch (err) {
-    console.log(err);
-    throw err;
-  }
-};
+const showArtwork = async (values) => {
+  // Get URL for social image
+  const url = showArtworkURL(values);
 
-const socialImage = async (values) => {
-  const images = encodeURIComponent(
-    values.image
-      .map((img) => {
-        return img.url;
-      })
-      .join(",")
-  );
-  console.log(images);
-  const title = encodeURIComponent(values.showName);
-  const formattedArtists = encodeURIComponent(
-    values.artists
-      .map((x) => x.label)
-      .join(", ")
-      .replace(/, ([^,]*)$/, " & $1")
-  );
-
-  // Format the date and time
-  const date = encodeURIComponent(
-    `${dayjs(values.datetime).utc().format("ddd DD MMM / HH:mm")}-${dayjs(
-      values.datetimeEnd
-    )
-      .utc()
-      .format("HH:mm")} (CET)`
-  );
-
-  const colours = [
-    "#cd46fd",
-    "#fd339b",
-    "#ff96ff",
-    "#f94646",
-    "#fe6301",
-    "#ff9d1d",
-    "#fffe49",
-    "#defc32",
-    "#b0b02b",
-    "#00cb0d",
-    "#32fe95",
-    "#4ac8f4",
-    "#5a60fe",
-    "#1a4afc",
-    "#ffa2b5",
-    "#facc7f",
-    "#99fffc",
-    "#99e9ff",
-    "#ab8dff",
-    "#ffd9f0",
-    "#fbffb3",
-    "#ccffd1",
-    "#ffedd9",
-    "#ccd2ff",
-  ];
-
-  // Get the day of the month
-  const dayOfMonth = dayjs(values.datetime).utc().date();
-
-  // Get a color from the colours array based on the day of the month
-  const colour = colours[dayOfMonth % colours.length];
-
-  // Determine the base URL based on the environment
-  const baseUrl =
-    process.env.NODE_ENV === "development"
-      ? "https://473c-2a02-8109-b68b-5000-74e9-8d05-bbf3-936d.ngrok-free.app"
-      : process.env.NEXT_PUBLIC_WEBSITE_URL;
-
-  // Set URL for social image
-  const url = `${baseUrl}/api/automated-artwork?title=${title}&artists=${formattedArtists}&date=${date}&images=${images}&colour=${encodeURIComponent(
-    colour
-  )}`;
-
-  const socialImage = {
+  const showArtwork = {
     url: url,
     type: "image/png",
-    filename: values.showName + "-social-image.png",
+    filename: values.showName + "-show-artwork.png",
   };
 
-  const socialImageId = await uploadImage(
-    values.showName + " - social image",
-    socialImage
+  const showArtworkId = await uploadImage(
+    values.showName + " - show artwork",
+    showArtwork
   );
-  return socialImageId;
-  // try {
-  //   const space = await client.getSpace(spaceId);
-  //   const environment = await space.getEnvironment(environmentId);
-  //   let asset = await environment.createAsset({
-  //     fields: {
-  //       title: {
-  //         "en-US": name,
-  //       },
-  //       file: {
-  //         "en-US": {
-  //           contentType: image.type,
-  //           fileName: image.filename,
-  //           upload: image.url,
-  //         },
-  //       },
-  //     },
-  //   });
-  //   const processedAsset = await asset.processForAllLocales();
-  //   await processedAsset.publish();
-  //   const imageURL = "https:" + processedAsset.fields.file["en-US"].url;
-  //   console.log(imageURL);
-  //   showImages.push(imageURL);
-  //   return processedAsset.sys.id;
-  // } catch (err) {
-  //   console.log(err);
-  //   throw err;
-  // }
+  return showArtworkId;
 };
 
 const formatInstaHandles = (handles) => {
@@ -568,7 +374,7 @@ export default async function handler(
         }
         // wrap social image in another try block so it doesnt blcok the main submission
         try {
-          values.socialImage = await socialImage(values);
+          values.showArtwork = await showArtwork(values);
         } catch (err) {
           sendSlackMessage(
             "Error generating social image for " + values.name,

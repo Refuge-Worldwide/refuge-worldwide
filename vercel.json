@@ -10,6 +10,10 @@
     {
       "path": "/api/cron/upcoming-featured-show-check",
       "schedule": "27 9 * * 1-5"
+    },
+    {
+      "path": "/api/cron/artwork-email",
+      "schedule": "30 17 * * *"
     }
   ]
 }

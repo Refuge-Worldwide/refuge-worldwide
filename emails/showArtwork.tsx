@@ -25,27 +25,16 @@ const env = process.env.NODE_ENV;
 interface EmailProps {
   userName: string;
   showDate: string;
+  artwork: string;
 }
-
-const artworkLinks = [
-  process.env.SHOW_ARTWORK_SUN,
-  process.env.SHOW_ARTWORK_MON,
-  process.env.SHOW_ARTWORK_TUES,
-  process.env.SHOW_ARTWORK_WED,
-  process.env.SHOW_ARTWORK_THURS,
-  process.env.SHOW_ARTWORK_FRI,
-  process.env.SHOW_ARTWORK_SAT,
-];
-
-const baseUrl = "https://refugeworldwide.com/";
 
 export const ShowArtworkEmail = ({
   userName = "Gramrcy",
   showDate = "2024-05-15T15:00:00.000Z",
+  artwork = "https://res.cloudinary.com/dqjn26pey/image/upload/v1706278328/Refuge-pichi_mg1jge.jpg",
 }: EmailProps) => {
   const dayOfWeekNo = Number(dayjs(showDate).format("d"));
   const dayOfWeek = dayjs(showDate).format("dddd");
-  const artworkLink = artworkLinks[dayOfWeekNo];
   return (
     <Html>
       <Head />
@@ -76,7 +65,7 @@ export const ShowArtworkEmail = ({
                 </Heading>
                 <Text style={paragraph}>
                   You can find artwork for your show on {dayOfWeek}{" "}
-                  <Link style={link} href={artworkLink}>
+                  <Link style={link} href={artwork}>
                     here
                   </Link>
                   . If there are any issues please let us know asap!

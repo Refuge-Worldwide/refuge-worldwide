@@ -122,6 +122,7 @@ export interface ShowInterface {
   };
   content: Content;
   status?: string;
+  showArtwork?: CoverImage;
 }
 
 export type PastShowSchema = {
@@ -288,6 +289,7 @@ export type SubmissionFormValues = {
     image?: string;
   }>;
   artistsAdditionalInfo?: any[];
+  artwork: Boolean;
 };
 
 export type EventType =

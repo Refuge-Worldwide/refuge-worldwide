@@ -343,6 +343,12 @@ export async function getUpcomingShowsByDate(
               email
             }
           }
+          showArtwork {
+            sys {
+              id
+            }
+            url
+          }
         }
       }
     }

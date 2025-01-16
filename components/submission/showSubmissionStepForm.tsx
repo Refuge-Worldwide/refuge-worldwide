@@ -17,7 +17,7 @@ dayjs.extend(utc);
 
 const env = process.env.NODE_ENV;
 
-export default function ShowSubmissionStep3({
+export default function ShowSubmissionStepForm({
   initial,
   genres,
   uploadLink,
@@ -130,7 +130,9 @@ export default function ShowSubmissionStep3({
                           description="No logos and no flyers. Minimum dimensions: 1000x1000px, maximum file size: 3MB."
                           required
                           name={`extraArtists.${index}.image`}
+                          value={values.extraArtists[index].image}
                         />
+
                         <div className="flex gap-2 md:gap-3 items-center border border-black p-3 md:p-6 bg-orange">
                           <AiOutlineInfoCircle className="w-5 sm:w-6 md:w-8 h-full" />
                           <span className="flex-1 text-small">
@@ -187,6 +189,7 @@ export default function ShowSubmissionStep3({
                             description="No logos and no flyers. Minimum dimensions: 1000x1000px, maximum file size: 3MB."
                             required
                             name={`artistsAdditionalInfo.${index}.image`}
+                            value={values.artistsAdditionalInfo[index].image}
                           />
                         )}
                         <div className="flex gap-2 md:gap-3 items-center border border-black p-3 md:p-6 bg-orange">
@@ -225,6 +228,7 @@ export default function ShowSubmissionStep3({
           description="Please upload your show / artist image(s) below, including any guest images. No logos and no flyers. Minimum dimensions: 1000x1000px, maximum file size: 3MB."
           required={true}
           multi={true}
+          value={values.image}
         />
         <div className="flex gap-2 md:gap-3 items-center border border-black p-3 md:p-6 mb-10 bg-orange">
           <AiOutlineInfoCircle className="w-5 sm:w-6 md:w-8 h-full" />
@@ -249,6 +253,7 @@ export default function ShowSubmissionStep3({
           required={true}
           options={genres}
           limit={3}
+          value={values.genres}
         />
         <CheckboxField
           name="hasNewGenres"
