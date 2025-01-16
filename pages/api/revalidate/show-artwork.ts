@@ -25,6 +25,11 @@ export default async function handler(
   res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 
+  // Handle preflight requests
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
+
   if (req.method === "POST") {
     try {
       const show = req.body;
