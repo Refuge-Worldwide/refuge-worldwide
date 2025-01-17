@@ -374,7 +374,7 @@ export default async function handler(
         }
         // wrap social image in another try block so it doesnt blcok the main submission
         try {
-          values.showArtwork = await showArtwork(values);
+          values.artwork = await showArtwork(values);
         } catch (err) {
           sendSlackMessage(
             "Error generating social image for " + values.name,
