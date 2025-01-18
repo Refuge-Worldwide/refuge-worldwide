@@ -7,7 +7,7 @@ import dayjs from "dayjs";
 
 const replyToEmails = [
   "leona@refugeworldwide.com",
-  "assistants@refugeworldwide.com",
+  "assistant@refugeworldwide.com",
 ];
 
 export async function sendEmail(artist, show, severity) {
@@ -98,7 +98,7 @@ export async function sendArtworkEmail(artist, date, artwork) {
         "Your show artwork for " + dayjs(date).format("dddd") + " is now ready",
       reply_to: [
         "leona@refugeworldwide.com",
-        "assistants@refugeworldwide.com",
+        "assistant@refugeworldwide.com",
         "irene@refugeworldwide.com",
       ],
       react: ShowArtworkEmail({
