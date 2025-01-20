@@ -26,15 +26,35 @@ async function handle(request: Request) {
     return transformedUrl;
   });
 
-  let title = searchParams.get("title") || "Guest Show w/ Yāri";
-  title = title.replace(/w\/.*/, "").trim();
-
-  const artists = searchParams.get("artists") || "Moehecan";
+  // get data from params
+  let title = searchParams.get("title") || "Steve Bicknell";
+  let artists = searchParams.get("artists") || "Residency";
   const date = searchParams.get("date") || "Thu 12 Sep / 15:00-16:00 (CET)";
   const colour = searchParams.get("colour") || "#00CB0D";
 
-  const isResidency = title.toLowerCase() === "residency";
-  const isGuestShow = title.toLowerCase() === "guest show";
+  // remove w/ from title if present
+  title = title.replace(/w\/.*/, "").trim();
+
+  // check if its residency or guest show as artwork template is slightly different
+  let isResidency = title.toLowerCase() === "residency";
+  let isGuestShow = title.toLowerCase() === "guest show";
+
+  // swap title and artists if its residency and regeneration artwork
+  // this because title comes is as name of artist | residency
+  // which is different from all other shows where artists come after first pipe on regeneration
+  if (artists.toLowerCase().includes("residency")) {
+    isResidency = true;
+    const tempArtists = artists;
+    artists = title;
+    title = tempArtists;
+  }
+
+  if (artists.toLowerCase().includes("guest show")) {
+    isGuestShow = true;
+    const tempArtists = artists;
+    artists = title;
+    title = tempArtists;
+  }
 
   const fontLight = await fetch(
     new URL("../../assets/VisueltLight.otf", import.meta.url)
