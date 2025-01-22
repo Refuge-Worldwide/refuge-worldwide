@@ -258,7 +258,7 @@ export const showArtworkURL = (
   const baseUrl =
     process.env.NODE_ENV === "development"
       ? "https://055a-2a02-8109-b68b-5000-a93d-b89a-5989-3996.ngrok-free.app/"
-      : process.env.NEXT_PUBLIC_WEBSITE_URL;
+      : process.env.NEXT_PUBLIC_SITE_URL;
 
   // Set URL for social image
   const url = `${baseUrl}/api/automated-artwork?title=${title}&artists=${formattedArtists}&date=${date}&images=${images}&colour=${encodeURIComponent(
