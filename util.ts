@@ -214,13 +214,19 @@ export const showArtworkURL = (
 
   formattedArtists = encodeURIComponent(formattedArtists);
 
+  const startDate = dayjs(values.datetime).utc();
+  const endDate = dayjs(values.datetimeEnd).utc();
+
+  // adjusted date ensures that shows in the early hours have previous days date and colour
+  const adjustedDate = startDate.subtract(4, "hours");
+
+  const showDate = adjustedDate.format("ddd DD MMM");
+  const startTime = startDate.format("HH:mm");
+  const endTime = endDate.format("HH:mm");
+
   // Format the date and time
-  const date = encodeURIComponent(
-    `${dayjs(values.datetime).utc().format("ddd DD MMM / HH:mm")}-${dayjs(
-      values.datetimeEnd
-    )
-      .utc()
-      .format("HH:mm")} (CET)`
+  const uriEncodedDate = encodeURIComponent(
+    showDate + " / " + startTime + "-" + endTime
   );
 
   const colours = [
@@ -249,7 +255,7 @@ export const showArtworkURL = (
   ];
 
   // Get the day of the month
-  const dayOfMonth = dayjs(values.datetime).utc().date();
+  const dayOfMonth = adjustedDate.date();
 
   // Get a color from the colours array based on the day of the month
   const colour = colours[dayOfMonth % colours.length];
@@ -257,11 +263,11 @@ export const showArtworkURL = (
   // Determine the base URL based on the environment
   const baseUrl =
     process.env.NODE_ENV === "development"
-      ? "https://055a-2a02-8109-b68b-5000-a93d-b89a-5989-3996.ngrok-free.app/"
+      ? "https://7a2a-194-126-177-76.ngrok-free.app/"
       : process.env.NEXT_PUBLIC_SITE_URL;
 
   // Set URL for social image
-  const url = `${baseUrl}/api/automated-artwork?title=${title}&artists=${formattedArtists}&date=${date}&images=${images}&colour=${encodeURIComponent(
+  const url = `${baseUrl}/api/automated-artwork?title=${title}&artists=${formattedArtists}&date=${uriEncodedDate}&images=${images}&colour=${encodeURIComponent(
     colour
   )}`;
 
