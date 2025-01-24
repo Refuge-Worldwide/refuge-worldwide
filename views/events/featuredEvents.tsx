@@ -49,7 +49,7 @@ export default function FeaturedEvents({
                   <Image
                     key={event.coverImage.sys.id}
                     src={event.coverImage.url}
-                    loader={loaders.contentful}
+                    loader={loaders.contentfulNoCrop}
                     width={600}
                     height={600}
                     alt={event.title}

@@ -7,6 +7,9 @@ const loaders: Record<string, ImageLoader> = {
     const height = Math.round(width / aspectRatio);
     return `${src}?w=${width}&h=${height}&q=${quality}&fm=jpg&fl=progressive&f=faces&fit=fill`;
   },
+  contentfulNoCrop: ({ src, width, quality = 75 }) => {
+    return `${src}?w=${width}&q=${quality}&fm=jpg&fl=progressive&f=faces&fit=fill`;
+  },
 };
 
 export default loaders;
