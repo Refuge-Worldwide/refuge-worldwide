@@ -226,7 +226,7 @@ export const showArtworkURL = (
 
   // Format the date and time
   const uriEncodedDate = encodeURIComponent(
-    showDate + " / " + startTime + "-" + endTime
+    showDate + " / " + startTime + "-" + endTime + " (CET)"
   );
 
   const colours = [
