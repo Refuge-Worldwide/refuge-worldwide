@@ -30,7 +30,7 @@ export default function MixedFeelingsPlayer({
     return (
       <div
         ref={ref}
-        className={`flex flex-col lg:flex-row items-stretch bg-[#94B5FA] text-black border-b-2 border-black ${
+        className={`flex flex-col lg:flex-row items-stretch bg-[#A5FDD1] text-black border-b-2 border-black ${
           isChatroom && "hidden lg:flex"
         }`}
       >
@@ -80,7 +80,7 @@ export default function MixedFeelingsPlayer({
                 }}
               /> */}
               <iframe
-                src="https://lvpr.tv?v=a643duatfcmq9w8j&lowLatency=true&autoplay=true&muted=true"
+                src="https://lvpr.tv?v=80102glf4yhnwkmd&lowLatency=true&autoplay=true&muted=true"
                 width="100%"
                 height="auto"
                 frameBorder="0"
@@ -128,10 +128,10 @@ export default function MixedFeelingsPlayer({
         >
           <div className="hidden lg:block">
             <p className="lg:text-[1.7rem] xl:text-base">
-              Mixed Feelings is expanding the radio experience. Refuge Worldwide
-              is proud to present a new series of radio shows embracing the
-              diverse talents and stories of artists from the disabled
-              community.
+              Refuge Worldwide is excited to expand on the next phase of the
+              Mixed Feelings project with a new radio series, further exploring
+              accessibility in the arts, embracing the diverse talents of
+              disabled and d/Deaf artists in Berlin and beyond.
             </p>
           </div>
           <div className="flex justify-between items-center">

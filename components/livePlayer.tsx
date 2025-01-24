@@ -11,6 +11,7 @@ import Image from "next/image";
 import { AiOutlineCalendar } from "react-icons/ai";
 import { useRouter } from "next/router";
 import { Arrow } from "../icons/arrow";
+import MixedFeelingsPlayer from "./mixedFeelingsPlayer";
 
 const BroadcastingIndicator = ({
   status,
@@ -135,55 +136,138 @@ export default function LivePlayer() {
   }
 
   return (
-    <section className={playerWrapperClassNames}>
-      <div
-        className={`h-12 sm:h-16 flex items-center flex-1 truncate lg:border-0 lg:min-w-[50%] ${
-          ch2IsOnline && "border-b-2 border-white"
-        }`}
-      >
-        {isOnline && (
-          <>
-            <button
-              className="pl-4 sm:pl-8 pr-3 sm:pr-5 h-full grow-0 flex items-center gap-4"
-              onClick={isPlaying == 1 ? pause : play}
-              aria-label={
-                isPlaying == 1 ? "Pause Live Broadcast" : "Play Live Broadcast"
+    <>
+      <section className={playerWrapperClassNames}>
+        <div
+          className={`h-12 sm:h-16 flex items-center flex-1 truncate lg:border-0 lg:min-w-[50%] ${
+            ch2IsOnline && "border-b-2 border-white"
+          }`}
+        >
+          {isOnline && (
+            <>
+              <button
+                className="pl-4 sm:pl-8 pr-3 sm:pr-5 h-full grow-0 flex items-center gap-4"
+                onClick={isPlaying == 1 ? pause : play}
+                aria-label={
+                  isPlaying == 1
+                    ? "Pause Live Broadcast"
+                    : "Play Live Broadcast"
+                }
+              >
+                {ch2IsOnline && (
+                  <span className="font-medium text-small bg-white h-6 w-6 text-black rounded-sm">
+                    1
+                  </span>
+                )}
+                <div className={`h-6 w-6 ${!ch2IsOnline && "sm:h-8 sm:w-8"}`}>
+                  {isPlaying == 1 ? <Pause /> : <Play />}
+                </div>
+              </button>
+            </>
+          )}
+
+          {!isLoading && !error && scheduleData?.liveNow?.title && (
+            <Link
+              className="flex-1 truncate mt-0.5 relative"
+              href={
+                scheduleData?.liveNow?.link ? scheduleData.liveNow.link : ""
               }
             >
-              {ch2IsOnline && (
-                <span className="font-medium text-small bg-white h-6 w-6 text-black rounded-sm">
-                  1
-                </span>
-              )}
-              <div className={`h-6 w-6 ${!ch2IsOnline && "sm:h-8 sm:w-8"}`}>
-                {isPlaying == 1 ? <Pause /> : <Play />}
-              </div>
-            </button>
-          </>
-        )}
-
-        {!isLoading && !error && scheduleData?.liveNow?.title && (
-          <Link
-            className="flex-1 truncate mt-0.5 relative"
-            href={scheduleData?.liveNow?.link ? scheduleData.liveNow.link : ""}
-          >
-            <Marquee
-              key={scheduleData?.liveNow.title + ch2IsOnline}
-              className="-mr-14"
-              text={<span className="pr-8">{scheduleData?.liveNow.title}</span>}
-              speed={ch2IsOnline ? 0.2 : 0.25}
-            />
-            {/* <span className="absolute left-0 top-0.5 font-medium text-small flex items-center justify-center pt-0.5 bg-white h-8 w-8 text-black rounded-sm">
+              <Marquee
+                key={scheduleData?.liveNow.title + ch2IsOnline}
+                className="-mr-14"
+                text={
+                  <span className="pr-8">{scheduleData?.liveNow.title}</span>
+                }
+                speed={ch2IsOnline ? 0.2 : 0.25}
+              />
+              {/* <span className="absolute left-0 top-0.5 font-medium text-small flex items-center justify-center pt-0.5 bg-white h-8 w-8 text-black rounded-sm">
               1
             </span> */}
-          </Link>
+            </Link>
+          )}
+
+          {!isLoading && (
+            <>
+              {hasBack && isSchedulePage ? (
+                <button
+                  className="lg:hidden flex pt-0.5 pb-0.5 sm:pt-4 sm:pb-4 px-4 !ml-0 self-stretch items-center bg-black border-white border-l-2 border-r-0 text-white"
+                  onClick={() => router.back()}
+                >
+                  {isSchedulePage ? (
+                    <Arrow
+                      colour="white"
+                      size={24}
+                      className="h-6 w-[24px] rotate-180 "
+                    />
+                  ) : (
+                    <AiOutlineCalendar />
+                  )}
+                  <span className="sr-only lg:hidden">Back</span>
+                </button>
+              ) : (
+                <Link
+                  className="lg:hidden flex pt-0.5 pb-0.5 sm:pt-4 sm:pb-4 px-4 !ml-0 self-stretch items-center bg-black border-white border-l-2 border-r-0 text-white"
+                  href={isSchedulePage ? "/" : "/schedule"}
+                >
+                  {isSchedulePage ? (
+                    <Arrow
+                      colour="white"
+                      size={24}
+                      className="h-6 w-[24px] rotate-180 "
+                    />
+                  ) : (
+                    <AiOutlineCalendar className="h-[22px] w-[22px]" />
+                  )}
+                  <span className="sr-only lg:hidden">
+                    {isSchedulePage ? "Back" : "Schedule"}
+                  </span>
+                </Link>
+              )}
+            </>
+          )}
+        </div>
+
+        {ch2IsOnline && (
+          <div className="h-12 sm:h-16 flex items-center flex-1 truncate">
+            <div className="w-0.5 bg-white h-full !ml-0 hidden lg:block"></div>
+            <button
+              className="grow-0 pl-4 sm:pl-8 pr-3 sm:pr-5 lg:px-5 h-full flex gap-4 items-center"
+              onClick={isPlaying == 2 ? pause : play2}
+              aria-label={
+                isPlaying == 2 ? "Pause Live Broadcast" : "Play Live Broadcast"
+              }
+            >
+              <span className="font-medium text-small bg-white h-6 w-6 text-black rounded-sm">
+                2
+              </span>
+              <div className="h-6 w-6">
+                {isPlaying == 2 ? <Pause /> : <Play />}
+              </div>
+            </button>
+
+            {!isLoading && !error && scheduleData?.liveNow?.title && (
+              <span className="flex-1 truncate mt-0.5 relative">
+                <Marquee
+                  key={scheduleData?.ch2.liveNow + ch2IsOnline}
+                  text={
+                    <span className="pr-8">{scheduleData?.ch2.liveNow}</span>
+                  }
+                  speed={0.3}
+                />
+                {/* <span className="absolute left-0 top-0.5 font-medium text-small flex items-center justify-center pt-0.5 bg-white h-8 w-8 text-black rounded-sm">
+                2
+              </span> */}
+              </span>
+            )}
+          </div>
         )}
 
         {!isLoading && (
           <>
             {hasBack && isSchedulePage ? (
               <button
-                className="lg:hidden flex pt-0.5 pb-0.5 sm:pt-4 sm:pb-4 px-4 !ml-0 self-stretch items-center bg-black border-white border-l-2 border-r-0 text-white"
+                className="hidden lg:flex pt-0.5 pb-0.5 sm:pt-4 sm:pb-4 px-4 !ml-0 self-stretch items-center bg-black border-white border-l-2 border-r-0 text-white"
                 onClick={() => router.back()}
               >
                 {isSchedulePage ? (
@@ -199,7 +283,7 @@ export default function LivePlayer() {
               </button>
             ) : (
               <Link
-                className="lg:hidden flex pt-0.5 pb-0.5 sm:pt-4 sm:pb-4 px-4 !ml-0 self-stretch items-center bg-black border-white border-l-2 border-r-0 text-white"
+                className="hidden lg:flex pt-0.5 pb-0.5 sm:pt-4 sm:pb-4 px-4 !ml-0 self-stretch items-center bg-black border-white border-l-2 border-r-0 text-white"
                 href={isSchedulePage ? "/" : "/schedule"}
               >
                 {isSchedulePage ? (
@@ -209,7 +293,7 @@ export default function LivePlayer() {
                     className="h-6 w-[24px] rotate-180 "
                   />
                 ) : (
-                  <AiOutlineCalendar className="h-[22px] w-[22px]" />
+                  <AiOutlineCalendar />
                 )}
                 <span className="sr-only lg:hidden">
                   {isSchedulePage ? "Back" : "Schedule"}
@@ -218,86 +302,20 @@ export default function LivePlayer() {
             )}
           </>
         )}
-      </div>
 
-      {ch2IsOnline && (
-        <div className="h-12 sm:h-16 flex items-center flex-1 truncate">
-          <div className="w-0.5 bg-white h-full !ml-0 hidden lg:block"></div>
-          <button
-            className="grow-0 pl-4 sm:pl-8 pr-3 sm:pr-5 lg:px-5 h-full flex gap-4 items-center"
-            onClick={isPlaying == 2 ? pause : play2}
-            aria-label={
-              isPlaying == 2 ? "Pause Live Broadcast" : "Play Live Broadcast"
-            }
-          >
-            <span className="font-medium text-small bg-white h-6 w-6 text-black rounded-sm">
-              2
-            </span>
-            <div className="h-6 w-6">
-              {isPlaying == 2 ? <Pause /> : <Play />}
-            </div>
-          </button>
-
-          {!isLoading && !error && scheduleData?.liveNow?.title && (
-            <span className="flex-1 truncate mt-0.5 relative">
-              <Marquee
-                key={scheduleData?.ch2.liveNow + ch2IsOnline}
-                text={<span className="pr-8">{scheduleData?.ch2.liveNow}</span>}
-                speed={0.3}
-              />
-              {/* <span className="absolute left-0 top-0.5 font-medium text-small flex items-center justify-center pt-0.5 bg-white h-8 w-8 text-black rounded-sm">
-                2
-              </span> */}
-            </span>
-          )}
-        </div>
+        <audio hidden id="refuge-live-player" preload="none" ref={player}>
+          <source ref={source} type="audio/mpeg" />
+          Your browser does not support the audio element.
+        </audio>
+      </section>
+      {scheduleData?.liveNow.isMixedFeelings && (
+        <MixedFeelingsPlayer
+          isPlaying={isPlaying == 1}
+          onPlay={isPlaying ? pause : play}
+          slug={scheduleData?.liveNow.slug}
+        />
       )}
-
-      {!isLoading && (
-        <>
-          {hasBack && isSchedulePage ? (
-            <button
-              className="hidden lg:flex pt-0.5 pb-0.5 sm:pt-4 sm:pb-4 px-4 !ml-0 self-stretch items-center bg-black border-white border-l-2 border-r-0 text-white"
-              onClick={() => router.back()}
-            >
-              {isSchedulePage ? (
-                <Arrow
-                  colour="white"
-                  size={24}
-                  className="h-6 w-[24px] rotate-180 "
-                />
-              ) : (
-                <AiOutlineCalendar />
-              )}
-              <span className="sr-only lg:hidden">Back</span>
-            </button>
-          ) : (
-            <Link
-              className="hidden lg:flex pt-0.5 pb-0.5 sm:pt-4 sm:pb-4 px-4 !ml-0 self-stretch items-center bg-black border-white border-l-2 border-r-0 text-white"
-              href={isSchedulePage ? "/" : "/schedule"}
-            >
-              {isSchedulePage ? (
-                <Arrow
-                  colour="white"
-                  size={24}
-                  className="h-6 w-[24px] rotate-180 "
-                />
-              ) : (
-                <AiOutlineCalendar />
-              )}
-              <span className="sr-only lg:hidden">
-                {isSchedulePage ? "Back" : "Schedule"}
-              </span>
-            </Link>
-          )}
-        </>
-      )}
-
-      <audio hidden id="refuge-live-player" preload="none" ref={player}>
-        <source ref={source} type="audio/mpeg" />
-        Your browser does not support the audio element.
-      </audio>
-    </section>
+    </>
   );
 }
 
