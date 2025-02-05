@@ -20,11 +20,10 @@ export default async function handler(
   }
 
   try {
-    const { t } = req.query as typeof req.query & {
-      t: string;
-    };
+    const t = req.query.t as string;
+    const decodedTimestamp = decodeURIComponent(t);
 
-    const show = await getShowByTime(t);
+    const show = await getShowByTime(decodedTimestamp);
 
     res
       .setHeader("Cache-Control", "s-maxage=1, stale-while-revalidate=59")
