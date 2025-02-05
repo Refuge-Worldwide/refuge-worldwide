@@ -13,7 +13,11 @@
     },
     {
       "path": "/api/cron/artwork-email",
-      "schedule": "30 17 * * *"
+      "schedule": "30 17 * * 1-6"
+    },
+    {
+      "path": "/api/cron/artwork-email?for-tues=true",
+      "schedule": "0 14 * * 1"
     }
   ]
 }

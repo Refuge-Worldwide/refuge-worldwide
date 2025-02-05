@@ -4,8 +4,8 @@ import { getUpcomingShowsByDate } from "../../../lib/contentful/pages/radio";
 import dayjs from "dayjs";
 import { sendSlackMessage } from "../../../lib/slack";
 
-const contentfulSpaceId = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID;
-const rateLimitDelay = 105; // 105 milliseconds delay to respect rate limits
+const CONTENTFUL_SPACE_ID = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID;
+const RATE_LIMIT_DELAY = 105; // 105 milliseconds delay to respect rate limits
 
 export default async function handler(
   req: NextApiRequest,
@@ -13,19 +13,29 @@ export default async function handler(
 ) {
   const authHeader = req.headers.authorization;
 
-  // if (
-  //   !process.env.CRON_SECRET ||
-  //   authHeader !== `Bearer ${process.env.CRON_SECRET}`
-  // ) {
-  //   return res.status(401).json({ success: false });
-  // }
-
-  const values = req.body;
+  if (
+    !process.env.CRON_SECRET ||
+    authHeader !== `Bearer ${process.env.CRON_SECRET}`
+  ) {
+    return res.status(401).json({ success: false });
+  }
 
   try {
+    // normally we send artwork out 2 days in advance so set this as default
+    let daysToAdd = 2;
+
+    console.log(req.query);
+
+    // Check if we are processing artwork emails for tuesday.
+    // These are sent on monday due to not being ready until then.
+    if (req.query["for-tues"]) {
+      daysToAdd = 1;
+    }
+
     const now = dayjs();
 
-    const artworkEmailDate = now.add(2, "days");
+    const artworkEmailDate = now.add(daysToAdd, "days");
+
     console.log(
       `Processing emails for date: ${artworkEmailDate.format("YYYY-MM-DD")}`
     );
@@ -49,14 +59,16 @@ export default async function handler(
             await sendArtworkEmail(artist, artworkEmailDate, artwork);
             emailedArtists.add(artist.email); // Add artist email to the set after emailing
             showEmailed = true;
-            await new Promise((resolve) => setTimeout(resolve, rateLimitDelay)); // Respect the rate limit
+            await new Promise((resolve) =>
+              setTimeout(resolve, RATE_LIMIT_DELAY)
+            ); // Respect the rate limit
           } catch (error) {
             console.error(
               `Failed to send email to ${artist.name} (${artist.email}) for show "${show.title}":`,
               error
             );
             await sendSlackMessage(
-              `Failed to send email request to ${artist.name} (${artist.email}) for show *${show.title}*. Error: ${error.message}. <@U04HG3VHHEW>`,
+              `(◎-◎；) Failed to send email request to ${artist.name} (${artist.email}) for show *${show.title}*. Error: ${error.message}. <@U04HG3VHHEW>`,
               "error"
             );
           }
@@ -65,7 +77,7 @@ export default async function handler(
 
       if (!showEmailed) {
         await sendSlackMessage(
-          `Show *${show.title}* has no emails assigned. No artwork email was sent. <https://app.contentful.com/spaces/${contentfulSpaceId}/entries/${show.sys.id}|Edit show >`
+          `【・_・?】Show *${show.title}* has no emails assigned. No artwork email was sent. <https://app.contentful.com/spaces/${CONTENTFUL_SPACE_ID}/entries/${show.sys.id}|Edit show >`
         );
       }
     }
