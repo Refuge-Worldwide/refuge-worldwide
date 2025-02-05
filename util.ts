@@ -273,3 +273,12 @@ export const showArtworkURL = (
 
   return url;
 };
+
+export const placeholderImage = {
+  sys: { id: "4njwdSvfwFLNoSZ6j1jE2G" },
+  title: "",
+  description: "",
+  url: "https://images.ctfassets.net/taoiy3h84mql/4njwdSvfwFLNoSZ6j1jE2G/210230cc75460ea78c4b242d1cbdb55c/default-image.jpg",
+  width: 2000,
+  height: 1340,
+};

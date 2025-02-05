@@ -10,6 +10,8 @@ import { client } from "./client";
 import { previewClient } from "./client";
 import { s } from "@fullcalendar/core/internal-common";
 import { PastShowSchema } from "../../types/shared";
+import { createPastShowSchema } from "./client";
+import { placeholderImage } from "../../util";
 export interface SearchData {
   shows: PastShowSchema[];
   articles: TypeArticle[];
@@ -173,7 +175,9 @@ function parseShowToPastShowSchema(show): PastShowSchema {
     id: show.sys?.id,
     title: show.fields?.title,
     slug: show.fields?.slug,
-    coverImage: show.fields?.coverImage?.fields.file.url,
+    coverImage: show.fields.coverImage
+      ? show.fields.coverImage.fields.file.url
+      : placeholderImage.url,
     mixcloudLink: show.fields?.mixcloudLink,
     genres: show.fields.genres
       .map((genre) => genre.fields?.name)
