@@ -5,7 +5,7 @@ import { ShowPreviewFragment } from "./fragments";
 import dayjs from "dayjs";
 import type { TypeShow, TypeShowFields } from "../../types/contentful";
 import type { ShowInterface, PastShowSchema } from "../../types/shared";
-import { sort } from "../../util";
+import { sort, placeholderImage } from "../../util";
 
 export const client = createClient({
   accessToken: process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN,
@@ -58,7 +58,9 @@ export const createPastShowSchema = (show: TypeShow): PastShowSchema => ({
   date: show.fields.date,
   slug: show.fields.slug,
   mixcloudLink: show.fields.mixcloudLink,
-  coverImage: show.fields.coverImage.fields.file.url,
+  coverImage: show.fields.coverImage
+    ? show.fields.coverImage.fields.file.url
+    : placeholderImage.url,
   genres: show.fields.genres.map((genre) => genre.fields?.name).filter(Boolean),
   // TODO: check if this field can be removed.
   artwork: show.fields.artwork ? show.fields.artwork.fields.file.url : null,
@@ -133,26 +135,40 @@ export async function getPastShows(
   const items =
     res.data.genreCollection.items[0].linkedFrom.showCollection.items;
 
+  items.forEach((show) => {
+    if (!show.coverImage || !show.coverImage.url) {
+      console.log("Show without cover image URL:", show);
+    }
+  });
+
+  //TODO: move to processor function.
   const processed = items.map((show) => ({
     id: show.sys.id,
     title: show.title,
     date: show.date,
     slug: show.slug,
     mixcloudLink: show.mixcloudLink,
-    coverImage: show.coverImage.url,
-    genres: show.genresCollection.items.map((genre) => genre?.name),
+    coverImage: show.coverImage?.url
+      ? show.coverImage.url
+      : placeholderImage.url,
+    genres: show.genresCollection.items
+      .map((genre) => genre?.name)
+      .filter(Boolean),
   }));
 
+  // remove shows that do not have a playback link or are newer than today.
   const filtered = processed.filter(
     (show) => show.mixcloudLink && show.date <= now
   );
 
+  // sort shows by date
   const sorted = filtered.sort((a, b) => {
     if (dayjs(a.date).isAfter(b.date)) return -1;
     if (dayjs(b.date).isAfter(a.date)) return 1;
     return sort.alpha(a.title, b.title);
   });
 
+  // paginate and return
   return sorted.slice(skip, skip + take);
 }
 

@@ -10,16 +10,8 @@ import {
   extractCollectionItem,
   extractLinkedFromCollection,
   sort,
+  placeholderImage,
 } from "../../../util";
-
-const placeholderImage = {
-  sys: { id: "4njwdSvfwFLNoSZ6j1jE2G" },
-  title: "",
-  description: "",
-  url: "/images/placeholder.jpg",
-  width: 2000,
-  height: 1340,
-};
 
 export const RADIO_SHOWS_PAGE_SIZE = 20;
 
@@ -253,7 +245,7 @@ export async function getRelatedShows(
     "showCollection"
   );
 
-  // find a nicer way to process
+  //TODO: move to processor function.
   const processed = linkedFromShows.map((show) => ({
     id: show.sys.id,
     title: show.title,
