@@ -69,7 +69,7 @@ async function sendEmails(
 
     if (!showEmailed) {
       await sendSlackMessage(
-        `Show *${show.title}* has no emails assigned. They did not receive ${severity} email. <https://app.contentful.com/spaces/${contentfulSpaceId}/entries/${show.sys.id}|Edit show >`
+        `【・_・?】 Show *${show.title}* has no emails assigned. They did not receive ${severity} email. <https://app.contentful.com/spaces/${contentfulSpaceId}/entries/${show.sys.id}|Edit show >`
       );
     }
   }
@@ -80,7 +80,7 @@ function checkEmails(shows: ShowInterface[]) {
     show.artistsCollection.items.forEach((artist) => {
       if (!artist.email) {
         sendSlackMessage(
-          `*${artist.name}* has no email assigned to them. This is a preflight check, please add an email address within 3 days to ensure they recieve the first automated email. <https://app.contentful.com/spaces/${contentfulSpaceId}/entries/${artist.sys.id}|Add email >`
+          `【・_・?】 *${artist.name}* has no email assigned to them. This is a preflight check, please add an email address within 3 days to ensure they recieve the first automated email. <https://app.contentful.com/spaces/${contentfulSpaceId}/entries/${artist.sys.id}|Add email >`
         );
       }
     });
