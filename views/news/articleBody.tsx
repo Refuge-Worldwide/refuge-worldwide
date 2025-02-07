@@ -89,6 +89,21 @@ export default function ArticleBody({
             )}
           </Prose>
 
+          {/* Center h5 headings for specific article because its not possible via cms (ﾉ･o･)ﾉ */}
+          {title.includes("Falastin Cinema Week Programme Announcement") && (
+            <style jsx global>{`
+              h5 {
+                text-align: center;
+                margin-top: -1rem !important;
+                margin-bottom: 3rem !important;
+                font-family: Visuelt, system-ui, -apple-system, "system-ui",
+                  "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
+                  sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+                  "Segoe UI Symbol", "Noto Color Emoji";
+              }
+            `}</style>
+          )}
+
           <div className="h-12 md:h-24" />
         </div>
       </section>
