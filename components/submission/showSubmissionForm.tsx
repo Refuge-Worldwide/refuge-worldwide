@@ -33,7 +33,12 @@ const validationSchema = [
     ),
   }),
   Yup.object().shape({
-    showName: Yup.string().required("Please provide a show name"),
+    showName: Yup.string()
+      .required("Please provide a show name")
+      .max(
+        35,
+        "Show names can be max 35 characters long, if you have additional info please add it to the description."
+      ),
     genres: Yup.array()
       .of(
         Yup.object().shape({
