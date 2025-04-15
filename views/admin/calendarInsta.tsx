@@ -64,7 +64,7 @@ export default function CalendarInsta() {
       onOpenChange={(dialogOpen) => setDialogOpen(dialogOpen)}
     >
       <Dialog.Trigger className="hover:bg-black/10 px-2 py-1 rounded-lg">
-        Instagram text
+        Daily Instagram text
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className="data-[state=open]:animate-overlayShow w-screen h-screen fixed top-0 left-0 bg-black/50 backdrop-blur-sm z-50" />

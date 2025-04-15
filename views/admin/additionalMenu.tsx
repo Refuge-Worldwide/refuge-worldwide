@@ -60,16 +60,16 @@ export default function ShowArtworkModal() {
         className="border border-black p-2 bg-white shadow-md text-small flex flex-col items-start z-20"
       >
         <DropdownMenu.Item
-          className="hover:bg-black/10 px-2 py-1 rounded-lg"
+          className="hover:bg-black/10 px-2 py-1 rounded-lg cursor-pointer"
           onClick={() => downloadArtwork()}
         >
           Download todays artwork
         </DropdownMenu.Item>
         <DropdownMenu.Item asChild>
-          <CalendarInsta />
+          <CalendarInstaWeekly />
         </DropdownMenu.Item>
         <DropdownMenu.Item asChild>
-          <CalendarInstaWeekly />
+          <CalendarInsta />
         </DropdownMenu.Item>
         <DropdownMenu.Item className="hover:bg-black/10 px-2 py-1 rounded-lg">
           <Link href="/admin/daily-schedule-generator">
