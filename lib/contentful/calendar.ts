@@ -44,6 +44,7 @@ interface CalendarShow {
   };
   additionalImages: Array<string>;
   isFeatured?: boolean;
+  instagramHandles?: string;
 }
 
 interface fcCalendarShow {
@@ -567,4 +568,65 @@ export async function getInstaInfo() {
   });
 
   return instaInfo;
+}
+
+export async function getWeeklyInstaInfo() {
+  const cetAdjustment = dayjs().tz("Europe/Berlin").utcOffset();
+  const nowUTC = dayjs.utc();
+  const nowCET = nowUTC.add(cetAdjustment, "minutes");
+  const startOfWeek = nowCET.startOf("week").add(1, "day");
+  const startSchedule = startOfWeek.toISOString();
+  const endSchedule = startOfWeek.add(1, "week").toISOString();
+
+  const scheduleQuery = /* GraphQL */ `
+    query scheduleQuery($startSchedule: DateTime, $endSchedule: DateTime) {
+      showCollection(
+        order: date_ASC
+        preview: true
+        where: {
+          date_gt: $startSchedule
+          dateEnd_lte: $endSchedule
+          dateEnd_exists: true
+        }
+      ) {
+        items {
+          title
+          date
+          dateEnd
+          instagramHandles
+        }
+      }
+    }
+  `;
+
+  const res = await graphql(scheduleQuery, {
+    variables: { startSchedule, endSchedule },
+    preview: true,
+  });
+
+  const scheduleInfo = extractCollection<CalendarShow>(res, "showCollection");
+
+  // Group shows by day
+  const groupedByDay: Record<string, string[]> = {};
+
+  scheduleInfo.forEach((show) => {
+    const day = dayjs(show.date).format("dddd");
+    const handles = show.instagramHandles;
+
+    if (!groupedByDay[day]) {
+      groupedByDay[day] = [];
+    }
+
+    groupedByDay[day].push(handles);
+  });
+
+  // Convert groupedByDay to an array of objects
+  const formattedOutput = Object.entries(groupedByDay).map(
+    ([day, handles]) => ({
+      day,
+      handles: handles.join(" "),
+    })
+  );
+
+  return formattedOutput;
 }
