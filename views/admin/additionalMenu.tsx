@@ -14,6 +14,7 @@ import Link from "next/link";
 import { getTodaysArtwork } from "../../lib/contentful/calendar";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
+import CalendarInstaWeekly from "./calendarInstaWeekly";
 
 export default function ShowArtworkModal() {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
@@ -64,8 +65,11 @@ export default function ShowArtworkModal() {
         >
           Download todays artwork
         </DropdownMenu.Item>
-        <DropdownMenu.Item asChild onSelect={(e) => e.preventDefault()}>
+        <DropdownMenu.Item asChild>
           <CalendarInsta />
+        </DropdownMenu.Item>
+        <DropdownMenu.Item asChild>
+          <CalendarInstaWeekly />
         </DropdownMenu.Item>
         <DropdownMenu.Item className="hover:bg-black/10 px-2 py-1 rounded-lg">
           <Link href="/admin/daily-schedule-generator">

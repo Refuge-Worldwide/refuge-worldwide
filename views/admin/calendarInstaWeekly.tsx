@@ -2,7 +2,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import Loading from "../../components/loading";
 import { useEffect, useState } from "react";
 import { Cross } from "../../icons/cross";
-import { getInstaInfo } from "../../lib/contentful/calendar";
+import { getWeeklyInstaInfo } from "../../lib/contentful/calendar";
 import { TfiSearch } from "react-icons/tfi";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -13,18 +13,16 @@ import toast from "react-hot-toast";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-export default function CalendarInsta() {
+export default function CalendarInstaWeekly() {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [data, setData] = useState(null);
   const [isLoading, setLoading] = useState(true);
   const instaText = useRef<HTMLParagraphElement>(null);
-  const instaHandles = useRef<HTMLDivElement>(null);
   const [copied, setCopied] = useState<boolean>(false);
 
   useEffect(() => {
     dialogOpen &&
-      getInstaInfo().then((info) => {
-        console.log("get insta info");
+      getWeeklyInstaInfo().then((info) => {
         setData(info);
         setLoading(false);
       });
@@ -33,17 +31,6 @@ export default function CalendarInsta() {
   const copyText = () => {
     navigator.clipboard
       .writeText(instaText.current?.innerText)
-      .then(() => {
-        toast.success("Copied to your clipboard");
-      })
-      .catch(() => {
-        toast.error("Uh oh, something went wrong :/");
-      });
-  };
-
-  const copyHandles = () => {
-    navigator.clipboard
-      .writeText(instaHandles.current?.innerText)
       .then(() => {
         toast.success("Copied to your clipboard");
       })
@@ -64,7 +51,7 @@ export default function CalendarInsta() {
       onOpenChange={(dialogOpen) => setDialogOpen(dialogOpen)}
     >
       <Dialog.Trigger className="hover:bg-black/10 px-2 py-1 rounded-lg">
-        Instagram text
+        Weekly instagram handles
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className="data-[state=open]:animate-overlayShow w-screen h-screen fixed top-0 left-0 bg-black/50 backdrop-blur-sm z-50" />
@@ -78,55 +65,20 @@ export default function CalendarInsta() {
                 contentEditable={true}
                 suppressContentEditableWarning={true}
               >
-                📻 {dayjs().format("dddd")} (all times CET)
-                <br />
-                <br />
-                {data.map((show) => (
-                  <>
-                    {show.date} {show.title}
+                {data.map((day) => (
+                  <span key={day.day}>
+                    {day.day}: {day.handles}
                     <br />
-                  </>
+                    <br />
+                  </span>
                 ))}
-                <>
-                  {data[data.length - 1].dateEnd} Repeats Playlist
-                  <br />
-                </>
-                <br />
-                🎧 Listen live:
-                <br />
-                www.refugeworldwide.com
-                <br />
-                <br />
-                💬 Chatroom:
-                <br />
-                www.refugeworldwide.com/chat
-                <br />
-                <br />
-                🥂 Drinks: @oona.bar - Weserstr. 166, 12045 Berlin
-                <br />
-                <br />
-                🎙Roll call:
-                <br />
-                <div ref={instaHandles}>
-                  {data.map((show) => (
-                    <>
-                      {show.instagramHandles} <br />
-                    </>
-                  ))}
-                </div>
               </p>
               <div className="flex gap-2 fixed top-2 right-2 z-10">
                 <button
                   className="hover:bg-black/10 px-2 py-1 rounded-lg border"
-                  onClick={() => copyHandles()}
-                >
-                  <span>Copy handles</span>
-                </button>
-                <button
-                  className="hover:bg-black/10 px-2 py-1 rounded-lg border"
                   onClick={() => copyText()}
                 >
-                  <span>Copy it all</span>
+                  <span>Copy it</span>
                 </button>
                 <Dialog.Close asChild>
                   <button className="float-right lg:hidden" aria-label="Close">
