@@ -193,22 +193,24 @@ export const showArtworkURL = (
   let formattedArtists = values.artists;
 
   if (!regenerate) {
-    formattedArtists = values.artists
-      .map((x) => x.label)
-      .join(", ")
-      .replace(/, ([^,]*)$/, " & $1");
-
-    if (useExtraArtists && values.hasExtraArtists) {
-      console.log("using additional artists");
-      const additionalArtists = values.extraArtists
-        .map((x) => x.name)
+    const formatArtists = (artists: { label?: string; name?: string }[]) =>
+      artists
+        .map((artist) => artist.label || artist.name)
         .join(", ")
         .replace(/, ([^,]*)$/, " & $1");
 
-      formattedArtists = `${formattedArtists}, ${additionalArtists}`.replace(
-        /, ([^,]*)$/,
-        " & $1"
-      );
+    formattedArtists = formatArtists(values.artists);
+
+    if (useExtraArtists && values.hasExtraArtists) {
+      console.log("using additional artists");
+      const additionalArtists = formatArtists(values.extraArtists);
+
+      formattedArtists = formattedArtists
+        ? `${formattedArtists}, ${additionalArtists}`.replace(
+            /, ([^,]*)$/,
+            " & $1"
+          )
+        : additionalArtists;
     }
   }
 
