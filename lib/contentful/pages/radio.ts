@@ -102,6 +102,7 @@ export async function getRadioPageSingle(slug: string, preview: boolean) {
 
 export type UpcomingShowType = Pick<
   ShowInterface,
+  | "sys"
   | "title"
   | "date"
   | "slug"
