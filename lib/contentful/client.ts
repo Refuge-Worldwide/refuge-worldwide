@@ -6,6 +6,7 @@ import dayjs from "dayjs";
 import type { TypeShow, TypeShowFields } from "../../types/contentful";
 import type { ShowInterface, PastShowSchema } from "../../types/shared";
 import { sort, placeholderImage } from "../../util";
+import { createClient as createManagementClient } from "contentful-management";
 
 export const client = createClient({
   accessToken: process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN,
@@ -18,10 +19,20 @@ export const previewClient = createClient({
   host: "preview.contentful.com",
 });
 
-export const managementClient = createClient({
-  accessToken: process.env.CONTENTFUL_MANAGEMENT_ACCESS_TOKEN,
-  space: process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID,
-});
+export const managementClient = async () => {
+  const client = createManagementClient({
+    accessToken: process.env.CONTENTFUL_MANAGEMENT_ACCESS_TOKEN,
+  });
+
+  const space = await client.getSpace(
+    process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID
+  );
+  const environment = await space.getEnvironment(
+    process.env.NEXT_PUBLIC_CONTENTFUL_ENVIRONMENT_ID
+  );
+
+  return environment;
+};
 
 export const getClient = (preview?: boolean) =>
   preview ? previewClient : client;

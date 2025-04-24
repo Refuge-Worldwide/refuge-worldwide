@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import dayjs, { locale } from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { graphql } from ".";
 import { extractCollection } from "../../util";
@@ -11,6 +11,7 @@ import {
   createReferencesArray,
 } from "../../lib/contentful/management";
 import { sendConfirmationEmail } from "../resend/email";
+import { managementClient } from "./client";
 
 dayjs.extend(utc);
 
@@ -63,86 +64,146 @@ interface fcCalendarShow {
 }
 
 export async function getCalendarShows(start, end, preview: boolean) {
-  const calendarQuery = /* GraphQL */ `
-    query calendarQuery($start: DateTime, $end: DateTime, $preview: Boolean) {
-      showCollection(
-        order: date_ASC
-        where: { date_gte: $start, dateEnd_lte: $end, dateEnd_exists: true }
-        preview: $preview
-        limit: 999
-      ) {
-        items {
-          title
-          type
-          date
-          dateEnd
-          slug
-          sys {
-            publishedVersion
-            id
-          }
-          status
-          mixcloudLink
-          artistsCollection(limit: 9) {
-            items {
-              sys {
-                id
-              }
-              name
-              email
-            }
-          }
-          coverImage: coverImage {
-            url
-          }
-          additionalImages
-          isFeatured
+  const client = await managementClient();
+
+  const query = {
+    content_type: "show",
+    "fields.date[gte]": start,
+    "fields.dateEnd[lte]": end,
+    "fields.dateEnd[exists]": true,
+    order: "fields.date",
+    limit: 999,
+  };
+
+  const res = await client.getEntries(query);
+
+  const processed = res.items.map((item) => {
+    // Remove locale from field values if they exist
+    const show = Object.fromEntries(
+      Object.entries(item.fields).map(([key, value]) => {
+        if (value && typeof value === "object" && value["en-US"]) {
+          return [key, value["en-US"]];
         }
-      }
-    }
-  `;
+        return [key, value];
+      })
+    );
 
-  const res = await graphql(calendarQuery, {
-    variables: { start, end, preview },
-    preview,
-  });
+    console.log(show);
 
-  const shows = extractCollection<CalendarShow>(res, "showCollection");
-
-  const processed = shows.map((show) => {
     return {
-      id: show.sys.id,
+      id: item.sys.id,
       title: show.title,
       type: show.type,
-      artists: transformForDropdown(show.artistsCollection.items),
+      artists: transformForDropdown(show.artistsCollection?.items || []),
       start: show.date ? show.date.slice(0, -1) : null,
       end: show.dateEnd ? show.dateEnd.slice(0, -1) : null,
-      status: show.status ? show.status : "Submitted",
-      published: show.sys.publishedVersion ? true : false,
+      status: show.status || "Submitted",
+      published: item.sys.publishedVersion ? true : false,
+      changed:
+        !!item.sys.publishedVersion &&
+        item.sys.version >= item.sys.publishedVersion + 2,
       isFeatured: show.isFeatured,
       backgroundColor:
-        show.status == "TBC"
+        show.status === "TBC"
           ? "#e3e3e3"
-          : show.status == "Confirmed"
+          : show.status === "Confirmed"
           ? "#F1E2AF"
-          : show.status == "Submitted"
+          : show.status === "Submitted"
           ? "#B3DCC1"
           : "#B3DCC1",
       borderColor:
-        show.status == "TBC"
+        show.status === "TBC"
           ? "#e3e3e3"
-          : show.status == "Confirmed"
+          : show.status === "Confirmed"
           ? "#F1E2AF"
-          : show.status == "Submitted"
+          : show.status === "Submitted"
           ? "#B3DCC1"
           : "#B3DCC1",
       mixcloudLink: show.mixcloudLink,
-      images: [
-        show.coverImage?.url,
-        ...(show.additionalImages ? show.additionalImages : []),
-      ],
+      images: [show.coverImage?.url, ...(show.additionalImages || [])],
     };
   });
+
+  // const calendarQuery = /* GraphQL */ `
+  //   query calendarQuery($start: DateTime, $end: DateTime, $preview: Boolean) {
+  //     showCollection(
+  //       order: date_ASC
+  //       where: { date_gte: $start, dateEnd_lte: $end, dateEnd_exists: true }
+  //       preview: $preview
+  //       limit: 999
+  //     ) {
+  //       items {
+  //         title
+  //         type
+  //         date
+  //         dateEnd
+  //         slug
+  //         sys {
+  //           publishedVersion
+  //           id
+  //         }
+  //         status
+  //         mixcloudLink
+  //         artistsCollection(limit: 9) {
+  //           items {
+  //             sys {
+  //               id
+  //             }
+  //             name
+  //             email
+  //           }
+  //         }
+  //         coverImage: coverImage {
+  //           url
+  //         }
+  //         additionalImages
+  //         isFeatured
+  //       }
+  //     }
+  //   }
+  // `;
+
+  // const res = await graphql(calendarQuery, {
+  //   variables: { start, end, preview },
+  //   preview,
+  // });
+
+  // const shows = extractCollection<CalendarShow>(res, "showCollection");
+
+  // const processed = shows.map((show) => {
+  //   return {
+  //     id: show.sys.id,
+  //     title: show.title,
+  //     type: show.type,
+  //     artists: transformForDropdown(show.artistsCollection.items),
+  //     start: show.date ? show.date.slice(0, -1) : null,
+  //     end: show.dateEnd ? show.dateEnd.slice(0, -1) : null,
+  //     status: show.status ? show.status : "Submitted",
+  //     published: show.sys.publishedVersion ? true : false,
+  //     isFeatured: show.isFeatured,
+  //     backgroundColor:
+  //       show.status == "TBC"
+  //         ? "#e3e3e3"
+  //         : show.status == "Confirmed"
+  //           ? "#F1E2AF"
+  //           : show.status == "Submitted"
+  //             ? "#B3DCC1"
+  //             : "#B3DCC1",
+  //     borderColor:
+  //       show.status == "TBC"
+  //         ? "#e3e3e3"
+  //         : show.status == "Confirmed"
+  //           ? "#F1E2AF"
+  //           : show.status == "Submitted"
+  //             ? "#B3DCC1"
+  //             : "#B3DCC1",
+  //     mixcloudLink: show.mixcloudLink,
+  //     images: [
+  //       show.coverImage?.url,
+  //       ...(show.additionalImages ? show.additionalImages : []),
+  //     ],
+  //   };
+  // });
 
   return {
     processed,
