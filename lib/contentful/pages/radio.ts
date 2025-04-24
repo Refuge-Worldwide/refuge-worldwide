@@ -102,6 +102,7 @@ export async function getRadioPageSingle(slug: string, preview: boolean) {
 
 export type UpcomingShowType = Pick<
   ShowInterface,
+  | "sys"
   | "title"
   | "date"
   | "slug"
@@ -133,6 +134,9 @@ export async function getUpcomingShows(
         limit: $limit
       ) {
         items {
+          sys {
+            id
+          }
           title
           date
           slug

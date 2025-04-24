@@ -922,9 +922,14 @@ function renderEventContent(eventInfo) {
             </span>
           ))}
       </p>
-      <div className="absolute bottom-1 right-1 opacity-50 flex">
-        {eventInfo.event?.extendedProps?.mixcloudLink && <IoMdMusicalNote />}
-        {eventInfo.event?.extendedProps?.published && <IoMdCheckmark />}
+      <div className="absolute bottom-1 right-1 flex">
+        {eventInfo.event?.extendedProps?.isFeatured && <span>🍊</span>}
+        {eventInfo.event?.extendedProps?.mixcloudLink && (
+          <IoMdMusicalNote opacity={0.5} />
+        )}
+        {eventInfo.event?.extendedProps?.published && (
+          <IoMdCheckmark opacity={0.5} />
+        )}
       </div>
     </div>
   );
