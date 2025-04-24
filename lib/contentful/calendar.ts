@@ -610,7 +610,8 @@ export async function getWeeklyInstaInfo() {
   const groupedByDay: Record<string, string[]> = {};
 
   scheduleInfo.forEach((show) => {
-    const day = dayjs(show.date).format("dddd");
+    // offset day by a few hours so we include shows that are at 0000 or 0100 in the previous day.
+    const day = dayjs(show.date).subtract(5, "hours").format("dddd");
     const handles = show.instagramHandles;
 
     if (!groupedByDay[day]) {
