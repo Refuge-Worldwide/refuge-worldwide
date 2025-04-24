@@ -193,22 +193,24 @@ export const showArtworkURL = (
   let formattedArtists = values.artists;
 
   if (!regenerate) {
-    formattedArtists = values.artists
-      .map((x) => x.label)
-      .join(", ")
-      .replace(/, ([^,]*)$/, " & $1");
-
-    if (useExtraArtists && values.hasExtraArtists) {
-      console.log("using additional artists");
-      const additionalArtists = values.extraArtists
-        .map((x) => x.name)
+    const formatArtists = (artists: { label?: string; name?: string }[]) =>
+      artists
+        .map((artist) => artist.label || artist.name)
         .join(", ")
         .replace(/, ([^,]*)$/, " & $1");
 
-      formattedArtists = `${formattedArtists}, ${additionalArtists}`.replace(
-        /, ([^,]*)$/,
-        " & $1"
-      );
+    formattedArtists = formatArtists(values.artists);
+
+    if (useExtraArtists && values.hasExtraArtists) {
+      console.log("using additional artists");
+      const additionalArtists = formatArtists(values.extraArtists);
+
+      formattedArtists = formattedArtists
+        ? `${formattedArtists}, ${additionalArtists}`.replace(
+            /, ([^,]*)$/,
+            " & $1"
+          )
+        : additionalArtists;
     }
   }
 
@@ -263,7 +265,7 @@ export const showArtworkURL = (
   // Determine the base URL based on the environment
   const baseUrl =
     process.env.NODE_ENV === "development"
-      ? "https://7a2a-194-126-177-76.ngrok-free.app/"
+      ? "https://a5f4-2a02-8109-b68b-5000-a040-54e2-7ee2-d589.ngrok-free.app"
       : process.env.NEXT_PUBLIC_SITE_URL;
 
   // Set URL for social image
