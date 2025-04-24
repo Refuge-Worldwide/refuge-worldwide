@@ -11,6 +11,7 @@ import {
   createReferencesArray,
 } from "../../lib/contentful/management";
 import { sendConfirmationEmail } from "../resend/email";
+import { getUpcomingShows } from "./pages/radio";
 
 dayjs.extend(utc);
 
@@ -109,6 +110,8 @@ export async function getCalendarShows(start, end, preview: boolean) {
 
   const shows = extractCollection<CalendarShow>(res, "showCollection");
 
+  const upcomingShows = await getUpcomingShows(preview);
+
   const processed = shows.map((show) => {
     return {
       id: show.sys.id,
@@ -119,7 +122,9 @@ export async function getCalendarShows(start, end, preview: boolean) {
       end: show.dateEnd ? show.dateEnd.slice(0, -1) : null,
       status: show.status ? show.status : "Submitted",
       published: show.sys.publishedVersion ? true : false,
-      isFeatured: show.isFeatured,
+      isFeatured: upcomingShows.some(
+        (upcomingShow) => upcomingShow.sys.id === show.sys.id
+      ),
       backgroundColor:
         show.status == "TBC"
           ? "#e3e3e3"

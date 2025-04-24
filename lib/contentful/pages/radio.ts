@@ -133,6 +133,9 @@ export async function getUpcomingShows(
         limit: $limit
       ) {
         items {
+          sys {
+            id
+          }
           title
           date
           slug
