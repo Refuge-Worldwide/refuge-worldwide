@@ -3,6 +3,7 @@ import { EventInterface, EventPageData } from "../../../types/shared";
 import { extractCollection, extractPage } from "../../../util";
 import { EventFragment } from "../fragments";
 import dayjs from "dayjs";
+import { placeholderImage } from "../../../util";
 
 export const EVENTS_PAGE_SIZE = 24;
 
@@ -82,11 +83,20 @@ export async function getEventsPage(preview: boolean) {
     preview,
   });
 
-  console.log(data.featuredEventsCollection);
+  let featuredEvents = extractPage<EventPageData>(data, "pageEvents")
+    .featuredEventsCollection.items;
+
+  // Replace missing images with placeholder
+  featuredEvents.forEach((event) => {
+    if (!event.coverImage) {
+      event.coverImage = placeholderImage;
+    }
+  });
+
+  const events = extractCollection<EventInterface>(data, "eventCollection");
 
   return {
-    featuredEvents: extractPage<EventPageData>(data, "pageEvents")
-      .featuredEventsCollection.items,
-    events: extractCollection<EventInterface>(data, "eventCollection"),
+    featuredEvents,
+    events,
   };
 }
