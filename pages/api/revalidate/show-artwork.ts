@@ -3,6 +3,7 @@ import { previewClient } from "../../../lib/contentful/client";
 import cloudinary from "cloudinary";
 import { showArtworkURL } from "../../../util";
 import { uploadImage, updateArtwork } from "../../../lib/contentful/management";
+import { error } from "console";
 
 cloudinary.v2.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -68,6 +69,10 @@ export default async function handler(
 
       const showTitle = show.title.split(" | ")[0];
 
+      if (!showTitle) {
+        throw new Error("No artists listed in title after | symbol");
+      }
+
       const values = {
         image: images,
         showName: showTitle,
@@ -94,7 +99,7 @@ export default async function handler(
       res.status(200).json({ message: "Regeneration triggered successfully!" });
     } catch (error) {
       console.error("Revalidation error:", error);
-      res.status(500).json({ error: "Failed to regenerate." });
+      res.status(500).json({ message: error });
     }
   } else {
     res.status(405).json({ error: "Method not allowed." });

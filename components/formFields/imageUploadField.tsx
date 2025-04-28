@@ -100,7 +100,7 @@ export default function ImageUploadField({
         <span className="label-description">
           {description
             ? description
-            : "Minimum dimensions: 1000x1000px, maximum file size: 3MB."}
+            : "Minimum dimensions: 1000x1000px, maximum file size: 2MB."}
         </span>
       </label>
       <FilePond
@@ -137,8 +137,8 @@ export default function ImageUploadField({
         labelIdle='Drag & Drop your image or <span class="filepond--label-action">Browse</span>'
         acceptedFileTypes={["image/png", "image/jpeg"]}
         labelFileTypeNotAllowed="Invalid file type. Please only upload images of JPEG and PNG format"
-        maxFileSize="3MB"
-        labelMaxFileSizeExceeded="Image is too large. 3MB is the maximum file size."
+        maxFileSize="2MB"
+        labelMaxFileSizeExceeded="Image is too large. 2MB is the maximum file size."
       />
       {meta.touched && meta.error ? (
         <span className="text-red mt-2">{meta.error}</span>
