@@ -5,6 +5,7 @@ import { getUpcomingShowsByDate } from "../../../lib/contentful/pages/radio";
 import { ShowInterface } from "../../../types/shared";
 import { sendSlackMessage } from "../../../lib/slack";
 import { sendEmail } from "../../../lib/resend/email";
+import { RESEND_RATE_LIMIT_DELAY } from "../../../constants";
 
 const contentfulSpaceId = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID;
 export default async function handler(
@@ -54,8 +55,6 @@ async function sendEmails(
   shows: ShowInterface[],
   severity: "initial" | "follow-up" | "late"
 ) {
-  const delay = 105; // 105 milliseconds delay
-
   for (const show of shows) {
     let showEmailed = false;
 
@@ -63,7 +62,9 @@ async function sendEmails(
       if (artist.email) {
         await sendEmail(artist, show, severity);
         showEmailed = true;
-        await new Promise((resolve) => setTimeout(resolve, delay)); // Respect the rate limit
+        await new Promise((resolve) =>
+          setTimeout(resolve, RESEND_RATE_LIMIT_DELAY)
+        ); // Respect the rate limit
       }
     }
 

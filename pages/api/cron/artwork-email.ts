@@ -3,9 +3,9 @@ import { sendArtworkEmail } from "../../../lib/resend/email";
 import { getUpcomingShowsByDate } from "../../../lib/contentful/pages/radio";
 import dayjs from "dayjs";
 import { sendSlackMessage } from "../../../lib/slack";
+import { RESEND_RATE_LIMIT_DELAY } from "../../../constants";
 
 const CONTENTFUL_SPACE_ID = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID;
-const RATE_LIMIT_DELAY = 105; // 105 milliseconds delay to respect rate limits
 
 export default async function handler(
   req: NextApiRequest,
@@ -60,7 +60,7 @@ export default async function handler(
             emailedArtists.add(artist.email); // Add artist email to the set after emailing
             showEmailed = true;
             await new Promise((resolve) =>
-              setTimeout(resolve, RATE_LIMIT_DELAY)
+              setTimeout(resolve, RESEND_RATE_LIMIT_DELAY)
             ); // Respect the rate limit
           } catch (error) {
             console.error(
