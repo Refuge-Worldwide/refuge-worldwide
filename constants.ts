@@ -65,3 +65,5 @@ export const REGEX = {
 export const ENDPOINT = `https://graphql.contentful.com/content/v1/spaces/${process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID}/environments/${process.env.NEXT_PUBLIC_CONTENTFUL_ENVIRONMENT_ID}`;
 
 export const FATHOM_SITE_ID = "WFNPQSZU";
+
+export const RESEND_RATE_LIMIT_DELAY = 1000; // 1000 milliseconds delay to respect rate limits
