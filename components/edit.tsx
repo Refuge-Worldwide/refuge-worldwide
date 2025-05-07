@@ -1,11 +1,20 @@
 import Link from "next/link";
 import { AiOutlineEdit } from "react-icons/ai";
 import { usePathname } from "next/navigation";
-import { useUser } from "@supabase/auth-helpers-react";
+import { createClient } from "@/lib/supabase/component";
+import { useState } from "react";
+import { useEffect } from "react";
 
 export default function Edit({ id }: { id?: string }) {
   const pathname = usePathname();
-  const user = useUser();
+  const supabase = createClient();
+  const [user, setUser] = useState();
+
+  useEffect(() => {
+    supabase.auth.getUser().then((user) => {
+      setUser(user.data);
+    });
+  }, []);
 
   if (id && user)
     return (

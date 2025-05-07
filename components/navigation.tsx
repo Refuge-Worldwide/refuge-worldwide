@@ -1,7 +1,7 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { MobileMenu } from "../components/mobileMenu";
 import { INSTAGRAM_URL, SHOP_URL, DISCORD_INVITE_URL } from "../constants";
 import Instagram from "../icons/instagram";
@@ -9,12 +9,14 @@ import { Menu } from "../icons/menu";
 import MessageSquare from "../icons/message-square";
 import Search from "../icons/search";
 import NavigationLink from "./navigationLink";
-import { useUser } from "@supabase/auth-helpers-react";
 import { AiTwotoneCalendar } from "react-icons/ai";
+import { createClient } from "@/lib/supabase/component";
 
 export default function Navigation() {
   const [isOpen, isOpenSet] = useState(false);
   const onDismiss = () => isOpenSet(false);
+  const supabase = createClient();
+  const [user, setUser] = useState();
 
   const openChat = useCallback(() => {
     const chatOptions =
@@ -23,7 +25,11 @@ export default function Navigation() {
     window.open("/chat", "refugechatwindow", chatOptions);
   }, []);
 
-  const user = useUser();
+  useEffect(() => {
+    supabase.auth.getUser().then((user) => {
+      setUser(user.data);
+    });
+  }, []);
 
   return (
     <Dialog.Root open={isOpen} onOpenChange={(open) => isOpenSet(open)}>
