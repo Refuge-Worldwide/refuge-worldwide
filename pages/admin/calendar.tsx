@@ -44,9 +44,12 @@ import CalendarSearch from "../../views/admin/calendarSearch";
 import CalendarInsta from "../../views/admin/calendarInsta";
 import EmailModal from "../../views/admin/emailModal";
 import TextareaField from "../../components/formFields/textareaField";
-import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { createClient } from "contentful-management";
+import { createClient as createSupabaseClient } from "@/lib/supabase/component";
 import AdditionalMenu from "../../views/admin/additionalMenu";
+
+import type { User } from "@supabase/supabase-js";
+import type { GetServerSidePropsContext } from "next";
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL
   ? `${process.env.NEXT_PUBLIC_SITE_URL}`
@@ -74,13 +77,12 @@ function Calendar() {
   const datePicker = useRef<any>();
   const windowSize = useWindowSize();
   const router = useRouter();
-  const supabaseClient = useSupabaseClient();
-  const user = useUser();
+  const supabase = createSupabaseClient();
   const [contentfulClient, setContentfulClient] = useState<any>(null);
 
   useEffect(() => {
     const contentfulClient = async () => {
-      const { data } = await supabaseClient
+      const { data } = await supabase
         .from("accessTokens")
         .select("token")
         .eq("application", "contentful")
@@ -91,8 +93,9 @@ function Calendar() {
       });
       setContentfulClient(client);
     };
-    if (user) contentfulClient();
-  }, [user]);
+
+    contentfulClient();
+  }, []);
 
   const handleKeyPress = useCallback((event) => {
     const calendarApi = calendarRef.current.getApi();

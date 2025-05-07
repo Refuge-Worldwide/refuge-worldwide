@@ -10,10 +10,12 @@ import { useGlobalStore } from "../../hooks/useStore";
 import PlayCircle from "../../icons/playCircle";
 import { ShowInterface } from "../../types/shared";
 import { parseGenres } from "../../util";
+import ShowLike from "@/components/showLike";
 
 const ShareButton = dynamic(() => import("../../components/shareButton"));
 
 export default function ShowBody({
+  sys,
   title,
   genresCollection,
   artistsCollection,
@@ -107,13 +109,9 @@ export default function ShowBody({
               )}
             </div>
 
-            <div className="flex">
-              <ShareButton
-                details={{
-                  title: title,
-                  slug: `/radio/${slug}`,
-                }}
-              />
+            <div className="flex pt-5">
+              {/*  */}
+              <ShowLike id={sys.id} />
             </div>
           </div>
 
