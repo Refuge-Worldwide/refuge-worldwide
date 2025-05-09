@@ -144,6 +144,10 @@
   .prose p {
     white-space: pre-wrap;
   }
+
+  .prose a {
+    font-weight: 300;
+  }
 }
 
 @layer utilities {
