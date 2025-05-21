@@ -10,8 +10,6 @@ export default async function handler(
   }
 
   try {
-    console.log("Revalidating radio page...");
-    console.log("Request body:", req.body);
     const id = JSON.parse(req.body)?.sys?.id;
     const slug = JSON.parse(req.body)?.fields?.slug?.["en-US"];
     const artists = JSON.parse(req.body)?.fields?.artists?.["en-US"];
