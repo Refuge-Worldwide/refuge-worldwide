@@ -27,7 +27,7 @@ export default async function handler(
       console.log("Artist ID:", artist.sys.id);
       const artistEnriched = await client.getEntry(artist.sys.id);
       console.log("Artist Enriched:", artistEnriched);
-      const artistSlug = artistEnriched?.fields?.slug?.["en-US"];
+      const artistSlug = artistEnriched?.fields?.slug;
       console.log("Artist Slug:", artistSlug);
       if (artistSlug) {
         await res.revalidate(`/artists/${artistSlug}`);
