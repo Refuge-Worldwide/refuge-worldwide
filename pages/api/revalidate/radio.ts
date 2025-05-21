@@ -10,6 +10,8 @@ export default async function handler(
   }
 
   try {
+    console.log("Revalidating radio page...");
+    console.log("Request body:", req.body);
     const id = JSON.parse(req.body)?.sys?.id;
     const slug = JSON.parse(req.body)?.fields?.slug?.["en-US"];
     const artists = JSON.parse(req.body)?.fields?.artists?.["en-US"];
@@ -21,8 +23,12 @@ export default async function handler(
     await res.revalidate(`/radio`);
 
     for (const artist of artists) {
+      console.log("Revalidating artist page...");
+      console.log("Artist ID:", artist.sys.id);
       const artistEnriched = await client.getEntry(artist.sys.id);
+      console.log("Artist Enriched:", artistEnriched);
       const artistSlug = artistEnriched?.fields?.slug?.["en-US"];
+      console.log("Artist Slug:", artistSlug);
       if (artistSlug) {
         await res.revalidate(`/artists/${artistSlug}`);
       }
