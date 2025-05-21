@@ -30,7 +30,8 @@ export default async function handler(
       const artistSlug = artistEnriched?.fields?.slug;
       console.log("Artist Slug:", artistSlug);
       if (artistSlug) {
-        await res.revalidate(`/artists/${artistSlug}`);
+        const result = await res.revalidate(`/artists/${artistSlug}`);
+        console.log("Revalidation result:", result);
       }
     }
 
