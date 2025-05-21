@@ -23,15 +23,10 @@ export default async function handler(
     await res.revalidate(`/radio`);
 
     for (const artist of artists) {
-      console.log("Revalidating artist page...");
-      console.log("Artist ID:", artist.sys.id);
       const artistEnriched = await client.getEntry(artist.sys.id);
-      console.log("Artist Enriched:", artistEnriched);
       const artistSlug = artistEnriched?.fields?.slug;
-      console.log("Artist Slug:", artistSlug);
       if (artistSlug) {
-        const result = await res.revalidate(`/artists/${artistSlug}`);
-        console.log("Revalidation result:", result);
+        await res.revalidate(`/artists/${artistSlug}`);
       }
     }
 
