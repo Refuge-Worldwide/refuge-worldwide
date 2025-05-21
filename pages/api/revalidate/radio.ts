@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import { client } from "../../../lib/contentful/client";
 
 export default async function handler(
   req: NextApiRequest,
@@ -9,13 +10,23 @@ export default async function handler(
   }
 
   try {
+    const id = JSON.parse(req.body)?.sys?.id;
     const slug = JSON.parse(req.body)?.fields?.slug?.["en-US"];
+    const artists = JSON.parse(req.body)?.fields?.artists?.["en-US"];
 
     if (slug) {
       await res.revalidate(`/radio/${slug}`);
     }
 
     await res.revalidate(`/radio`);
+
+    for (const artist of artists) {
+      const artistEnriched = await client.getEntry(artist.sys.id);
+      const artistSlug = artistEnriched?.fields?.slug?.["en-US"];
+      if (artistSlug) {
+        await res.revalidate(`/artists/${artistSlug}`);
+      }
+    }
 
     return res.json({ revalidated: true });
   } catch (error) {
