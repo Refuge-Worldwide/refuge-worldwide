@@ -104,7 +104,7 @@ export default async function handler(
       .setHeader("Server-Timing", `schedule;dur=${duration}`)
       .setHeader(
         "Cache-Control",
-        "s-maxage=30, stale-while-revalidate=60, stale-if-error=600"
+        "s-maxage=20, stale-while-revalidate=10, stale-if-error=600"
       )
       .json(scheduleData);
   } catch (error) {
