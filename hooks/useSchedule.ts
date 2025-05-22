@@ -33,9 +33,11 @@ export default function useSchedule() {
     "/api/schedule",
     getSchedule,
     {
-      refreshInterval: 30 * 1000,
+      refreshInterval: 1 * 1000,
     }
   );
+
+  console.log(data);
 
   return {
     scheduleData: data,

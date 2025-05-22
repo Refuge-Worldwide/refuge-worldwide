@@ -79,7 +79,7 @@ export default async function handler(
     };
 
     const liveNow = {
-      title: liveNowTitle(),
+      title: Date.now(),
       artwork: liveNowArtwork,
       link: liveNowContentful ? "/radio/" + liveNowContentful.slug : null,
       slug:
