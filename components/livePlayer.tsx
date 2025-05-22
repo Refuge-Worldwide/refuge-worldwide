@@ -72,8 +72,6 @@ export default function LivePlayer() {
 
   const { scheduleData, isLoading, error } = useSchedule();
 
-  console.log(error);
-
   const isOnline = scheduleData?.status === "online";
   const ch2IsOnline = scheduleData?.ch2?.status === "online";
 
