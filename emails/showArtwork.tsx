@@ -118,12 +118,8 @@ export const ShowArtworkEmail = ({
                   a day or two after broadcast, feel free to repost!
                 </Text>
                 <Text style={list}>
-                  📲 If you need to download your show, they’re kept{" "}
-                  <Link style={link} href="https://bit.ly/refuge-show-dl">
-                    here
-                  </Link>{" "}
-                  for one month (shows may take up to three days from the date
-                  of recording to appear here)
+                  If you would like a copy of your show, please email
+                  assistant@refugeworldwide.com
                 </Text>
                 <br />
                 <Heading as="h2" style={paragraph}>
