@@ -85,22 +85,12 @@ export default function LivePlayer() {
     urlCh2: CH2,
   });
 
-  // const { isPlaying2, play, pause } = usePlayerState({
-  //   audioRef: player2,
-  //   sourceRef: source2,
-  //   url: CH2,
-  // });
-
   const playerWrapperClassNames = cn(
     "bg-black text-white lg:flex items-center max-w-screen",
     {
       "sticky top-0 z-50": isOnline,
     }
   );
-
-  useEffect(() => {
-    console.log(isPlaying);
-  }, [isPlaying]);
 
   useEffect(() => {
     if ("mediaSession" in navigator && scheduleData?.liveNow) {

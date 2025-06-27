@@ -34,6 +34,7 @@ export default function useSchedule() {
     getSchedule,
     {
       refreshInterval: 30 * 1000,
+      revalidateOnFocus: true,
     }
   );
 
