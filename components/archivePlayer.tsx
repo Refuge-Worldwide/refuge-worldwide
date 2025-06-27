@@ -12,7 +12,6 @@ export default function ArchivePlayer() {
   const [showKey, setShowKey] = useState(null);
 
   useEffect(() => {
-    console.log("player changed");
     if (activePlayer === ActivePlayer.MIXCLOUD) {
       setShowKey(getMixcloudKey(showUrl));
     } else if (activePlayer === ActivePlayer.SOUNDCLOUD) {
@@ -31,7 +30,6 @@ export default function ArchivePlayer() {
       if (ampersandPosition != -1) {
         video_id = video_id.substring(0, ampersandPosition);
       }
-      console.log(video_id);
       setShowKey(video_id);
     }
   }, [showUrl, activePlayer]);

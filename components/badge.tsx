@@ -1,20 +1,25 @@
+import React from "react";
 import cn from "classnames";
 import { Cross } from "../icons/cross";
-export default function Badge({
-  text,
-  invert,
-  small,
-  cross,
-  as: As = "div",
-  onClick,
-}: {
-  text: string;
-  invert?: boolean;
-  cross?: boolean;
-  small?: boolean;
-  as?: any;
-  onClick?: () => void;
-}) {
+
+const Badge = React.forwardRef(function Badge(
+  {
+    text,
+    invert,
+    small,
+    cross,
+    as: As = "div",
+    onClick,
+  }: {
+    text: string;
+    invert?: boolean;
+    cross?: boolean;
+    small?: boolean;
+    as?: any;
+    onClick?: () => void;
+  },
+  ref: React.ForwardedRef<HTMLDivElement>
+) {
   const classNames = cn(
     "block uppercase font-medium border-1.5 rounded-full whitespace-nowrap focus:outline-none focus:ring-4 flex space-x-2",
     small ? "px-2 py-1 text-xxs" : "px-3 py-2 text-tiny",
@@ -39,27 +44,30 @@ export default function Badge({
       )}
     </As>
   );
-}
+});
 
-export function EventBadge({
-  text,
-  invert,
-  small,
-  cross,
-  eventType,
-  filter,
-  as: As = "div",
-  onClick,
-}: {
-  text: string;
-  invert?: boolean;
-  cross?: boolean;
-  small?: boolean;
-  eventType?: string;
-  as?: any;
-  filter?: boolean;
-  onClick?: () => void;
-}) {
+const EventBadge = React.forwardRef(function EventBadge(
+  {
+    text,
+    invert,
+    small,
+    cross,
+    eventType,
+    filter,
+    as: As = "div",
+    onClick,
+  }: {
+    text: string;
+    invert?: boolean;
+    cross?: boolean;
+    small?: boolean;
+    eventType?: string;
+    as?: any;
+    filter?: boolean;
+    onClick?: () => void;
+  },
+  ref: React.ForwardedRef<HTMLDivElement>
+) {
   const classNames = cn(
     "block uppercase font-medium border-1.5 rounded-full whitespace-nowrap focus:outline-none focus:ring-4 flex space-x-2 text-center",
     small ? "px-2 py-1 text-xxs" : "px-3 py-2 text-tiny",
@@ -93,4 +101,7 @@ export function EventBadge({
       )}
     </As>
   );
-}
+});
+
+export default Badge;
+export { EventBadge };
