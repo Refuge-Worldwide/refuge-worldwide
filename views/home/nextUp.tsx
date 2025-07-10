@@ -4,14 +4,19 @@ import Link from "next/link";
 import LocalTime from "../../components/localTime";
 import Marquee from "../../components/marquee";
 import { Cross } from "../../icons/cross";
+import { useState, useEffect } from "react";
+
+const bgOptions = ["bg-orange", "bg-purple", "bg-pink", "bg-green", "bg-red"];
 
 export default function NextUp() {
   const { scheduleData, isLoading, error } = useSchedule();
   // const shouldShowBanner = scheduleData.nextUp;
 
-  const bgOptions = ["bg-orange", "bg-purple", "bg-pink", "bg-green", "bg-red"];
+  const [bgColour, setBgColour] = useState("");
 
-  const bgColour = bgOptions[Math.floor(Math.random() * bgOptions.length)];
+  useEffect(() => {
+    setBgColour(bgOptions[Math.floor(Math.random() * bgOptions.length)]);
+  }, []);
 
   if (
     (!isLoading && !scheduleData?.nextUp) ||
