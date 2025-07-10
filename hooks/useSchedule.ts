@@ -42,7 +42,6 @@ export default function useSchedule() {
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (!document.hidden) {
-        // Force revalidation when tab becomes visible
         console.log("Tab is visible");
       }
     };
