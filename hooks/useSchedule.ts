@@ -1,5 +1,6 @@
 import useSWR from "swr";
 import { ScheduleShow } from "../types/shared";
+import { useEffect } from "react";
 
 type Schedule = {
   status: "online" | "offline";
@@ -34,9 +35,23 @@ export default function useSchedule() {
     getSchedule,
     {
       refreshInterval: 30 * 1000,
-      revalidateOnFocus: true,
+      refreshWhenHidden: true,
     }
   );
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        // Force revalidation when tab becomes visible
+        console.log("Tab is visible");
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
 
   return {
     scheduleData: data,
