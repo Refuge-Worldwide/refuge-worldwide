@@ -34,9 +34,8 @@ export default function useSchedule() {
     "/api/schedule",
     getSchedule,
     {
-      refreshInterval: 30 * 1000,
+      refreshInterval: 60 * 1000,
       refreshWhenHidden: true,
-      revalidateOnFocus: false,
     }
   );
 
