@@ -102,7 +102,10 @@ export default async function handler(
 
     res
       .setHeader("Server-Timing", `schedule;dur=${duration}`)
-      .setHeader("Cache-Control", "public, s-maxage=60, must-revalidate")
+      .setHeader(
+        "Cache-Control",
+        "s-maxage=60, stale-while-revalidate=20, stale-if-error=600"
+      )
       .json(scheduleData);
   } catch (error) {
     assertError(error);
