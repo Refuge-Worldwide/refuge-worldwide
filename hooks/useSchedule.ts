@@ -35,22 +35,8 @@ export default function useSchedule() {
     getSchedule,
     {
       refreshInterval: 60 * 1000,
-      refreshWhenHidden: true,
     }
   );
-
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (!document.hidden) {
-        console.log("Tab is visible");
-      }
-    };
-
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-    return () => {
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
-  }, []);
 
   return {
     scheduleData: data,
