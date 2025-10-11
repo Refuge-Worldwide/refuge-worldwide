@@ -1,11 +1,14 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { assertError } from "ts-extras";
+import { documentToPlainTextString } from "@contentful/rich-text-plain-text-renderer";
 import { getRadioPageSingle } from "../../../lib/contentful/pages/radio";
 import { ShowInterface, PastShowSchema } from "../../../types/shared";
 
-// Response type for individual show endpoint
 export type ShowResponse = {
-  show: ShowInterface;
+  show: ShowInterface & {
+    description: string;
+    audioFile: string | null;
+  };
   relatedShows: PastShowSchema[];
 };
 
@@ -24,22 +27,28 @@ export default async function handler(
       return res.status(400).json({ message: "Show slug is required" });
     }
 
-    // Use the existing function that gets show data for the show page
     const { show, relatedShows } = await getRadioPageSingle(slug, false);
 
     if (!show) {
       return res.status(404).json({ message: "Show not found" });
     }
 
+    const processedShow = {
+      ...show,
+      description: show.content
+        ? documentToPlainTextString(show.content.json)
+        : "",
+      audioFile: (show as any).audioFile?.url || null,
+    };
+
     res
       .setHeader("Cache-Control", "s-maxage=300, stale-while-revalidate=600")
-      .json({ show, relatedShows });
+      .json({ show: processedShow, relatedShows });
   } catch (error) {
     assertError(error);
 
     console.log(error);
 
-    // Handle specific "not found" errors
     if (error.message.includes("No Show found for slug")) {
       return res.status(404).json({ message: "Show not found" });
     }

@@ -1,11 +1,16 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { assertError } from "ts-extras";
+import { documentToPlainTextString } from "@contentful/rich-text-plain-text-renderer";
 import { getPastShows } from "../../lib/contentful/client";
 import { PastShowSchema } from "../../types/shared";
 
+export type ShowsResponse = (PastShowSchema & {
+  audioFile: string | null;
+})[];
+
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<PastShowSchema[] | { message: string }>
+  res: NextApiResponse<ShowsResponse | { message: string }>
 ) {
   try {
     const { take, skip, filter } = req.query as typeof req.query & {
@@ -20,9 +25,14 @@ export default async function handler(
       filter
     );
 
+    const processedShows = shows.map((show) => ({
+      ...show,
+      audioFile: (show as any).audioFile || null,
+    }));
+
     res
       .setHeader("Cache-Control", "s-maxage=1, stale-while-revalidate=59")
-      .json(shows);
+      .json(processedShows);
   } catch (error) {
     assertError(error);
 
