@@ -12,6 +12,21 @@ export type ShowResponse = {
   relatedShows: PastShowSchema[];
 };
 
+export function processShowData(
+  show: ShowInterface,
+  relatedShows: PastShowSchema[]
+): ShowResponse {
+  const processedShow = {
+    ...show,
+    description: show.content
+      ? documentToPlainTextString(show.content.json)
+      : "",
+    audioFile: (show as any).audioFile?.url || null,
+  };
+
+  return { show: processedShow, relatedShows };
+}
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ShowResponse | { message: string }>
@@ -33,17 +48,11 @@ export default async function handler(
       return res.status(404).json({ message: "Show not found" });
     }
 
-    const processedShow = {
-      ...show,
-      description: show.content
-        ? documentToPlainTextString(show.content.json)
-        : "",
-      audioFile: (show as any).audioFile?.url || null,
-    };
+    const response = processShowData(show, relatedShows);
 
     res
       .setHeader("Cache-Control", "s-maxage=300, stale-while-revalidate=600")
-      .json({ show: processedShow, relatedShows });
+      .json(response);
   } catch (error) {
     assertError(error);
 
