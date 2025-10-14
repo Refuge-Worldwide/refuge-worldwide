@@ -100,6 +100,89 @@ export async function getRadioPageSingle(slug: string, preview: boolean) {
   };
 }
 
+export async function getRadioPageById(id: string, preview: boolean) {
+  const RadioPageByIdQuery = /* GraphQL */ `
+    query RadioPageByIdQuery($id: String!, $preview: Boolean) {
+      show(id: $id, preview: $preview) {
+        sys {
+          id
+        }
+        title
+        date
+        slug
+        mixcloudLink
+        isFeatured
+        coverImage {
+          sys {
+            id
+          }
+          title
+          description
+          url
+          width
+          height
+        }
+        coverImagePosition
+        artistsCollection(limit: 9) {
+          items {
+            name
+            slug
+          }
+        }
+        genresCollection(limit: 9) {
+          items {
+            name
+          }
+        }
+        content {
+          json
+          links {
+            assets {
+              block {
+                sys {
+                  id
+                }
+                contentType
+                title
+                description
+                url
+                width
+                height
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  const res = await graphql(RadioPageByIdQuery, {
+    variables: { id, preview },
+    preview,
+  });
+
+  const entry = res?.data?.show as ShowInterface | null;
+
+  if (!entry) {
+    throw new Error(`No Show found for id '${id}'`);
+  }
+
+  if (!entry.coverImage) {
+    entry.coverImage = placeholderImage;
+  }
+
+  console.log(entry.genresCollection);
+
+  const genres = entry.genresCollection.items.map((genre) => genre?.name);
+
+  const relatedShows = await getRelatedShows(entry.slug, genres, 7, 0);
+
+  return {
+    show: entry,
+    relatedShows,
+  };
+}
+
 export type UpcomingShowType = Pick<
   ShowInterface,
   | "sys"
