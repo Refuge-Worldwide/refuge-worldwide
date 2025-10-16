@@ -77,10 +77,10 @@ export const ShowArtworkEmail = ({
                 <Text style={list}>
                   ⏱️ Please arrive at{" "}
                   <Link
-                    href="https://goo.gl/maps/ZY1w74xS4ULk4B1z5"
+                    href="https://maps.app.goo.gl/cnBmyCFUmw9V965d8"
                     style={link}
                   >
-                    Weserstraße 166, 12045
+                    Niemetzstraße 1, 12055
                   </Link>{" "}
                   at least 15 minutes before your show, and let us know ASAP via
                   Whatsapp on 015205492590 if you&apos;re going to be late.

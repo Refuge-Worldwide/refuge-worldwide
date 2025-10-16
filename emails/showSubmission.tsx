@@ -116,10 +116,10 @@ export const ShowSubmissionEmail = ({
                     <>
                       Location:{" "}
                       <Link
-                        href="https://goo.gl/maps/ZY1w74xS4ULk4B1z5"
+                        href="https://maps.app.goo.gl/cnBmyCFUmw9V965d8"
                         style={link}
                       >
-                        Weserstraße 166, 12045
+                        Niemetzstraße 1, 12055
                       </Link>
                     </>
                   )}
