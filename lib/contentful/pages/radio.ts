@@ -68,6 +68,14 @@ export async function getRadioPageSingle(slug: string, preview: boolean) {
               }
             }
           }
+          audioFile {
+            sys {
+              id
+            }
+            title
+            description
+            url
+          }
         }
       }
     }
@@ -151,6 +159,14 @@ export async function getRadioPageById(id: string, preview: boolean) {
               }
             }
           }
+        }
+        audioFile {
+          sys {
+            id
+          }
+          title
+          description
+          url
         }
       }
     }

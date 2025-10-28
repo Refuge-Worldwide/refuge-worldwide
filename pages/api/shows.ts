@@ -27,7 +27,7 @@ export default async function handler(
 
     const processedShows = shows.map((show) => ({
       ...show,
-      audioFile: (show as any).audioFile || null,
+      audioFile: (show as any).audioFile?.url || null,
     }));
 
     res
