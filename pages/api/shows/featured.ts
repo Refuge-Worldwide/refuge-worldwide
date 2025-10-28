@@ -71,6 +71,14 @@ export default async function handler(
               width
               height
             }
+            audioFile {
+              sys {
+                id
+              }
+              title
+              description
+              url
+            }
           }
         }
       }
@@ -98,7 +106,7 @@ export default async function handler(
         .map((genre: any) => genre?.name)
         .filter(Boolean),
       artwork: show.artwork?.url || null,
-      audioFile: (show as any).audioFile || null,
+      audioFile: (show as any).audioFile?.url || null,
     }));
 
     res

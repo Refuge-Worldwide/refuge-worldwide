@@ -134,6 +134,7 @@ export type PastShowSchema = {
   mixcloudLink: string;
   genres: string[];
   artwork?: string;
+  audioFile?: string | null;
 };
 
 export type ScheduleShow = {

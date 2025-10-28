@@ -64,6 +64,7 @@ export const createPastShowSchema = (show: TypeShow): PastShowSchema => ({
   genres: show.fields.genres.map((genre) => genre.fields?.name).filter(Boolean),
   // TODO: check if this field can be removed.
   artwork: show.fields.artwork ? show.fields.artwork.fields.file.url : null,
+  audioFile: (show.fields as any).audioFile?.fields?.file?.url || null,
 });
 
 export async function getPastShows(
@@ -117,6 +118,14 @@ export async function getPastShows(
                 mixcloudLink
                 slug
                 title
+                audioFile {
+                  sys {
+                    id
+                  }
+                  title
+                  description
+                  url
+                }
                 sys {
                   id
                 }

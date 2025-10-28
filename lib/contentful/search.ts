@@ -46,6 +46,7 @@ export async function getSearchData(
           "fields.genres",
           "fields.coverImage",
           "fields.mixcloudLink",
+          "fields.audioFile",
         ],
       }),
       client.getEntries<TypeArticleFields>({
@@ -182,5 +183,6 @@ function parseShowToPastShowSchema(show): PastShowSchema {
     genres: show.fields.genres
       .map((genre) => genre.fields?.name)
       .filter(Boolean),
+    audioFile: show.fields.audioFile?.fields?.file?.url || null,
   };
 }
