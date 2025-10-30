@@ -97,7 +97,7 @@ export async function getPastShows(
       genreCollection(where: { name: $filter }, limit: 1) {
         items {
           linkedFrom {
-            showCollection(limit: 999) {
+            showCollection(limit: 200) {
               items {
                 coverImage {
                   sys {
@@ -119,11 +119,6 @@ export async function getPastShows(
                 slug
                 title
                 audioFile {
-                  sys {
-                    id
-                  }
-                  title
-                  description
                   url
                 }
                 sys {
