@@ -81,7 +81,7 @@ export async function getArtistsPageSingle(slug: string, preview: boolean) {
             }
           }
           linkedFrom {
-            showCollection(limit: 900) {
+            showCollection(limit: 300) {
               items {
                 slug
                 title
@@ -97,6 +97,9 @@ export async function getArtistsPageSingle(slug: string, preview: boolean) {
                 }
                 date
                 mixcloudLink
+                audioFile {
+                  url
+                }
                 genresCollection(limit: 9) {
                   items {
                     name
@@ -140,6 +143,7 @@ export async function getArtistsPageSingle(slug: string, preview: boolean) {
     slug: show.slug,
     mixcloudLink: show.mixcloudLink,
     coverImage: show.coverImage.url,
+    audioFile: (show as any).audioFile?.url || null,
     genres: show.genresCollection.items
       .map((genre) => genre?.name)
       .filter(Boolean),
