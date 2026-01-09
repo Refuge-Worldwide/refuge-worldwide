@@ -39,8 +39,6 @@ export default function RadioPage({
 
       <h1 hidden>Radio</h1>
 
-      {upcomingShows.length > 0 && <NextShows upcomingShows={upcomingShows} />}
-
       <AllShows genres={genres} pastShows={pastShows} />
     </Layout>
   );
