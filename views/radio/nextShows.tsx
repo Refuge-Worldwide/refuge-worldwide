@@ -16,7 +16,7 @@ export default function NextShows({
     })
     .slice(0, 4);
   return (
-    <section className="bg-orange border-2">
+    <section className="bg-orange border-2 hidden xl:block">
       <div className="p-4 sm:p-8">
         <Pill>
           <h2>Coming Soon</h2>
