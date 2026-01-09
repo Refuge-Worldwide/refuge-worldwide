@@ -8,6 +8,11 @@ export type ShowResponse = {
   show: ShowInterface & {
     description: string;
     audioFile: string | null;
+    artists: Array<{
+      name: string;
+      slug: string;
+      photo: string;
+    }>;
   };
   relatedShows: PastShowSchema[];
 };
@@ -16,12 +21,19 @@ export function processShowData(
   show: ShowInterface,
   relatedShows: PastShowSchema[]
 ): ShowResponse {
+  const artists = show.artistsCollection.items.map((artist) => ({
+    name: artist.name,
+    slug: artist.slug,
+    photo: artist.photo?.url || "",
+  }));
+
   const processedShow = {
     ...show,
     description: show.content
       ? documentToPlainTextString(show.content.json)
       : "",
     audioFile: (show as any).audioFile?.url || null,
+    artists,
   };
 
   return { show: processedShow, relatedShows };

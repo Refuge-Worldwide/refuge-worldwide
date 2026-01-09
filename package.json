@@ -15,7 +15,8 @@
     "postinstall": "husky install",
     "format-staged": "pretty-quick --staged",
     "lint-staged": "lint-staged",
-    "email": "email dev"
+    "email": "email dev",
+    "download-soundcloud": "node scripts/download-soundcloud-audio.js"
   },
   "lint-staged": {
     "*.{ts,tsx}": [

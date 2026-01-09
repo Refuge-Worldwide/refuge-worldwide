@@ -43,6 +43,16 @@ export async function getRadioPageSingle(slug: string, preview: boolean) {
             items {
               name
               slug
+              photo {
+                sys {
+                  id
+                }
+                title
+                description
+                url
+                width
+                height
+              }
             }
           }
           genresCollection(limit: 9) {
