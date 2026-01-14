@@ -86,7 +86,7 @@ async function handle(request: Request) {
 
   return new ImageResponse(
     (
-      <div tw="flex flex-col w-full h-full px-[60px] pb-[20px] text-white bg-opacity-0 pt-[170px] bg-black/25">
+      <div tw="flex flex-col w-full h-full px-[60px] pb-[20px] text-white bg-opacity-0 pt-[170px]">
         <div tw="flex">
           <div tw="flex flex-col grow py-2">
             <div
@@ -124,7 +124,7 @@ async function handle(request: Request) {
                 width="183.666"
                 height="119.028"
                 transform="rotate(18.4027 38.0784 0.501726)"
-                fill="#D9D9D9"
+                fill="#FFFFFF"
               />
               <rect
                 x="38.0784"
