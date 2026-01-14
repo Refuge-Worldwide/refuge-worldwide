@@ -280,6 +280,33 @@
   @apply bg-white;
 }
 
+@media (prefers-color-scheme: dark) {
+  .calendar-container {
+    background-color: black;
+  }
+
+  .calendar-container .fc {
+    --fc-border-color: #333;
+    --fc-page-bg-color: black;
+  }
+
+  .calendar-container .fc-toolbar-title,
+  .calendar-container .fc-col-header-cell,
+  .calendar-container .fc-timegrid-axis,
+  .calendar-container .fc-timegrid-slot-label {
+    color: white;
+  }
+
+  .calendar-container .fc .fc-button-primary {
+    color: white;
+    border-color: #666;
+  }
+
+  .calendar-container .fc-day-today {
+    background-color: #222;
+  }
+}
+
 .fc .fc-button-primary {
   @apply uppercase font-medium text-small border-1.5 rounded-full whitespace-nowrap focus:outline-none focus:ring-4 space-x-2 bg-transparent text-black border-black;
 }

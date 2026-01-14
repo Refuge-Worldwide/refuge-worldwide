@@ -461,7 +461,7 @@ function Calendar() {
 
   if (windowSize.width && router.isReady && contentfulClient)
     return (
-      <div className="mt-2 lg:m-4 h-[calc(100vh-100px)] lg:h-[calc(100vh-125px)] relative">
+      <div className="pt-2 lg:p-4 h-[calc(100vh-100px)] lg:h-[calc(100vh-125px)] relative">
         <PageMeta title="Calendar | Refuge Worldwide" path="signin/" />
         <div>
           <Toaster
