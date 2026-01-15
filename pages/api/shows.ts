@@ -16,23 +16,21 @@ export default async function handler(
     const { take, skip, filter } = req.query as typeof req.query & {
       take: string;
       skip: string;
-      filter: string[];
+      filter: string;
     };
+
+    // Parse filter from comma-separated string to array
+    const filterArray = filter ? filter.split(",").filter(Boolean) : [];
 
     const shows = await getPastShows(
       Number(take),
       Number(parseInt(skip)),
-      filter
+      filterArray
     );
-
-    const processedShows = shows.map((show) => ({
-      ...show,
-      audioFile: (show as any).audioFile?.url || null,
-    }));
 
     res
       .setHeader("Cache-Control", "s-maxage=1, stale-while-revalidate=59")
-      .json(processedShows);
+      .json(shows);
   } catch (error) {
     assertError(error);
 
