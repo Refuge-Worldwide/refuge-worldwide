@@ -74,22 +74,59 @@ export async function getPastShows(
 ) {
   const now = dayjs().format("YYYY-MM-DD");
 
-  if (filter.length == 0) {
-    const { items } = await client.getEntries<TypeShowFields>({
-      "fields.mixcloudLink[exists]": true,
-      "fields.coverImage[exists]": true,
-      "fields.date[lte]": now,
-      order: "-fields.date,fields.title",
-      content_type: "show",
-      limit: take,
-      skip: skip,
+  if (filter.length === 0) {
+    const allShowsQuery = /* GraphQL */ `
+      query allShowsQuery($limit: Int!, $skip: Int!, $now: DateTime!) {
+        showCollection(
+          where: {
+            mixcloudLink_exists: true
+            coverImage_exists: true
+            date_lte: $now
+          }
+          order: [date_DESC, title_ASC]
+          limit: $limit
+          skip: $skip
+        ) {
+          items {
+            sys {
+              id
+            }
+            title
+            date
+            slug
+            mixcloudLink
+            coverImage {
+              url
+            }
+            genresCollection(limit: 9) {
+              items {
+                name
+              }
+            }
+            audioFile {
+              url
+            }
+          }
+        }
+      }
+    `;
+
+    const res = await graphql(allShowsQuery, {
+      variables: { limit: take, skip, now },
     });
 
-    const processed = (items as Entry<TypeShowFields>[]).map(
-      createPastShowSchema
-    );
-
-    return processed;
+    return res.data.showCollection.items.map((show) => ({
+      id: show.sys.id,
+      title: show.title,
+      date: show.date,
+      slug: show.slug,
+      mixcloudLink: show.mixcloudLink,
+      coverImage: show.coverImage?.url ?? placeholderImage.url,
+      genres: show.genresCollection.items
+        .map((genre) => genre?.name)
+        .filter(Boolean),
+      audioFile: show.audioFile?.url ?? null,
+    }));
   }
 
   const genreShowQuery = /* GraphQL */ `
@@ -100,14 +137,7 @@ export async function getPastShows(
             showCollection(limit: 200) {
               items {
                 coverImage {
-                  sys {
-                    id
-                  }
-                  title
-                  description
                   url
-                  width
-                  height
                 }
                 date
                 genresCollection(limit: 9) {
@@ -133,31 +163,23 @@ export async function getPastShows(
   `;
 
   const res = await graphql(genreShowQuery, {
-    variables: { filter },
+    variables: { filter: filter[0] },
   });
 
   const items =
     res.data.genreCollection.items[0].linkedFrom.showCollection.items;
 
-  items.forEach((show) => {
-    if (!show.coverImage || !show.coverImage.url) {
-      console.log("Show without cover image URL:", show);
-    }
-  });
-
-  //TODO: move to processor function.
   const processed = items.map((show) => ({
     id: show.sys.id,
     title: show.title,
     date: show.date,
     slug: show.slug,
     mixcloudLink: show.mixcloudLink,
-    coverImage: show.coverImage?.url
-      ? show.coverImage.url
-      : placeholderImage.url,
+    coverImage: show.coverImage?.url ?? placeholderImage.url,
     genres: show.genresCollection.items
       .map((genre) => genre?.name)
       .filter(Boolean),
+    audioFile: show.audioFile?.url ?? null,
   }));
 
   // remove shows that do not have a playback link or are newer than today.
