@@ -1,5 +1,41 @@
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
-import { Block, BLOCKS, INLINES, Inline } from "@contentful/rich-text-types";
+import {
+  Block,
+  BLOCKS,
+  INLINES,
+  Inline,
+  Document,
+} from "@contentful/rich-text-types";
+// Utility to slugify heading text for anchor ids
+function slugify(text: string) {
+  return text
+    .toString()
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^\w\-]+/g, "")
+    .replace(/\-\-+/g, "-")
+    .replace(/^-+/, "")
+    .replace(/-+$/, "");
+}
+
+// Extract all h5 headings from Contentful rich text JSON
+export function extractH5Headings(
+  doc: Document
+): Array<{ text: string; id: string }> {
+  const headings: Array<{ text: string; id: string }> = [];
+  function traverse(node: any) {
+    if (node.nodeType === BLOCKS.HEADING_5) {
+      const text = node.content.map((c: any) => c.value).join(" ");
+      const id = slugify(text);
+      headings.push({ text, id });
+    }
+    if (node.content) {
+      node.content.forEach(traverse);
+    }
+  }
+  traverse(doc);
+  return headings;
+}
 import Image from "next/image";
 import { Asset, Entry, Content } from "../types/shared";
 import Link from "next/link";
@@ -22,7 +58,10 @@ const getAssetById = (id: string, assets: Asset[]) =>
 const getEntryById = (id: string, assets: Entry[]) =>
   assets.filter((asset) => asset.sys.id === id).pop();
 
-export function RenderRichTextWithImages(content: Content) {
+export function RenderRichTextWithImages(
+  content: Content,
+  toc: boolean = false
+) {
   const [loaded, setLoaded] = useState(false);
   useEffect(() => {
     const scriptTag = document.createElement("script");
@@ -37,6 +76,19 @@ export function RenderRichTextWithImages(content: Content) {
 
     return documentToReactComponents(content.json, {
       renderNode: {
+        [BLOCKS.HEADING_5]: (node, children) => {
+          const text = node.content.map((c: any) => c.value).join(" ");
+          if (toc) {
+            const id = slugify(text);
+            return (
+              <h5 id={id} style={{ scrollMarginTop: "96px" }}>
+                {children}
+              </h5>
+            );
+          } else {
+            return <h5>{children}</h5>;
+          }
+        },
         [INLINES.HYPERLINK]: function InlineHyperlink(node: Inline, children) {
           let uri = node.data.uri as string;
 

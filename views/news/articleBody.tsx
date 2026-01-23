@@ -3,8 +3,12 @@ import { Fragment } from "react";
 import Date from "../../components/date";
 import Pill from "../../components/pill";
 import Prose from "../../components/Prose";
-import { RenderRichTextWithImages } from "../../lib/rich-text";
+import {
+  RenderRichTextWithImages,
+  extractH5Headings,
+} from "../../lib/rich-text";
 import { ArticleInterface } from "../../types/shared";
+import TableOfContents from "../../components/TableOfContents";
 import Link from "next/link";
 import { Arrow } from "../../icons/arrow";
 const ShareButton = dynamic(() => import("../../components/shareButton"));
@@ -18,6 +22,11 @@ export default function ArticleBody({
   articleType,
   author,
 }: ArticleInterface) {
+  // Only show ToC for Berlin Stories articles
+  const showToc = title.includes("Berlin Stories");
+  const tocItems =
+    showToc && content?.json ? extractH5Headings(content.json) : [];
+
   return (
     <Fragment>
       <section>
@@ -62,9 +71,11 @@ export default function ArticleBody({
           </div>
 
           <div className="h-6" />
-
+          {showToc && tocItems.length > 0 && (
+            <TableOfContents items={tocItems} />
+          )}
           <Prose>
-            {RenderRichTextWithImages(content)}{" "}
+            {RenderRichTextWithImages(content)}
             {title.includes("ICYMI") && (
               <div className="text-center mt-32">
                 <Link
