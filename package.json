@@ -57,7 +57,7 @@
     "add-to-calendar-button-react": "^2.4.3",
     "classnames": "^2.3.2",
     "cloudinary": "^2.5.1",
-    "contentful": "^10.0.0-beta-v10.8",
+    "contentful": "10.0.0-beta-v10.8",
     "contentful-management": "^10.29.3",
     "contentful-ui-extensions-sdk": "^4.29.3",
     "dayjs": "^1.11.7",
