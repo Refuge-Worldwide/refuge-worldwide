@@ -19,11 +19,25 @@ const ContentfulRevalidateArtwork = () => {
 
     // Get entry fields and set them as state
     const fields = sdk.entry.fields;
+
+    // Try to get additionalMediaImages, fallback to legacy additionalImages
+    let additionalImages = null;
+    try {
+      additionalImages = sdk.entry.fields.additionalMediaImages?.getValue();
+    } catch (e) {
+      // Field might not exist, try legacy field
+      try {
+        additionalImages = sdk.entry.fields.additionalImages?.getValue();
+      } catch (err) {
+        // Neither field exists, leave as null
+      }
+    }
+
     const data = {
       id: sdk.entry.getSys().id,
       title: sdk.entry.fields.title.getValue(),
       coverImage: sdk.entry.fields.coverImage.getValue(),
-      additionalImages: sdk.entry.fields.additionalImages.getValue(),
+      additionalMediaImages: additionalImages,
       artists: sdk.entry.fields.artists.getValue(),
       date: sdk.entry.fields.date.getValue(),
       dateEnd: sdk.entry.fields.dateEnd.getValue(),

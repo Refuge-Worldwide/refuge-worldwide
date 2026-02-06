@@ -1,11 +1,7 @@
 export const serverOptions = {
   process: (fieldName, file, metadata, load, error, progress, abort) => {
-    const cloudName = "dqjn26pey";
-    const unsignedUploadPreset = "initgtvl";
-
-    // `fieldName` and `meta` are not used for now
-
-    const url = `https://api.cloudinary.com/v1_1/${cloudName}/upload`;
+    // Upload to Contentful via our API endpoint
+    const url = `/api/upload-image`;
     const xhr = new XMLHttpRequest();
     const formData = new FormData();
 
@@ -23,15 +19,14 @@ export const serverOptions = {
 
       if (xhr.status >= 200 && xhr.status < 300) {
         const response = JSON.parse(xhr.responseText);
-        load(response.url);
+        // Return the full response as a JSON string so we can access both URL and ID
+        load(JSON.stringify(response));
         return;
       }
 
-      error("oh no!");
+      error("Error uploading image");
     };
 
-    formData.append("upload_preset", unsignedUploadPreset);
-    formData.append("tags", "browser_upload");
     formData.append("file", file);
     xhr.send(formData);
 

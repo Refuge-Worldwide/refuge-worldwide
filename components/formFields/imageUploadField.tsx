@@ -65,8 +65,25 @@ export default function ImageUploadField({
 
   // const setFieldValue(field, value){
   const imageUploaded = (file) => {
-    const url = file.serverId.replace("http", "https");
+    // Parse the response from Contentful upload
+    let uploadData;
+    try {
+      uploadData = JSON.parse(file.serverId);
+    } catch (e) {
+      // Fallback for old format (just URL string)
+      uploadData = { url: file.serverId };
+    }
+
+    // Ensure URL uses https protocol
+    let url = uploadData.url;
+    if (url.startsWith("http://")) {
+      url = url.replace("http://", "https://");
+    } else if (url.startsWith("//")) {
+      url = `https:${url}`;
+    }
+
     const image = {
+      id: uploadData.id, // Store the Contentful asset ID
       filename: file.filename,
       type: file.fileType,
       url: url,

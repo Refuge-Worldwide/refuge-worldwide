@@ -263,10 +263,16 @@ export const showArtworkURL = (
   const colour = colours[dayOfMonth % colours.length];
 
   // Determine the base URL based on the environment
-  const baseUrl =
-    process.env.NODE_ENV === "development"
-      ? "https://a5f4-2a02-8109-b68b-5000-a040-54e2-7ee2-d589.ngrok-free.app"
-      : process.env.NEXT_PUBLIC_SITE_URL;
+  let baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
+
+  // In development, use current origin if available (client-side)
+  if (process.env.NODE_ENV === "development") {
+    if (typeof window !== "undefined") {
+      baseUrl = window.location.origin;
+    } else {
+      baseUrl = "http://localhost:3000"; // Fallback for server-side
+    }
+  }
 
   // Set URL for social image
   const url = `${baseUrl}/api/automated-artwork?title=${title}&artists=${formattedArtists}&date=${uriEncodedDate}&images=${images}&colour=${encodeURIComponent(

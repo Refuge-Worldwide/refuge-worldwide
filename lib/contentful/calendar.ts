@@ -43,7 +43,12 @@ interface CalendarShow {
   artwork?: {
     url: string;
   };
-  additionalImages: Array<string>;
+  additionalImages?: Array<string>; // Legacy field for backward compatibility
+  additionalMediaImagesCollection?: {
+    items: Array<{
+      url: string;
+    }>;
+  };
   isFeatured?: boolean;
   instagramHandles?: string;
 }
@@ -97,6 +102,11 @@ export async function getCalendarShows(start, end, preview: boolean) {
             url
           }
           additionalImages
+          additionalMediaImagesCollection(limit: 10) {
+            items {
+              url
+            }
+          }
           isFeatured
         }
       }
@@ -144,7 +154,12 @@ export async function getCalendarShows(start, end, preview: boolean) {
       mixcloudLink: show.mixcloudLink,
       images: [
         show.coverImage?.url,
-        ...(show.additionalImages ? show.additionalImages : []),
+        // Use new additionalMediaImages field, fallback to legacy additionalImages
+        ...(show.additionalMediaImagesCollection?.items?.map(
+          (img) => img.url
+        ) ||
+          show.additionalImages ||
+          []),
       ],
     };
   });
@@ -224,6 +239,11 @@ export async function searchCalendarShows(query, preview: boolean) {
             url
           }
           additionalImages
+          additionalMediaImagesCollection(limit: 10) {
+            items {
+              url
+            }
+          }
           isFeatured
         }
       }
@@ -250,7 +270,12 @@ export async function searchCalendarShows(query, preview: boolean) {
       isFeatured: show.isFeatured,
       images: [
         show.coverImage?.url,
-        ...(show.additionalImages ? show.additionalImages : []),
+        // Use new additionalMediaImages field, fallback to legacy additionalImages
+        ...(show.additionalMediaImagesCollection?.items?.map(
+          (img) => img.url
+        ) ||
+          show.additionalImages ||
+          []),
       ],
     };
   });
