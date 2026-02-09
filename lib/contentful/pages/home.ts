@@ -3,8 +3,13 @@ import {
   ArticleInterface,
   HomePageData,
   NextUpSection,
+  PastShowSchema,
 } from "../../../types/shared";
-import { extractCollection, extractPage } from "../../../util";
+import {
+  extractCollection,
+  extractPage,
+  placeholderImage,
+} from "../../../util";
 import {
   ArticlePreviewFragment,
   FeaturedArticleFragment,
@@ -27,7 +32,46 @@ export async function getHomePage() {
       pageHome(id: "3xN3mbIMb4CwtrZqlRbYyu") {
         featuredShowsCollection {
           items {
-            ...ShowPreviewFragment
+            sys {
+              id
+            }
+            title
+            date
+            slug
+            mixcloudLink
+            coverImage {
+              sys {
+                id
+              }
+              title
+              description
+              url
+              width
+              height
+            }
+            genresCollection(limit: 9) {
+              items {
+                name
+              }
+            }
+            artwork {
+              sys {
+                id
+              }
+              title
+              description
+              url
+              width
+              height
+            }
+            audioFile {
+              sys {
+                id
+              }
+              title
+              description
+              url
+            }
           }
         }
       }
@@ -49,7 +93,6 @@ export async function getHomePage() {
       }
     }
 
-    ${ShowPreviewFragment}
     ${FeaturedArticleFragment}
     ${ArticlePreviewFragment}
   `;
@@ -84,13 +127,31 @@ export async function getHomePage() {
   //   return article.title.includes("Berlin Stories") && !icymi
   // })
 
+  const pageHome = extractPage<HomePageData>(data, "pageHome");
+  const rawFeaturedShows = pageHome.featuredShowsCollection.items;
+
+  // Transform featured shows to PastShowSchema format
+  const featuredShows: PastShowSchema[] = rawFeaturedShows.map((show: any) => ({
+    id: show.sys.id,
+    title: show.title,
+    date: show.date,
+    slug: show.slug,
+    mixcloudLink: show.mixcloudLink,
+    coverImage: show.coverImage?.url || placeholderImage.url,
+    genres:
+      show.genresCollection?.items
+        .map((genre: any) => genre?.name)
+        .filter(Boolean) || [],
+    artwork: show.artwork?.url || null,
+    audioFile: show.audioFile?.url || null,
+  }));
+
   return {
     featuredArticles: extractCollection<ArticleInterface>(
       data,
       "featuredArticles"
     ),
-    featuredShows: extractPage<HomePageData>(data, "pageHome")
-      .featuredShowsCollection.items,
+    featuredShows,
     latestArticles: filteredArticles.slice(0, 6),
     nextUp: extractPage<NextUpSection>(data, "nextUp"),
   };

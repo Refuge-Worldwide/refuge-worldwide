@@ -2,10 +2,10 @@ import Link from "next/link";
 import Pill from "../../components/pill";
 import { FeaturedShowPreview } from "../../components/showPreview";
 import { Arrow } from "../../icons/arrow";
-import { ShowPreviewEntry } from "../../types/shared";
+import { PastShowSchema } from "../../types/shared";
 
 type FeaturedShowsProps = {
-  shows: ShowPreviewEntry[];
+  shows: PastShowSchema[];
 };
 
 export default function FeaturedShows({ shows }: FeaturedShowsProps) {

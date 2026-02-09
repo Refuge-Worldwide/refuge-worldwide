@@ -173,20 +173,18 @@ export function FeaturedShowPreview({
   slug,
   title,
   coverImage,
-  genresCollection,
+  genres,
   date,
   mixcloudLink,
   className = "",
   priority,
-}: ShowPreviewProps & { className?: string; priority?: boolean }) {
+}: PastShowSchema & { className?: string; priority?: boolean }) {
   const cachedClassNames = classNames("text-small", className);
-
-  const genres = parseGenres(genresCollection);
 
   return (
     <article className={cachedClassNames}>
       <ShowImageWithPlayer
-        src={coverImage.url}
+        src={coverImage}
         alt={title}
         mixcloudLink={mixcloudLink}
         priority={priority}

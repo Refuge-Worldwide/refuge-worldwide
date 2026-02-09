@@ -1,9 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { assertError } from "ts-extras";
 import { getHomePage } from "../../../lib/contentful/pages/home";
-import { ShowPreviewEntry } from "../../../types/shared";
+import { PastShowSchema } from "../../../types/shared";
 
-export type FeaturedShowsResponse = ShowPreviewEntry[];
+export type FeaturedShowsResponse = PastShowSchema[];
 
 export default async function handler(
   req: NextApiRequest,
