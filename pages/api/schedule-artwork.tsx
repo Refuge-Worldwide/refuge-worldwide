@@ -9,7 +9,7 @@ dayjs.extend(timezone);
 const cetAdjustment = dayjs().tz("Europe/Berlin").utcOffset();
 
 export const config = {
-  runtime: "experimental-edge",
+  runtime: "edge",
 };
 
 async function handle(request: Request) {

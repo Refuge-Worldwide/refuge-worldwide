@@ -86,7 +86,14 @@ const appendToSpreadsheet = async (values) => {
 
 const addArtist = async (artist) => {
   try {
-    const image = await uploadImage(artist.name, artist.image);
+    // Use existing asset ID if available, otherwise upload
+    let imageId;
+    if (artist.image.id) {
+      imageId = artist.image.id;
+    } else {
+      imageId = await uploadImage(artist.name, artist.image);
+    }
+
     const content = await richTextFromMarkdown(artist.bio);
     const space = await client.getSpace(spaceId);
     const environment = await space.getEnvironment(environmentId);
@@ -112,7 +119,7 @@ const addArtist = async (artist) => {
             sys: {
               type: "Link",
               linkType: "Asset",
-              id: image,
+              id: imageId,
             },
           },
         },
@@ -210,11 +217,35 @@ const updateShow = async (values) => {
     );
     const dateFormatted = dayjs(values.datetime).format("DD MMM YYYY");
     const genres = createReferencesArray(values.genres);
-    let additionalImages = [];
-    values.image.slice(1).forEach((image) => {
-      additionalImages.push(image.url);
-    });
-    Object.values(values.image).join(",");
+
+    // Create asset references for additional images
+    // Use existing asset IDs if available, otherwise upload
+    let additionalMediaImages = [];
+    if (values.image.length > 1) {
+      for (const image of values.image.slice(1)) {
+        let assetId;
+
+        // Check if we already have an asset ID (from FilePond upload)
+        if (image.id) {
+          assetId = image.id;
+        } else {
+          // Fallback: upload the image if no ID exists (backward compatibility)
+          assetId = await uploadImage(
+            `${values.showName} - additional image`,
+            image
+          );
+        }
+
+        additionalMediaImages.push({
+          sys: {
+            type: "Link",
+            linkType: "Asset",
+            id: assetId,
+          },
+        });
+      }
+    }
+
     console.log(genres);
     client
       .getSpace(spaceId)
@@ -257,9 +288,12 @@ const updateShow = async (values) => {
         entry.fields.status = {
           "en-US": "Submitted",
         };
-        entry.fields.additionalImages = {
-          "en-US": additionalImages,
-        };
+        // Save additional images as Contentful asset references
+        if (additionalMediaImages.length > 0) {
+          entry.fields.additionalMediaImages = {
+            "en-US": additionalMediaImages,
+          };
+        }
         entry.fields.instagramHandles = {
           "en-US": formatInstaHandles(values.instagram),
         };
@@ -290,17 +324,56 @@ const showArtwork = async (values) => {
   // Get URL for social image
   const url = showArtworkURL(values);
 
-  const showArtwork = {
-    url: url,
-    type: "image/png",
-    filename: values.showName + "-show-artwork.png",
-  };
+  try {
+    // Fetch the artwork from our API endpoint
+    const artworkResponse = await fetch(url);
+    if (!artworkResponse.ok) {
+      throw new Error(`Failed to fetch artwork: ${artworkResponse.statusText}`);
+    }
 
-  const showArtworkId = await uploadImage(
-    values.showName + " - show artwork",
-    showArtwork
-  );
-  return showArtworkId;
+    // Get the image as an ArrayBuffer
+    const artworkArrayBuffer = await artworkResponse.arrayBuffer();
+
+    // Upload directly to Contentful using binary data
+    const space = await client.getSpace(spaceId);
+    const environment = await space.getEnvironment(environmentId);
+
+    // Step 1: Create an upload with the binary data
+    const upload = await environment.createUpload({
+      file: artworkArrayBuffer,
+    });
+
+    // Step 2: Create asset with reference to the upload
+    let asset = await environment.createAsset({
+      fields: {
+        title: {
+          "en-US": values.showName + " - show artwork",
+        },
+        file: {
+          "en-US": {
+            contentType: "image/png",
+            fileName: values.showName + "-show-artwork.png",
+            uploadFrom: {
+              sys: {
+                type: "Link",
+                linkType: "Upload",
+                id: upload.sys.id,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    // Step 3: Process and publish the asset
+    const processedAsset = await asset.processForAllLocales();
+    await processedAsset.publish();
+
+    return processedAsset.sys.id;
+  } catch (err) {
+    console.error("Error generating/uploading artwork:", err);
+    throw err;
+  }
 };
 
 const formatInstaHandles = (handles) => {
@@ -346,7 +419,14 @@ export default async function handler(
       console.log("UPDATING");
       console.log(dayjs().utcOffset());
       try {
-        values.imageId = await uploadImage(values.showName, values.image[0]);
+        // Use existing asset ID if available, otherwise upload
+        if (values.image[0].id) {
+          values.imageId = values.image[0].id;
+        } else {
+          // Fallback: upload the image if no ID exists (backward compatibility)
+          values.imageId = await uploadImage(values.showName, values.image[0]);
+        }
+
         if (values.hasExtraArtists) {
           for (const artist of values.extraArtists) {
             // if ((artist.bio && artist.image) || (artist.bio !== "" && artist.image !== "")) {
@@ -367,7 +447,12 @@ export default async function handler(
         if (values.artistsAdditionalInfo) {
           for (const artist of values.artistsAdditionalInfo) {
             if (artist.image) {
-              artist.imageId = await uploadImage(artist.name, artist.image);
+              // Use existing asset ID if available, otherwise upload
+              if (artist.image.id) {
+                artist.imageId = artist.image.id;
+              } else {
+                artist.imageId = await uploadImage(artist.name, artist.image);
+              }
             }
             await updateArtist(artist);
           }

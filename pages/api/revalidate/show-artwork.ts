@@ -1,14 +1,15 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { previewClient } from "../../../lib/contentful/client";
-import cloudinary from "cloudinary";
 import { showArtworkURL } from "../../../util";
-import { uploadImage, updateArtwork } from "../../../lib/contentful/management";
-import { error } from "console";
+import { updateArtwork } from "../../../lib/contentful/management";
+import { createClient } from "contentful-management";
 
-cloudinary.v2.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
+const accesstoken = process.env.CONTENTFUL_MANAGEMENT_ACCESS_TOKEN;
+const spaceId = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID;
+const environmentId = process.env.NEXT_PUBLIC_CONTENTFUL_ENVIRONMENT_ID;
+
+const client = createClient({
+  accessToken: accesstoken,
 });
 
 export default async function handler(
@@ -38,16 +39,38 @@ export default async function handler(
       const coverImageId = show.coverImage.sys.id;
 
       // Fetch the asset details from Contentful
-      const asset = await previewClient.getAsset(coverImageId);
+      const coverImageAsset = await previewClient.getAsset(coverImageId);
 
       // Extract the URL of the cover image
-      const coverImageUrl = `https:${asset.fields.file.url}`;
+      const coverImageUrl = coverImageAsset.fields.file.url;
+      const formattedCoverUrl = coverImageUrl.startsWith("//")
+        ? `https:${coverImageUrl}`
+        : coverImageUrl;
 
-      // Upload the image to Cloudinary using regular upload
-      const result = await cloudinary.v2.uploader.upload(coverImageUrl);
+      // Start with cover image
+      let images = [{ url: formattedCoverUrl }];
 
-      let images = [{ url: result.url }];
-      if (show.additionalImages) {
+      // Handle both new additionalMediaImages and legacy additionalImages
+      if (show.additionalMediaImages && show.additionalMediaImages.length > 0) {
+        // Fetch the full asset details for additionalMediaImages
+        for (const mediaImageRef of show.additionalMediaImages) {
+          try {
+            const mediaAsset = await previewClient.getAsset(
+              mediaImageRef.sys.id
+            );
+            const imageUrl = mediaAsset.fields.file.url;
+            images.push({
+              url: imageUrl.startsWith("//") ? `https:${imageUrl}` : imageUrl,
+            });
+          } catch (err) {
+            console.error(
+              `Failed to fetch media image asset ${mediaImageRef.sys.id}:`,
+              err
+            );
+          }
+        }
+      } else if (show.additionalImages) {
+        // Fallback to legacy additionalImages field (already URLs)
         show.additionalImages.forEach((image) => {
           images.push({ url: image });
         });
@@ -83,16 +106,53 @@ export default async function handler(
 
       const url = showArtworkURL(values, false, regenerate);
 
-      const artwork = {
-        type: "image/png",
-        filename: showTitle + " - show artwork",
-        url: url,
-      };
+      // Fetch the artwork from our API endpoint
+      const artworkResponse = await fetch(url);
+      if (!artworkResponse.ok) {
+        throw new Error(
+          `Failed to fetch artwork: ${artworkResponse.statusText}`
+        );
+      }
 
-      const artworkId = await uploadImage(
-        showTitle + " - show artwork",
-        artwork
-      );
+      // Get the image as an ArrayBuffer
+      const artworkArrayBuffer = await artworkResponse.arrayBuffer();
+
+      // Upload directly to Contentful using binary data
+      const space = await client.getSpace(spaceId);
+      const environment = await space.getEnvironment(environmentId);
+
+      // Step 1: Create an upload with the binary data
+      const upload = await environment.createUpload({
+        file: artworkArrayBuffer,
+      });
+
+      // Step 2: Create asset with reference to the upload
+      let artworkAsset = await environment.createAsset({
+        fields: {
+          title: {
+            "en-US": showTitle + " - show artwork",
+          },
+          file: {
+            "en-US": {
+              contentType: "image/png",
+              fileName: showTitle + "-show-artwork.png",
+              uploadFrom: {
+                sys: {
+                  type: "Link",
+                  linkType: "Upload",
+                  id: upload.sys.id,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      // Step 3: Process and publish the asset
+      const processedArtworkAsset = await artworkAsset.processForAllLocales();
+      await processedArtworkAsset.publish();
+
+      const artworkId = processedArtworkAsset.sys.id;
       console.log(artworkId);
       await updateArtwork(show.id, artworkId);
 

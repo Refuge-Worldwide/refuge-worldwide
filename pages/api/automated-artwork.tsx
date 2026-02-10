@@ -1,7 +1,7 @@
 import { ImageResponse } from "@vercel/og";
 
 export const config = {
-  runtime: "experimental-edge",
+  runtime: "edge",
 };
 
 const imageWidths = ["1048px", "517px", "340px"];
@@ -13,17 +13,39 @@ async function handle(request: Request) {
     searchParams.get("images") ||
     "https://res.cloudinary.com/dqjn26pey/image/upload/v1726483539/default_image-pichi_u9id7o.jpg";
   const imagesArray = decodeURIComponent(images).split(",");
-  const aspects = ["12:10", "59:100", "35:100"];
-  const cloudinaryTransform = `ar_${
-    imagesArray.length > 3
-      ? aspects[aspects.length - 1]
-      : aspects[imagesArray.length - 1]
-  },c_fill,g_face:auto`;
+  const aspects = [
+    { ratio: "12:10", width: 1048, height: 873 },
+    { ratio: "59:100", width: 517, height: 876 },
+    { ratio: "35:100", width: 340, height: 971 },
+  ];
+
   const transformedImages = imagesArray.map((img) => {
-    const [baseUrl, rest] = img.split("/upload/");
-    const transformedUrl = `${baseUrl}/upload/${cloudinaryTransform}/${rest}`;
-    console.log(transformedUrl);
-    return transformedUrl;
+    const aspect =
+      imagesArray.length > 3
+        ? aspects[aspects.length - 1]
+        : aspects[imagesArray.length - 1];
+
+    // Check if it's a Contentful image URL
+    if (img.includes("images.ctfassets.net") || img.includes("ctfassets.net")) {
+      // Use Contentful's image API with query parameters
+      // Ensure URL has https protocol
+      const imageUrl = img.startsWith("//") ? `https:${img}` : img;
+      const transformedUrl = `${imageUrl}?w=${aspect.width}&h=${aspect.height}&fit=fill&f=faces`;
+      console.log(transformedUrl);
+      return transformedUrl;
+    }
+    // Fallback to Cloudinary transformation for backward compatibility
+    else if (img.includes("cloudinary.com")) {
+      const cloudinaryTransform = `ar_${aspect.ratio},c_fill,g_face:auto`;
+      const [baseUrl, rest] = img.split("/upload/");
+      const transformedUrl = `${baseUrl}/upload/${cloudinaryTransform}/${rest}`;
+      console.log(transformedUrl);
+      return transformedUrl;
+    }
+    // Return original URL if neither Contentful nor Cloudinary
+    else {
+      return img;
+    }
   });
 
   // get data from params
