@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { assertError } from "ts-extras";
 import { getScheduleData } from "../../lib/contentful/schedule";
+import { placeholderImage } from "../../util";
 
 type RadioCo = {
   status: "online" | "offline";
@@ -59,11 +60,11 @@ export default async function handler(
       console.log("error loading channel 2: " + error.message);
     }
 
-    let liveNowArtwork = radioCoData?.current_track.artwork_url;
     const liveNowContentful = data.schedule.find((show) => {
       return show.live;
     });
 
+    let liveNowArtwork = placeholderImage.url;
     if (liveNowContentful && liveNowContentful.coverImage) {
       liveNowArtwork = liveNowContentful.coverImage.url;
     }
