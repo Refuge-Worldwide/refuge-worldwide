@@ -1,10 +1,17 @@
 import Head from "next/head";
 import Layout from "../components/layout";
 import PageMeta from "../components/seo/page";
+import Image from "next/image";
+import { useEffect } from "react";
 
 export default function AppTesting() {
-  const tallyEmbed = `https://tally.so/embed/?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1`;
-  const appVersion = "0.1.1"; // Update this with each new release
+  useEffect(() => {
+    const scriptTag = document.createElement("script");
+    scriptTag.src = "https://tally.so/widgets/embed.js";
+    document.body.appendChild(scriptTag);
+  }, []);
+  const tallyEmbed = `https://tally.so/embed/OD5oBA?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1`;
+  const appVersion = "0.1.1";
 
   return (
     <Layout>
@@ -16,7 +23,7 @@ export default function AppTesting() {
       <div className="min-h-screen bg-black text-white">
         <div className="container mx-auto px-4 sm:px-8 py-12 max-w-5xl">
           {/* Header */}
-          <div className="text-center mb-16">
+          <div className="text-center mb-8">
             <h1 className="text-large font-bold mb-4">
               Refuge Worldwide App Testing
             </h1>
@@ -25,6 +32,14 @@ export default function AppTesting() {
               <span className="font-bold">{appVersion}</span>
             </div>
           </div>
+
+          <Image
+            src="/images/app-mockup.jpg"
+            alt="App Mockup"
+            width={800}
+            height={400}
+            className="w-full mb-8"
+          />
 
           {/* Intro */}
           <div className="mb-12 space-y-4">
@@ -86,7 +101,6 @@ export default function AppTesting() {
                     sources&quot; in your settings
                   </li>
                   <li>Install the app on your Android device</li>
-                  <li>Start testing and exploring!</li>
                 </ol>
               </div>
               <div className="mt-4">
@@ -113,12 +127,11 @@ export default function AppTesting() {
             </p>
             <div className="bg-white/5 p-4 rounded-lg border border-white/10">
               <iframe
-                src={tallyEmbed}
+                data-tally-src={tallyEmbed}
                 width="100%"
-                height="600"
+                height="auto"
                 title="App Testing Feedback Form"
                 className="mb-8"
-                loading="lazy"
               ></iframe>
             </div>
           </section>
