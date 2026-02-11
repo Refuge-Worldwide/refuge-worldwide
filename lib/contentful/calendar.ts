@@ -75,7 +75,7 @@ export async function getCalendarShows(start, end, preview: boolean) {
         order: date_ASC
         where: { date_gte: $start, dateEnd_lte: $end, dateEnd_exists: true }
         preview: $preview
-        limit: 999
+        limit: 100
       ) {
         items {
           title
