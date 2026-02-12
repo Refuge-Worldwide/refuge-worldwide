@@ -84,7 +84,7 @@ export async function getSearchData(
     }),
     client.getEntries<TypeGenreFields>({
       content_type: "genre",
-      limit: 8,
+      limit: 10,
       order: "fields.name",
 
       "fields.name[match]": query,

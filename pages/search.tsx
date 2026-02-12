@@ -138,7 +138,7 @@ export default function SearchPage({
                         <Link
                           href={`/radio?genre=${encodeURIComponent(
                             genre.fields.name
-                          )}`}
+                          )}#shows`}
                         >
                           <Badge text={genre.fields.name} />
                         </Link>
