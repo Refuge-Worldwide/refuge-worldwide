@@ -12,6 +12,8 @@ import { getSearchData } from "../lib/contentful/search";
 import { useRouter } from "next/router";
 import Loading from "../components/loading";
 import { useRef } from "react";
+import Link from "next/link";
+import Badge from "../components/badge";
 
 export async function getStaticProps() {
   const { data } = await getSearchData("");
@@ -48,6 +50,7 @@ export default function SearchPage({
     ...data.shows,
     ...data.articles,
     ...data.artists,
+    ...data.genres,
   ]);
 
   const handleSubmit = (event) => {
@@ -82,7 +85,7 @@ export default function SearchPage({
                   handleSearch(e.target.value);
                 }}
                 aria-describedby="search-description"
-                placeholder="Search shows, news and artists..."
+                placeholder="Search shows, news, artists and genres..."
                 defaultValue={router.query.query?.toString()}
               />
               <div id="search-description" className="sr-only">
@@ -119,6 +122,34 @@ export default function SearchPage({
               </h2>
             </div>
           )}
+          {router.query.query && !isEmpty(data.genres) && (
+            <section>
+              <div className="p-4 sm:p-8">
+                <Pill>
+                  <h3>Genres</h3>
+                </Pill>
+
+                <div className="h-5" />
+
+                <ul className="flex flex-wrap gap-2">
+                  {data.genres.map((genre) => {
+                    return (
+                      <li key={genre.fields.slug}>
+                        <Link
+                          href={`/radio?genre=${encodeURIComponent(
+                            genre.fields.name
+                          )}#shows`}
+                        >
+                          <Badge text={genre.fields.name} />
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            </section>
+          )}
+
           {!isEmpty(data.shows) && (
             <section>
               <div className="p-4 sm:p-8">

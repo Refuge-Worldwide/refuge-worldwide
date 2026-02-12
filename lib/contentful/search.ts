@@ -4,6 +4,8 @@ import type {
   TypeArticleFields,
   TypeArtist,
   TypeArtistFields,
+  TypeGenre,
+  TypeGenreFields,
   TypeShowFields,
 } from "../../types/contentful";
 import { client } from "./client";
@@ -16,6 +18,7 @@ export interface SearchData {
   shows: PastShowSchema[];
   articles: TypeArticle[];
   artists: TypeArtist[];
+  genres: TypeGenre[];
 }
 
 export async function getSearchData(
@@ -25,66 +28,80 @@ export async function getSearchData(
 ) {
   const start = Date.now();
 
-  const [showsCollection, articlesCollection, artistsCollection] =
-    await Promise.all([
-      client.getEntries<TypeShowFields>({
-        content_type: "show",
-        limit: query ? limit : noQueryLimit,
-        order: "-fields.date,fields.title",
+  const [
+    showsCollection,
+    articlesCollection,
+    artistsCollection,
+    genresCollection,
+  ] = await Promise.all([
+    client.getEntries<TypeShowFields>({
+      content_type: "show",
+      limit: query ? limit : noQueryLimit,
+      order: "-fields.date,fields.title",
 
-        "fields.mixcloudLink[exists]": true,
-        "fields.date[lte]": dayjs().format("YYYY-MM-DD"),
+      "fields.mixcloudLink[exists]": true,
+      "fields.date[lte]": dayjs().format("YYYY-MM-DD"),
 
-        query: query,
+      query: query,
 
-        select: [
-          "sys.id",
-          "fields.title",
-          "fields.slug",
-          "fields.date",
-          "fields.artists",
-          "fields.genres",
-          "fields.coverImage",
-          "fields.mixcloudLink",
-          "fields.audioFile",
-        ],
-      }),
-      client.getEntries<TypeArticleFields>({
-        content_type: "article",
-        limit: query ? limit : noQueryLimit,
-        order: "-fields.date",
+      select: [
+        "sys.id",
+        "fields.title",
+        "fields.slug",
+        "fields.date",
+        "fields.artists",
+        "fields.genres",
+        "fields.coverImage",
+        "fields.mixcloudLink",
+        "fields.audioFile",
+      ],
+    }),
+    client.getEntries<TypeArticleFields>({
+      content_type: "article",
+      limit: query ? limit : noQueryLimit,
+      order: "-fields.date",
 
-        "fields.articleType[exists]": true,
+      "fields.articleType[exists]": true,
 
-        "fields.title[match]": query,
+      "fields.title[match]": query,
 
-        select: [
-          "fields.title",
-          "fields.slug",
-          "fields.date",
-          "fields.coverImage",
-          "fields.articleType",
-        ],
-      }),
-      client.getEntries<TypeArtistFields>({
-        content_type: "artist",
-        limit: query ? limit : noQueryLimit,
-        order: "fields.name",
+      select: [
+        "fields.title",
+        "fields.slug",
+        "fields.date",
+        "fields.coverImage",
+        "fields.articleType",
+      ],
+    }),
+    client.getEntries<TypeArtistFields>({
+      content_type: "artist",
+      limit: query ? limit : noQueryLimit,
+      order: "fields.name",
 
-        "fields.name[match]": query,
+      "fields.name[match]": query,
 
-        select: ["fields.name", "fields.slug", "fields.photo"],
-      }),
-    ]);
+      select: ["fields.name", "fields.slug", "fields.photo"],
+    }),
+    client.getEntries<TypeGenreFields>({
+      content_type: "genre",
+      limit: 10,
+      order: "fields.name",
+
+      "fields.name[match]": query,
+
+      select: ["fields.name", "fields.slug"],
+    }),
+  ]);
 
   const end = Date.now();
 
   const shows = showsCollection.items.map(parseShowToPastShowSchema);
   const articles = articlesCollection.items;
   const artists = artistsCollection.items;
+  const genres = genresCollection.items;
 
   return {
-    data: { shows, articles, artists } as SearchData,
+    data: { shows, articles, artists, genres } as SearchData,
     duration: end - start,
   };
 }
