@@ -116,6 +116,18 @@ export default function AppTesting() {
             </div>
           </section>
 
+          <section className="mb-12">
+            <h2 className="text-2xl font-bold mb-8 border-b border-white/20 pb-2">
+              Login details
+            </h2>
+            <p>
+              If you want to signin on the app you can use the following
+              details:
+            </p>
+            <p>Email: test@refugeworldwide.com</p>
+            <p>Password: testing123</p>
+          </section>
+
           {/* Feedback Form */}
           <section className="mb-12">
             <h2 className="text-2xl font-bold mb-8 border-b border-white/20 pb-2">
