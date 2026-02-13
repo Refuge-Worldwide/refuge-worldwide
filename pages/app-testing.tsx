@@ -51,7 +51,7 @@ export default function AppTesting() {
           {/* iOS Section */}
           <section className="mb-12">
             <h2 className="text-2xl font-bold mb-4 border-b border-white/20 pb-2">
-              iOS Testing
+              Apple/iOS Testing
             </h2>
             <div className="space-y-4">
               <p>
