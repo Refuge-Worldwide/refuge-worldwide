@@ -11,7 +11,7 @@ export default function AppTesting() {
     document.body.appendChild(scriptTag);
   }, []);
   const tallyEmbed = `https://tally.so/embed/OD5oBA?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1`;
-  const appVersion = "0.1.1";
+  const appVersion = "0.1.2";
 
   return (
     <Layout>
@@ -73,7 +73,7 @@ export default function AppTesting() {
               </div>
               <div className="mt-4">
                 <a
-                  href=""
+                  href="https://testflight.apple.com/join/ZQ3sd8Zc"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-block bg-white text-black px-6 py-3 rounded-lg font-bold hover:bg-white/90 transition-colors"
@@ -105,7 +105,7 @@ export default function AppTesting() {
               </div>
               <div className="mt-4">
                 <a
-                  href=""
+                  href="https://expo.dev/accounts/refuge-worldwide/projects/refuge-worldwide/builds/ae90ebc2-4e82-49ed-902c-97e20c5cfcac"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-block bg-white text-black px-6 py-3 rounded-lg font-bold hover:bg-white/90 transition-colors"
