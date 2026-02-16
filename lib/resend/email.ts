@@ -96,11 +96,7 @@ export async function sendArtworkEmail(artist, date, artwork) {
           : artist.email,
       subject:
         "Your show artwork for " + dayjs(date).format("dddd") + " is now ready",
-      reply_to: [
-        "leona@refugeworldwide.com",
-        "assistant@refugeworldwide.com",
-        "irene@refugeworldwide.com",
-      ],
+      reply_to: ["leona@refugeworldwide.com", "assistant@refugeworldwide.com"],
       react: ShowArtworkEmail({
         userName: artist.name,
         showDate: date,
