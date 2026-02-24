@@ -12,6 +12,14 @@ module.exports = {
     scrollRestoration: true,
   },
   transpilePackages: ["@radix-ui"],
+  async headers() {
+    return [
+      {
+        source: "/.well-known/apple-app-site-association",
+        headers: [{ key: "Content-Type", value: "application/json" }],
+      },
+    ];
+  },
   async redirects() {
     return [
       {
