@@ -19,6 +19,7 @@ type ShowImageWithPlayerProps = {
   alt: string;
   priority?: boolean;
   title: string;
+  slug: string;
 };
 
 function ShowImageWithPlayer({
@@ -27,10 +28,11 @@ function ShowImageWithPlayer({
   alt,
   priority,
   title,
+  slug,
 }: ShowImageWithPlayerProps) {
   const showUrlSet = useGlobalStore((state) => state.showUrlSet);
 
-  const onClick = () => showUrlSet(mixcloudLink);
+  const onClick = () => showUrlSet(mixcloudLink, src, `/radio/${slug}`);
 
   return (
     <button
@@ -77,6 +79,7 @@ export default function ShowPreview({
         alt={title}
         mixcloudLink={mixcloudLink}
         title={title}
+        slug={slug}
       />
 
       <div className="h-2" />
@@ -189,6 +192,7 @@ export function FeaturedShowPreview({
         mixcloudLink={mixcloudLink}
         priority={priority}
         title={title}
+        slug={slug}
       />
 
       <div className="h-2" />
@@ -248,7 +252,7 @@ export function ArticleShowPreview({
   const showUrlSet = useGlobalStore((state) => state.showUrlSet);
 
   const onClick = () => {
-    showUrlSet(mixcloudLink);
+    showUrlSet(mixcloudLink, coverImage.url, `/radio/${slug}`);
   };
 
   return (

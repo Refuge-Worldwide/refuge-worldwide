@@ -73,6 +73,7 @@
     "formik": "^2.2.9",
     "fuzzysort": "^2.0.1",
     "google-spreadsheet": "^3.3.0",
+    "hls.js": "^1.6.15",
     "js-cookie": "^3.0.5",
     "jszip": "^3.10.1",
     "next": "^13.1.1",

@@ -14,7 +14,13 @@ interface GlobalStore {
   activePlayerSet: (activePlayer: ActivePlayer) => void;
 
   showUrl: string | undefined;
-  showUrlSet: (showKey: string) => void;
+  showImage: string | undefined;
+  showPageUrl: string | undefined;
+  showUrlSet: (
+    showUrl: string,
+    showImage?: string,
+    showPageUrl?: string
+  ) => void;
 }
 
 export const useGlobalStore = create<GlobalStore>()((set) => ({
@@ -22,10 +28,14 @@ export const useGlobalStore = create<GlobalStore>()((set) => ({
   activePlayerSet: (activePlayer) => set({ activePlayer }),
 
   showUrl: undefined,
-  showUrlSet: (showUrl) =>
+  showImage: undefined,
+  showPageUrl: undefined,
+  showUrlSet: (showUrl, showImage, showPageUrl) =>
     set({
       activePlayer: archivePlayerType(showUrl),
       showUrl,
+      showImage,
+      showPageUrl,
     }),
 }));
 

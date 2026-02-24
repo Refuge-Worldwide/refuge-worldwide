@@ -3,27 +3,37 @@ import { SyntheticEvent } from "react";
 import { ActivePlayer, useGlobalStore } from "../hooks/useStore";
 import { useState, useEffect } from "react";
 import { getMixcloudKey } from "../util";
+import SoundCloudPlayer from "./soundcloudPlayer";
 
 export default function ArchivePlayer() {
   const showUrl = useGlobalStore((state) => state.showUrl);
+  const showImage = useGlobalStore((state) => state.showImage);
+  const showPageUrl = useGlobalStore((state) => state.showPageUrl);
   const activePlayer = useGlobalStore((state) => state.activePlayer);
   const activePlayerSet = useGlobalStore((state) => state.activePlayerSet);
 
   const [showKey, setShowKey] = useState(null);
+  const [scRendered, setScRendered] = useState(false);
+  const [scLeaving, setScLeaving] = useState(false);
+
+  useEffect(() => {
+    const isSoundcloud = activePlayer === ActivePlayer.SOUNDCLOUD && !!showUrl;
+    if (isSoundcloud) {
+      setScLeaving(false);
+      setScRendered(true);
+    } else if (scRendered) {
+      setScLeaving(true);
+      const t = setTimeout(() => {
+        setScRendered(false);
+        setScLeaving(false);
+      }, 300);
+      return () => clearTimeout(t);
+    }
+  }, [activePlayer, showUrl]);
 
   useEffect(() => {
     if (activePlayer === ActivePlayer.MIXCLOUD) {
       setShowKey(getMixcloudKey(showUrl));
-    } else if (activePlayer === ActivePlayer.SOUNDCLOUD) {
-      // TODO: move this soundcloud show id extraction to its own function (possibly api endpoint)
-      const encodedShowUrl = encodeURI(showUrl);
-      const embedResolveURL = `https://soundcloud.com/oembed?url=${encodedShowUrl}&format=json`;
-      fetch(embedResolveURL)
-        .then((res) => res.json())
-        .then((data) => {
-          const showId = extractShowIdFromIframe(data.html);
-          setShowKey(showId);
-        });
     } else if (activePlayer === ActivePlayer.YOUTUBE) {
       var video_id = showUrl.split("v=")[1];
       var ampersandPosition = video_id.indexOf("&");
@@ -69,25 +79,13 @@ export default function ArchivePlayer() {
           }
         />
       )}
-      {activePlayer === ActivePlayer.SOUNDCLOUD && showKey && (
-        <iframe
-          width="100%"
-          height={120}
-          allow="autoplay"
-          className="fixed bottom-0 left-0 w-full md:w-2/3 lg:w-1/2"
-          src={
-            `https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/` +
-            `${showKey}&` +
-            `auto_play=true&` +
-            `buying=false&` +
-            `sharing=false&` +
-            `download=false&` +
-            `show_artwork=true&` +
-            `show_playcount=false&` +
-            `show_user=false&` +
-            `color=000000`
-          }
-        ></iframe>
+      {scRendered && (
+        <SoundCloudPlayer
+          url={showUrl}
+          image={showImage}
+          leaving={scLeaving}
+          showPageUrl={showPageUrl}
+        />
       )}
       {activePlayer === ActivePlayer.YOUTUBE && showKey && (
         <div className="fixed bottom-0 left-0 w-full md:w-1/3 aspect-video">
@@ -102,23 +100,4 @@ export default function ArchivePlayer() {
       <Script src="https://widget.mixcloud.com/media/js/widgetApi.js" />
     </>
   );
-}
-
-// TODO: move this function to a better place.
-function extractShowIdFromIframe(iframeString) {
-  // Use a regular expression to extract the src attribute
-  const srcMatch = iframeString.match(/src="([^"]+)"/);
-  if (srcMatch) {
-    const srcUrl = srcMatch[1]; // Extract the src URL
-    const urlParam = new URL(srcUrl).searchParams.get("url");
-    if (urlParam) {
-      // Decode the URL and extract the ID after '/tracks/'
-      const decodedUrl = decodeURIComponent(urlParam);
-      const match = decodedUrl.match(/\/tracks\/(\d+)/);
-      if (match) {
-        return match[1]; // Return the extracted ID
-      }
-    }
-  }
-  return null; // Return null if no ID is found
 }
