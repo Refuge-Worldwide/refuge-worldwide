@@ -1,5 +1,4 @@
 import MuxPlayer from "@mux/mux-player-react";
-import type MuxPlayerElement from "@mux/mux-player";
 import Head from "next/head";
 import { useRef, useState } from "react";
 
@@ -37,7 +36,7 @@ function VolumeOffIcon() {
 }
 
 export default function LivestreamPage() {
-  const playerRef = useRef<MuxPlayerElement>(null);
+  const playerRef = useRef(null);
   const [muted, setMuted] = useState(true);
   const [paused, setPaused] = useState(false);
 
@@ -78,15 +77,13 @@ export default function LivestreamPage() {
             streamType="on-demand"
             autoPlay
             muted
-            style={
-              {
-                width: "100%",
-                height: "100%",
-                "--controls": "none",
-                "--media-object-fit": "cover",
-                "--media-object-position": "center",
-              } as React.CSSProperties
-            }
+            style={{
+              width: "100%",
+              height: "100%",
+              "--controls": "none",
+              "--media-object-fit": "cover",
+              "--media-object-position": "center",
+            }}
           />
 
           <div className="absolute top-4 right-4 flex gap-2 z-10">
@@ -111,4 +108,4 @@ export default function LivestreamPage() {
   );
 }
 
-(LivestreamPage as any).noLayout = true;
+LivestreamPage.noLayout = true;
