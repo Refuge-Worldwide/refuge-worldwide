@@ -71,7 +71,7 @@ export default function LivestreamPage() {
         <meta name="robots" content="noindex, nofollow" />
       </Head>
       <div className="w-screen h-screen bg-black flex items-center justify-center overflow-hidden">
-        <div className="relative w-full aspect-[2/3] md:aspect-auto md:h-full">
+        <div className="relative w-full aspect-square md:aspect-auto md:h-full">
           <MuxPlayer
             ref={playerRef}
             playbackId="AGgpQQqVf2H6N402BwjLyZQ4IiCoi7H191wrMYcwrCCg"
