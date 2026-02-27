@@ -1,4 +1,5 @@
 import MuxPlayer from "@mux/mux-player-react";
+import type MuxPlayerElement from "@mux/mux-player";
 import Head from "next/head";
 import { useRef, useState } from "react";
 
@@ -36,7 +37,7 @@ function VolumeOffIcon() {
 }
 
 export default function LivestreamPage() {
-  const playerRef = useRef(null);
+  const playerRef = useRef<MuxPlayerElement>(null);
   const [muted, setMuted] = useState(true);
   const [paused, setPaused] = useState(false);
 
@@ -73,7 +74,7 @@ export default function LivestreamPage() {
         <div className="relative w-full aspect-[2/3] md:aspect-auto md:h-full">
           <MuxPlayer
             ref={playerRef}
-            playbackId="AGgpQQqVf2H6N402BwjLyZQ4IiCoi7H191wrMYcwrCCg"
+            playbackId="b91oNEndMxBLCM4DJZJKsbdoC25wmLbhYM8LxfAby004"
             streamType="live"
             autoPlay
             muted
