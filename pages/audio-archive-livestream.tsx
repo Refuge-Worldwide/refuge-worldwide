@@ -74,7 +74,7 @@ export default function LivestreamPage() {
         <div className="relative w-full aspect-square md:aspect-auto md:h-full">
           <MuxPlayer
             ref={playerRef}
-            playbackId="AGgpQQqVf2H6N402BwjLyZQ4IiCoi7H191wrMYcwrCCg"
+            playbackId="IAGzx00zHKjaGzw49c02TYY5ALJQcEwqpwT2H45L01Oa0100"
             streamType="live"
             autoPlay
             muted
