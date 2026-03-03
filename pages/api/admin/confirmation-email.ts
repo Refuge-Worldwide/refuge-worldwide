@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { sendConfirmationEmail } from "../../../lib/resend/email";
-import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 
 export default async function handler(
   req: NextApiRequest,

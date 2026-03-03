@@ -1,9 +1,12 @@
 {
   "name": "refuge-worldwide",
-  "version": "1.0.0",
-  "author": "@mirshko <jeff@reiner.design>",
-  "private": false,
-  "license": "UNLICENSED",
+  "version": "2.0.0",
+  "author": "jackmb <jack@refugeworldwide.com>",
+  "private": true,
+  "license": "MIT License",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "dev": "next dev",
     "build": "next build",

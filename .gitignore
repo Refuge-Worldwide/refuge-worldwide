@@ -4,6 +4,7 @@
 /node_modules
 /.pnp
 .pnp.js
+/packages/calendar/node_modules
 
 # testing
 /coverage
@@ -14,6 +15,9 @@
 
 # production
 /build
+
+# package build output
+/packages/calendar/dist
 
 # misc
 .DS_Store
