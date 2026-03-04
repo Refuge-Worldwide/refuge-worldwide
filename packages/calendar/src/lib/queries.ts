@@ -1,4 +1,5 @@
-import type { CalendarConfig } from "../config";
+import type { CalendarConfig, ParticipantTypeConfig } from "../config";
+import { getParticipantTypes } from "../config";
 import type { RawCalendarShow, DropdownOption } from "../types";
 
 /**
@@ -20,6 +21,22 @@ function topLevelCollection(contentTypeId: string): string {
 }
 
 /**
+ * Builds the GraphQL fragment for a single participant type's collection.
+ * Used in both the calendar query and the search query.
+ */
+function buildParticipantFragment(pt: ParticipantTypeConfig): string {
+  const coll = collectionName(pt.showField);
+  return `
+    ${pt.showField}: ${coll}(limit: 9) {
+      items {
+        sys { id }
+        name: ${pt.fields.name}
+        ${pt.fields.email ? `email: ${pt.fields.email}` : ""}
+      }
+    }`;
+}
+
+/**
  * Builds the calendar shows query dynamically from the station's field config.
  *
  * We use GraphQL aliases (`genericName: actualFieldName`) so the response always
@@ -32,15 +49,17 @@ function topLevelCollection(contentTypeId: string): string {
  *   `startTime_gte: $start` instead of `date_gte: $start`
  */
 export function buildCalendarQuery(config: CalendarConfig): string {
-  const { show: showTypeId, artist: artistTypeId } = config.contentTypes;
+  const { show: showTypeId } = config.contentTypes;
   const f = config.fields.show;
-  const af = config.fields.artist;
 
   const collection = topLevelCollection(showTypeId);
-  const artistsCollection = collectionName(f.artists);
   const mediaImagesCollection = f.additionalMediaImages
     ? collectionName(f.additionalMediaImages)
     : null;
+
+  const participantFragments = getParticipantTypes(config)
+    .map(buildParticipantFragment)
+    .join("\n");
 
   return /* GraphQL */ `
     query calendarQuery($start: DateTime, $end: DateTime, $preview: Boolean) {
@@ -68,13 +87,7 @@ export function buildCalendarQuery(config: CalendarConfig): string {
               ? `additionalMediaImages: ${mediaImagesCollection}(limit: 10) { items { url } }`
               : ""
           }
-          artists: ${artistsCollection}(limit: 9) {
-            items {
-              sys { id }
-              name: ${af.name}
-              email: ${af.email}
-            }
-          }
+          ${participantFragments}
         }
       }
     }
@@ -84,13 +97,15 @@ export function buildCalendarQuery(config: CalendarConfig): string {
 export function buildSearchQuery(config: CalendarConfig): string {
   const { show: showTypeId } = config.contentTypes;
   const f = config.fields.show;
-  const af = config.fields.artist;
 
   const collection = topLevelCollection(showTypeId);
-  const artistsCollection = collectionName(f.artists);
   const mediaImagesCollection = f.additionalMediaImages
     ? collectionName(f.additionalMediaImages)
     : null;
+
+  const participantFragments = getParticipantTypes(config)
+    .map(buildParticipantFragment)
+    .join("\n");
 
   return /* GraphQL */ `
     query calendarSearchQuery($query: String, $preview: Boolean) {
@@ -117,13 +132,7 @@ export function buildSearchQuery(config: CalendarConfig): string {
               ? `additionalMediaImages: ${mediaImagesCollection}(limit: 10) { items { url } }`
               : ""
           }
-          artists: ${artistsCollection}(limit: 9) {
-            items {
-              sys { id }
-              name: ${af.name}
-              email: ${af.email}
-            }
-          }
+          ${participantFragments}
         }
       }
     }
@@ -146,6 +155,32 @@ export function buildArtistSearchQuery(config: CalendarConfig): string {
           sys { id }
           name: ${af.name}
           email: ${af.email}
+        }
+      }
+    }
+  `;
+}
+
+/**
+ * Builds a search query for a single participant type.
+ * Used by the search handler when `?type=<contentTypeId>` is requested.
+ */
+export function buildSingleParticipantSearchQuery(
+  pt: ParticipantTypeConfig
+): string {
+  const collection = topLevelCollection(pt.contentTypeId);
+
+  return /* GraphQL */ `
+    query participantSearchQuery($query: String, $limit: Int) {
+      ${collection}(
+        order: ${pt.fields.name}_ASC
+        where: { ${pt.fields.name}_contains: $query }
+        limit: $limit
+      ) {
+        items {
+          sys { id }
+          name: ${pt.fields.name}
+          ${pt.fields.email ? `email: ${pt.fields.email}` : ""}
         }
       }
     }
@@ -233,11 +268,21 @@ export function processShow(
       []),
   ].filter((url): url is string => Boolean(url));
 
-  const artists: DropdownOption[] = (show.artists?.items ?? []).map((a) => ({
-    value: a.sys.id,
-    label: a.name,
-    email: a.email ?? [],
-  }));
+  // Collect participants from all configured types, tagging each with sourceField
+  const participantTypes = getParticipantTypes(config);
+  const artists: DropdownOption[] = participantTypes.flatMap((pt) => {
+    const field = (show as Record<string, unknown>)[pt.showField] as
+      | {
+          items: Array<{ sys: { id: string }; name: string; email?: string[] }>;
+        }
+      | undefined;
+    return (field?.items ?? []).map((a) => ({
+      value: a.sys.id,
+      label: a.name,
+      email: a.email ?? [],
+      sourceField: pt.showField,
+    }));
+  });
 
   return {
     id: show.sys.id,

@@ -44,6 +44,52 @@ export interface ContentfulOAuthConfig {
 }
 
 /**
+ * Configuration for a single participant type (e.g. artist, label, show).
+ * Each configured type gets its own labelled multi-select in the form and
+ * is stored as a separate reference field on the episode entry.
+ */
+export interface ParticipantTypeConfig {
+  /** Contentful content type ID, e.g. 'label' */
+  contentTypeId: string;
+  /** Form section label shown above the multi-select, e.g. 'Labels' */
+  label: string;
+  /** The reference field name on the show/episode entry, e.g. 'labels' */
+  showField: string;
+  /** Field names on this content type */
+  fields: {
+    /** Display name field */
+    name: string;
+    /** Optional email field — if absent, this type contributes no emails */
+    email?: string;
+  };
+}
+
+/**
+ * Returns the list of participant types to use.
+ * When `config.participants` is set, returns it directly.
+ * Otherwise derives a single-type list from the legacy `contentTypes.artist`
+ * and `fields.artist` config for full backwards compatibility.
+ */
+export function getParticipantTypes(
+  config: CalendarConfig
+): ParticipantTypeConfig[] {
+  if (config.participants && config.participants.length > 0) {
+    return config.participants;
+  }
+  return [
+    {
+      contentTypeId: config.contentTypes.artist,
+      label: "Artists",
+      showField: config.fields.show.artists,
+      fields: {
+        name: config.fields.artist.name,
+        email: config.fields.artist.email,
+      },
+    },
+  ];
+}
+
+/**
  * Maps the package's generic field names to the actual Contentful field names
  * used in this station's space.
  *
@@ -185,6 +231,24 @@ export interface CalendarConfig {
    * ```
    */
   onShowConfirmed?: (show: ShowNotificationData) => Promise<void>;
+  /**
+   * Multi-type participant configuration. When set, replaces the single
+   * `contentTypes.artist` + `fields.artist` for all participant operations.
+   *
+   * Each entry gets its own labelled multi-select in the show form and is
+   * stored as a separate reference field on the episode entry in Contentful.
+   *
+   * @example
+   * ```ts
+   * participants: [
+   *   { contentTypeId: 'artist', label: 'Artists', showField: 'artists',
+   *     fields: { name: 'name', email: 'email' } },
+   *   { contentTypeId: 'label',  label: 'Labels',  showField: 'labels',
+   *     fields: { name: 'labelName', email: 'contactEmail' } },
+   * ]
+   * ```
+   */
+  participants?: ParticipantTypeConfig[];
   /**
    * Authentication configuration.
    * Configure `contentfulOAuth` to enable Contentful's OAuth login flow —

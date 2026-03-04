@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import type { CalendarConfig } from "../config";
+import { getParticipantTypes } from "../config";
 import type { ShowFormValues, MutationResult, DropdownOption } from "../types";
 
 dayjs.extend(utc);
@@ -83,16 +84,21 @@ export async function createCalendarShow(
     ? values.title.split(" | ")[0] + " - "
     : "" + artistsLabel + " - " + dateFormatted;
 
-  const artists = createReferencesArray(values.artists);
-
   const fields: Record<string, { "en-US": unknown }> = {
     [f.title]: { "en-US": values.title ?? "" },
     [f.date]: { "en-US": startDateTime },
     [f.dateEnd]: { "en-US": endDateTime },
-    [f.artists]: { "en-US": artists },
     [f.status]: { "en-US": values.status.value },
     [f.type]: { "en-US": values.type ?? config.typeValues.live },
   };
+
+  // Write each participant type to its own reference field
+  for (const pt of getParticipantTypes(config)) {
+    const selected =
+      values.participants?.[pt.showField] ??
+      (pt.showField === f.artists ? values.artists : []);
+    fields[pt.showField] = { "en-US": createReferencesArray(selected) };
+  }
 
   if (f.internal) {
     fields[f.internal] = { "en-US": internalNote };
@@ -141,18 +147,28 @@ export async function updateCalendarShow(
     entry.fields[f.title]["en-US"] = values.title;
   }
 
-  if (values.artists?.length) {
-    const artists = createReferencesArray(values.artists);
-    entry.fields[f.artists] = { "en-US": artists };
-
-    if (f.internal) {
-      const artistsLabel = formatArtistsLabel(values.artists);
-      const dateFormatted = dayjs(values.start).format("DD MMM YYYY");
-      const internalNote = values.title
-        ? values.title.split(" | ")[0] + " - "
-        : "" + artistsLabel + " - " + dateFormatted;
-      entry.fields[f.internal]["en-US"] = internalNote;
+  // Update each participant type field
+  for (const pt of getParticipantTypes(config)) {
+    const selected =
+      values.participants?.[pt.showField] ??
+      (pt.showField === f.artists ? values.artists : undefined);
+    if (selected?.length) {
+      entry.fields[pt.showField] = {
+        "en-US": createReferencesArray(selected),
+      };
     }
+  }
+
+  // Update internal note based on primary artists (first participant type)
+  const primaryArtists =
+    values.participants?.[f.artists] ?? values.artists ?? [];
+  if (primaryArtists.length && f.internal) {
+    const artistsLabel = formatArtistsLabel(primaryArtists);
+    const dateFormatted = dayjs(values.start).format("DD MMM YYYY");
+    const internalNote = values.title
+      ? values.title.split(" | ")[0] + " - "
+      : "" + artistsLabel + " - " + dateFormatted;
+    entry.fields[f.internal]["en-US"] = internalNote;
   }
 
   if (values.status && entry.fields[f.status]) {

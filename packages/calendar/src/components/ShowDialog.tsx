@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import dayjs from "dayjs";
 
 import type { CalendarConfig } from "../config";
+import { getParticipantTypes } from "../config";
 import type { ShowFormValues, DropdownOption, MutationResult } from "../types";
 import type { ManagementClient } from "../lib/mutations";
 import {
@@ -63,6 +64,19 @@ export function ShowDialog({
     },
   ];
 
+  const participantTypes = getParticipantTypes(config);
+  const isMultiType = participantTypes.length > 1;
+
+  // Build per-type participant map from the flat tagged artists array
+  const allParticipants: DropdownOption[] =
+    selectedShow?.extendedProps?.artists ?? [];
+  const initialParticipants: Record<string, DropdownOption[]> = {};
+  for (const pt of participantTypes) {
+    initialParticipants[pt.showField] = isMultiType
+      ? allParticipants.filter((a) => a.sourceField === pt.showField)
+      : allParticipants;
+  }
+
   const initialValues: ShowFormValues & {
     hasExtraArtists: boolean;
     extraArtists: Array<{ name: string; pronouns?: string; email?: string }>;
@@ -72,7 +86,10 @@ export function ShowDialog({
     type: selectedShow?.extendedProps?.type ?? config.typeValues.live,
     start: selectedShow?.startStr ?? "",
     end: selectedShow?.endStr ?? "",
-    artists: selectedShow?.extendedProps?.artists ?? [],
+    // Legacy single-type field — kept for backwards compat
+    artists: initialParticipants[config.fields.show.artists] ?? allParticipants,
+    // Multi-type map
+    participants: isMultiType ? initialParticipants : undefined,
     status: selectedShow?.extendedProps?.status
       ? {
           value: selectedShow.extendedProps.status,
@@ -266,18 +283,39 @@ export function ShowDialog({
                     {/* Title */}
                     <InputField name="title" label="Show name" type="text" />
 
-                    {/* Artists */}
-                    <ArtistMultiSelectField
-                      label="Artist(s)"
-                      name="artists"
-                      limit={10}
-                      value={initialValues.artists}
-                      searchEndpoint={searchEndpoint}
-                    />
+                    {/* Participant fields — one per configured type */}
+                    {isMultiType ? (
+                      participantTypes.map((pt) => (
+                        <ArtistMultiSelectField
+                          key={pt.showField}
+                          label={pt.label}
+                          name={`participants.${pt.showField}`}
+                          limit={10}
+                          value={
+                            initialValues.participants?.[pt.showField] ?? []
+                          }
+                          searchEndpoint={`${searchEndpoint}?type=${pt.contentTypeId}`}
+                        />
+                      ))
+                    ) : (
+                      <ArtistMultiSelectField
+                        label="Artist(s)"
+                        name="artists"
+                        limit={10}
+                        value={initialValues.artists}
+                        searchEndpoint={searchEndpoint}
+                      />
+                    )}
 
-                    {/* Artist emails */}
+                    {/* Participant emails */}
                     <EmailModal
-                      artists={values.artists}
+                      artists={
+                        isMultiType
+                          ? participantTypes.flatMap(
+                              (pt) => values.participants?.[pt.showField] ?? []
+                            )
+                          : values.artists
+                      }
                       client={client}
                       config={config}
                     />

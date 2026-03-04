@@ -6,10 +6,12 @@ import {
   buildCalendarQuery,
   buildSearchQuery,
   buildArtistSearchQuery,
+  buildSingleParticipantSearchQuery,
   executeGraphQL,
   extractItems,
   processShow,
 } from "../lib/queries";
+import { getParticipantTypes } from "../config";
 import type { RawCalendarShow } from "../types";
 
 dayjs.extend(utc);
@@ -84,7 +86,44 @@ export function calendarSearchHandler(config: CalendarConfig) {
     const { query = "", type } = req.query as { query?: string; type?: string };
 
     try {
+      // Match ?type=<contentTypeId> to a configured participant type
+      const participantTypes = getParticipantTypes(config);
+      const matchedType = type
+        ? participantTypes.find((pt) => pt.contentTypeId === type) ??
+          // backwards compat: ?type=artists also matches the artist participant type
+          (type === "artists" ? participantTypes[0] : undefined)
+        : undefined;
+
+      if (matchedType) {
+        const gql = buildSingleParticipantSearchQuery(matchedType);
+        const data = await executeGraphQL(gql, config, {
+          preview: true,
+          variables: { query, limit: 30 },
+        });
+
+        const key = `${matchedType.contentTypeId}Collection`;
+        const collection = data[key] as {
+          items?: Array<{
+            sys: { id: string };
+            name: string;
+            email?: string[];
+          }>;
+        };
+        const items = (collection?.items ?? []).map((a) => ({
+          value: a.sys.id,
+          label: a.name,
+          email: matchedType.fields.email ? a.email ?? [] : [],
+          sourceField: matchedType.showField,
+        }));
+
+        return res
+          .status(200)
+          .setHeader("Cache-Control", "s-maxage=1, stale-while-revalidate=59")
+          .json(items);
+      }
+
       if (type === "artists") {
+        // Legacy fallback in case buildArtistSearchQuery is still used directly
         const gql = buildArtistSearchQuery(config);
         const data = await executeGraphQL(gql, config, {
           preview: true,

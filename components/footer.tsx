@@ -10,7 +10,7 @@ import { Arrow } from "../icons/arrow";
 import Mixcloud from "../icons/mixcloud";
 import Soundcloud from "../icons/soundcloud";
 import Telegram from "../icons/telegram";
-import { useCalendarAuth } from "../packages/calendar/dist";
+import { useCalendarAuth } from "@refuge-worldwide/calendar";
 import calendarConfig from "../contentful-calendar.config";
 
 export default function Footer() {

@@ -2,6 +2,7 @@
 export {
   defineCalendarConfig,
   refugeDefaultConfig,
+  getParticipantTypes,
   type CalendarConfig,
   type CalendarContentfulConfig,
   type ContentfulOAuthConfig,
@@ -11,6 +12,7 @@ export {
   type TypeValueMap,
   type StatusColorMap,
   type ShowNotificationData,
+  type ParticipantTypeConfig,
 } from "./config";
 
 // Auth — Contentful OAuth hook and utilities
@@ -54,6 +56,7 @@ export {
   buildCalendarQuery,
   buildSearchQuery,
   buildArtistSearchQuery,
+  buildSingleParticipantSearchQuery,
   executeGraphQL,
   extractItems,
   processShow,

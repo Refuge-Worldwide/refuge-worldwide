@@ -10,7 +10,7 @@ import MessageSquare from "../icons/message-square";
 import Search from "../icons/search";
 import NavigationLink from "./navigationLink";
 import { AiTwotoneCalendar } from "react-icons/ai";
-import { useCalendarAuth } from "../packages/calendar/dist";
+import { useCalendarAuth } from "@refuge-worldwide/calendar";
 import calendarConfig from "../contentful-calendar.config";
 
 export default function Navigation() {

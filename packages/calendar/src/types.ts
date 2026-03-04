@@ -62,6 +62,12 @@ export interface DropdownOption {
   value: string;
   label: string;
   email?: string[];
+  /**
+   * Which show reference field this option belongs to (e.g. 'artists', 'labels').
+   * Used when multiple participant types are configured to split the flat display
+   * list back into per-type arrays when pre-populating the edit form.
+   */
+  sourceField?: string;
 }
 
 /** Values the show create/update form submits */
@@ -72,7 +78,14 @@ export interface ShowFormValues {
   start: string;
   end: string;
   status: DropdownOption;
+  /** Legacy single-type artists field — used when `config.participants` is not set */
   artists: DropdownOption[];
+  /**
+   * Multi-type participant selections, keyed by the participant's `showField`.
+   * e.g. `{ artists: [...], labels: [...] }`
+   * Only populated when `config.participants` is configured.
+   */
+  participants?: Record<string, DropdownOption[]>;
   isFeatured?: boolean;
   hasExtraArtists?: boolean;
   extraArtists?: Array<{ name: string; pronouns?: string; email?: string }>;

@@ -18,6 +18,7 @@ vi.mock("../lib/queries", () => ({
   buildCalendarQuery: vi.fn(() => "mock-calendar-query"),
   buildSearchQuery: vi.fn(() => "mock-search-query"),
   buildArtistSearchQuery: vi.fn(() => "mock-artist-query"),
+  buildSingleParticipantSearchQuery: vi.fn(() => "mock-participant-query"),
   executeGraphQL: vi.fn(),
   extractItems: vi.fn(),
   processShow: vi.fn(),
@@ -149,9 +150,15 @@ describe("calendarSearchHandler", () => {
       res as any
     );
 
-    expect(queries.buildArtistSearchQuery).toHaveBeenCalled();
+    // ?type=artists now routes through buildSingleParticipantSearchQuery
+    expect(queries.buildSingleParticipantSearchQuery).toHaveBeenCalled();
     expect(res.json).toHaveBeenCalledWith([
-      { value: "a1", label: "DJ Test", email: ["dj@test.com"] },
+      {
+        value: "a1",
+        label: "DJ Test",
+        email: ["dj@test.com"],
+        sourceField: "artists",
+      },
     ]);
   });
 

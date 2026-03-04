@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { AiOutlineEdit } from "react-icons/ai";
 import { usePathname } from "next/navigation";
-import { useCalendarAuth } from "../packages/calendar/dist";
+import { useCalendarAuth } from "@refuge-worldwide/calendar";
 import calendarConfig from "../contentful-calendar.config";
 
 export default function Edit({ id }: { id?: string }) {

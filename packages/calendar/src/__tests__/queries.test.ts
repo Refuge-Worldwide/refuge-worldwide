@@ -181,8 +181,13 @@ describe("processShow", () => {
     });
     const result = processShow(show, testConfig);
     expect(result.artists).toEqual([
-      { value: "a1", label: "DJ One", email: ["one@test.com"] },
-      { value: "a2", label: "DJ Two", email: [] },
+      {
+        value: "a1",
+        label: "DJ One",
+        email: ["one@test.com"],
+        sourceField: "artists",
+      },
+      { value: "a2", label: "DJ Two", email: [], sourceField: "artists" },
     ]);
   });
 
