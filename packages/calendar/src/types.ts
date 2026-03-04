@@ -35,7 +35,7 @@ export interface CalendarShow {
 export interface RawCalendarShow {
   sys: {
     id: string;
-    publishedVersion?: string | null;
+    publishedVersion?: string | number | null;
   };
   title: string;
   type?: string;

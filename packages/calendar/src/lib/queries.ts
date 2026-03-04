@@ -271,7 +271,7 @@ export function processShow(
   // Collect participants from all configured types, tagging each with sourceField
   const participantTypes = getParticipantTypes(config);
   const artists: DropdownOption[] = participantTypes.flatMap((pt) => {
-    const field = (show as Record<string, unknown>)[pt.showField] as
+    const field = (show as unknown as Record<string, unknown>)[pt.showField] as
       | {
           items: Array<{ sys: { id: string }; name: string; email?: string[] }>;
         }
