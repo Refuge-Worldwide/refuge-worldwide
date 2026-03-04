@@ -19,6 +19,10 @@ export {
 // Auth — Contentful OAuth hook and utilities
 export { useContentfulAuth, type AuthState } from "./hooks/useContentfulAuth";
 export {
+  useCalendarAuth,
+  type CalendarAuthStatus,
+} from "./hooks/useCalendarAuth";
+export {
   buildAuthUrl,
   redirectToContentfulAuth,
   parseCallbackHash,

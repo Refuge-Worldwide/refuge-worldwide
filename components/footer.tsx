@@ -10,14 +10,14 @@ import { Arrow } from "../icons/arrow";
 import Mixcloud from "../icons/mixcloud";
 import Soundcloud from "../icons/soundcloud";
 import Telegram from "../icons/telegram";
-import { useUser } from "@supabase/auth-helpers-react";
-import SignOut from "./signOut";
+import { useCalendarAuth } from "../packages/calendar/dist";
+import calendarConfig from "../contentful-calendar.config";
 
 export default function Footer() {
   const handleGoToTop = () =>
     window?.scroll({ top: 0, left: 0, behavior: "smooth" });
 
-  const user = useUser();
+  const { isAuthenticated, logout } = useCalendarAuth(calendarConfig);
 
   return (
     <footer className="bg-black text-white">
@@ -52,7 +52,13 @@ export default function Footer() {
       <div className="px-4 md:px-8 border-t border-white py-4 md:py-6">
         <div className="grid lg:grid-cols-3 gap-8 lg:gap-12 text-small font-medium">
           {/* Spacer */}
-          {user ? <SignOut /> : <div className="hidden lg:block" />}
+          {isAuthenticated ? (
+            <button className="text-left grow-0" onClick={logout}>
+              Sign out
+            </button>
+          ) : (
+            <div className="hidden lg:block" />
+          )}
 
           <div className="flex justify-center">
             <button

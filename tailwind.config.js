@@ -5,6 +5,8 @@ module.exports = {
     "./pages/**/*.{ts,tsx}",
     "./views/**/*.{ts,tsx}",
     "./lib/**/*.{ts,tsx}",
+    // Calendar package — so Refuge's own theme (custom font sizes, colours) applies to calendar classes
+    "./packages/calendar/src/**/*.{ts,tsx}",
   ],
   theme: {
     fontWeight: {

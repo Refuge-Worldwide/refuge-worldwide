@@ -8,8 +8,6 @@ import useFathom from "../hooks/useFathom";
 import JoinChat from "../components/join-chat";
 import useSmoothscrollPolyfill from "../hooks/useSmoothscrollPolyfill";
 import { useRouter } from "next/router";
-import { createPagesBrowserClient } from "@supabase/auth-helpers-nextjs";
-import { SessionContextProvider, Session } from "@supabase/auth-helpers-react";
 import { useState } from "react";
 import "../styles/globals.css";
 
@@ -26,29 +24,22 @@ function RefugeApp({ Component, pageProps }: AppProps) {
   useSmoothscrollPolyfill();
   useFathom();
   const router = useRouter();
-  const [supabaseClient] = useState(() => createPagesBrowserClient());
-
   if ((Component as any).noLayout) return <Component {...pageProps} />;
 
   return (
     <Fragment>
-      <SessionContextProvider
-        supabaseClient={supabaseClient}
-        initialSession={pageProps.initialSession}
-      >
-        <header>
-          <Navigation />
-        </header>
+      <header>
+        <Navigation />
+      </header>
 
-        <LivePlayer />
+      <LivePlayer />
 
-        <Component {...pageProps} />
+      <Component {...pageProps} />
 
-        {router.pathname != "/admin/calendar" && <Footer />}
+      {router.pathname != "/admin/calendar" && <Footer />}
 
-        <ArchivePlayer />
-        {router.pathname != "/admin/calendar" && <JoinChat />}
-      </SessionContextProvider>
+      <ArchivePlayer />
+      {router.pathname != "/admin/calendar" && <JoinChat />}
     </Fragment>
   );
 }

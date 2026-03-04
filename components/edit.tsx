@@ -1,13 +1,14 @@
 import Link from "next/link";
 import { AiOutlineEdit } from "react-icons/ai";
 import { usePathname } from "next/navigation";
-import { useUser } from "@supabase/auth-helpers-react";
+import { useCalendarAuth } from "../packages/calendar/dist";
+import calendarConfig from "../contentful-calendar.config";
 
 export default function Edit({ id }: { id?: string }) {
   const pathname = usePathname();
-  const user = useUser();
+  const { isAuthenticated } = useCalendarAuth(calendarConfig);
 
-  if (id && user)
+  if (id && isAuthenticated)
     return (
       <Link
         className={`absolute ${

@@ -1,0 +1,182 @@
+/*
+ * @refuge-worldwide/calendar — stylesheet
+ *
+ * Import this file in your app to style the calendar widget:
+ *
+ *   import '@refuge-worldwide/calendar/styles.css';
+ *
+ * ── CSS Custom Properties ────────────────────────────────────────────────────
+ *
+ * Override any of these in your own CSS (after this import) to match your
+ * station's branding. No Tailwind required.
+ *
+ *   --cal-font-family      Font used across the calendar UI.
+ *                          Default: system sans-serif.
+ *
+ *   --cal-color-border     Primary border / drop-shadow colour.
+ *                          Default: #000 (black).
+ *
+ *   --cal-color-accent     Accent colour used for checkboxes and highlights.
+ *                          Default: #4d7cff (blue).
+ *
+ *   --cal-color-error      Validation error / highlight colour.
+ *                          Default: #ff0000 (red).
+ *
+ *   --cal-color-subtle     Subtle background colour (today column).
+ *                          Default: #ececec (light grey).
+ *
+ *   --cal-font-size-input  Input font size on wider screens (≥ 640px).
+ *                          Default: 1.875rem. Set to a smaller value for
+ *                          denser UIs.
+ *
+ * FullCalendar itself also exposes many --fc-* variables you can override.
+ * See: https://fullcalendar.io/docs/css-customization
+ *
+ * ── Example ─────────────────────────────────────────────────────────────────
+ *
+ *   :root {
+ *     --cal-font-family:     'Inter', sans-serif;
+ *     --cal-color-border:    #1a1a1a;
+ *     --cal-color-accent:    #e85d04;
+ *     --cal-color-error:     #dc2626;
+ *     --cal-font-size-input: 1rem;
+ *   }
+ *
+ * ────────────────────────────────────────────────────────────────────────────
+ */
+
+@tailwind components;
+@tailwind utilities;
+
+/* ── CSS custom property defaults ───────────────────────────────────────── */
+
+:root {
+  --cal-font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  --cal-color-border: #000;
+  --cal-color-accent: #4d7cff;
+  --cal-color-error: #ff0000;
+  --cal-color-subtle: #ececec;
+  --cal-font-size-input: 1.875rem;
+}
+
+/* ── Form labels ─────────────────────────────────────────────────────────── */
+
+label,
+legend {
+  @apply mb-2 inline-block;
+}
+
+.label-description {
+  @apply mt-1 block text-small;
+}
+
+.checkbox-label {
+  margin-bottom: 0;
+  @apply sm:mt-0.5 sm:leading-none text-small ml-2;
+}
+
+/* ── Pill input ──────────────────────────────────────────────────────────── */
+
+.pill-input {
+  @apply px-6 pt-4 pb-3 w-full rounded-full border-2 bg-white font-light;
+  box-sizing: border-box;
+  border-color: var(--cal-color-border);
+  box-shadow: 0 2px 0 0 var(--cal-color-border);
+  color: #000;
+  font-family: var(--cal-font-family);
+  font-size: 1.25rem;
+  line-height: 1.3;
+}
+
+@media (min-width: 640px) {
+  .pill-input {
+    font-size: var(--cal-font-size-input);
+    line-height: 1.267;
+  }
+}
+
+textarea.pill-input {
+  border-radius: 28px;
+}
+
+/* ── FullCalendar core theme ─────────────────────────────────────────────── */
+
+.fc {
+  font-family: var(--cal-font-family);
+}
+
+.fc .fc-button-primary {
+  @apply uppercase border-1.5 rounded-full whitespace-nowrap focus:outline-none bg-transparent;
+  border-color: var(--cal-color-border);
+  color: #000;
+  font-family: var(--cal-font-family);
+  font-weight: 500;
+  font-size: 0.75rem;
+  line-height: 1.1;
+}
+
+.fc .fc-button {
+  @apply px-3 py-2;
+}
+
+.fc .fc-toolbar-title {
+  font-family: var(--cal-font-family);
+  font-weight: 500;
+  font-size: 1.875rem;
+  line-height: 1.267;
+}
+
+.fc table {
+  font-family: var(--cal-font-family);
+  font-weight: 300;
+  font-size: 1.25rem;
+  line-height: 1.3;
+}
+
+.fc .fc-timegrid-slot {
+  @apply py-2;
+}
+
+.fc .slot-title {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.fc .fc-toolbar.fc-header-toolbar {
+  @apply mb-2 lg:mb-3 mx-2 lg:mr-28 lg:ml-12;
+}
+
+.fc-day-today {
+  background-color: var(--cal-color-subtle) !important;
+  border: none !important;
+}
+
+.fc .fc-timegrid-now-indicator-line {
+  border-width: 1px;
+}
+
+.fc-header-toolbar .fc-toolbar-chunk:nth-child(2),
+.fc-header-toolbar .fc-toolbar-chunk:nth-child(3) {
+  @apply hidden lg:block;
+}
+
+.fc-event {
+  @apply cursor-pointer rounded-none transition-all;
+}
+
+/* ── Highlighted event (from search result navigation) ───────────────────── */
+
+.fc-highlighted-event {
+  outline: 3px solid var(--cal-color-error);
+  outline-offset: -2px;
+  animation: cal-highlight 0.5s 3;
+}
+
+@keyframes cal-highlight {
+  to {
+    outline-color: #fff;
+  }
+}

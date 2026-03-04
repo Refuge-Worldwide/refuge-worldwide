@@ -9,8 +9,9 @@ import { Menu } from "../icons/menu";
 import MessageSquare from "../icons/message-square";
 import Search from "../icons/search";
 import NavigationLink from "./navigationLink";
-import { useUser } from "@supabase/auth-helpers-react";
 import { AiTwotoneCalendar } from "react-icons/ai";
+import { useCalendarAuth } from "../packages/calendar/dist";
+import calendarConfig from "../contentful-calendar.config";
 
 export default function Navigation() {
   const [isOpen, isOpenSet] = useState(false);
@@ -23,7 +24,7 @@ export default function Navigation() {
     window.open("/chat", "refugechatwindow", chatOptions);
   }, []);
 
-  const user = useUser();
+  const { isAuthenticated } = useCalendarAuth(calendarConfig);
 
   return (
     <Dialog.Root open={isOpen} onOpenChange={(open) => isOpenSet(open)}>
@@ -148,7 +149,7 @@ export default function Navigation() {
                       </a>
                     </li>
                     <li>
-                      {user ? (
+                      {isAuthenticated ? (
                         <Link href="/admin/calendar">
                           <AiTwotoneCalendar />
                         </Link>
