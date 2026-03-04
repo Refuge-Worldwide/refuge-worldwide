@@ -22,11 +22,6 @@
       "import": "./dist/components.mjs",
       "require": "./dist/components.js"
     },
-    "./adapters": {
-      "types": "./dist/adapters.d.ts",
-      "import": "./dist/adapters.mjs",
-      "require": "./dist/adapters.js"
-    },
     "./styles.css": "./dist/styles.css"
   },
   "typesVersions": {
@@ -36,16 +31,16 @@
       ],
       "components": [
         "./dist/components.d.ts"
-      ],
-      "adapters": [
-        "./dist/adapters.d.ts"
       ]
     }
   },
   "scripts": {
     "build": "tsup && tailwindcss -c tailwind.config.js -i src/styles.css -o dist/styles.css --minify",
     "dev": "tsup --watch",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "peerDependencies": {
     "contentful-management": ">=10",
@@ -73,10 +68,13 @@
   "devDependencies": {
     "@types/node": "^18.0.0",
     "@types/react": "^18.0.0",
+    "@vitest/coverage-v8": "^2.0.0",
     "contentful-management": "^10.29.3",
+    "happy-dom": "^14.0.0",
     "next": "^13.1.1",
     "tailwindcss": "^3.4.0",
     "tsup": "^8.0.0",
-    "typescript": "^4.9.4"
+    "typescript": "^4.9.4",
+    "vitest": "^2.0.0"
   }
 }

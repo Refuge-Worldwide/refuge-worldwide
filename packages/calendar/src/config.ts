@@ -110,37 +110,18 @@ export interface TypeValueMap {
   prerecord: string;
 }
 
-export interface CalendarEmailConfig {
-  adapter: EmailAdapter;
-  /** From address for outgoing emails */
-  from: string;
-  /** Optional reply-to address */
-  replyTo?: string;
-}
-
-export interface EmailAdapter {
-  sendConfirmation(
-    to: string[],
-    show: ConfirmationEmailData
-  ): Promise<{ id: string }>;
-  sendReminder(
-    to: string[],
-    show: ConfirmationEmailData,
-    daysBefore: number
-  ): Promise<{ id: string }>;
-}
-
-export interface ConfirmationEmailData {
+/**
+ * Data passed to onShowConfirmed when a show is confirmed.
+ * Use this to send confirmation emails, trigger webhooks, etc.
+ */
+export interface ShowNotificationData {
   id: string;
   title: string;
+  /** ISO datetime string */
   date: string;
+  /** ISO datetime string */
   dateEnd: string;
-  artists: Array<{ name: string; email: string[] }>;
-}
-
-export interface ReminderConfig {
-  /** How many days before the show to send the reminder */
-  daysBefore: number;
+  participants: Array<{ name: string; email: string[] }>;
 }
 
 /**
@@ -186,13 +167,24 @@ export interface CalendarConfig {
    * Defaults to Refuge Worldwide's colour scheme if omitted.
    */
   colors?: StatusColorMap;
-  /** Email integration. Optional — if omitted, no emails are sent. */
-  email?: CalendarEmailConfig;
   /**
-   * Reminder email schedule. Requires `email` to be configured.
-   * @example [{ daysBefore: 7 }, { daysBefore: 1 }]
+   * Called when a show's status transitions to Confirmed.
+   * Use this to send confirmation emails, trigger webhooks, etc.
+   * The callback runs client-side — if you need server-side secrets,
+   * call your own API route from inside this function.
+   *
+   * @example
+   * ```ts
+   * onShowConfirmed: async (show) => {
+   *   await fetch('/api/admin/confirmation-email', {
+   *     method: 'POST',
+   *     headers: { 'Content-Type': 'application/json' },
+   *     body: JSON.stringify(show),
+   *   });
+   * }
+   * ```
    */
-  reminders?: ReminderConfig[];
+  onShowConfirmed?: (show: ShowNotificationData) => Promise<void>;
   /**
    * Authentication configuration.
    * Configure `contentfulOAuth` to enable Contentful's OAuth login flow —
@@ -221,12 +213,6 @@ export interface CalendarConfig {
    * Defaults to `https://app.contentful.com/spaces/{spaceId}`.
    */
   contentfulAppUrl?: string;
-  /**
-   * API route that handles sending confirmation emails.
-   * Defaults to `/api/admin/confirmation-email`.
-   * Only used when a show status transitions to Confirmed.
-   */
-  confirmationEmailApiPath?: string;
 }
 
 /**

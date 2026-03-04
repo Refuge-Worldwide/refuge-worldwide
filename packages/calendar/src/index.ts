@@ -10,10 +10,7 @@ export {
   type StatusValueMap,
   type TypeValueMap,
   type StatusColorMap,
-  type CalendarEmailConfig,
-  type EmailAdapter,
-  type ConfirmationEmailData,
-  type ReminderConfig,
+  type ShowNotificationData,
 } from "./config";
 
 // Auth — Contentful OAuth hook and utilities

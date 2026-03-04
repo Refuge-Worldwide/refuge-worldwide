@@ -13,7 +13,7 @@ import { useRouter } from "next/router";
 import { createClient } from "contentful-management";
 import dayjs from "dayjs";
 
-import type { CalendarConfig } from "../config";
+import type { CalendarConfig, ShowNotificationData } from "../config";
 import type { ShowFormValues, MutationResult } from "../types";
 import { useContentfulAuth } from "../hooks/useContentfulAuth";
 import { updateCalendarShow } from "../lib/mutations";
@@ -196,18 +196,20 @@ export function CalendarWidget({
     setCalendarLoading(false);
     toast.success(method === "update" ? "Show updated" : "Show created");
 
-    if (show.confirmationEmail) {
-      const fetchPromise = fetch(
-        config.confirmationEmailApiPath ?? "/api/admin/confirmation-email",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(values),
-        }
-      ).then((r) => (r.ok ? r.json() : Promise.reject(r.json())));
+    if (show.confirmationEmail && config.onShowConfirmed) {
+      const showData: ShowNotificationData = {
+        id: values.id ?? "",
+        title: values.title ?? "",
+        date: values.start,
+        dateEnd: values.end,
+        participants: (values.artists ?? []).map((a) => ({
+          name: a.label,
+          email: a.email ?? [],
+        })),
+      };
 
-      toast.promise(fetchPromise, {
-        loading: "Sending confirmation email",
+      toast.promise(config.onShowConfirmed(showData), {
+        loading: "Sending confirmation email…",
         success: "Confirmation email sent",
         error: "Failed to send confirmation email",
       });

@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import type { NextApiRequest, NextApiResponse } from "next";
-import type { CalendarConfig, ConfirmationEmailData } from "../config";
+import type { CalendarConfig, ShowNotificationData } from "../config";
 import {
   buildCalendarQuery,
   buildSearchQuery,
@@ -10,7 +10,7 @@ import {
   extractItems,
   processShow,
 } from "../lib/queries";
-import type { RawCalendarShow, ShowFormValues } from "../types";
+import type { RawCalendarShow } from "../types";
 
 dayjs.extend(utc);
 
@@ -19,7 +19,7 @@ dayjs.extend(utc);
  *
  * ```ts
  * // pages/api/admin/calendar.ts
- * import { calendarHandler } from '@refuge-worldwide/contentful-calendar/api';
+ * import { calendarHandler } from '@refuge-worldwide/calendar/api';
  * import config from '../../../contentful-calendar.config';
  * export default calendarHandler(config);
  * ```
@@ -70,7 +70,7 @@ export function calendarHandler(config: CalendarConfig) {
  *
  * ```ts
  * // pages/api/admin/search.ts
- * import { calendarSearchHandler } from '@refuge-worldwide/contentful-calendar/api';
+ * import { calendarSearchHandler } from '@refuge-worldwide/calendar/api';
  * import config from '../../../contentful-calendar.config';
  * export default calendarSearchHandler(config);
  * ```
@@ -135,181 +135,82 @@ export function calendarSearchHandler(config: CalendarConfig) {
   };
 }
 
-/**
- * POST /api/admin/confirmation-email
- *
- * Sends a confirmation email to all artists on a show when its status
- * transitions to Confirmed. Requires `email` to be configured in CalendarConfig.
- *
- * The CalendarWidget calls this automatically after a show is saved with
- * Confirmed status. Wire it up once:
- *
- * ```ts
- * // pages/api/admin/confirmation-email.ts
- * import { confirmationEmailHandler } from '@refuge-worldwide/contentful-calendar/api';
- * import config from '../../../contentful-calendar.config';
- * export default confirmationEmailHandler(config);
- * ```
- */
-export function confirmationEmailHandler(config: CalendarConfig) {
-  return async function handler(req: NextApiRequest, res: NextApiResponse) {
-    if (req.method !== "POST") {
-      return res.status(405).json({ message: "Method not allowed" });
-    }
-
-    if (!config.email) {
-      return res
-        .status(501)
-        .json({ message: "No email adapter configured in CalendarConfig" });
-    }
-
-    try {
-      const values = req.body as ShowFormValues;
-
-      const to = (values.artists ?? []).flatMap((a) => a.email ?? []);
-      if (!to.length) {
-        return res
-          .status(400)
-          .json({ message: "No artist email addresses found on this show" });
-      }
-
-      const showData: ConfirmationEmailData = {
-        id: values.id ?? "",
-        title: values.title ?? "",
-        date: values.start,
-        dateEnd: values.end,
-        artists: (values.artists ?? []).map((a) => ({
-          name: a.label,
-          email: a.email ?? [],
-        })),
-      };
-
-      const result = await config.email.adapter.sendConfirmation(to, showData);
-      return res.status(200).json(result);
-    } catch (error) {
-      console.error("[confirmationEmailHandler]", error);
-      return res.status(400).json({ message: (error as Error).message });
-    }
-  };
+export interface ReminderTarget {
+  daysBefore: number;
+  shows: ShowNotificationData[];
 }
 
 /**
- * GET /api/admin/reminder-emails
+ * Returns confirmed shows that need reminder emails for the given day windows.
  *
- * Sends reminder emails for upcoming confirmed shows. Designed to be called
- * by a cron job (e.g. Vercel Cron at midnight daily).
+ * Use this in your own cron API route — the package does not send emails itself.
  *
- * Requires `email` and `reminders` to be configured in CalendarConfig.
- *
+ * @example
  * ```ts
  * // pages/api/admin/reminder-emails.ts
- * import { reminderHandler } from '@refuge-worldwide/contentful-calendar/api';
+ * import { getShowsNeedingReminders } from '@refuge-worldwide/calendar/api';
  * import config from '../../../contentful-calendar.config';
- * export default reminderHandler(config);
- * ```
  *
- * Vercel Cron (vercel.json):
- * ```json
- * { "crons": [{ "path": "/api/admin/reminder-emails", "schedule": "0 9 * * *" }] }
+ * export default async function handler(req, res) {
+ *   const targets = await getShowsNeedingReminders(config, { dayWindows: [7, 1] });
+ *   for (const { daysBefore, shows } of targets) {
+ *     for (const show of shows) {
+ *       await myEmailClient.send({ template: 'reminder', data: show });
+ *     }
+ *   }
+ *   res.json({ sent: targets.flatMap(t => t.shows).length });
+ * }
  * ```
- *
- * ⚠️  Idempotency: this handler has no built-in deduplication — running it
- * twice on the same day will send duplicate reminders. Prevent this by either:
- * - Calling it exactly once per day via cron
- * - Using an email provider that handles deduplication natively (e.g. Loops)
  */
-export function reminderHandler(config: CalendarConfig) {
-  return async function handler(req: NextApiRequest, res: NextApiResponse) {
-    if (req.method !== "GET" && req.method !== "POST") {
-      return res.status(405).json({ message: "Method not allowed" });
-    }
+export async function getShowsNeedingReminders(
+  config: CalendarConfig,
+  options: {
+    /** How many days ahead to check for each reminder window */
+    dayWindows: number[];
+    /** Override the current date (useful for testing) */
+    date?: Date;
+  }
+): Promise<ReminderTarget[]> {
+  const now = options.date ? dayjs(options.date).utc() : dayjs.utc();
+  const maxDays = Math.max(...options.dayWindows);
 
-    if (!config.email) {
-      return res
-        .status(501)
-        .json({ message: "No email adapter configured in CalendarConfig" });
-    }
+  const start = now.toISOString();
+  const end = now.add(maxDays, "day").endOf("day").toISOString();
 
-    if (!config.reminders?.length) {
-      return res
-        .status(200)
-        .json({ message: "No reminders configured", sent: 0 });
-    }
+  const query = buildCalendarQuery(config);
+  const data = await executeGraphQL(query, config, {
+    preview: false,
+    variables: { start, end },
+  });
 
-    try {
-      const now = dayjs.utc();
-      const maxDays = Math.max(...config.reminders.map((r) => r.daysBefore));
+  const rawShows = extractItems<RawCalendarShow>(
+    data,
+    config.contentTypes.show
+  );
 
-      // Fetch all shows starting between now and the furthest reminder window
-      const start = now.toISOString();
-      const end = now.add(maxDays, "day").endOf("day").toISOString();
+  const confirmedShows = rawShows.filter(
+    (s) => s.status === config.statusValues.confirmed
+  );
 
-      const query = buildCalendarQuery(config);
-      const data = await executeGraphQL(query, config, {
-        preview: false,
-        variables: { start, end },
-      });
+  return options.dayWindows.map((daysBefore) => {
+    const targetDay = now.add(daysBefore, "day").format("YYYY-MM-DD");
 
-      const rawShows = extractItems<RawCalendarShow>(
-        data,
-        config.contentTypes.show
-      );
+    const shows = confirmedShows
+      .filter(
+        (show) =>
+          show.date && dayjs.utc(show.date).format("YYYY-MM-DD") === targetDay
+      )
+      .map((show) => ({
+        id: show.sys.id,
+        title: show.title ?? "",
+        date: show.date,
+        dateEnd: show.dateEnd,
+        participants: (show.artists?.items ?? []).map((a) => ({
+          name: a.name,
+          email: a.email ?? [],
+        })),
+      }));
 
-      // Only process confirmed shows
-      const confirmedShows = rawShows.filter(
-        (s) => s.status === config.statusValues.confirmed
-      );
-
-      const results: Array<{
-        showId: string;
-        daysBefore: number;
-        result: unknown;
-      }> = [];
-
-      for (const reminder of config.reminders) {
-        const targetDay = now
-          .add(reminder.daysBefore, "day")
-          .format("YYYY-MM-DD");
-
-        const dueShows = confirmedShows.filter((show) => {
-          if (!show.date) return false;
-          return dayjs.utc(show.date).format("YYYY-MM-DD") === targetDay;
-        });
-
-        for (const show of dueShows) {
-          const artists = (show.artists?.items ?? []).map((a) => ({
-            name: a.name,
-            email: a.email ?? [],
-          }));
-
-          const to = artists.flatMap((a) => a.email);
-          if (!to.length) continue;
-
-          const showData: ConfirmationEmailData = {
-            id: show.sys.id,
-            title: show.title ?? "",
-            date: show.date,
-            dateEnd: show.dateEnd,
-            artists,
-          };
-
-          const result = await config.email!.adapter.sendReminder(
-            to,
-            showData,
-            reminder.daysBefore
-          );
-          results.push({
-            showId: show.sys.id,
-            daysBefore: reminder.daysBefore,
-            result,
-          });
-        }
-      }
-
-      return res.status(200).json({ sent: results.length, results });
-    } catch (error) {
-      console.error("[reminderHandler]", error);
-      return res.status(400).json({ message: (error as Error).message });
-    }
-  };
+    return { daysBefore, shows };
+  });
 }
