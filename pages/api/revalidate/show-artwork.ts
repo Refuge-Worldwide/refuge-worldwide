@@ -50,30 +50,20 @@ export default async function handler(
       // Start with cover image
       let images = [{ url: formattedCoverUrl }];
 
-      // Handle both new additionalMediaImages and legacy additionalImages
-      if (show.additionalMediaImages && show.additionalMediaImages.length > 0) {
-        // Fetch the full asset details for additionalMediaImages
-        for (const mediaImageRef of show.additionalMediaImages) {
-          try {
-            const mediaAsset = await previewClient.getAsset(
-              mediaImageRef.sys.id
-            );
-            const imageUrl = mediaAsset.fields.file.url;
-            images.push({
-              url: imageUrl.startsWith("//") ? `https:${imageUrl}` : imageUrl,
-            });
-          } catch (err) {
-            console.error(
-              `Failed to fetch media image asset ${mediaImageRef.sys.id}:`,
-              err
-            );
-          }
+      // Fetch additionalMediaImages using the asset IDs passed from the app
+      const additionalMediaImages: any[] = show.additionalMediaImages || [];
+      const additionalImageAssets = await Promise.all(
+        additionalMediaImages
+          .filter((link) => link?.sys?.id)
+          .map((link) => previewClient.getAsset(link.sys.id))
+      );
+      for (const asset of additionalImageAssets) {
+        if (asset?.fields?.file?.url) {
+          const imageUrl = asset.fields.file.url as string;
+          images.push({
+            url: imageUrl.startsWith("//") ? `https:${imageUrl}` : imageUrl,
+          });
         }
-      } else if (show.additionalImages) {
-        // Fallback to legacy additionalImages field (already URLs)
-        show.additionalImages.forEach((image) => {
-          images.push({ url: image });
-        });
       }
 
       let artists = show.title.split(" | ")[1];
