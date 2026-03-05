@@ -123,6 +123,13 @@ export interface ShowFieldMap {
   booker?: string;
   /** Additional media images (new collection field) */
   additionalMediaImages?: string;
+  /**
+   * Short text field to store the RRULE recurrence string (e.g. `FREQ=WEEKLY;BYDAY=TU;COUNT=8`).
+   * Written when a show is created via the repeat feature. No time component is stored —
+   * each entry's `date` and `dateEnd` fields hold the individual occurrence times.
+   * If omitted, repeat still works but the rule is not persisted in Contentful.
+   */
+  rrule?: string;
 }
 
 export interface ArtistFieldMap {

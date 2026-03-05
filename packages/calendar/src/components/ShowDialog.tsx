@@ -7,6 +7,12 @@ import { RxDownload, RxCopy, RxLink1, RxExternalLink } from "react-icons/rx";
 import { RiDeleteBin7Line } from "react-icons/ri";
 import toast from "react-hot-toast";
 import dayjs from "dayjs";
+import type { RRule } from "rrule";
+import {
+  RepeatSection,
+  toRRuleString,
+  generateOccurrences,
+} from "./RepeatSection";
 
 import type { CalendarConfig } from "../config";
 import { getParticipantTypes } from "../config";
@@ -20,7 +26,6 @@ import {
 } from "../lib/mutations";
 import { InputField } from "./fields/InputField";
 import { CheckboxField } from "./fields/CheckboxField";
-import { MultiSelectField } from "./fields/MultiSelectField";
 import { ArtistMultiSelectField } from "./fields/ArtistMultiSelectField";
 import { EmailModal } from "./EmailModal";
 import { Arrow } from "./icons/Arrow";
@@ -51,6 +56,11 @@ export function ShowDialog({
   onShowDeleted,
 }: ShowDialogProps) {
   const [isDeleting, setIsDeleting] = React.useState(false);
+  const [repeatRule, setRepeatRule] = React.useState<RRule | null>(null);
+  const [repeatProgress, setRepeatProgress] = React.useState<{
+    current: number;
+    total: number;
+  } | null>(null);
 
   const statusOptions = [
     { value: config.statusValues.tbc, label: config.statusValues.tbc },
@@ -111,22 +121,58 @@ export function ShowDialog({
         }
       }
 
-      const show =
-        method === "update"
-          ? await updateCalendarShow(
-              values as ShowFormValues & { id: string },
-              client,
-              config
-            )
-          : await createCalendarShow(values as ShowFormValues, client, config);
+      if (method === "create" && repeatRule) {
+        // Bulk create: generate all occurrences then create each in sequence
+        const occurrences = generateOccurrences(
+          repeatRule,
+          values.start,
+          values.end
+        );
+        const rruleString = toRRuleString(repeatRule);
+        setRepeatProgress({ current: 0, total: occurrences.length });
+
+        for (let i = 0; i < occurrences.length; i++) {
+          const occ = occurrences[i];
+          const show = await createCalendarShow(
+            { ...(values as ShowFormValues), start: occ.start, end: occ.end },
+            client,
+            config,
+            rruleString
+          );
+          setRepeatProgress({ current: i + 1, total: occurrences.length });
+          onShowSaved(
+            show,
+            { ...(values as ShowFormValues), start: occ.start, end: occ.end },
+            "create"
+          );
+        }
+
+        setRepeatProgress(null);
+        toast.success(`Created ${occurrences.length} shows`);
+      } else {
+        const show =
+          method === "update"
+            ? await updateCalendarShow(
+                values as ShowFormValues & { id: string },
+                client,
+                config
+              )
+            : await createCalendarShow(
+                values as ShowFormValues,
+                client,
+                config
+              );
+
+        onShowSaved(show, values as ShowFormValues, method);
+      }
 
       actions.setSubmitting(false);
       actions.setStatus("submitted");
-      onShowSaved(show, values as ShowFormValues, method);
     } catch (error) {
       toast.error(
         method === "update" ? "Error updating show" : "Error creating show"
       );
+      setRepeatProgress(null);
       actions.setSubmitting(false);
       throw error;
     }
@@ -403,13 +449,33 @@ export function ShowDialog({
                     </div>
 
                     {/* Status */}
-                    <MultiSelectField
-                      label="Status"
-                      name="status"
-                      options={statusOptions}
-                      limit={1}
-                      value={[initialValues.status]}
-                    />
+                    <fieldset className="mb-8">
+                      <legend>Status</legend>
+                      <select
+                        value={values.status.value}
+                        onChange={(e) =>
+                          setFieldValue("status", {
+                            value: e.target.value,
+                            label: e.target.value,
+                          })
+                        }
+                        className="pill-input"
+                      >
+                        {statusOptions.map((opt) => (
+                          <option key={opt.value} value={opt.value}>
+                            {opt.label}
+                          </option>
+                        ))}
+                      </select>
+                    </fieldset>
+
+                    {/* Repeat — new shows only */}
+                    {!values.id && values.start && (
+                      <RepeatSection
+                        startDate={values.start}
+                        onChange={setRepeatRule}
+                      />
+                    )}
                   </div>
 
                   {/* Footer */}
@@ -420,10 +486,22 @@ export function ShowDialog({
                       disabled={isSubmitting}
                     >
                       <span className="underline">
-                        {values?.id ? "Save" : "Add"}
+                        {values?.id
+                          ? "Save"
+                          : repeatRule
+                          ? `Add ${
+                              repeatRule.all((_, i) => i < 52).length
+                            } shows`
+                          : "Add"}
                       </span>
                       {isSubmitting ? (
-                        <AiOutlineLoading3Quarters className="animate-spin" />
+                        repeatProgress ? (
+                          <span className="text-sm tabular-nums">
+                            {repeatProgress.current}/{repeatProgress.total}
+                          </span>
+                        ) : (
+                          <AiOutlineLoading3Quarters className="animate-spin" />
+                        )
                       ) : (
                         <Arrow />
                       )}

@@ -63,7 +63,8 @@
     "react-hot-toast": "^2.4.1",
     "react-icons": "^4.10.1",
     "react-select": "^5.6.1",
-    "react-select-async-paginate": "^0.7.3"
+    "react-select-async-paginate": "^0.7.3",
+    "rrule": "^2.8.1"
   },
   "devDependencies": {
     "@types/node": "^18.0.0",

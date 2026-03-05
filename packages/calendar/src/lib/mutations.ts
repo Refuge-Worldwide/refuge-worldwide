@@ -65,7 +65,8 @@ async function getEnvironment(
 export async function createCalendarShow(
   values: ShowFormValues,
   client: ManagementClient,
-  config: CalendarConfig
+  config: CalendarConfig,
+  rruleString?: string
 ): Promise<MutationResult> {
   const f = config.fields.show;
   const af = config.fields.artist;
@@ -98,6 +99,10 @@ export async function createCalendarShow(
       values.participants?.[pt.showField] ??
       (pt.showField === f.artists ? values.artists : []);
     fields[pt.showField] = { "en-US": createReferencesArray(selected) };
+  }
+
+  if (f.rrule && rruleString) {
+    fields[f.rrule] = { "en-US": rruleString };
   }
 
   if (f.internal) {
