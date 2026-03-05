@@ -1,6 +1,6 @@
 import Layout from "../../components/layout";
 import PageMeta from "../../components/seo/page";
-import { CalendarWidget } from "../../packages/calendar/dist/components";
+import { CalendarWidget } from "@refuge-worldwide/calendar/components";
 import AdditionalMenu from "../../views/admin/additionalMenu";
 import calendarConfig from "../../contentful-calendar.config";
 

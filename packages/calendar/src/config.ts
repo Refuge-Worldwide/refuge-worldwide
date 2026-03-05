@@ -175,6 +175,8 @@ export interface ShowNotificationData {
   /** ISO datetime string */
   dateEnd: string;
   participants: Array<{ name: string; email: string[] }>;
+  /** Human-readable repeat rule for recurring series, e.g. "every Monday". */
+  rruleText?: string;
 }
 
 /**

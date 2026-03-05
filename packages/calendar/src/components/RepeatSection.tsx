@@ -175,13 +175,13 @@ export function RepeatSection({ startDate, onChange }: RepeatSectionProps) {
     : 0;
 
   return (
-    <fieldset className="mb-4 text-xxs">
-      <legend className="text-xxs">Repeat</legend>
+    <fieldset className="mb-4">
+      <legend>Repeat</legend>
 
       <select
         value={freq}
         onChange={(e) => setFreq(e.target.value as typeof freq)}
-        className="border-2 border-black rounded-full px-3 py-1 w-full text-xxs font-light bg-white"
+        className="pill-input"
       >
         <option value="none">None</option>
         <option value="weekly">Weekly</option>
@@ -189,7 +189,7 @@ export function RepeatSection({ startDate, onChange }: RepeatSectionProps) {
       </select>
 
       {freq !== "none" && (
-        <div className="mt-3 space-y-3 text-xxs">
+        <div className="mt-2 space-y-2 text-sm">
           {/* Weekly: day-of-week picker */}
           {freq === "weekly" && (
             <div>
@@ -225,7 +225,7 @@ export function RepeatSection({ startDate, onChange }: RepeatSectionProps) {
           )}
 
           {/* End condition */}
-          <div className="space-y-2">
+          <div className="space-y-1 text-small">
             <label className="flex items-center gap-2 cursor-pointer font-normal">
               <input
                 type="radio"
@@ -243,7 +243,7 @@ export function RepeatSection({ startDate, onChange }: RepeatSectionProps) {
                   setCount(Math.max(1, Math.min(52, Number(e.target.value))))
                 }
                 disabled={endType !== "count"}
-                className="border-2 border-black rounded-full px-2 py-1 w-12 text-center text-xxs font-light bg-white disabled:opacity-40"
+                className="border-2 border-black rounded-full px-2 py-1 w-12 text-center font-light bg-white disabled:opacity-40"
               />
               occurrences
             </label>
@@ -261,7 +261,7 @@ export function RepeatSection({ startDate, onChange }: RepeatSectionProps) {
                 min={startDate.slice(0, 10)}
                 onChange={(e) => setUntil(e.target.value)}
                 disabled={endType !== "until"}
-                className="border-2 border-black rounded-full px-3 py-1 text-xxs font-light bg-white disabled:opacity-40"
+                className="border-2 border-black rounded-full px-3 py-1 font-light bg-white disabled:opacity-40"
               />
             </label>
           </div>

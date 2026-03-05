@@ -46,25 +46,26 @@ export async function sendEmail(artist, show, severity) {
 
 export async function sendConfirmationEmail(show) {
   await Promise.all(
-    show.artists.map(async (artist) => {
-      if (artist.email) {
+    show.participants.map(async (participant) => {
+      if (participant.email?.length) {
         try {
           const { data, error } = await resend.emails.send({
             from: "Refuge Worldwide <noreply@mail.refugeworldwide.com>",
             to:
               process.env.NODE_ENV === "development"
                 ? "jack@refugeworldwide.com"
-                : artist.email,
+                : participant.email,
             subject:
-              "Show confirmation - " + dayjs(show.start).format("MMM YYYY"),
+              "Show confirmation - " + dayjs(show.date).format("MMM YYYY"),
             reply_to: replyToEmails,
             react: ShowSubmissionEmail({
-              userName: artist.label,
-              showDateStart: show.start,
-              showDateEnd: show.end,
-              showType: show.type,
+              userName: participant.name,
+              showDateStart: show.date,
+              showDateEnd: show.dateEnd,
+              showType: "Live",
               severity: "confirmation",
               showId: show.id,
+              rruleText: show.rruleText,
             }),
           });
 
@@ -74,10 +75,9 @@ export async function sendConfirmationEmail(show) {
 
           return data;
         } catch (error) {
-          // send message to slack saying there was an issue sending the email
           console.log(error);
           sendSlackMessage(
-            `Failed to send email request to ${artist.name}(${artist.email}) on show *${show.title}*. ${error.name} - ${error.message}. <@U04HG3VHHEW>`,
+            `Failed to send email request to ${participant.name}(${participant.email}) on show *${show.title}*. ${error.name} - ${error.message}. <@U04HG3VHHEW>`,
             "error"
           );
         }

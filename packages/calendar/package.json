@@ -8,16 +8,19 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "source": "./src/index.ts",
       "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
     },
     "./api": {
+      "source": "./src/api/index.ts",
       "types": "./dist/api.d.ts",
       "import": "./dist/api.mjs",
       "require": "./dist/api.js"
     },
     "./components": {
+      "source": "./src/components/index.ts",
       "types": "./dist/components.d.ts",
       "import": "./dist/components.mjs",
       "require": "./dist/components.js"
@@ -72,7 +75,6 @@
     "@vitest/coverage-v8": "^2.0.0",
     "contentful-management": "^10.29.3",
     "happy-dom": "^14.0.0",
-    "next": "^13.1.1",
     "tailwindcss": "^3.4.0",
     "tsup": "^8.0.0",
     "typescript": "^4.9.4",

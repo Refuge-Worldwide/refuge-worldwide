@@ -6,7 +6,6 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { RxDownload, RxCopy, RxLink1, RxExternalLink } from "react-icons/rx";
 import { RiDeleteBin7Line } from "react-icons/ri";
 import toast from "react-hot-toast";
-import dayjs from "dayjs";
 import type { RRule } from "rrule";
 import {
   RepeatSection,
@@ -14,7 +13,7 @@ import {
   generateOccurrences,
 } from "./RepeatSection";
 
-import type { CalendarConfig } from "../config";
+import type { CalendarConfig, ShowNotificationData } from "../config";
 import { getParticipantTypes } from "../config";
 import type { ShowFormValues, DropdownOption, MutationResult } from "../types";
 import type { ManagementClient } from "../lib/mutations";
@@ -40,7 +39,8 @@ interface ShowDialogProps {
   onShowSaved: (
     show: MutationResult,
     values: ShowFormValues,
-    method: "create" | "update"
+    method: "create" | "update",
+    keepOpen?: boolean
   ) => void;
   onShowDeleted: (id: string) => void;
 }
@@ -60,7 +60,10 @@ export function ShowDialog({
   const [repeatProgress, setRepeatProgress] = React.useState<{
     current: number;
     total: number;
+    rollingBack?: boolean;
   } | null>(null);
+  // Ref so the onOpenChange guard works during both creation and rollback
+  const isCreatingRepeats = React.useRef(false);
 
   const statusOptions = [
     { value: config.statusValues.tbc, label: config.statusValues.tbc },
@@ -122,7 +125,7 @@ export function ShowDialog({
       }
 
       if (method === "create" && repeatRule) {
-        // Bulk create: generate all occurrences then create each in sequence
+        // Bulk create: fire all requests in parallel, rollback everything on any failure
         const occurrences = generateOccurrences(
           repeatRule,
           values.start,
@@ -130,25 +133,126 @@ export function ShowDialog({
         );
         const rruleString = toRRuleString(repeatRule);
         setRepeatProgress({ current: 0, total: occurrences.length });
+        isCreatingRepeats.current = true;
 
-        for (let i = 0; i < occurrences.length; i++) {
-          const occ = occurrences[i];
-          const show = await createCalendarShow(
-            { ...(values as ShowFormValues), start: occ.start, end: occ.end },
-            client,
-            config,
-            rruleString
+        const onBeforeUnload = (e: BeforeUnloadEvent) => {
+          e.preventDefault();
+        };
+        window.addEventListener("beforeunload", onBeforeUnload);
+
+        try {
+          let completed = 0;
+          const results = await Promise.allSettled(
+            occurrences.map(async (occ) => {
+              const show = await createCalendarShow(
+                {
+                  ...(values as ShowFormValues),
+                  start: occ.start,
+                  end: occ.end,
+                },
+                client,
+                config,
+                rruleString
+              );
+              completed++;
+              setRepeatProgress({
+                current: completed,
+                total: occurrences.length,
+              });
+              return { show, occ };
+            })
           );
-          setRepeatProgress({ current: i + 1, total: occurrences.length });
-          onShowSaved(
-            show,
-            { ...(values as ShowFormValues), start: occ.start, end: occ.end },
-            "create"
+
+          type CreatedResult = {
+            show: MutationResult;
+            occ: { start: string; end: string };
+          };
+          const succeeded = results.filter(
+            (r): r is PromiseFulfilledResult<CreatedResult> =>
+              r.status === "fulfilled"
           );
+          const failedCount = results.length - succeeded.length;
+
+          if (failedCount > 0) {
+            // Rollback: delete all successfully created entries from Contentful
+            setRepeatProgress({
+              current: 0,
+              total: succeeded.length,
+              rollingBack: true,
+            });
+            let rolledBack = 0;
+            await Promise.allSettled(
+              succeeded.map(async (r) => {
+                await deleteCalendarShow(
+                  r.value.show.entry.sys.id,
+                  client,
+                  config
+                );
+                rolledBack++;
+                setRepeatProgress({
+                  current: rolledBack,
+                  total: succeeded.length,
+                  rollingBack: true,
+                });
+              })
+            );
+            toast.error(
+              `${failedCount} show${
+                failedCount > 1 ? "s" : ""
+              } failed — nothing was saved. Please try again.`
+            );
+            // Dialog stays open so the user can retry
+          } else {
+            // All succeeded — send one confirmation email for the first occurrence
+            const firstResult = succeeded[0];
+            if (
+              firstResult.value.show.confirmationEmail &&
+              config.onShowConfirmed
+            ) {
+              const showData: ShowNotificationData = {
+                id: firstResult.value.show.entry.sys.id,
+                title: values.title ?? "",
+                date: firstResult.value.occ.start,
+                dateEnd: firstResult.value.occ.end,
+                participants: (values.artists ?? []).map((a) => ({
+                  name: a.label,
+                  email: a.email ?? [],
+                })),
+                rruleText: repeatRule
+                  ?.toText()
+                  .replace(/,?\s+(?:for|until) .+$/i, ""),
+              };
+              toast.promise(config.onShowConfirmed(showData), {
+                loading: "Sending confirmation email…",
+                success: "Confirmation email sent",
+                error: "Failed to send confirmation email",
+              });
+            }
+
+            for (const result of succeeded) {
+              onShowSaved(
+                result.value.show,
+                {
+                  ...(values as ShowFormValues),
+                  start: result.value.occ.start,
+                  end: result.value.occ.end,
+                },
+                "create",
+                true
+              );
+            }
+            toast.success(
+              `Created ${succeeded.length} show${
+                succeeded.length !== 1 ? "s" : ""
+              }`
+            );
+            onOpenChange(false);
+          }
+        } finally {
+          window.removeEventListener("beforeunload", onBeforeUnload);
+          setRepeatProgress(null);
+          isCreatingRepeats.current = false;
         }
-
-        setRepeatProgress(null);
-        toast.success(`Created ${occurrences.length} shows`);
       } else {
         const show =
           method === "update"
@@ -226,7 +330,14 @@ export function ShowDialog({
   };
 
   return (
-    <Dialog.Root open={open} onOpenChange={onOpenChange}>
+    <Dialog.Root
+      open={open}
+      onOpenChange={(next) => {
+        // Prevent closing while repeat shows are being created or rolled back
+        if (!next && isCreatingRepeats.current) return;
+        onOpenChange(next);
+      }}
+    >
       <Dialog.Portal>
         <Dialog.Overlay className="data-[state=open]:animate-overlayShow w-screen h-screen fixed top-0 left-0 bg-black/50 z-50 backdrop-blur-sm" />
         <Dialog.Content className="data-[state=open]:animate-contentShow bg-white w-full h-full lg:h-auto lg:max-w-4xl fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 border-black border">
@@ -497,6 +608,7 @@ export function ShowDialog({
                       {isSubmitting ? (
                         repeatProgress ? (
                           <span className="text-sm tabular-nums">
+                            {repeatProgress.rollingBack ? "Rolling back " : ""}
                             {repeatProgress.current}/{repeatProgress.total}
                           </span>
                         ) : (

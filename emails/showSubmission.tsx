@@ -29,6 +29,7 @@ interface EmailProps {
   showType: "Live" | "Pre-record";
   severity: "confirmation" | "initial" | "follow-up" | "late";
   showId: string;
+  rruleText?: string;
 }
 
 // const baseUrl = process.env.NEXT_PUBLIC_SITE_URL
@@ -44,14 +45,15 @@ export const ShowSubmissionEmail = ({
   showType = "Live",
   severity = "confirmation",
   showId = "7JIvNxsqyZcPZsw2PJGzIx",
+  rruleText,
 }: EmailProps) => {
   const startDate = dayjs(showDateStart).utc();
   let formattedDate =
     startDate.format("dddd Do MMMM, HH:mm") +
     "-" +
     dayjs(showDateEnd).utc().format("HH:mm CET");
-  if (showType == "Pre-record") {
-    formattedDate = startDate.format("dddd Do MMMM");
+  if (showType == "Pre-record" || rruleText) {
+    formattedDate = startDate.format("dddd Do MMMM, HH:mm CET");
   }
   const submissionDeadlineDate = startDate
     .subtract(4, "day")
@@ -110,8 +112,15 @@ export const ShowSubmissionEmail = ({
                   <b>Your upcoming show</b>
                 </Heading>
                 <Text style={{ ...paragraph, marginTop: -5 }}>
-                  Date: {formattedDate}
+                  Date: {rruleText ? "from " : ""}
+                  {formattedDate}
                   <br />
+                  {rruleText && (
+                    <>
+                      Repeats: {rruleText}
+                      <br />
+                    </>
+                  )}
                   {showType == "Live" && (
                     <>
                       Location:{" "}

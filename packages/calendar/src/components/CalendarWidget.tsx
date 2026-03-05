@@ -84,6 +84,7 @@ export function CalendarWidget({
 
   const calendarRef = useRef<any>();
   const datePicker = useRef<any>();
+  const prevShowDialogOpen = useRef(false);
   const router = useRouter();
   const auth = useContentfulAuth(config);
   const contentfulClient =
@@ -92,6 +93,15 @@ export function CalendarWidget({
       : null;
 
   useEffect(() => setMounted(true), []);
+
+  // Refetch events whenever the dialog closes so the calendar is always in
+  // sync with the server — avoids duplicates from mixing addEvent + fetch.
+  useEffect(() => {
+    if (prevShowDialogOpen.current && !showDialogOpen) {
+      calendarRef.current?.getApi()?.refetchEvents();
+    }
+    prevShowDialogOpen.current = showDialogOpen;
+  }, [showDialogOpen]);
 
   // Keyboard shortcuts
   const handleKeyPress = useCallback((e: KeyboardEvent) => {
@@ -155,48 +165,19 @@ export function CalendarWidget({
       });
   };
 
-  const transformForFC = (values: ShowFormValues, id: string) => {
-    const statusKey =
-      values.status.value === config.statusValues.tbc
-        ? "tbc"
-        : values.status.value === config.statusValues.confirmed
-        ? "confirmed"
-        : "submitted";
-    const color = (config.colors ?? {
-      tbc: "#e3e3e3",
-      confirmed: "#F1E2AF",
-      submitted: "#B3DCC1",
-    })[statusKey];
-    return {
-      id,
-      title: values.title ?? "",
-      type: values.type ?? config.typeValues.live,
-      artists: values.artists,
-      start: values.start,
-      end: values.end,
-      status: values.status.value,
-      published: false,
-      isFeatured: values.isFeatured,
-      backgroundColor: color,
-      borderColor: color,
-    };
-  };
-
   const handleShowSaved = (
     show: MutationResult,
     values: ShowFormValues,
-    method: "create" | "update"
+    method: "create" | "update",
+    keepOpen = false
   ) => {
-    const api = calendarRef.current?.getApi();
-    if (api) {
-      if (method === "update") api.getEventById(values.id)?.remove();
-      api.addEvent(transformForFC(values, show.entry.sys.id));
+    if (!keepOpen) {
+      setShowDialogOpen(false);
+      setCalendarLoading(false);
+      toast.success(method === "update" ? "Show updated" : "Show created");
     }
-    setShowDialogOpen(false);
-    setCalendarLoading(false);
-    toast.success(method === "update" ? "Show updated" : "Show created");
 
-    if (show.confirmationEmail && config.onShowConfirmed) {
+    if (!keepOpen && show.confirmationEmail && config.onShowConfirmed) {
       const showData: ShowNotificationData = {
         id: values.id ?? "",
         title: values.title ?? "",
