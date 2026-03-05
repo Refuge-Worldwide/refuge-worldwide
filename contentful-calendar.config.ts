@@ -1,7 +1,7 @@
 import {
   defineCalendarConfig,
   refugeDefaultConfig,
-} from "./packages/calendar/dist";
+} from "@refuge-worldwide/calendar";
 
 export default defineCalendarConfig({
   contentful: {

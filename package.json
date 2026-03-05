@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run build -w @refuge-worldwide/calendar && next build",
     "postbuild": "next-sitemap",
     "start": "next start",
     "format": "prettier --write \"**/*.tsx\" \"**/*.ts\"",
