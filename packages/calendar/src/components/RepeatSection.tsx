@@ -57,7 +57,7 @@ export function generateOccurrences(
 interface RepeatSectionProps {
   /** The current start datetime string from the form ("YYYY-MM-DDTHH:mm"). */
   startDate: string;
-  onChange: (rule: RRule | null) => void;
+  onChange: (rule: RRule | null, displayText?: string) => void;
 }
 
 export function RepeatSection({ startDate, onChange }: RepeatSectionProps) {
@@ -99,6 +99,7 @@ export function RepeatSection({ startDate, onChange }: RepeatSectionProps) {
         : { count };
 
     let rule: RRule;
+    let displayText: string;
     if (freq === "weekly") {
       rule = new RRule({
         freq: RRule.WEEKLY,
@@ -106,6 +107,11 @@ export function RepeatSection({ startDate, onChange }: RepeatSectionProps) {
         byweekday: weekdays.map((i) => RRULE_WEEKDAYS[i]),
         ...endOpts,
       });
+      const dayNames = [...weekdays]
+        .sort((a, b) => a - b)
+        .map((d) => DAYS_FULL[d])
+        .join(", ");
+      displayText = `every week on ${dayNames}`;
     } else {
       // monthly — always nth weekday of the month
       rule = new RRule({
@@ -115,9 +121,12 @@ export function RepeatSection({ startDate, onChange }: RepeatSectionProps) {
         bysetpos: [nthWeekday],
         ...endOpts,
       });
+      displayText = `${ordinal(nthWeekday)} ${
+        DAYS_FULL[startDayIdx]
+      } of each month`;
     }
 
-    onChangeRef.current(rule);
+    onChangeRef.current(rule, displayText);
   }, [
     freq,
     weekdays,

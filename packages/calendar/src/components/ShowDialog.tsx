@@ -57,6 +57,9 @@ export function ShowDialog({
 }: ShowDialogProps) {
   const [isDeleting, setIsDeleting] = React.useState(false);
   const [repeatRule, setRepeatRule] = React.useState<RRule | null>(null);
+  const [repeatDisplayText, setRepeatDisplayText] = React.useState<
+    string | undefined
+  >(undefined);
   const [repeatProgress, setRepeatProgress] = React.useState<{
     current: number;
     total: number;
@@ -218,9 +221,7 @@ export function ShowDialog({
                   name: a.label,
                   email: a.email ?? [],
                 })),
-                rruleText: repeatRule
-                  ?.toText()
-                  .replace(/,?\s+(?:for|until) .+$/i, ""),
+                rruleText: repeatDisplayText,
               };
               toast.promise(config.onShowConfirmed(showData), {
                 loading: "Sending confirmation email…",
@@ -584,7 +585,10 @@ export function ShowDialog({
                     {!values.id && values.start && (
                       <RepeatSection
                         startDate={values.start}
-                        onChange={setRepeatRule}
+                        onChange={(rule, text) => {
+                          setRepeatRule(rule);
+                          setRepeatDisplayText(text);
+                        }}
                       />
                     )}
                   </div>
