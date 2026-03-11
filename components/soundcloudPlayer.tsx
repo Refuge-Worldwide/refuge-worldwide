@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from "react";
+import Hls from "hls.js";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import * as Slider from "@radix-ui/react-slider";
-import Hls from "hls.js";
 import Image from "next/image";
 import Link from "next/link";
 import Pause from "../icons/pause";

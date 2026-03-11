@@ -15,7 +15,6 @@ const getAccessToken = async (): Promise<string> => {
     .single();
 
   if (row?.token && now.isBefore(dayjs(row.expires))) {
-    console.log("[soundcloud-resolve] Using cached SoundCloud token");
     return row.token;
   }
 
@@ -51,7 +50,8 @@ const getAccessToken = async (): Promise<string> => {
         .from("accessTokens")
         .insert({ application: APPLICATION, ...tokenData });
 
-  if (saveError) console.error("[soundcloud-resolve] save error:", saveError);
+  if (saveError)
+    console.error("[soundcloud-resolve] Supabase save error:", saveError);
 
   return body.access_token;
 };
@@ -98,7 +98,7 @@ const getStreams = async (
 };
 
 const selectStreamUrl = (streams: Record<string, string>): string => {
-  const preferred = ["whe_aac_160_url", "hls_aac_96_url"];
+  const preferred = ["hls_aac_160_url", "hls_aac_96_url"];
 
   for (const key of preferred) {
     if (streams[key]) return streams[key];
@@ -167,7 +167,7 @@ export default async function handler(
       artwork,
     });
   } catch (error) {
-    console.error("[soundcloud-resolve]", error);
+    console.error("[soundcloud-resolve] Error:", error);
     return res.status(500).json({ error: String(error) });
   }
 }
