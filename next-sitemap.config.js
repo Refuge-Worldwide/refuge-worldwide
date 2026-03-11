@@ -18,7 +18,7 @@ function isServerSidePath(path) {
 module.exports = {
   siteUrl: "https://refugeworldwide.com",
   generateRobotsTxt: true,
-  exclude: ["/server-sitemap.xml", "/app-testing"],
+  exclude: ["/server-sitemap.xml", "/app-testing", "/audio-archive-livestream"],
   robotsTxtOptions: {
     additionalSitemaps: ["https://refugeworldwide.com/server-sitemap.xml"],
     policies: [
@@ -34,6 +34,7 @@ module.exports = {
           "/residents-feedback",
           "/submission-v2",
           "/app-testing",
+          "/audio-archive-livestream",
         ],
       },
     ],
