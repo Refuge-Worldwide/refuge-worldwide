@@ -2,13 +2,103 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { supabase } from "../../lib/supabase/client";
 import dayjs from "dayjs";
 
+const APPLICATION = "soundcloud-oauth";
+
+const getAccessToken = async (): Promise<string> => {
+  const now = dayjs();
+
+  const { data: row } = await supabase
+    .from("accessTokens")
+    .select("token, expires")
+    .eq("application", APPLICATION)
+    .limit(1)
+    .single();
+
+  if (row?.token && now.isBefore(dayjs(row.expires))) {
+    console.log("[soundcloud-resolve] Using cached SoundCloud token");
+    return row.token;
+  }
+
+  const response = await fetch("https://api.soundcloud.com/oauth2/token", {
+    method: "POST",
+    body: new URLSearchParams({
+      client_id: process.env.SC_CLIENT_ID,
+      client_secret: process.env.SC_CLIENT_SECRET,
+      grant_type: "client_credentials",
+    }),
+  });
+
+  const body = await response.json();
+
+  if (!body.access_token) {
+    throw new Error(`Failed to get SoundCloud token: ${JSON.stringify(body)}`);
+  }
+
+  const expiresIn = body.expires_in ?? 3600;
+
+  const tokenData = {
+    token: body.access_token,
+    refresh_token: body.refresh_token ?? null,
+    expires: now.add(expiresIn - 30, "seconds").toISOString(),
+  };
+
+  const { error: saveError } = row
+    ? await supabase
+        .from("accessTokens")
+        .update(tokenData)
+        .eq("application", APPLICATION)
+    : await supabase
+        .from("accessTokens")
+        .insert({ application: APPLICATION, ...tokenData });
+
+  if (saveError) console.error("[soundcloud-resolve] save error:", saveError);
+
+  return body.access_token;
+};
+
+const cleanSoundcloudUrl = (url: string): string => {
+  try {
+    const parsed = new URL(url);
+    parsed.search = "";
+    return parsed.toString();
+  } catch {
+    return url;
+  }
+};
+
+const resolveTrack = async (token: string, url: string) => {
+  const response = await fetch(
+    `https://api.soundcloud.com/resolve?url=${encodeURIComponent(
+      cleanSoundcloudUrl(url)
+    )}`,
+    { headers: { Authorization: `OAuth ${token}` } }
+  );
+
+  if (!response.ok) {
+    throw new Error(`Failed to resolve track: ${response.status}`);
+  }
+
+  return response.json();
+};
+
+const getStreams = async (
+  token: string,
+  trackId: number
+): Promise<Record<string, string>> => {
+  const response = await fetch(
+    `https://api.soundcloud.com/tracks/${trackId}/streams`,
+    { headers: { Authorization: `OAuth ${token}` } }
+  );
+
+  if (!response.ok) {
+    throw new Error(`Failed to get streams: ${response.status}`);
+  }
+
+  return response.json();
+};
+
 const selectStreamUrl = (streams: Record<string, string>): string => {
-  const preferred = [
-    "http_mp3_128_url",
-    "hls_mp3_128_url",
-    "hls_opus_64_url",
-    "preview_mp3_128_url",
-  ];
+  const preferred = ["whe_aac_160_url", "hls_aac_96_url"];
 
   for (const key of preferred) {
     if (streams[key]) return streams[key];
@@ -46,98 +136,38 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const now = dayjs();
-  let accessToken = null;
+  const { url } = req.query as { url: string };
+
+  if (!url) {
+    return res
+      .status(400)
+      .json({ error: "Missing required query parameter: url" });
+  }
 
   try {
-    const { data: accessTokens } = await supabase
-      .from("accessTokens")
-      .select("application, token, refresh_token, expires")
-      .eq("application", "soundcloud")
-      .limit(1)
-      .single();
-
-    const isExpired =
-      !accessTokens?.expires || now.isAfter(dayjs(accessTokens.expires));
-
-    if (isExpired) {
-      const response = await fetch("https://api.soundcloud.com/oauth2/token", {
-        method: "POST",
-        body: new URLSearchParams({
-          client_id: process.env.SC_CLIENT_ID,
-          client_secret: process.env.SC_CLIENT_SECRET,
-          grant_type: "client_credentials",
-        }),
-      });
-
-      const body = await response.json();
-
-      if (!body.access_token) {
-        throw new Error(
-          `Failed to get SoundCloud token: ${JSON.stringify(body)}`
-        );
-      }
-
-      accessToken = body.access_token;
-      const expiresIn = body.expires_in ?? 3600;
-
-      await supabase
-        .from("accessTokens")
-        .upsert({
-          application: "soundcloud",
-          token: body.access_token,
-          refresh_token: body.refresh_token ?? null,
-          expires: now.add(expiresIn - 30, "seconds").toISOString(),
-        })
-        .eq("application", "soundcloud");
-    } else {
-      accessToken = accessTokens.token;
-    }
-
-    const { url } = req.query as { url: string };
-
-    const trackResponse = await fetch(
-      `https://api.soundcloud.com/resolve?url=${url}`,
-      {
-        headers: {
-          Authorization: `OAuth ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    if (!trackResponse.ok) {
-      return res
-        .status(trackResponse.status)
-        .json({ error: "Failed to resolve track" });
-    }
-
-    const track = await trackResponse.json();
-
-    const streamsResponse = await fetch(
-      `https://api.soundcloud.com/tracks/${track.id}/streams`,
-      { headers: { Authorization: `OAuth ${accessToken}` } }
-    );
-
-    if (!streamsResponse.ok) {
-      return res
-        .status(streamsResponse.status)
-        .json({ error: "Failed to get streams" });
-    }
-
-    const streams = await streamsResponse.json();
+    const token = await getAccessToken();
+    const track = await resolveTrack(token, url);
+    const streams = await getStreams(token, track.id);
     const streamApiUrl = selectStreamUrl(streams);
-    const streamUrl = await getActualStreamUrl(accessToken, streamApiUrl);
+    const streamUrl = await getActualStreamUrl(token, streamApiUrl);
 
+    // Cache at Vercel's CDN edge for 45 min. stale-while-revalidate allows
+    // serving the cached response while a fresh one is fetched in the background.
     res.setHeader("Cache-Control", "s-maxage=2700, stale-while-revalidate=300");
+
+    // SoundCloud artwork is 100x100 by default (-large). Replace with -t200x200 for a crisper thumbnail.
+    const artwork = track.artwork_url
+      ? track.artwork_url.replace("-large", "-t200x200")
+      : null;
 
     return res.status(200).json({
       id: track.id,
       streamUrl,
       waveform: track.waveform_url,
+      artwork,
     });
   } catch (error) {
-    console.log(error);
-    return res.status(400).json({ error: String(error) });
+    console.error("[soundcloud-resolve]", error);
+    return res.status(500).json({ error: String(error) });
   }
 }

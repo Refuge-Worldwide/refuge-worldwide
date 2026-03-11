@@ -74,7 +74,7 @@ export default function SoundCloudPlayer({
     setDuration(0);
     hasStarted.current = false;
 
-    fetch(`/api/soundcloud-stream?url=${encodeURIComponent(url)}`)
+    fetch(`/api/soundcloud-resolve?url=${encodeURIComponent(url)}`)
       .then((res) => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return res.json();
