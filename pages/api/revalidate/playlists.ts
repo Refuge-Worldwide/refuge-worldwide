@@ -1,71 +1,11 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { supabase } from "../../../lib/supabase/client";
 import { graphql } from "../../../lib/contentful";
+import {
+  getAccessToken,
+  resolve,
+  updatePlaylist,
+} from "../../../lib/soundcloud";
 import { extractCollectionItem } from "../../../util";
-import dayjs from "dayjs";
-
-async function getSoundcloudAccessToken(): Promise<string> {
-  const now = dayjs();
-
-  const { data: accessTokens } = await supabase
-    .from("accessTokens")
-    .select("application, token, refresh_token, expires")
-    .eq("application", "soundcloud")
-    .limit(1)
-    .single();
-
-  if (now.isAfter(dayjs(accessTokens.expires))) {
-    const response = await fetch("https://api.soundcloud.com/oauth2/token", {
-      method: "POST",
-      body: new URLSearchParams({
-        client_id: process.env.SC_CLIENT_ID,
-        client_secret: process.env.SC_CLIENT_SECRET,
-        grant_type: "client_credentials",
-      }),
-    });
-
-    const body = await response.json();
-
-    await supabase
-      .from("accessTokens")
-      .update({
-        token: body.access_token,
-        refresh_token: body.refresh_token,
-        expires: now.add(body.expires_in - 30, "seconds").toISOString(),
-      })
-      .eq("application", "soundcloud")
-      .select();
-
-    return body.access_token;
-  }
-
-  return accessTokens.token;
-}
-
-async function resolveSoundcloudUrl(
-  url: string,
-  accessToken: string
-): Promise<number | null> {
-  try {
-    const response = await fetch(
-      `https://api.soundcloud.com/resolve?url=${url}`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `OAuth ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    if (!response.ok) return null;
-
-    const body = await response.json();
-    return body.id ?? null;
-  } catch {
-    return null;
-  }
-}
 
 const PlaylistForSyncQuery = /* GraphQL */ `
   query PlaylistForSyncQuery($slug: String) {
@@ -111,15 +51,12 @@ export default async function handler(
       return res.json({ revalidated: true, synced: false });
     }
 
-    const accessToken = await getSoundcloudAccessToken();
+    const token = await getAccessToken();
 
-    // Resolve the Contentful playlist's soundcloudLink to a SC playlist ID
-    const scPlaylistId = await resolveSoundcloudUrl(
-      playlist.soundcloudLink,
-      accessToken
-    );
+    // Resolve the playlist's soundcloudLink to a SC playlist ID
+    const scPlaylist = await resolve(token, playlist.soundcloudLink);
 
-    if (!scPlaylistId) {
+    if (!scPlaylist?.id) {
       console.error(
         `Could not resolve SoundCloud playlist: ${playlist.soundcloudLink}`
       );
@@ -128,39 +65,25 @@ export default async function handler(
         .json({ message: "Could not resolve SoundCloud playlist" });
     }
 
-    // Resolve each show's mixcloudLink (SoundCloud URL) to a SC track ID in parallel
-    const trackResults = await Promise.all(
+    // Resolve each show's SoundCloud URL to a track ID in parallel, skipping any that fail
+    const trackResults = await Promise.allSettled(
       playlist.showsCollection.items
         .filter((show) => show.mixcloudLink)
-        .map((show) => resolveSoundcloudUrl(show.mixcloudLink, accessToken))
+        .map((show) => resolve(token, show.mixcloudLink))
     );
 
     const tracks = trackResults
-      .filter((id): id is number => id !== null)
-      .map((id) => ({ id }));
+      .filter(
+        (r): r is PromiseFulfilledResult<{ id: number }> =>
+          r.status === "fulfilled" && r.value?.id != null
+      )
+      .map((r) => ({ id: r.value.id }));
 
-    // Update the SoundCloud playlist track list
-    const updateResponse = await fetch(
-      `https://api.soundcloud.com/playlists/${scPlaylistId}`,
-      {
-        method: "PUT",
-        headers: {
-          Authorization: `OAuth ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ playlist: { tracks } }),
-      }
-    );
-
-    if (!updateResponse.ok) {
-      const error = await updateResponse.text();
-      console.error("SoundCloud playlist update failed:", error);
-      return res.status(500).json({ message: "SoundCloud update failed" });
-    }
+    await updatePlaylist(token, scPlaylist.id, tracks);
 
     return res.json({ revalidated: true, synced: true, tracks: tracks.length });
   } catch (error) {
-    console.error(error);
+    console.error("[revalidate/playlists] Error:", error);
     return res.status(500).send("Error syncing playlist");
   }
 }
