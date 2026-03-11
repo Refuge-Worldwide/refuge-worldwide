@@ -1,0 +1,13 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["85Q95CZM55.com.anonymous.refuge-worldwide"],
+        "components": [
+          { "/": "/radio/*" },
+          { "/": "/artists/*" }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.refugeworldwide.app",
+      "sha256_cert_fingerprints": [
+        "B5:CE:35:B1:BA:AD:DF:6D:BC:0B:51:25:C5:1F:31:1A:73:7B:D2:6F"
+      ]
+    }
+  }
+]

@@ -12,7 +12,7 @@ export default function JoinChat() {
   if (scheduleData?.liveNow?.isMixedFeelings) return null;
   else
     return (
-      <div className="fixed bottom-5 right-4 hidden sm:block z-30">
+      <div className="fixed bottom-5 right-4 hidden md:block z-30">
         <ChatRoom />
       </div>
     );
