@@ -330,3 +330,42 @@ export type SubmissionImportantInfo = {
   liveShows2: Content;
   preRecords: Content;
 };
+
+export interface PlaylistInterface {
+  sys: { id: string };
+  title: string;
+  slug: string;
+  description?: Content;
+  showsCollection: {
+    items: Array<
+      Pick<
+        ShowInterface,
+        | "sys"
+        | "title"
+        | "slug"
+        | "mixcloudLink"
+        | "coverImage"
+        | "date"
+        | "genresCollection"
+      > & { audioFile?: { url: string }; artwork?: { url: string } }
+    >;
+  };
+  soundcloudLink: string;
+}
+
+export type PlaylistListItem = {
+  id: string;
+  title: string;
+  slug: string;
+  description?: Content;
+  soundcloudLink: string;
+};
+
+export type PlaylistSchema = {
+  id: string;
+  title: string;
+  slug: string;
+  description?: Content;
+  soundcloudLink: string;
+  shows: PastShowSchema[];
+};
