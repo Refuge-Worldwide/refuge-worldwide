@@ -105,7 +105,7 @@ export default function AppTesting() {
               </div>
               <div className="mt-4">
                 <a
-                  href="https://expo.dev/accounts/refuge-worldwide/projects/refuge-worldwide/builds/ae90ebc2-4e82-49ed-902c-97e20c5cfcac"
+                  href="https://downloads.ctfassets.net/taoiy3h84mql/5iSrk7erZZ08wFvQ88dHHN/18d53059df408e1a488a12633f465044/build-1773230525145.apk"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-block bg-white text-black px-6 py-3 rounded-lg font-bold hover:bg-white/90 transition-colors"
