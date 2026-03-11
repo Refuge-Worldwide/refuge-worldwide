@@ -32,7 +32,7 @@ function ShowImageWithPlayer({
 }: ShowImageWithPlayerProps) {
   const showUrlSet = useGlobalStore((state) => state.showUrlSet);
 
-  const onClick = () => showUrlSet(mixcloudLink, src, `/radio/${slug}`);
+  const onClick = () => showUrlSet(mixcloudLink, src, `/radio/${slug}`, title);
 
   return (
     <button
@@ -252,7 +252,7 @@ export function ArticleShowPreview({
   const showUrlSet = useGlobalStore((state) => state.showUrlSet);
 
   const onClick = () => {
-    showUrlSet(mixcloudLink, coverImage.url, `/radio/${slug}`);
+    showUrlSet(mixcloudLink, coverImage.url, `/radio/${slug}`, title);
   };
 
   return (

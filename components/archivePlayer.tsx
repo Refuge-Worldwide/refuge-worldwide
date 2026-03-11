@@ -7,6 +7,7 @@ import SoundCloudPlayer from "./soundcloudPlayer";
 
 export default function ArchivePlayer() {
   const showUrl = useGlobalStore((state) => state.showUrl);
+  const showTitle = useGlobalStore((state) => state.showTitle);
   const showImage = useGlobalStore((state) => state.showImage);
   const showPageUrl = useGlobalStore((state) => state.showPageUrl);
   const activePlayer = useGlobalStore((state) => state.activePlayer);
@@ -29,7 +30,7 @@ export default function ArchivePlayer() {
       }, 300);
       return () => clearTimeout(t);
     }
-  }, [activePlayer, showUrl]);
+  }, [activePlayer, showUrl]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (activePlayer === ActivePlayer.MIXCLOUD) {
@@ -82,6 +83,7 @@ export default function ArchivePlayer() {
       {scRendered && (
         <SoundCloudPlayer
           url={showUrl}
+          title={showTitle}
           image={showImage}
           leaving={scLeaving}
           showPageUrl={showPageUrl}

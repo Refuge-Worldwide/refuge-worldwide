@@ -53,7 +53,7 @@ export default function ShowBody({
   const showUrlSet = useGlobalStore((state) => state.showUrlSet);
 
   const onClick = () =>
-    showUrlSet(mixcloudLink, coverImage?.url, `/radio/${slug}`);
+    showUrlSet(mixcloudLink, coverImage?.url, `/radio/${slug}`, title);
 
   return (
     <Fragment>

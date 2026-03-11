@@ -17,11 +17,13 @@ type StreamData = {
 
 export default function SoundCloudPlayer({
   url,
+  title,
   image,
   leaving,
   showPageUrl,
 }: {
   url: string;
+  title?: string;
   image?: string;
   leaving?: boolean;
   showPageUrl?: string;
@@ -38,7 +40,7 @@ export default function SoundCloudPlayer({
   useEffect(() => {
     if (!("mediaSession" in navigator) || !image) return;
     navigator.mediaSession.metadata = new MediaMetadata({
-      title: "Refuge Worldwide",
+      title: title ?? "Refuge Worldwide",
       artwork: [
         {
           src: `${image}?w=384&h=384&fit=fill&f=faces`,
@@ -52,7 +54,7 @@ export default function SoundCloudPlayer({
         },
       ],
     });
-  }, [image]);
+  }, [image, title]);
 
   const [data, setData] = useState<StreamData | null>(null);
   const [loading, setLoading] = useState(true);
