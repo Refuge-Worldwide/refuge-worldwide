@@ -1,4 +1,6 @@
 import { useRef, useState, useEffect } from "react";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import * as Slider from "@radix-ui/react-slider";
 import Hls from "hls.js";
 import Image from "next/image";
 import Link from "next/link";
@@ -51,10 +53,14 @@ export default function SoundCloudPlayer({
       ],
     });
   }, [image]);
+
   const [data, setData] = useState<StreamData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [playing, setPlaying] = useState(false);
+  const hasStarted = useRef(false);
+  const [buffering, setBuffering] = useState(false);
+  const bufferingTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [progress, setProgress] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -66,6 +72,7 @@ export default function SoundCloudPlayer({
     setProgress(0);
     setCurrentTime(0);
     setDuration(0);
+    hasStarted.current = false;
 
     fetch(`/api/soundcloud-stream?url=${encodeURIComponent(url)}`)
       .then((res) => {
@@ -74,7 +81,6 @@ export default function SoundCloudPlayer({
       })
       .then((json: StreamData) => {
         setData(json);
-        setLoading(false);
       })
       .catch((err) => {
         console.error("[SoundCloudPlayer]", err);
@@ -118,11 +124,12 @@ export default function SoundCloudPlayer({
     setProgress((audio.currentTime / audio.duration) * 100);
   };
 
-  const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleSliderChange = (value: number[]) => {
     if (!audioRef.current || !duration) return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    const percent = (e.clientX - rect.left) / rect.width;
-    audioRef.current.currentTime = percent * duration;
+    const newTime = (value[0] / 100) * duration;
+    audioRef.current.currentTime = newTime;
+    setProgress(value[0]);
+    setCurrentTime(newTime);
   };
 
   const formatTime = (s: number) => {
@@ -142,8 +149,25 @@ export default function SoundCloudPlayer({
         ref={audioRef}
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={() => setDuration(audioRef.current?.duration ?? 0)}
-        onPlay={() => setPlaying(true)}
+        onPlay={() => {
+          if (!hasStarted.current) {
+            hasStarted.current = true;
+            setLoading(false);
+          }
+          setPlaying(true);
+        }}
         onPause={() => setPlaying(false)}
+        onWaiting={() => {
+          bufferingTimer.current = setTimeout(() => setBuffering(true), 300);
+        }}
+        onCanPlay={() => {
+          if (bufferingTimer.current) clearTimeout(bufferingTimer.current);
+          setBuffering(false);
+        }}
+        onPlaying={() => {
+          if (bufferingTimer.current) clearTimeout(bufferingTimer.current);
+          setBuffering(false);
+        }}
       />
 
       {/* Artwork */}
@@ -181,8 +205,8 @@ export default function SoundCloudPlayer({
           disabled={loading || !!error}
           aria-label={playing ? "Pause" : "Play"}
         >
-          {loading ? (
-            <div className="h-full w-full animate-pulse bg-white/25 rounded-full" />
+          {loading || buffering ? (
+            <AiOutlineLoading3Quarters className="h-full w-full animate-spin text-white" />
           ) : playing ? (
             <Pause />
           ) : (
@@ -191,21 +215,21 @@ export default function SoundCloudPlayer({
         </button>
 
         {/* Scrubber */}
-        <div
-          className="flex-1 h-8 cursor-pointer flex items-center group"
-          onClick={handleSeek}
+        <Slider.Root
+          className="relative flex flex-1 items-center cursor-pointer h-8"
+          min={0}
+          max={100}
+          step={0.1}
+          value={[progress]}
+          onValueChange={handleSliderChange}
+          disabled={!duration || !!error}
+          aria-label="Seek"
         >
-          <div className="relative w-full h-px bg-white/25">
-            <div
-              className="h-full bg-white"
-              style={{ width: `${progress}%` }}
-            />
-            <div
-              className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 h-3 w-3 rounded-full bg-white"
-              style={{ left: `${progress}%` }}
-            />
-          </div>
-        </div>
+          <Slider.Track className="relative w-full h-px bg-white/25">
+            <Slider.Range className="absolute h-full bg-white" />
+          </Slider.Track>
+          <Slider.Thumb className="block h-3 w-3 rounded-full bg-white focus:outline-none" />
+        </Slider.Root>
 
         {/* Time */}
         <span className="text-white text-small tabular-nums flex-shrink-0">

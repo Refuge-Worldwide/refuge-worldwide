@@ -21,6 +21,7 @@ export default function ShowBody({
   date,
   content,
   mixcloudLink,
+  coverImage,
 }: ShowInterface) {
   const genres = parseGenres(genresCollection);
 
@@ -51,7 +52,8 @@ export default function ShowBody({
 
   const showUrlSet = useGlobalStore((state) => state.showUrlSet);
 
-  const onClick = () => showUrlSet(mixcloudLink, undefined, `/radio/${slug}`);
+  const onClick = () =>
+    showUrlSet(mixcloudLink, coverImage?.url, `/radio/${slug}`);
 
   return (
     <Fragment>
