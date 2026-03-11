@@ -12,6 +12,7 @@ function processPlaylist(playlist: PlaylistInterface): PlaylistSchema {
     title: playlist.title,
     slug: playlist.slug,
     description: playlist.description,
+    image: playlist.image?.url ?? null,
     soundcloudLink: playlist.soundcloudLink,
     shows: playlist.showsCollection.items.filter(Boolean).map((show) => ({
       id: show.sys.id,
@@ -70,6 +71,9 @@ export async function getPlaylists(take: number, skip: number) {
           description {
             json
           }
+          image {
+            url
+          }
           soundcloudLink
         }
       }
@@ -86,6 +90,7 @@ export async function getPlaylists(take: number, skip: number) {
       title: item.title,
       slug: item.slug,
       description: item.description,
+      image: item.image?.url ?? null,
       soundcloudLink: item.soundcloudLink,
     })
   );
@@ -107,6 +112,9 @@ export async function getPlaylistBySlug(slug: string, preview: boolean) {
           slug
           description {
             json
+          }
+          image {
+            url
           }
           soundcloudLink
           showsCollection(limit: 50) {

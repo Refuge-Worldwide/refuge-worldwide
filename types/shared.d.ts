@@ -336,6 +336,7 @@ export interface PlaylistInterface {
   title: string;
   slug: string;
   description?: Content;
+  image?: CoverImage;
   showsCollection: {
     items: Array<
       Pick<
@@ -358,6 +359,7 @@ export type PlaylistListItem = {
   title: string;
   slug: string;
   description?: Content;
+  image?: string;
   soundcloudLink: string;
 };
 
@@ -366,6 +368,7 @@ export type PlaylistSchema = {
   title: string;
   slug: string;
   description?: Content;
+  image?: string;
   soundcloudLink: string;
   shows: PastShowSchema[];
 };
