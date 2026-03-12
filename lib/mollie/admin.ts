@@ -99,15 +99,31 @@ export async function createOrRetrieveMollieCustomer({
 export async function createMollieSubscription(
   customerId: string,
   userId: string,
-  amount: string = "5.00"
+  options: {
+    amount: string;
+    interval: string;
+    description: string;
+    plan: string;
+    tier: string;
+  } = {
+    amount: "3.00",
+    interval: "1 month",
+    description: "Refuge Worldwide Supporter - Monthly",
+    plan: "supporter_monthly",
+    tier: "supporter",
+  }
 ) {
   const subscription = await mollie.customerSubscriptions.create({
     customerId,
-    amount: { currency: "EUR", value: amount },
-    interval: "1 month",
-    description: "Refuge Worldwide Monthly Supporter",
+    amount: { currency: "EUR", value: options.amount },
+    interval: options.interval,
+    description: options.description,
     webhookUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/api/mollie/webhook`,
-    metadata: JSON.stringify({ userId }),
+    metadata: JSON.stringify({
+      userId,
+      plan: options.plan,
+      tier: options.tier,
+    }),
   });
 
   return subscription;

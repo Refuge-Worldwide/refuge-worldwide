@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { mollie } from "@/lib/mollie/config";
+import { mollie, PLANS, type PlanId } from "@/lib/mollie/config";
 import { PaymentMethod } from "@mollie/api-client";
 import {
   createOrRetrieveMollieCustomer,
@@ -15,10 +15,15 @@ export default async function handler(
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { cardToken } = req.body;
+  const { cardToken, plan } = req.body as { cardToken?: string; plan?: PlanId };
+  const planConfig = plan && PLANS[plan];
 
   if (!cardToken) {
     return res.status(400).json({ error: "Card token is required" });
+  }
+
+  if (!planConfig) {
+    return res.status(400).json({ error: "Invalid plan" });
   }
 
   const supabase = createClient(req, res);
@@ -32,63 +37,63 @@ export default async function handler(
   }
 
   try {
-    // Get or create Mollie customer
     const mollieCustomerId = await createOrRetrieveMollieCustomer({
       email: user.email!,
       uuid: user.id,
     });
 
-    // Create payment using the card token
-    // This is the first payment which will set up the mandate for recurring payments
     const payment = await mollie.payments.create({
-      amount: { currency: "EUR", value: "5.00" },
+      amount: { currency: "EUR", value: planConfig.amount },
       customerId: mollieCustomerId,
-      description: "Refuge Worldwide Supporter - First Payment",
+      description: `${planConfig.description} - First Payment`,
       redirectUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/profile`,
       webhookUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/api/mollie/webhook`,
       method: PaymentMethod.creditcard,
       cardToken,
       metadata: JSON.stringify({
         userId: user.id,
+        plan,
+        tier: planConfig.tier,
         type: "subscription_first",
       }),
     });
 
-    // Check if payment needs 3D Secure or other redirect
     const checkoutUrl = payment._links?.checkout?.href;
 
     if (checkoutUrl) {
-      // Payment requires additional authentication (3D Secure)
-      return res.status(200).json({
-        requiresAction: true,
-        checkoutUrl,
-      });
+      return res.status(200).json({ requiresAction: true, checkoutUrl });
     }
 
-    // Payment was processed immediately (unlikely for first payment)
     if (payment.status === "paid") {
-      // Create the subscription
       const subscription = await mollie.customerSubscriptions.create({
         customerId: mollieCustomerId,
-        amount: { currency: "EUR", value: "5.00" },
-        interval: "1 month",
-        description: "Refuge Worldwide Monthly Supporter",
+        amount: { currency: "EUR", value: planConfig.amount },
+        interval: planConfig.interval,
+        description: planConfig.description,
         webhookUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/api/mollie/webhook`,
-        metadata: JSON.stringify({ userId: user.id }),
+        metadata: JSON.stringify({
+          userId: user.id,
+          plan,
+          tier: planConfig.tier,
+        }),
       });
+
+      const periodMs =
+        planConfig.interval === "1 year"
+          ? 365 * 24 * 60 * 60 * 1000
+          : 30 * 24 * 60 * 60 * 1000;
 
       await updateSubscriptionInSupabase(
         subscription.id,
         user.id,
         "active",
         new Date(),
-        new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+        new Date(Date.now() + periodMs)
       );
 
       return res.status(200).json({ success: true });
     }
 
-    // Payment is pending or has another status
     return res.status(200).json({
       status: payment.status,
       message: "Payment is being processed",

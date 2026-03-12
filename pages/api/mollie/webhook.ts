@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { mollie } from "@/lib/mollie/config";
+import { mollie, PLANS, type PlanId } from "@/lib/mollie/config";
 import {
   createMollieSubscription,
   updateSubscriptionInSupabase,
@@ -42,10 +42,18 @@ export default async function handler(
         // First payment successful - create recurring subscription
         console.log(`Creating subscription for user ${metadata.userId}`);
 
+        const planConfig =
+          PLANS[metadata.plan as PlanId] ?? PLANS.supporter_monthly;
         const subscription = await createMollieSubscription(
           payment.customerId as string,
-          metadata.userId
+          metadata.userId,
+          { ...planConfig, plan: metadata.plan ?? "supporter_monthly" }
         );
+
+        const periodMs =
+          planConfig.interval === "1 year"
+            ? 365 * 24 * 60 * 60 * 1000
+            : 30 * 24 * 60 * 60 * 1000;
 
         // Store subscription in Supabase
         await updateSubscriptionInSupabase(
@@ -53,7 +61,7 @@ export default async function handler(
           metadata.userId,
           "active",
           new Date(),
-          new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+          new Date(Date.now() + periodMs)
         );
 
         console.log(
@@ -63,12 +71,18 @@ export default async function handler(
         // Recurring payment successful - update subscription period
         const subscriptionId = payment.subscriptionId;
         if (subscriptionId) {
+          const planConfig =
+            PLANS[metadata.plan as PlanId] ?? PLANS.supporter_monthly;
+          const periodMs =
+            planConfig.interval === "1 year"
+              ? 365 * 24 * 60 * 60 * 1000
+              : 30 * 24 * 60 * 60 * 1000;
           await updateSubscriptionInSupabase(
             subscriptionId,
             metadata.userId,
             "active",
             new Date(),
-            new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+            new Date(Date.now() + periodMs)
           );
         }
       }
