@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { mollie } from "@/lib/mollie/config";
+import { mollie, PLANS, type PlanId } from "@/lib/mollie/config";
 import { createOrRetrieveMollieCustomer } from "@/lib/mollie/admin";
 import createClient from "@/lib/supabase/api";
 import { SequenceType } from "@mollie/api-client";
@@ -10,6 +10,13 @@ export default async function handler(
 ) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
+  }
+
+  const { plan } = req.body as { plan?: PlanId };
+  const planConfig = plan && PLANS[plan];
+
+  if (!planConfig) {
+    return res.status(400).json({ error: "Invalid plan" });
   }
 
   const supabase = createClient(req, res);
@@ -23,23 +30,22 @@ export default async function handler(
   }
 
   try {
-    // Get or create Mollie customer
     const mollieCustomerId = await createOrRetrieveMollieCustomer({
       email: user.email!,
       uuid: user.id,
     });
 
-    // Create first payment to set up the subscription
-    // Mollie requires a successful first payment before creating a subscription
     const payment = await mollie.payments.create({
-      amount: { currency: "EUR", value: "5.00" },
+      amount: { currency: "EUR", value: planConfig.amount },
       customerId: mollieCustomerId,
       sequenceType: SequenceType.first,
-      description: "Refuge Worldwide Supporter - First Payment",
+      description: `${planConfig.description} - First Payment`,
       redirectUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/supporters/success`,
       webhookUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/api/mollie/webhook`,
       metadata: JSON.stringify({
         userId: user.id,
+        plan,
+        tier: planConfig.tier,
         type: "subscription_first",
       }),
     });
