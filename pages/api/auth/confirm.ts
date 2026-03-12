@@ -12,7 +12,8 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method !== "GET") {
-    res.status(405).appendHeader("Allow", "GET").end();
+    res.setHeader("Allow", "GET");
+    res.status(405).end();
     return;
   }
 

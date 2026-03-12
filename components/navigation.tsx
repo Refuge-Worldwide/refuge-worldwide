@@ -16,7 +16,7 @@ export default function Navigation() {
   const [isOpen, isOpenSet] = useState(false);
   const onDismiss = () => isOpenSet(false);
   const supabase = createClient();
-  const [user, setUser] = useState();
+  const [user, setUser] = useState<any>(undefined);
 
   const openChat = useCallback(() => {
     const chatOptions =

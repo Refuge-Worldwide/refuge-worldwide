@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 export default function SignOut() {
   const router = useRouter();
   const supabase = createClient();
-  const [user, setUser] = useState();
+  const [user, setUser] = useState<any>(undefined);
 
   useEffect(() => {
     supabase.auth.getUser().then((user) => {
