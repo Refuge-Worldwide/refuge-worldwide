@@ -1,5 +1,6 @@
 // Local script for syncing playlists from SoundCloud to Contentful.
 // Make for one time sync but can be re-run if needed.
+export {};
 
 // import { NextApiRequest, NextApiResponse } from "next";
 // // import { createClient } from "contentful-management";
