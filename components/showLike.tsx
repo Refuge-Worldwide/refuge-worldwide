@@ -9,7 +9,7 @@ import { Button } from "@react-email/components";
 export default function ShowLike({ id }: { id?: string }) {
   const pathname = usePathname();
   const supabase = createClient();
-  const [user, setUser] = useState();
+  const [user, setUser] = useState<any>(undefined);
   const [liked, setLiked] = useState(null);
 
   useEffect(() => {

@@ -8,7 +8,7 @@ import { useEffect } from "react";
 export default function Edit({ id }: { id?: string }) {
   const pathname = usePathname();
   const supabase = createClient();
-  const [user, setUser] = useState();
+  const [user, setUser] = useState<any>(undefined);
 
   useEffect(() => {
     supabase.auth.getUser().then((user) => {
