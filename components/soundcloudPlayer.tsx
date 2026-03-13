@@ -206,10 +206,7 @@ export default function SoundCloudPlayer({
         {/* Title + close */}
         <div className="flex items-center justify-between gap-2">
           {showPageUrl ? (
-            <Link
-              href={showPageUrl}
-              className="text-small text-white truncate hover:underline"
-            >
+            <Link href={showPageUrl} className="text-small text-white truncate">
               {title ?? ""}
             </Link>
           ) : (
