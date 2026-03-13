@@ -11,7 +11,7 @@ export default function AppTesting() {
     document.body.appendChild(scriptTag);
   }, []);
   const tallyEmbed = `https://tally.so/embed/OD5oBA?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1`;
-  const appVersion = "0.1.2";
+  const appVersion = "0.1.4";
 
   return (
     <Layout>
@@ -95,7 +95,7 @@ export default function AppTesting() {
               </p>
               <div className="bg-white/5 p-6 rounded-lg border border-white/10">
                 <ol className="list-decimal list-inside space-y-2">
-                  <li>Download the app using the link below</li>
+                  <li>Download the APK file using the link below</li>
                   <li>
                     You may need to enable &quot;Install from unknown
                     sources&quot; in your settings
@@ -105,7 +105,7 @@ export default function AppTesting() {
               </div>
               <div className="mt-4">
                 <a
-                  href="https://downloads.ctfassets.net/taoiy3h84mql/5iSrk7erZZ08wFvQ88dHHN/18d53059df408e1a488a12633f465044/build-1773230525145.apk"
+                  href="https://github.com/Refuge-Worldwide/mobile-app/releases/tag/0.1.4"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-block bg-white text-black px-6 py-3 rounded-lg font-bold hover:bg-white/90 transition-colors"
