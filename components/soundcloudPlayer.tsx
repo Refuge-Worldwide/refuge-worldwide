@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import Hls from "hls.js";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { AiOutlineLoading3Quarters, AiOutlineClose } from "react-icons/ai";
 import * as Slider from "@radix-ui/react-slider";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,6 +8,7 @@ import Pause from "../icons/pause";
 import Play from "../icons/play";
 import Soundcloud from "../icons/soundcloud";
 import loaders from "../lib/loaders";
+import { useGlobalStore } from "../hooks/useStore";
 
 type StreamData = {
   id: number;
@@ -28,6 +29,7 @@ export default function SoundCloudPlayer({
   leaving?: boolean;
   showPageUrl?: string;
 }) {
+  const showUrlClear = useGlobalStore((state) => state.showUrlClear);
   const audioRef = useRef<HTMLAudioElement>(null);
   const [visible, setVisible] = useState(false);
 
@@ -143,7 +145,7 @@ export default function SoundCloudPlayer({
 
   return (
     <div
-      className={`fixed bottom-0 left-0 w-full md:w-2/3 lg:w-1/2 bg-black text-white flex items-stretch h-16 transition-transform duration-300 ease-out ${
+      className={`fixed bottom-0 left-0 w-full md:w-2/3 lg:w-1/2 bg-black text-white flex h-20 transition-transform duration-300 ease-out ${
         visible && !leaving ? "translate-y-0" : "translate-y-full"
       }`}
     >
@@ -172,10 +174,10 @@ export default function SoundCloudPlayer({
         }}
       />
 
-      {/* Artwork */}
-      {image ? (
-        <div className="relative h-16 w-16 flex-shrink-0">
-          {showPageUrl ? (
+      {/* Artwork — square, full height */}
+      <div className="relative h-full aspect-square flex-shrink-0">
+        {image ? (
+          showPageUrl ? (
             <Link href={showPageUrl} className="block w-full h-full">
               <Image
                 src={image}
@@ -193,61 +195,88 @@ export default function SoundCloudPlayer({
               alt=""
               className="object-cover"
             />
-          )}
-        </div>
-      ) : (
-        <div className="h-16 w-16 bg-white/10 flex-shrink-0" />
-      )}
+          )
+        ) : (
+          <div className="w-full h-full bg-white/10" />
+        )}
+      </div>
 
-      <div className="flex flex-1 items-center gap-3 px-4">
-        {/* Play / Pause */}
-        <button
-          className="h-6 w-6 flex-shrink-0"
-          onClick={togglePlay}
-          disabled={loading || !!error}
-          aria-label={playing ? "Pause" : "Play"}
-        >
-          {loading || buffering ? (
-            <AiOutlineLoading3Quarters className="h-full w-full animate-spin text-white" />
-          ) : playing ? (
-            <Pause />
+      {/* Right column: title + controls */}
+      <div className="flex flex-1 flex-col justify-between px-4 py-2 min-w-0">
+        {/* Title + close */}
+        <div className="flex items-center justify-between gap-2">
+          {showPageUrl ? (
+            <Link
+              href={showPageUrl}
+              className="text-small text-white truncate hover:underline"
+            >
+              {title ?? ""}
+            </Link>
           ) : (
-            <Play />
+            <span className="text-small text-white truncate">
+              {title ?? ""}
+            </span>
           )}
-        </button>
+          <button
+            onClick={showUrlClear}
+            aria-label="Close player"
+            className="flex-shrink-0 text-white/60 hover:text-white transition-colors"
+          >
+            <AiOutlineClose className="h-4 w-4" />
+          </button>
+        </div>
 
-        {/* Scrubber */}
-        <Slider.Root
-          className="relative flex flex-1 items-center cursor-pointer h-8"
-          min={0}
-          max={100}
-          step={0.1}
-          value={[progress]}
-          onValueChange={handleSliderChange}
-          disabled={!duration || !!error}
-          aria-label="Seek"
-        >
-          <Slider.Track className="relative w-full h-px bg-white/25">
-            <Slider.Range className="absolute h-full bg-white" />
-          </Slider.Track>
-          <Slider.Thumb className="block h-3 w-3 rounded-full bg-white focus:outline-none" />
-        </Slider.Root>
+        {/* Controls */}
+        <div className="flex items-center gap-3">
+          {/* Play / Pause */}
+          <button
+            className="h-6 w-6 flex-shrink-0"
+            onClick={togglePlay}
+            disabled={loading || !!error}
+            aria-label={playing ? "Pause" : "Play"}
+          >
+            {loading || buffering ? (
+              <AiOutlineLoading3Quarters className="h-full w-full animate-spin text-white" />
+            ) : playing ? (
+              <Pause />
+            ) : (
+              <Play />
+            )}
+          </button>
 
-        {/* Time */}
-        <span className="text-white text-small tabular-nums flex-shrink-0">
-          {error ? "Failed to load" : formatTime(currentTime)}
-        </span>
+          {/* Scrubber */}
+          <Slider.Root
+            className="relative flex flex-1 items-center cursor-pointer h-8 touch-none"
+            min={0}
+            max={100}
+            step={0.1}
+            value={[progress]}
+            onValueChange={handleSliderChange}
+            disabled={!duration || !!error}
+            aria-label="Seek"
+          >
+            <Slider.Track className="relative w-full h-px bg-white/25">
+              <Slider.Range className="absolute h-full bg-white" />
+            </Slider.Track>
+            <Slider.Thumb className="block h-4 w-4 rounded-full bg-white focus:outline-none" />
+          </Slider.Root>
 
-        {/* SoundCloud link */}
-        <a
-          href={url}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Open on SoundCloud"
-          className="flex-shrink-0 text-white/60 hover:text-white transition-colors"
-        >
-          <Soundcloud />
-        </a>
+          {/* Time */}
+          <span className="text-white text-small tabular-nums flex-shrink-0">
+            {error ? "Failed to load" : formatTime(currentTime)}
+          </span>
+
+          {/* SoundCloud link */}
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Open on SoundCloud"
+            className="flex-shrink-0 text-white/60 hover:text-white transition-colors"
+          >
+            <Soundcloud />
+          </a>
+        </div>
       </div>
     </div>
   );

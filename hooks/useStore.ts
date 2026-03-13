@@ -23,6 +23,7 @@ interface GlobalStore {
     showPageUrl?: string,
     showTitle?: string
   ) => void;
+  showUrlClear: () => void;
 }
 
 export const useGlobalStore = create<GlobalStore>()((set) => ({
@@ -40,6 +41,14 @@ export const useGlobalStore = create<GlobalStore>()((set) => ({
       showTitle,
       showImage,
       showPageUrl,
+    }),
+  showUrlClear: () =>
+    set({
+      activePlayer: undefined,
+      showUrl: undefined,
+      showTitle: undefined,
+      showImage: undefined,
+      showPageUrl: undefined,
     }),
 }));
 
