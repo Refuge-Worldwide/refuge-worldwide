@@ -1,20 +1,20 @@
 import { stripe } from "@/lib/stripe/config";
 import { createClient } from "@supabase/supabase-js";
 import Stripe from "stripe";
-import type { Database, Tables, TablesInsert } from "types_db";
-
-type Product = Tables<"products">;
-type Price = Tables<"prices">;
-
-// Change to control trial period length
-const TRIAL_PERIOD_DAYS = 0;
+import type { Database, TablesInsert } from "@/types/supabase";
 
 // Note: supabaseAdmin uses the SERVICE_ROLE_KEY which you must only use in a secure server-side context
 // as it has admin privileges and overwrites RLS policies!
-const supabaseAdmin = createClient<Database>(
+export const supabaseAdmin = createClient<Database>(
   process.env.NEXT_PUBLIC_SUPABASE_URL || "",
-  process.env.SUPABASE_SERVICE_ROLE_KEY || ""
+  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_KEY || ""
 );
+
+const toDateTime = (secs: number) => {
+  const t = new Date("1970-01-01T00:30:00Z");
+  t.setSeconds(secs);
+  return t;
+};
 
 const upsertCustomerToSupabase = async (uuid: string, customerId: string) => {
   const { error: upsertError } = await supabaseAdmin
@@ -37,7 +37,7 @@ const createCustomerInStripe = async (uuid: string, email: string) => {
   return newCustomer.id;
 };
 
-const createOrRetrieveCustomer = async ({
+export const createOrRetrieveCustomer = async ({
   email,
   uuid,
 }: {
@@ -92,14 +92,12 @@ const createOrRetrieveCustomer = async ({
         `Supabase customer record mismatched Stripe ID. Supabase record updated.`
       );
     }
-    // If Supabase has a record and matches Stripe, return Stripe customer ID
     return stripeCustomerId;
   } else {
     console.warn(
       `Supabase customer record was missing. A new record was created.`
     );
 
-    // If Supabase has no record, create a new record and return Stripe customer ID
     const upsertedStripeCustomer = await upsertCustomerToSupabase(
       uuid,
       stripeIdToInsert
@@ -111,31 +109,7 @@ const createOrRetrieveCustomer = async ({
   }
 };
 
-/**
- * Copies the billing details from the payment method to the customer object.
- */
-const copyBillingDetailsToCustomer = async (
-  uuid: string,
-  payment_method: Stripe.PaymentMethod
-) => {
-  //Todo: check this assertion
-  const customer = payment_method.customer as string;
-  const { name, phone, address } = payment_method.billing_details;
-  if (!name || !phone || !address) return;
-  //@ts-ignore
-  await stripe.customers.update(customer, { name, phone, address });
-  const { error: updateError } = await supabaseAdmin
-    .from("users")
-    .update({
-      billing_address: { ...address },
-      payment_method: { ...payment_method[payment_method.type] },
-    })
-    .eq("id", uuid);
-  if (updateError)
-    throw new Error(`Customer update failed: ${updateError.message}`);
-};
-
-const manageSubscriptionStatusChange = async (
+export const manageSubscriptionStatusChange = async (
   subscriptionId: string,
   customerId: string,
   createAction = false
@@ -152,19 +126,16 @@ const manageSubscriptionStatusChange = async (
 
   const { id: uuid } = customerData!;
 
-  const subscription = await stripe.subscriptions.retrieve(subscriptionId, {
-    expand: ["default_payment_method"],
-  });
-  // Upsert the latest status of the subscription object.
+  // Cast to any to access fields that exist at runtime but may not be in the
+  // TypeScript types for the current Stripe SDK / API version
+  const subscription = (await stripe.subscriptions.retrieve(
+    subscriptionId
+  )) as any;
+
   const subscriptionData: TablesInsert<"subscriptions"> = {
     id: subscription.id,
     user_id: uuid,
-    metadata: subscription.metadata,
     status: subscription.status,
-    price_id: subscription.items.data[0].price.id,
-    //TODO check quantity on subscription
-    // @ts-ignore
-    quantity: subscription.quantity,
     cancel_at_period_end: subscription.cancel_at_period_end,
     cancel_at: subscription.cancel_at
       ? toDateTime(subscription.cancel_at).toISOString()
@@ -182,12 +153,6 @@ const manageSubscriptionStatusChange = async (
     ended_at: subscription.ended_at
       ? toDateTime(subscription.ended_at).toISOString()
       : null,
-    trial_start: subscription.trial_start
-      ? toDateTime(subscription.trial_start).toISOString()
-      : null,
-    trial_end: subscription.trial_end
-      ? toDateTime(subscription.trial_end).toISOString()
-      : null,
   };
 
   const { error: upsertError } = await supabaseAdmin
@@ -200,15 +165,4 @@ const manageSubscriptionStatusChange = async (
   console.log(
     `Inserted/updated subscription [${subscription.id}] for user [${uuid}]`
   );
-
-  // For a new subscription copy the billing details to the customer object.
-  // NOTE: This is a costly operation and should happen at the very end.
-  if (createAction && subscription.default_payment_method && uuid)
-    //@ts-ignore
-    await copyBillingDetailsToCustomer(
-      uuid,
-      subscription.default_payment_method as Stripe.PaymentMethod
-    );
 };
-
-export { createOrRetrieveCustomer, manageSubscriptionStatusChange };

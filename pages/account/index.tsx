@@ -4,6 +4,7 @@ import Layout from "../../components/layout";
 import PageMeta from "../../components/seo/page";
 import Link from "next/link";
 import Image from "next/image";
+import { useState } from "react";
 
 type AccountPageProps = {
   user: { id: string; email: string };
@@ -18,6 +19,7 @@ export default function AccountPage({
 }: AccountPageProps) {
   const isPaidSupporter =
     subscription?.status === "active" || subscription?.status === "past_due";
+  const [isPortalLoading, setIsPortalLoading] = useState(false);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -27,9 +29,25 @@ export default function AccountPage({
     });
   };
 
-  const menuItems = [
+  async function handleManageSubscription() {
+    setIsPortalLoading(true);
+    try {
+      const res = await fetch("/api/stripe/portal", { method: "POST" });
+      const data = await res.json();
+      if (data.url) {
+        window.open(data.url, "_blank", "noopener,noreferrer");
+      } else {
+        alert(data.error || "Failed to open billing portal");
+      }
+    } catch {
+      alert("Failed to open billing portal");
+    } finally {
+      setIsPortalLoading(false);
+    }
+  }
+
+  const linkItems = [
     { label: "Favorite Shows", href: "/account/likes" },
-    { label: "Manage Subscription", href: "/account/billing" },
     { label: "Account Settings", href: "/account/settings" },
     { label: "Help", href: "/support" },
   ];
@@ -81,7 +99,7 @@ export default function AccountPage({
 
           {/* Menu Items */}
           <div className="space-y-3">
-            {menuItems.map((item) => (
+            {linkItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
@@ -90,6 +108,24 @@ export default function AccountPage({
                 {item.label}
               </Link>
             ))}
+
+            {isPaidSupporter ? (
+              <button
+                onClick={handleManageSubscription}
+                disabled={isPortalLoading}
+                title="Opens in a new tab"
+                className="w-full bg-white border-2 border-black rounded-full py-4 px-6 text-center text-small font-medium hover:bg-grey transition-colors disabled:opacity-50"
+              >
+                {isPortalLoading ? "Loading..." : "Manage Subscription ↗"}
+              </button>
+            ) : (
+              <Link
+                href="/supporters"
+                className="block w-full bg-white border-2 border-black rounded-full py-4 px-6 text-center text-small font-medium hover:bg-grey transition-colors"
+              >
+                Become a Supporter
+              </Link>
+            )}
 
             {/* Sign Out Button */}
             <form action="/api/auth/signout" method="POST">
