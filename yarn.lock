@@ -2088,6 +2088,13 @@
   resolved "https://registry.yarnpkg.com/@stitches/react/-/react-1.2.8.tgz#954f8008be8d9c65c4e58efa0937f32388ce3a38"
   integrity sha512-9g9dWI4gsSVe8bNLlb+lMkBYsnIKCZTmvqvDG+Avnn69XfmHZKiaMrx7cgTaddq7aTPPmXiTsbFcUy0xgI4+wA==
 
+"@stripe/react-stripe-js@^5.6.1":
+  version "5.6.1"
+  resolved "https://registry.yarnpkg.com/@stripe/react-stripe-js/-/react-stripe-js-5.6.1.tgz#e6f6989651ce65b39bf59ac0b5a2cea459ec3070"
+  integrity sha512-5xBrjkGmFvKvpMod6VvpOaFaa67eRbmieKeFTePZyOr/sUXzm7A3YY91l330pS0usUst5PxTZDUZHWfOc0v1GA==
+  dependencies:
+    prop-types "^15.7.2"
+
 "@stripe/stripe-js@^8.9.0":
   version "8.9.0"
   resolved "https://registry.yarnpkg.com/@stripe/stripe-js/-/stripe-js-8.9.0.tgz#44e441c7f19555fdf627675a8190ab8024d2890e"
