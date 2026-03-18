@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { supabase } from "../../../lib/supabase/client";
 
 const SYSTEM_USERNAME = "Refuge Worldwide";
+const SYSTEM_USER_ID = "cldf0werf0000l2o1xg5i9y";
 
 export default async function handler(
   req: NextApiRequest,
@@ -57,7 +58,7 @@ export default async function handler(
     const { data: lastSystem, error: fetchError } = await supabase
       .from("chat")
       .select("message")
-      .is("user_id", null)
+      .is("user_id", SYSTEM_USER_ID)
       .eq("username", SYSTEM_USERNAME)
       .order("created_at", { ascending: false })
       .limit(1)
@@ -83,7 +84,7 @@ export default async function handler(
 
     // Insert system message with show title and artwork
     const { error: insertError } = await supabase.from("chat").insert({
-      user_id: null,
+      user_id: SYSTEM_USER_ID,
       username: SYSTEM_USERNAME,
       message: title,
       image: artwork ?? null,
@@ -91,13 +92,11 @@ export default async function handler(
 
     if (insertError) {
       console.error("[chat-show-announce] insert error:", insertError);
-      return res
-        .status(500)
-        .json({
-          success: false,
-          error: insertError.message,
-          details: insertError.details,
-        });
+      return res.status(500).json({
+        success: false,
+        error: insertError.message,
+        details: insertError.details,
+      });
     }
 
     console.log("[chat-show-announce] inserted:", title);
