@@ -7,8 +7,8 @@ import Image from "next/image";
 import { useState } from "react";
 
 type AccountPageProps = {
-  user: { id: string; email: string };
-  profile: { username: string; created_at: string } | null;
+  user: { id: string; email: string; created_at: string };
+  profile: { username: string } | null;
   subscription: { status: string; current_period_end: string } | null;
 };
 
@@ -59,16 +59,16 @@ export default function AccountPage({
       <div className="min-h-[75vh] bg-blue p-4 sm:p-8">
         <div className="max-w-md mx-auto">
           {/* Profile Card */}
-          <div className="bg-pink rounded-3xl p-6 sm:p-8 mb-6">
-            <h1 className="font-serif text-large text-center mb-6">
-              {profile?.username || "Supporter"}
+          <div className="bg-black text-white rounded-xl p-4 mb-6">
+            <h1 className="font-sans text-default font-medium text-center mb-6">
+              {profile?.username || user.email}
             </h1>
 
             {/* Refuge Logo */}
             <div className="flex justify-center mb-6">
               <div className="w-20 h-20 relative">
                 <Image
-                  src="/images/navigation-smile.svg"
+                  src="/images/footer-smile.svg"
                   alt="Refuge Worldwide"
                   fill
                   className="object-contain"
@@ -77,22 +77,16 @@ export default function AccountPage({
             </div>
 
             {/* Info Grid */}
-            <div className="grid grid-cols-2 gap-4 text-small">
-              <div>
-                <p className="font-medium">Joined:</p>
+            <div className="flex flex-col text-small">
+              <div className="flex justify-between">
+                <span className="font-medium">Joined:</span>
+                <span>{formatDate(user.created_at)}</span>
               </div>
-              <div>
-                <p>
-                  {profile?.created_at ? formatDate(profile.created_at) : "—"}
-                </p>
-              </div>
-              <div>
-                <p className="font-medium">Subscription:</p>
-              </div>
-              <div>
-                <p className="capitalize">
+              <div className="flex justify-between">
+                <span className="font-medium">Subscription:</span>
+                <span className="capitalize">
                   {isPaidSupporter ? subscription?.status : "Free"}
-                </p>
+                </span>
               </div>
             </div>
           </div>
@@ -103,7 +97,7 @@ export default function AccountPage({
               <Link
                 key={item.href}
                 href={item.href}
-                className="block w-full bg-white border-2 border-black rounded-full py-4 px-6 text-center text-small font-medium hover:bg-grey transition-colors"
+                className="block w-full border-2 border-black rounded-full py-4 px-6 text-center text-small font-medium hover:bg-black hover:text-white transition-colors"
               >
                 {item.label}
               </Link>
@@ -114,14 +108,14 @@ export default function AccountPage({
                 onClick={handleManageSubscription}
                 disabled={isPortalLoading}
                 title="Opens in a new tab"
-                className="w-full bg-white border-2 border-black rounded-full py-4 px-6 text-center text-small font-medium hover:bg-grey transition-colors disabled:opacity-50"
+                className="w-full border-2 border-black rounded-full py-4 px-6 text-center text-small font-medium hover:bg-black hover:text-white transition-colors disabled:opacity-50"
               >
                 {isPortalLoading ? "Loading..." : "Manage Subscription ↗"}
               </button>
             ) : (
               <Link
                 href="/supporters"
-                className="block w-full bg-white border-2 border-black rounded-full py-4 px-6 text-center text-small font-medium hover:bg-grey transition-colors"
+                className="block w-full  border-2 border-black rounded-full py-4 px-6 text-center text-small font-medium hover:bg-black hover:text-white transition-colors"
               >
                 Become a Supporter
               </Link>
@@ -131,7 +125,7 @@ export default function AccountPage({
             <form action="/api/auth/signout" method="POST">
               <button
                 type="submit"
-                className="w-full bg-white border-2 border-black rounded-full py-4 px-6 text-center text-small font-medium hover:bg-grey transition-colors"
+                className="w-full  border-2 border-black rounded-full py-4 px-6 text-center text-small font-medium hover:bg-black hover:text-white transition-colors"
               >
                 Sign Out
               </button>
@@ -162,7 +156,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   // Get profile
   const { data: profile } = await supabase
     .from("profiles")
-    .select("username, created_at")
+    .select("username")
     .eq("id", user.id)
     .single();
 
@@ -176,7 +170,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   return {
     props: {
-      user: { id: user.id, email: user.email },
+      user: { id: user.id, email: user.email, created_at: user.created_at },
       profile,
       subscription,
     },
