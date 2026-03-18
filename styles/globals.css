@@ -265,6 +265,28 @@
   @apply bg-black;
 }
 
+/* chat scrollbar */
+.chat-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.chat-scrollbar::-webkit-scrollbar-track {
+  @apply bg-black;
+}
+
+.chat-scrollbar {
+  scrollbar-color: white black;
+  scrollbar-width: thin;
+}
+
+.chat-scrollbar::-webkit-scrollbar-thumb {
+  @apply bg-white;
+}
+
+.chat-scrollbar::-webkit-scrollbar-thumb:hover {
+  @apply bg-white;
+}
+
 /* splide carousel */
 
 /* pagination dots */
