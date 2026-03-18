@@ -1,15 +1,24 @@
-import { useRef } from "react";
+import { useState } from "react";
+import { createPagesBrowserClient } from "@supabase/auth-helpers-nextjs";
+import { SessionContextProvider } from "@supabase/auth-helpers-react";
 import PageMeta from "../components/seo/page";
-import DiscordEmbed from "../components/DiscordEmbed";
-import { DISCORD_INVITE_URL } from "../constants";
+import ChatRoom from "../components/chatRoom";
 import LivePlayer from "../components/livePlayer";
-import { BsDiscord } from "react-icons/bs";
 import Head from "next/head";
+
 export default function ChatPage() {
-  const ref = useRef<HTMLDivElement>();
+  const [supabaseClient] = useState(() => createPagesBrowserClient());
 
   return (
-    <div ref={ref} className="flex flex-col bg-[#36393E] h-screen">
+    <SessionContextProvider supabaseClient={supabaseClient}>
+      <ChatPageContent />
+    </SessionContextProvider>
+  );
+}
+
+function ChatPageContent() {
+  return (
+    <div className="flex flex-col bg-black h-screen overflow-hidden">
       <Head>
         <meta
           name="viewport"
@@ -18,23 +27,14 @@ export default function ChatPage() {
       </Head>
       <PageMeta title="Chat | Refuge Worldwide" path="chat/" />
 
-      <LivePlayer />
-      <div className="absolute top-12 sm:top-16 left-0 w-full bg-black text-white h-[50px] px-4 border-b border-white border-t">
-        <div className="flex gap-4 items-center h-full">
-          <span className="leading-6 flex-grow">Chatroom</span>
-          <a
-            href={DISCORD_INVITE_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 bg-[#36393E] py-2 px-4 rounded-full text-small"
-          >
-            <p>Join our Discord</p>
-            <BsDiscord color="white" />
-          </a>
-        </div>
+      <div className="flex-shrink-0">
+        <LivePlayer />
       </div>
-      <div className="w-full h-[calc(100vh-130px)] sm:h-[calc(100vh-55px)] pb-safe">
-        <DiscordEmbed />
+      <div className="flex-shrink-0 bg-black text-white h-[50px] px-4 border-y border-white/20 flex items-center">
+        <span className="leading-6">Chatroom</span>
+      </div>
+      <div className="flex-1 min-h-0 pb-safe">
+        <ChatRoom />
       </div>
     </div>
   );
