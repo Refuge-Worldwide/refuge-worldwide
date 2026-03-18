@@ -475,10 +475,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     .in("status", ["active", "trialing"])
     .maybeSingle();
 
+  if (subscription) {
+    return { redirect: { destination: "/account", permanent: false } };
+  }
+
   return {
     props: {
       user: { id: user.id, email: user.email },
-      hasActiveSubscription: !!subscription,
+      hasActiveSubscription: false,
     },
   };
 }

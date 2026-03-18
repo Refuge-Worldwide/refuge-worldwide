@@ -4,12 +4,11 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { MobileMenu } from "../components/mobileMenu";
 import { INSTAGRAM_URL, SHOP_URL, DISCORD_INVITE_URL } from "../constants";
-import Instagram from "../icons/instagram";
 import { Menu } from "../icons/menu";
 import MessageSquare from "../icons/message-square";
 import Search from "../icons/search";
 import NavigationLink from "./navigationLink";
-import { AiTwotoneCalendar } from "react-icons/ai";
+import { AiOutlineUser } from "react-icons/ai";
 import { createClient } from "@/lib/supabase/component";
 
 export default function Navigation() {
@@ -154,19 +153,9 @@ export default function Navigation() {
                       </a>
                     </li>
                     <li>
-                      {user ? (
-                        <Link href="/admin/calendar">
-                          <AiTwotoneCalendar />
-                        </Link>
-                      ) : (
-                        <a
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          href={INSTAGRAM_URL}
-                        >
-                          <Instagram />
-                        </a>
-                      )}
+                      <Link href={user ? "/account" : "/signin"}>
+                        <AiOutlineUser size={24} />
+                      </Link>
                     </li>
                   </ul>
                 </li>
