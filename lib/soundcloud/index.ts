@@ -95,7 +95,7 @@ export const getStreams = async (
 };
 
 export const selectStreamUrl = (streams: Record<string, string>): string => {
-  const preferred = ["hls_aac_160_url", "hls_aac_96_url"];
+  const preferred = ["hls_aac_160_url", "hls_aac_96_url", "hls_mp3_128_url"];
 
   for (const key of preferred) {
     if (streams[key]) return streams[key];

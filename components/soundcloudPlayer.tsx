@@ -97,7 +97,7 @@ export default function SoundCloudPlayer({
     if (!data?.streamUrl || !audioRef.current) return;
     const audio = audioRef.current;
 
-    if (Hls.isSupported()) {
+    if (data.streamUrl.includes(".m3u8") && Hls.isSupported()) {
       const hls = new Hls();
       hls.loadSource(data.streamUrl);
       hls.attachMedia(audio);
@@ -106,7 +106,7 @@ export default function SoundCloudPlayer({
       });
       return () => hls.destroy();
     } else {
-      // Safari — native HLS support
+      // Progressive MP3, or Safari with native HLS support
       audio.src = data.streamUrl;
       audio.play().catch(console.error);
     }
