@@ -168,7 +168,7 @@ export const parseGenres = (genresCollection: { items: GenreInterface[] }) =>
 export const uniq = <T>(arr: T[]) => Array.from(new Set(arr));
 
 export const transformForDropdown = (array) => {
-  return array.map((item) => ({
+  return array.filter(Boolean).map((item) => ({
     value: item.sys.id,
     label: item.name,
     // to do: remove sys and name from spread to reduce size of object
