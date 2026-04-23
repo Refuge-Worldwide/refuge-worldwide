@@ -40,40 +40,6 @@ export const formatArtistsForContenful = (
   }
 };
 
-export const uploadImage = async (name, image) => {
-  const accesstoken = process.env.CONTENTFUL_MANAGEMENT_ACCESS_TOKEN;
-  const spaceId = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID;
-  const client = createClient({
-    accessToken: accesstoken,
-  });
-  const environmentId = process.env.NEXT_PUBLIC_CONTENTFUL_ENVIRONMENT_ID;
-
-  try {
-    const space = await client.getSpace(spaceId);
-    const environment = await space.getEnvironment(environmentId);
-    let asset = await environment.createAsset({
-      fields: {
-        title: {
-          "en-US": name,
-        },
-        file: {
-          "en-US": {
-            contentType: image.type,
-            fileName: image.filename,
-            upload: image.url,
-          },
-        },
-      },
-    });
-    const processedAsset = await asset.processForAllLocales();
-    await processedAsset.publish();
-    return processedAsset.sys.id;
-  } catch (err) {
-    console.log(err);
-    throw err;
-  }
-};
-
 export const updateArtwork = async (id, artworkId) => {
   const accesstoken = process.env.CONTENTFUL_MANAGEMENT_ACCESS_TOKEN;
   const spaceId = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID;

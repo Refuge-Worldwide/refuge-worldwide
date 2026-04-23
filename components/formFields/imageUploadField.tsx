@@ -98,12 +98,20 @@ export default function ImageUploadField({
   };
 
   const _reorderDeleteHandler = (files) => {
-    console.log(files);
     const processed = files.map((file) => {
+      let uploadData;
+      try {
+        uploadData = JSON.parse(file.serverId);
+      } catch (e) {
+        uploadData = { url: file.serverId };
+      }
+      let url = uploadData.url ?? file.serverId;
+      if (url?.startsWith("//")) url = `https:${url}`;
       return {
+        id: uploadData.id,
         filename: file.filename,
         type: file.fileType,
-        url: file.serverId,
+        url,
       };
     });
     setFieldValue(props.name, processed);

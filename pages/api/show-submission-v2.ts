@@ -12,7 +12,6 @@ import {
 import { getShowById } from "../../lib/contentful/pages/submission";
 import { sendSlackMessage } from "../../lib/slack";
 import { showArtworkURL } from "../../util";
-import { uploadImage } from "../../lib/contentful/management";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -86,13 +85,9 @@ const appendToSpreadsheet = async (values) => {
 
 const addArtist = async (artist) => {
   try {
-    // Use existing asset ID if available, otherwise upload
-    let imageId;
-    if (artist.image.id) {
-      imageId = artist.image.id;
-    } else {
-      imageId = await uploadImage(artist.name, artist.image);
-    }
+    if (!artist.image.id)
+      throw new Error(`Missing asset ID for artist image: ${artist.name}`);
+    let imageId = artist.image.id;
 
     const content = await richTextFromMarkdown(artist.bio);
     const space = await client.getSpace(spaceId);
@@ -225,16 +220,11 @@ const updateShow = async (values) => {
       for (const image of values.image.slice(1)) {
         let assetId;
 
-        // Check if we already have an asset ID (from FilePond upload)
-        if (image.id) {
-          assetId = image.id;
-        } else {
-          // Fallback: upload the image if no ID exists (backward compatibility)
-          assetId = await uploadImage(
-            `${values.showName} - additional image`,
-            image
+        if (!image.id)
+          throw new Error(
+            `Missing asset ID for additional image on show: ${values.showName}`
           );
-        }
+        assetId = image.id;
 
         additionalMediaImages.push({
           sys: {
@@ -419,13 +409,11 @@ export default async function handler(
       console.log("UPDATING");
       console.log(dayjs().utcOffset());
       try {
-        // Use existing asset ID if available, otherwise upload
-        if (values.image[0].id) {
-          values.imageId = values.image[0].id;
-        } else {
-          // Fallback: upload the image if no ID exists (backward compatibility)
-          values.imageId = await uploadImage(values.showName, values.image[0]);
-        }
+        if (!values.image[0].id)
+          throw new Error(
+            `Missing asset ID for show image: ${values.showName}`
+          );
+        values.imageId = values.image[0].id;
 
         if (values.hasExtraArtists) {
           for (const artist of values.extraArtists) {
@@ -447,12 +435,11 @@ export default async function handler(
         if (values.artistsAdditionalInfo) {
           for (const artist of values.artistsAdditionalInfo) {
             if (artist.image) {
-              // Use existing asset ID if available, otherwise upload
-              if (artist.image.id) {
-                artist.imageId = artist.image.id;
-              } else {
-                artist.imageId = await uploadImage(artist.name, artist.image);
-              }
+              if (!artist.image.id)
+                throw new Error(
+                  `Missing asset ID for artist image: ${artist.name}`
+                );
+              artist.imageId = artist.image.id;
             }
             await updateArtist(artist);
           }
