@@ -120,7 +120,7 @@ export default function Footer() {
               className="underline"
               target="_blank"
               rel="noopener noreferrer"
-              href="https://reiner.design"
+              href="https://reiner.systems"
             >
               mirshko
             </a>
