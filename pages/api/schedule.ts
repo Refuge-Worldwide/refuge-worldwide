@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { assertError } from "ts-extras";
 import { getScheduleData } from "../../lib/contentful/schedule";
+import { client } from "../../lib/contentful/client";
 import { placeholderImage } from "../../util";
 
 type RadioCo = {
@@ -51,6 +52,8 @@ export default async function handler(
       throw new Error(error.message);
     }
 
+    let ch2Artwork = placeholderImage.url;
+
     try {
       const ch2 = await fetch(
         "https://public.radio.co/stations/s8ce53d687/status"
@@ -58,6 +61,16 @@ export default async function handler(
       radioCoDataCh2 = await ch2.json();
     } catch (error) {
       console.log("error loading channel 2: " + error.message);
+    }
+
+    if (radioCoDataCh2?.status === "online") {
+      try {
+        const ch2Entry = await client.getEntry("4YKAkm3ifdmBGi7K1GFZSe");
+        const image = (ch2Entry.fields.image as any)?.fields?.file?.url;
+        if (image) ch2Artwork = image;
+      } catch (error) {
+        console.log("error loading ch2 image: " + error.message);
+      }
     }
 
     const liveNowContentful = data.schedule.find((show) => {
@@ -98,6 +111,7 @@ export default async function handler(
       ch2: {
         status: radioCoDataCh2?.status,
         liveNow: radioCoDataCh2?.current_track?.title,
+        artwork: ch2Artwork,
       },
     };
 
