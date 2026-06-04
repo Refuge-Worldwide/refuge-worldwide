@@ -16,6 +16,7 @@ type Schedule = {
   ch2: {
     status: "online" | "offline";
     liveNow: string;
+    artwork: string;
   };
 };
 
