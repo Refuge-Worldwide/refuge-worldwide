@@ -10,7 +10,7 @@ export default function SinglePage({
   backPath,
   objectPosition = "center",
 }: {
-  coverImage: CoverImage;
+  coverImage?: CoverImage;
   children: ReactNode;
   backPath?: string;
   objectPosition?: CoverImagePosition;
@@ -23,21 +23,23 @@ export default function SinglePage({
         </div>
       )}
 
-      <div className="relative h-72 sm:h-96 md:h-112 lg:h-cover-image -z-10">
-        <Image
-          alt={coverImage.description ? coverImage.description : ""}
-          className="select-none object-cover bg-black/10"
-          draggable={false}
-          key={coverImage.sys.id}
-          loader={loaders.contentful}
-          priority
-          src={coverImage.url}
-          style={{ objectPosition: objectPosition }}
-          fill
-        />
-      </div>
+      {coverImage && (
+        <div className="relative h-72 sm:h-96 md:h-112 lg:h-cover-image -z-10">
+          <Image
+            alt={coverImage.description ? coverImage.description : ""}
+            className="select-none object-cover bg-black/10"
+            draggable={false}
+            key={coverImage.sys.id}
+            loader={loaders.contentful}
+            priority
+            src={coverImage.url}
+            style={{ objectPosition: objectPosition }}
+            fill
+          />
+        </div>
+      )}
 
-      <div className="lg:-mt-24">{children}</div>
+      <div className={coverImage ? "lg:-mt-24" : ""}>{children}</div>
     </div>
   );
 }

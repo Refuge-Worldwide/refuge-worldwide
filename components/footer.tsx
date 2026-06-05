@@ -106,6 +106,10 @@ export default function Footer() {
             <Link className="underline" href="/imprint">
               Imprint
             </Link>
+            .{" "}
+            <Link className="underline" href="/privacy-policy">
+              Privacy Policy
+            </Link>
             . Designed by{" "}
             <a
               className="underline"
@@ -137,22 +141,11 @@ export default function Footer() {
             Powered by{" "}
             <a
               target="_blank"
-              rel="noopener noreferrer"
-              href="https://vercel.com/?utm_source=refugeworldwide&utm_campaign=oss"
-            >
-              <img
-                className="inline h-3 w-auto"
-                src="/vercel-logotype-light.svg"
-                alt="Vercel"
-              />
-            </a>
-            <a
-              target="_blank"
               rel="nofollow"
               href="https://www.contentful.com/"
             >
               <img
-                className="inline h-4 w-auto ml-1"
+                className="inline h-4 w-auto"
                 src="/contentful-logo.svg"
                 alt="Powered by Contentful"
               />
