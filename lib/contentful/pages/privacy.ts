@@ -5,7 +5,7 @@ import { extractPage } from "../../../util";
 export async function getPrivacyPage(preview: boolean) {
   const PrivacyPageQuery = /* GraphQL */ `
     query PrivacyPageQuery($preview: Boolean) {
-      pageAbout(id: "5z5ZdCi24uu6FRMYY5l5MI", preview: $preview) {
+      pagePrivacyPolicy(id: "9U21ZsbJHQmsgBTs3LSnB", preview: $preview) {
         coverImage {
           sys {
             id
@@ -43,5 +43,5 @@ export async function getPrivacyPage(preview: boolean) {
     preview,
   });
 
-  return extractPage<AboutPageData>(data, "pageAbout");
+  return extractPage<AboutPageData>(data, "pagePrivacyPolicy");
 }
