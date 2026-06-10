@@ -38,7 +38,7 @@ export default async function handler(
 ) {
   try {
     const { data, duration } = await getScheduleData();
-    let radioCoData: RadioCo;
+    let radioCoData: RadioCo | null = null;
     let radioCoDataCh2: RadioCo;
 
     try {
@@ -52,7 +52,7 @@ export default async function handler(
 
       radioCoData = await r.json();
     } catch (error) {
-      throw new Error(error.message);
+      console.log("error loading channel 1: " + error.message);
     }
 
     let ch2Artwork = placeholderImage.url;
@@ -84,18 +84,19 @@ export default async function handler(
     }
 
     const liveNowTitle = () => {
-      if (radioCoData.current_track.title.includes("!OVERWRITE!")) {
-        return radioCoData.current_track.title.replace("!OVERWRITE!", "");
+      const radioTitle = radioCoData?.current_track?.title ?? "";
+      if (radioTitle.includes("!OVERWRITE!")) {
+        return radioTitle.replace("!OVERWRITE!", "");
       } else if (liveNowContentful) {
         return liveNowContentful.title;
       } else {
-        return radioCoData.current_track.title;
+        return radioTitle;
       }
     };
 
     const scheduleData = {
       ch1: {
-        status: radioCoData.status,
+        status: radioCoData?.status ?? "offline",
         streamUrl: CH1_STREAM_URL,
         liveNow: {
           title: liveNowTitle(),

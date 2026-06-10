@@ -117,6 +117,8 @@ export default function LivePlayer() {
     }
   }, [scheduleData]);
 
+  if (isLoading) return <LivePlayerLoading />;
+
   if (error) {
     return (
       <section className={playerWrapperClassNames}>
