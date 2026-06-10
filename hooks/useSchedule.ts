@@ -3,20 +3,26 @@ import { ScheduleShow } from "../types/shared";
 import { useEffect } from "react";
 
 type Schedule = {
-  status: "online" | "offline";
-  liveNow: {
-    title: string;
-    artwork: string;
-    link?: string;
-    slug?: string;
-    isMixedFeelings?: boolean;
+  ch1: {
+    status: "online" | "offline";
+    streamUrl: string;
+    liveNow: {
+      title: string;
+      artwork: string;
+      link?: string | null;
+      slug?: string | null;
+      isMixedFeelings?: boolean;
+    };
+    nextUp: Array<ScheduleShow>;
+    schedule: Array<ScheduleShow>;
   };
-  nextUp: Array<ScheduleShow>;
-  schedule: Array<ScheduleShow>;
   ch2: {
     status: "online" | "offline";
-    liveNow: string;
-    artwork: string;
+    streamUrl: string;
+    liveNow: {
+      title: string | null;
+      artwork: string;
+    };
   };
 };
 
@@ -32,7 +38,7 @@ async function getSchedule(url: URL) {
 
 export default function useSchedule() {
   const { data, error, isLoading } = useSWR<Schedule, Error>(
-    "/api/schedule",
+    "/api/v2/schedule",
     getSchedule,
     {
       refreshInterval: 60 * 1000,

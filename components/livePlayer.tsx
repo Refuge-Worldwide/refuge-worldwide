@@ -72,7 +72,7 @@ export default function LivePlayer() {
 
   const { scheduleData, isLoading, error } = useSchedule();
 
-  const isOnline = scheduleData?.status === "online";
+  const isOnline = scheduleData?.ch1?.status === "online";
   const ch2IsOnline = scheduleData?.ch2?.status === "online";
 
   const player = useRef<HTMLAudioElement>(null);
@@ -93,18 +93,22 @@ export default function LivePlayer() {
   );
 
   useEffect(() => {
-    if ("mediaSession" in navigator && scheduleData?.liveNow) {
+    if ("mediaSession" in navigator && scheduleData?.ch1?.liveNow) {
       navigator.mediaSession.metadata = new MediaMetadata({
-        title: scheduleData.liveNow.title,
+        title: scheduleData.ch1.liveNow.title,
         artist: "Refuge Worldwide",
         artwork: [
           {
-            src: scheduleData.liveNow.artwork + "?w=384&h=384&fit=fill&f=faces",
+            src:
+              scheduleData.ch1.liveNow.artwork +
+              "?w=384&h=384&fit=fill&f=faces",
             sizes: "384x384",
             type: "image/png",
           },
           {
-            src: scheduleData.liveNow.artwork + "?w=512&h=512&fit=fill&f=faces",
+            src:
+              scheduleData.ch1.liveNow.artwork +
+              "?w=512&h=512&fit=fill&f=faces",
             sizes: "512x512",
             type: "image/png",
           },
@@ -154,18 +158,22 @@ export default function LivePlayer() {
             </>
           )}
 
-          {!isLoading && !error && scheduleData?.liveNow?.title && (
+          {!isLoading && !error && scheduleData?.ch1?.liveNow?.title && (
             <Link
               className="flex-1 truncate mt-0.5 relative"
               href={
-                scheduleData?.liveNow?.link ? scheduleData.liveNow.link : ""
+                scheduleData?.ch1?.liveNow?.link
+                  ? scheduleData.ch1.liveNow.link
+                  : ""
               }
             >
               <Marquee
-                key={scheduleData?.liveNow.title + ch2IsOnline}
+                key={scheduleData?.ch1?.liveNow.title + ch2IsOnline}
                 className="-mr-14"
                 text={
-                  <span className="pr-8">{scheduleData?.liveNow.title}</span>
+                  <span className="pr-8">
+                    {scheduleData?.ch1?.liveNow.title}
+                  </span>
                 }
                 speed={ch2IsOnline ? 0.2 : 0.25}
               />
@@ -234,12 +242,14 @@ export default function LivePlayer() {
               </div>
             </button>
 
-            {!isLoading && !error && scheduleData?.liveNow?.title && (
+            {!isLoading && !error && scheduleData?.ch2?.liveNow?.title && (
               <span className="flex-1 truncate mt-0.5 relative">
                 <Marquee
-                  key={scheduleData?.ch2.liveNow + ch2IsOnline}
+                  key={scheduleData?.ch2.liveNow.title + ch2IsOnline}
                   text={
-                    <span className="pr-8">{scheduleData?.ch2.liveNow}</span>
+                    <span className="pr-8">
+                      {scheduleData?.ch2.liveNow.title}
+                    </span>
                   }
                   speed={0.3}
                 />
@@ -296,11 +306,11 @@ export default function LivePlayer() {
           Your browser does not support the audio element.
         </audio>
       </section>
-      {scheduleData?.liveNow.isMixedFeelings && (
+      {scheduleData?.ch1?.liveNow?.isMixedFeelings && (
         <MixedFeelingsPlayer
           isPlaying={isPlaying == 1}
           onPlay={isPlaying ? pause : play}
-          slug={scheduleData?.liveNow.slug}
+          slug={scheduleData?.ch1?.liveNow?.slug}
         />
       )}
     </>

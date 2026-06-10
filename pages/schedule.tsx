@@ -37,8 +37,8 @@ function Schedule() {
   if (error) return <div>Failed to Load Schedule</div>;
   return (
     <ScheduleByDay
-      schedule={scheduleData.schedule}
-      liveNow={scheduleData.liveNow.title}
+      schedule={scheduleData.ch1.schedule}
+      liveNow={scheduleData.ch1.liveNow.title}
     />
   );
 }
