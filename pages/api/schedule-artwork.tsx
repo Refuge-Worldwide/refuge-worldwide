@@ -50,12 +50,12 @@ async function handle(request: Request) {
   const randomSticker = getRandomSticker();
   const randomPosition = getRandomPosition();
 
-  const response = await fetch(`${BASE_URL}/api/schedule`);
+  const response = await fetch(`${BASE_URL}/api/v2/schedule`);
   const schedule = await response.json();
 
   let todaysSchedule = [];
 
-  schedule.schedule.forEach((show) => {
+  schedule.ch1.schedule.forEach((show) => {
     const date = dayjs(show.date);
     const adjustedDate = date.subtract(5, "hour");
     if (adjustedDate.isSame(dayjs(), "day")) {
