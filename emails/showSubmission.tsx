@@ -84,9 +84,9 @@ export const ShowSubmissionEmail = ({
         <Container>
           <Section style={logo}>
             <Img
-              src={`https://res.cloudinary.com/dqjn26pey/image/upload/v1706278328/Refuge-pichi_mg1jge.jpg`}
-              height={89}
-              width={146}
+              src={`https://refugeworldwide.com/images/refuge-logo.png`}
+              height={80}
+              width={132}
               style={logo}
             />
           </Section>

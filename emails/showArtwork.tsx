@@ -43,9 +43,9 @@ export const ShowArtworkEmail = ({
         <Container>
           <Section style={logo}>
             <Img
-              src={`https://res.cloudinary.com/dqjn26pey/image/upload/v1706278328/Refuge-pichi_mg1jge.jpg`}
-              height={89}
-              width={146}
+              src={`https://refugeworldwide.com/images/refuge-logo.png`}
+              height={80}
+              width={132}
               style={logo}
             />
           </Section>
@@ -126,8 +126,8 @@ export const ShowArtworkEmail = ({
                   <b>MIXER OVERVIEW</b>
                 </Heading>
                 <Img
-                  src={`https://res.cloudinary.com/dqjn26pey/image/upload/v1712756321/DJM_Annotated_v2-pichi-1_fkkw36.jpg`}
-                  height={750}
+                  src={`https://refugeworldwide.com/images/mixer-instructions.jpg`}
+                  height={849}
                   width={600}
                   style={logo}
                 />
@@ -135,18 +135,10 @@ export const ShowArtworkEmail = ({
                   <b>HOW TO USE THE MIC</b>
                 </Heading>
                 <Img
-                  src={`https://res.cloudinary.com/dqjn26pey/image/upload/v1713795088/Refuge-studio-signage-mic-v5-mailer-auto2-pichi_e8psbu.jpg`}
-                  height={537}
+                  src={`https://refugeworldwide.com/images/mic-instructions.jpg`}
+                  height={849}
                   width={600}
                   style={logo}
-                  alt="1. Put your headphones on.
-                  2. Turn the MIXING knob (above the PHONES LEVEL knob) to
-                  MASTER, so you can hear yourself in the headphones.
-                  3. Make sure the MASTER channel's CUE button is on.
-                  4. Switch the mic to ON (light turns solid red).
-                  5. Turn down the channel currently playing music to 3.
-                  6. Speak closely and clearly into the front of the mic.
-                  When you're finished, just reverse the process above!"
                 />
                 <Text style={paragraph}></Text>
                 <Text style={paragraph}>
