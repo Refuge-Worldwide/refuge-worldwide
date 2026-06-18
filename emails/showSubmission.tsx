@@ -85,8 +85,8 @@ export const ShowSubmissionEmail = ({
           <Section style={logo}>
             <Img
               src={`https://refugeworldwide.com/images/refuge-logo.png`}
-              height={80}
-              width={132}
+              height={40}
+              width={66}
               style={logo}
             />
           </Section>
