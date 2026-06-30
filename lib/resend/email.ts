@@ -5,10 +5,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 import { sendSlackMessage } from "../../lib/slack";
 import dayjs from "dayjs";
 
-const replyToEmails = [
-  "leona@refugeworldwide.com",
-  "assistant@refugeworldwide.com",
-];
+const replyToEmails = ["assistant@refugeworldwide.com"];
 
 export async function sendEmail(artist, show, severity) {
   try {
@@ -96,7 +93,7 @@ export async function sendArtworkEmail(artist, date, artwork) {
           : artist.email,
       subject:
         "Your show artwork for " + dayjs(date).format("dddd") + " is now ready",
-      reply_to: ["leona@refugeworldwide.com", "assistant@refugeworldwide.com"],
+      reply_to: ["assistant@refugeworldwide.com"],
       react: ShowArtworkEmail({
         userName: artist.name,
         showDate: date,
