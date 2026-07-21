@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { supabase } from "../../../lib/supabase/client";
+import { createItem, readItems } from "@directus/sdk";
+import { directusServer } from "@/lib/directus/server";
 
 const SYSTEM_USERNAME = "Refuge Worldwide";
-const SYSTEM_USER_ID = "cldf0werf0000l2o1xg5i9y";
 
 export default async function handler(
   req: NextApiRequest,
@@ -54,48 +54,52 @@ export default async function handler(
 
     const { title, artwork } = schedule.liveNow;
 
-    // Check if this show was already announced — use maybeSingle to avoid error when no rows exist
-    const { data: lastSystem, error: fetchError } = await supabase
-      .from("chat")
-      .select("message")
-      .is("user_id", SYSTEM_USER_ID)
-      .eq("username", SYSTEM_USERNAME)
-      .order("created_at", { ascending: false })
-      .limit(1)
-      .maybeSingle();
-
-    if (fetchError) {
+    // Check if this show was already announced
+    let lastMessage: string | undefined;
+    try {
+      const lastSystem = await directusServer.request(
+        readItems("chat", {
+          filter: { username: { _eq: SYSTEM_USERNAME } },
+          sort: ["-date_created"],
+          limit: 1,
+          fields: ["message"],
+        })
+      );
+      lastMessage = lastSystem[0]?.message;
+    } catch (fetchError) {
       console.error(
         "[chat-show-announce] fetch last system message error:",
         fetchError
       );
     }
 
-    console.log(
-      "[chat-show-announce] last system message:",
-      lastSystem?.message
-    );
+    console.log("[chat-show-announce] last system message:", lastMessage);
 
-    if (lastSystem?.message === title) {
+    if (lastMessage === title) {
       return res
         .status(200)
         .json({ success: false, reason: "already announced" });
     }
 
-    // Insert system message with show title and artwork
-    const { error: insertError } = await supabase.from("chat").insert({
-      user_id: SYSTEM_USER_ID,
-      username: SYSTEM_USERNAME,
-      message: title,
-      image: artwork ?? null,
-    });
-
-    if (insertError) {
+    // Insert system message with show title and artwork. No `user` — system
+    // messages are identified purely by username, matching the frontend's
+    // check (msg.username === "Refuge Worldwide").
+    try {
+      await directusServer.request(
+        createItem("chat", {
+          username: SYSTEM_USERNAME,
+          message: title,
+          image: artwork ?? null,
+        })
+      );
+    } catch (insertError) {
       console.error("[chat-show-announce] insert error:", insertError);
       return res.status(500).json({
         success: false,
-        error: insertError.message,
-        details: insertError.details,
+        error:
+          insertError instanceof Error
+            ? insertError.message
+            : String(insertError),
       });
     }
 

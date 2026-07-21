@@ -26,7 +26,11 @@ export default async function handler(
   const buf = await new Promise<Buffer>((resolve, reject) => {
     const chunks: Buffer[] = [];
     req.on("data", (chunk) => chunks.push(Buffer.from(chunk)));
-    req.on("end", () => resolve(Buffer.concat(chunks)));
+    // Same TS 5 generic Uint8Array/Buffer tightening as elsewhere — fine at
+    // runtime, just needs a cast to satisfy the stricter type.
+    req.on("end", () =>
+      resolve(Buffer.concat(chunks as unknown as Uint8Array[]))
+    );
     req.on("error", reject);
   });
   const sig = req.headers["stripe-signature"] as string;

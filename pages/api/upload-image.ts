@@ -27,7 +27,10 @@ const uploadToContentful = async (file: formidable.File) => {
 
     // Step 1: Create an upload using binary data
     const upload = await environment.createUpload({
-      file: fileBuffer,
+      // contentful-management's types predate TS 5's generic Uint8Array/Buffer
+      // tightening; Buffer is fine here at runtime, just not structurally
+      // assignable to ArrayBuffer anymore under the stricter typing.
+      file: fileBuffer as unknown as ArrayBuffer,
     });
 
     // Step 2: Create asset with reference to the upload

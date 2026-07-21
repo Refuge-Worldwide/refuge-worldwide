@@ -1,17 +1,17 @@
 import Image from "next/image";
-import { createPagesBrowserClient } from "@supabase/auth-helpers-nextjs";
-import { useUser } from "@supabase/auth-helpers-react";
+import { readItems } from "@directus/sdk";
 import { FC, useCallback, useEffect, useRef, useState } from "react";
+import { directusBrowser } from "@/lib/directus/browser";
 
 const LS_USERNAME = "rw_chat_username";
 
 interface ChatMessage {
-  id: string;
-  user_id: string | null;
+  id: number;
+  user: string | null;
   username: string;
   message: string;
   image: string | null;
-  created_at: string;
+  date_created: string;
 }
 
 function formatTimestamp(ts: string): string {
@@ -36,9 +36,6 @@ function formatTimestamp(ts: string): string {
 }
 
 const ChatRoom: FC = () => {
-  const [supabase] = useState(() => createPagesBrowserClient());
-  const user = useUser();
-
   const [username, setUsername] = useState<string | null>(null);
   const [nameInput, setNameInput] = useState("");
   const [settingName, setSettingName] = useState(false);
@@ -48,6 +45,7 @@ const ChatRoom: FC = () => {
   const [loadingMessages, setLoadingMessages] = useState(true);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState<string | null>(null);
 
   const listRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -59,33 +57,52 @@ const ChatRoom: FC = () => {
     setReady(true);
   }, []);
 
-  // Load messages and subscribe to realtime updates
+  // Load messages
   useEffect(() => {
-    supabase
-      .from("chat")
-      .select("*")
-      .order("created_at", { ascending: false })
-      .limit(100)
-      .then(({ data }) => {
-        if (data) setMessages((data as ChatMessage[]).reverse());
+    directusBrowser
+      .request(readItems("chat", { sort: ["date_created"], limit: 100 }))
+      .then((data) => {
+        setMessages(data as unknown as ChatMessage[]);
+        setLoadingMessages(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching chat messages:", error);
         setLoadingMessages(false);
       });
+  }, []);
 
-    const channel = supabase
-      .channel("chat_changes")
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "chat" },
-        (payload) => {
-          setMessages((prev) => [...prev, payload.new as ChatMessage]);
+  // Subscribe to realtime updates
+  useEffect(() => {
+    let unsubscribe: (() => void) | undefined;
+    let cancelled = false;
+
+    const listen = async () => {
+      try {
+        const { subscription, unsubscribe: unsub } =
+          await directusBrowser.subscribe("chat", { event: "create" });
+        unsubscribe = unsub;
+
+        for await (const message of subscription) {
+          if (cancelled) break;
+          if (message.event === "create") {
+            setMessages((prev) => [
+              ...prev,
+              ...(message.data as unknown as ChatMessage[]),
+            ]);
+          }
         }
-      )
-      .subscribe();
+      } catch (error) {
+        console.error("Error subscribing to chat:", error);
+      }
+    };
+
+    listen();
 
     return () => {
-      supabase.removeChannel(channel);
+      cancelled = true;
+      unsubscribe?.();
     };
-  }, [supabase]);
+  }, []);
 
   // Scroll to bottom when messages arrive
   useEffect(() => {
@@ -120,16 +137,25 @@ const ChatRoom: FC = () => {
     const text = input.trim().slice(0, 500);
     setInput("");
     setSending(true);
+    setSendError(null);
     try {
-      await supabase.from("chat").insert({
-        user_id: user?.id ?? null,
-        username,
-        message: text,
+      const response = await fetch("/api/chat/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, message: text }),
       });
+
+      if (!response.ok) {
+        const body = await response.json().catch(() => null);
+        setSendError(body?.error ?? "Failed to send message");
+      }
+    } catch (error) {
+      console.error("Error sending message:", error);
+      setSendError("Failed to send message");
     } finally {
       setTimeout(() => setSending(false), 1000);
     }
-  }, [username, input, sending, supabase, user]);
+  }, [username, input, sending]);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
@@ -204,7 +230,7 @@ const ChatRoom: FC = () => {
                     {msg.username}
                   </span>
                   <span className="text-tiny text-white/40 leading-none">
-                    {formatTimestamp(msg.created_at)}
+                    {formatTimestamp(msg.date_created)}
                   </span>
                 </div>
                 <p className="text-tiny mt-1 break-words leading-snug">
@@ -240,6 +266,9 @@ const ChatRoom: FC = () => {
                 Send
               </button>
             </div>
+            {sendError && (
+              <p className="text-tiny text-red-400 px-3 pb-1">{sendError}</p>
+            )}
             <div className="flex items-center justify-end gap-1 px-3 pb-3">
               <span className="text-white text-tiny">
                 Chatting as <strong className="text-white">{username}</strong>
