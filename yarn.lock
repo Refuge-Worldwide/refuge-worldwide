@@ -3381,7 +3381,7 @@ convert-source-map@^1.5.0, convert-source-map@^1.5.1:
   resolved "https://registry.npmjs.org/convert-source-map/-/convert-source-map-1.9.0.tgz"
   integrity "sha1-f6rmI1P7QhM2bQypg1jSLoNosF8= sha512-ASFBup0Mz1uyiIjANan1jzLQami9z1PoYSZCiiYW2FczPbenXc45FZdBZLzOT+r6+iciuEModtmCti+hjaAk0A=="
 
-cookie@^1.0.1:
+cookie@1.0.2, cookie@^1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/cookie/-/cookie-1.0.2.tgz#27360701532116bd3f1f9416929d176afe1e4610"
   integrity sha512-9Kr/j4O16ISv8zBBhJoi4bXOYNTkFLOqSL3UDB0njXxCXNezjeyVrJyGOWtgfs/q2km1gwBcfH8q1yEGoMYunA==

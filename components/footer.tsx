@@ -11,13 +11,17 @@ import Mixcloud from "../icons/mixcloud";
 import Soundcloud from "../icons/soundcloud";
 import Telegram from "../icons/telegram";
 import SignOut from "./signOut";
+import SupportBanner from "./supportBanner";
+import { useDirectusUser } from "../hooks/useDirectusUser";
 
 export default function Footer() {
   const handleGoToTop = () =>
     window?.scroll({ top: 0, left: 0, behavior: "smooth" });
+  const { user, loading } = useDirectusUser();
 
   return (
     <footer className="bg-black text-white">
+      {!loading && !user && <SupportBanner />}
       <div className="px-4 md:px-8 py-10 md:py-20">
         <div className="container md:grid items-center grid-cols-2">
           <div className="mb-6 md:mb-0">

@@ -1,7 +1,7 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { MobileMenu } from "../components/mobileMenu";
 import { INSTAGRAM_URL, SHOP_URL, DISCORD_INVITE_URL } from "../constants";
 import { Menu } from "../icons/menu";
@@ -9,25 +9,18 @@ import MessageSquare from "../icons/message-square";
 import Search from "../icons/search";
 import NavigationLink from "./navigationLink";
 import { AiOutlineUser } from "react-icons/ai";
-import { createClient } from "@/lib/supabase/component";
+import { useDirectusUser } from "../hooks/useDirectusUser";
 
 export default function Navigation() {
   const [isOpen, isOpenSet] = useState(false);
   const onDismiss = () => isOpenSet(false);
-  const supabase = createClient();
-  const [user, setUser] = useState<any>(undefined);
+  const { user } = useDirectusUser();
 
   const openChat = useCallback(() => {
     const chatOptions =
       "width=480,height=520,menubar=no,location=no,resizable=no,scrollbars=no,status=no";
 
     window.open("/chat", "refugechatwindow", chatOptions);
-  }, []);
-
-  useEffect(() => {
-    supabase.auth.getUser().then((user) => {
-      setUser(user.data);
-    });
   }, []);
 
   return (
@@ -119,11 +112,11 @@ export default function Navigation() {
                 </li>
                 <li>
                   <NavigationLink
-                    href="/newsletter"
+                    href="/support"
                     activeClassName="text-pink"
                     className="hover:text-pink focus:text-pink"
                   >
-                    Newsletter
+                    Support
                   </NavigationLink>
                 </li>
                 <li>
@@ -146,11 +139,6 @@ export default function Navigation() {
                       >
                         <Search />
                       </NavigationLink>
-                    </li>
-                    <li className="h-6 leading-none">
-                      <a href="/chat" target="_blank" rel="noopener noreferrer">
-                        <MessageSquare />
-                      </a>
                     </li>
                     <li>
                       <Link href={user ? "/account" : "/signin"}>

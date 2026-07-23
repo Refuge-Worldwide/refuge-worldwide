@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import createClient from "@/lib/supabase/api";
+import { directusUrl, getValidAccessToken } from "@/lib/directus/session";
 import { graphql } from "@/lib/contentful";
 import { placeholderImage } from "@/util";
 
@@ -8,36 +8,32 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method !== "GET") {
+    res.setHeader("Allow", "GET");
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const supabase = createClient(req, res);
-  const {
-    data: { user },
-    error: userError,
-  } = await supabase.auth.getUser();
-
-  if (userError || !user) {
+  const token = await getValidAccessToken(req, res);
+  if (!token) {
     return res.status(401).json({ error: "Unauthorized" });
   }
 
   try {
-    // Get liked show IDs from Supabase
-    const { data: likes, error: likesError } = await supabase
-      .from("showLikes")
-      .select("show_id, created_at")
-      .eq("user_id", user.id)
-      .order("created_at", { ascending: false });
-
-    if (likesError) {
-      throw new Error(likesError.message);
+    // Get liked show IDs from Directus (show_favourites is scoped to the
+    // caller's own rows by the "Refuge App - Own Favourites" policy).
+    const favResponse = await fetch(
+      `${directusUrl}/items/show_favourites?fields=show_id&sort=-date_created&limit=-1`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    if (!favResponse.ok) {
+      throw new Error("Failed to fetch favourites");
     }
+    const { data: favourites } = await favResponse.json();
 
-    if (!likes || likes.length === 0) {
+    if (!favourites || favourites.length === 0) {
       return res.status(200).json({ shows: [] });
     }
 
-    const showIds = likes.map((l) => l.show_id);
+    const showIds = favourites.map((f: { show_id: string }) => f.show_id);
 
     // Fetch show details from Contentful
     const query = /* GraphQL */ `
@@ -67,9 +63,9 @@ export default async function handler(
     const contentfulRes = await graphql(query, { variables: { ids: showIds } });
     const shows = contentfulRes.data.showCollection.items;
 
-    // Preserve the order from likes (most recently liked first)
+    // Preserve the order from favourites (most recently liked first)
     const orderedShows = showIds
-      .map((id) => shows.find((s: any) => s.sys.id === id))
+      .map((id: string) => shows.find((s: any) => s.sys.id === id))
       .filter(Boolean)
       .map((show: any) => ({
         id: show.sys.id,

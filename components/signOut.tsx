@@ -1,20 +1,12 @@
 import { useRouter } from "next/router";
-import { createClient } from "@/lib/supabase/component";
-import { useState, useEffect } from "react";
+import { useDirectusUser } from "@/hooks/useDirectusUser";
 
 export default function SignOut() {
   const router = useRouter();
-  const supabase = createClient();
-  const [user, setUser] = useState<any>(undefined);
-
-  useEffect(() => {
-    supabase.auth.getUser().then((user) => {
-      setUser(user.data);
-    });
-  }, []);
+  const { user } = useDirectusUser();
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut();
+    await fetch("/api/auth/logout", { method: "POST" });
     router.reload();
   };
 
@@ -24,4 +16,6 @@ export default function SignOut() {
         Sign out
       </button>
     );
+
+  return null;
 }

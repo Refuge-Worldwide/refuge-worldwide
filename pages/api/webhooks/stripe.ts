@@ -1,7 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import Stripe from "stripe";
 import { stripe } from "@/lib/stripe/config";
-import { manageSubscriptionStatusChange } from "@/lib/supabase/admin";
+import {
+  syncSupporterSubscription,
+  upsertSupporterFromCheckout,
+} from "@/lib/membership";
 
 export const config = {
   api: {
@@ -10,7 +13,7 @@ export const config = {
 };
 
 const relevantEvents = new Set([
-  "customer.subscription.created",
+  "checkout.session.completed",
   "customer.subscription.updated",
   "customer.subscription.deleted",
 ]);
@@ -42,24 +45,58 @@ export default async function handler(
       return res.status(400).json({ error: "Webhook secret not found." });
     }
     event = stripe.webhooks.constructEvent(buf, sig, webhookSecret);
-    console.log(`Webhook received: ${event.type}`);
+    console.log(`[webhooks/stripe] received ${event.type} (${event.id})`);
   } catch (err: any) {
-    console.error(`Webhook error: ${err.message}`);
+    console.error(
+      `[webhooks/stripe] signature verification failed: ${err.message}`
+    );
     return res.status(400).json({ error: `Webhook Error: ${err.message}` });
   }
 
-  if (relevantEvents.has(event.type)) {
-    try {
+  if (!relevantEvents.has(event.type)) {
+    console.log(
+      `[webhooks/stripe] ignoring ${event.type} — not in relevantEvents`
+    );
+    return res.status(200).json({ received: true });
+  }
+
+  try {
+    if (event.type === "checkout.session.completed") {
+      const session = event.data.object as Stripe.Checkout.Session;
+      const email = session.customer_details?.email;
+      const subscriptionId = session.subscription as string | null;
+
+      if (!email || !subscriptionId) {
+        console.warn(
+          "[webhooks/stripe] checkout.session.completed missing email or subscription",
+          { email, subscriptionId }
+        );
+      } else {
+        console.log(
+          `[webhooks/stripe] checkout.session.completed for ${email}, subscription ${subscriptionId}`
+        );
+        const subscription = await stripe.subscriptions.retrieve(
+          subscriptionId
+        );
+        await upsertSupporterFromCheckout(email, subscription);
+        console.log(
+          `[webhooks/stripe] upsertSupporterFromCheckout completed for ${email}`
+        );
+      }
+    } else {
+      // customer.subscription.updated / .deleted
       const subscription = event.data.object as Stripe.Subscription;
-      await manageSubscriptionStatusChange(
-        subscription.id,
-        subscription.customer as string,
-        event.type === "customer.subscription.created"
+      console.log(
+        `[webhooks/stripe] ${event.type} for customer ${subscription.customer}, status ${subscription.status}`
       );
-    } catch (error) {
-      console.error("Webhook handler error:", error);
-      return res.status(400).json({ error: "Webhook handler failed." });
+      await syncSupporterSubscription(subscription);
+      console.log(
+        `[webhooks/stripe] syncSupporterSubscription completed for customer ${subscription.customer}`
+      );
     }
+  } catch (error) {
+    console.error(`[webhooks/stripe] handler failed for ${event.type}:`, error);
+    return res.status(400).json({ error: "Webhook handler failed." });
   }
 
   return res.status(200).json({ received: true });

@@ -67,6 +67,7 @@
     "contentful": "10.0.0-beta-v10.8",
     "contentful-management": "^10.29.3",
     "contentful-ui-extensions-sdk": "^4.29.3",
+    "cookie": "1.0.2",
     "dayjs": "^1.11.7",
     "dayjs-plugin-utc": "^0.1.2",
     "fathom-client": "^3.5.0",

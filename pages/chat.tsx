@@ -1,22 +1,9 @@
-import { useState } from "react";
-import { createPagesBrowserClient } from "@supabase/auth-helpers-nextjs";
-import { SessionContextProvider } from "@supabase/auth-helpers-react";
 import PageMeta from "../components/seo/page";
 import ChatRoom from "../components/chatRoom";
 import LivePlayer from "../components/livePlayer";
 import Head from "next/head";
 
 export default function ChatPage() {
-  const [supabaseClient] = useState(() => createPagesBrowserClient());
-
-  return (
-    <SessionContextProvider supabaseClient={supabaseClient}>
-      <ChatPageContent />
-    </SessionContextProvider>
-  );
-}
-
-function ChatPageContent() {
   return (
     <div className="flex flex-col bg-black h-screen overflow-hidden">
       <Head>
