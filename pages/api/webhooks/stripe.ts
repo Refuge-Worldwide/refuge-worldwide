@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import Stripe from "stripe";
 import { stripe } from "@/lib/stripe/config";
 import {
+  markPaymentFailed,
   syncSupporterSubscription,
   upsertSupporterFromCheckout,
 } from "@/lib/membership";
@@ -16,6 +17,7 @@ const relevantEvents = new Set([
   "checkout.session.completed",
   "customer.subscription.updated",
   "customer.subscription.deleted",
+  "invoice.payment_failed",
 ]);
 
 export default async function handler(
@@ -61,7 +63,14 @@ export default async function handler(
   }
 
   try {
-    if (event.type === "checkout.session.completed") {
+    if (event.type === "invoice.payment_failed") {
+      const invoice = event.data.object as Stripe.Invoice;
+      const customerId = invoice.customer as string;
+      console.log(
+        `[webhooks/stripe] invoice.payment_failed for customer ${customerId}`
+      );
+      await markPaymentFailed(customerId);
+    } else if (event.type === "checkout.session.completed") {
       const session = event.data.object as Stripe.Checkout.Session;
       const email = session.customer_details?.email;
       const subscriptionId = session.subscription as string | null;

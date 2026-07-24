@@ -18,6 +18,8 @@ type AccountPageProps = {
     subscription_status?: string | null;
     supporter_amount_cents?: number | null;
     supporter_interval?: "month" | "year" | null;
+    // TODO: show a "payment failed" notice.
+    payment_failed_at?: string | null;
   };
 };
 
@@ -214,7 +216,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const user = await getSessionUser(
     context.req,
     context.res,
-    "id,email,first_name,stripe_customer_id,subscription_status,supporter_amount_cents,supporter_interval"
+    "id,email,first_name,stripe_customer_id,subscription_status,supporter_amount_cents,supporter_interval,payment_failed_at"
   );
 
   if (!user) {

@@ -40,7 +40,7 @@ interface SubscriptionFields {
 
 function fieldsFromSubscription(
   subscription: Stripe.Subscription
-): SubscriptionFields {
+): SubscriptionFields & { payment_failed_at?: null } {
   const item = subscription.items.data[0];
   const price = item?.price;
 
@@ -51,6 +51,9 @@ function fieldsFromSubscription(
     supporter_amount_cents: price?.unit_amount ?? null,
     supporter_interval:
       (price?.recurring?.interval as "month" | "year" | undefined) ?? null,
+    // A sync landing here means Stripe reported a subscription state for
+    // this customer, so any earlier payment-failure flag is stale.
+    ...(subscription.status === "active" ? { payment_failed_at: null } : {}),
   };
 }
 
@@ -159,5 +162,28 @@ export async function syncSupporterSubscription(
       user.id,
       fieldsFromSubscription(subscription) as unknown as Record<string, unknown>
     )
+  );
+}
+
+/**
+ * Called on invoice.payment_failed. Stripe itself emails the customer about
+ * the failed charge — this just flags it on their Directus record so it can
+ * be surfaced in the account UI.
+ * TODO: nothing in pages/account currently reads payment_failed_at — surface
+ * a "payment failed" notice in the account section once there's a design for it.
+ */
+export async function markPaymentFailed(customerId: string) {
+  const user = await findUserByStripeCustomerId(customerId);
+  if (!user) {
+    console.warn(
+      `[membership] no Directus user found for Stripe customer ${customerId} (payment_failed)`
+    );
+    return;
+  }
+
+  await directusMembershipAdmin.request(
+    updateUser(user.id, {
+      payment_failed_at: new Date().toISOString(),
+    } as unknown as Record<string, unknown>)
   );
 }
