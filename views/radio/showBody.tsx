@@ -1,4 +1,3 @@
-import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Fragment } from "react";
@@ -8,6 +7,7 @@ import Pill from "../../components/pill";
 import Prose from "../../components/Prose";
 import { useGlobalStore } from "../../hooks/useStore";
 import PlayCircle from "../../icons/playCircle";
+import { RenderRichTextWithImages } from "../../lib/rich-text";
 import { ShowInterface } from "../../types/shared";
 import { parseGenres } from "../../util";
 
@@ -119,7 +119,7 @@ export default function ShowBody({
 
           <div className="h-6" />
 
-          {content && <Prose>{documentToReactComponents(content?.json)}</Prose>}
+          {content && <Prose>{RenderRichTextWithImages(content)}</Prose>}
         </div>
       </section>
     </Fragment>
