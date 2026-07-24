@@ -12,8 +12,10 @@ export default function Workshop({
   workshop,
   preview,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const tallyID = workshop.tallyFormLink.split("/").pop();
-  const tallyEmbed = `https://tally.so/embed/${tallyID}?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1`;
+  const tallyID = workshop.tallyFormLink?.split("/").pop();
+  const tallyEmbed = tallyID
+    ? `https://tally.so/embed/${tallyID}?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1`
+    : null;
   return (
     <Layout preview={preview}>
       <WorkshopMeta {...workshop} />
@@ -31,14 +33,16 @@ export default function Workshop({
             <Prose>{RenderRichTextWithImages(workshop.content)}</Prose>
           </div>
           <div className="mt-16 max-w-[750px] mx-auto">
-            <iframe
-              src={tallyEmbed}
-              width="100%"
-              height="1600"
-              title="Application form"
-              className="mb-24"
-              loading="lazy"
-            ></iframe>
+            {tallyEmbed && (
+              <iframe
+                src={tallyEmbed}
+                width="100%"
+                height="1600"
+                title="Application form"
+                className="mb-24"
+                loading="lazy"
+              ></iframe>
+            )}
 
             {/* Add back in when tally works with router */}
             {/* <Script

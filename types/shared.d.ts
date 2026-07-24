@@ -322,7 +322,7 @@ export interface WorkshopInterface {
   slug: string;
   coverImage?: CoverImage;
   content: Content;
-  tallyFormLink: string;
+  tallyFormLink?: string | null;
 }
 
 export type SubmissionImportantInfo = {
