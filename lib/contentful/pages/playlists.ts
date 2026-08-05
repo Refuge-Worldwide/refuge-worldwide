@@ -1,10 +1,12 @@
 import { graphql } from "..";
 import { PlaylistInterface, PlaylistSchema } from "../../../types/shared";
 import {
-  extractCollection,
   extractCollectionItem,
+  extractPage,
   placeholderImage,
 } from "../../../util";
+
+const PLAYLISTS_PAGE_ID = "66ltrry3HPWOktbkFPI5Ms";
 
 function processPlaylist(playlist: PlaylistInterface): PlaylistSchema {
   return {
@@ -56,44 +58,46 @@ const PlaylistShowFields = /* GraphQL */ `
 
 export async function getPlaylists(take: number, skip: number) {
   const PlaylistsQuery = /* GraphQL */ `
-    query PlaylistsQuery($limit: Int!, $skip: Int!) {
-      playlistCollection(
-        limit: $limit
-        skip: $skip
-        order: sys_firstPublishedAt_DESC
-      ) {
-        items {
-          sys {
-            id
+    query PlaylistsQuery($id: String!, $limit: Int!, $skip: Int!) {
+      pagePlaylists(id: $id) {
+        playlistsCollection(limit: $limit, skip: $skip) {
+          items {
+            sys {
+              id
+            }
+            title
+            slug
+            description {
+              json
+            }
+            image {
+              url
+            }
+            soundcloudLink
           }
-          title
-          slug
-          description {
-            json
-          }
-          image {
-            url
-          }
-          soundcloudLink
         }
       }
     }
   `;
 
   const res = await graphql(PlaylistsQuery, {
-    variables: { limit: take, skip },
+    variables: { id: PLAYLISTS_PAGE_ID, limit: take, skip },
   });
 
-  return extractCollection<PlaylistInterface>(res, "playlistCollection").map(
-    (item) => ({
+  const page = extractPage<{
+    playlistsCollection: { items: Array<PlaylistInterface | null> };
+  }>(res, "pagePlaylists");
+
+  return (page?.playlistsCollection?.items ?? [])
+    .filter((item): item is PlaylistInterface => Boolean(item))
+    .map((item) => ({
       id: item.sys.id,
       title: item.title,
       slug: item.slug,
       description: item.description,
       image: item.image?.url ?? null,
       soundcloudLink: item.soundcloudLink,
-    })
-  );
+    }));
 }
 
 export async function getPlaylistBySlug(slug: string, preview: boolean) {
