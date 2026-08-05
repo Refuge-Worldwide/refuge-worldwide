@@ -12,6 +12,11 @@ import { AiOutlineCalendar } from "react-icons/ai";
 import { useRouter } from "next/router";
 import { Arrow } from "../icons/arrow";
 import MixedFeelingsPlayer from "./mixedFeelingsPlayer";
+import { SupportModal } from "./supportModal";
+
+// Only nudge listeners to support us once every 7 days.
+const SUPPORT_POPUP_KEY = "rw-support-popup-last-shown";
+const SUPPORT_POPUP_INTERVAL_MS = 7 * 24 * 60 * 60 * 1000;
 
 const BroadcastingIndicator = ({
   status,
@@ -84,6 +89,28 @@ export default function LivePlayer() {
     url: CH1,
     urlCh2: CH2,
   });
+
+  const [supportModalOpen, setSupportModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (isPlaying !== 1 && isPlaying !== 2) return;
+
+    let lastShown = 0;
+    try {
+      lastShown = Number(localStorage.getItem(SUPPORT_POPUP_KEY)) || 0;
+    } catch (error) {
+      // localStorage unavailable (e.g. private browsing) - just skip gating
+    }
+
+    if (Date.now() - lastShown < SUPPORT_POPUP_INTERVAL_MS) return;
+
+    setSupportModalOpen(true);
+    try {
+      localStorage.setItem(SUPPORT_POPUP_KEY, String(Date.now()));
+    } catch (error) {
+      // ignore - not critical if we can't persist this
+    }
+  }, [isPlaying]);
 
   const playerWrapperClassNames = cn(
     "bg-black text-white lg:flex items-center max-w-screen",
@@ -315,6 +342,10 @@ export default function LivePlayer() {
           slug={scheduleData?.ch1?.liveNow?.slug}
         />
       )}
+      <SupportModal
+        open={supportModalOpen}
+        onOpenChange={setSupportModalOpen}
+      />
     </>
   );
 }

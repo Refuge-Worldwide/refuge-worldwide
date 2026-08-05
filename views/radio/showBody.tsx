@@ -107,7 +107,13 @@ export default function ShowBody({
               )}
             </div>
 
-            <div className="flex items-start">
+            <div className="flex items-start gap-2">
+              <ShareButton
+                details={{
+                  title: title,
+                  slug: `/radio/${slug}`,
+                }}
+              />
               <ShowLike id={sys.id} />
             </div>
           </div>
