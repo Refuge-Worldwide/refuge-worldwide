@@ -106,6 +106,32 @@ export async function getSearchData(
   };
 }
 
+export async function getShowByTitle(title: string) {
+  if (!title) return null;
+
+  const { items } = await client.getEntries<TypeShowFields>({
+    content_type: "show",
+    limit: 1,
+    order: "-fields.date",
+
+    "fields.date[lte]": dayjs().format("YYYY-MM-DD"),
+    "fields.title[match]": title,
+
+    select: ["fields.title", "fields.slug", "fields.coverImage"],
+  });
+
+  const show = items[0];
+  if (!show) return null;
+
+  const coverImageUrl = (show.fields.coverImage as any)?.fields?.file?.url;
+
+  return {
+    title: show.fields.title,
+    slug: show.fields.slug,
+    coverImage: coverImageUrl ? { url: coverImageUrl } : null,
+  };
+}
+
 export async function getCalendarSearchData(query: string, limit = 100) {
   const start = Date.now();
 
