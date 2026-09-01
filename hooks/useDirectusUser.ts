@@ -15,9 +15,16 @@ export function useDirectusUser() {
 
   useEffect(() => {
     let cancelled = false;
+    // Only the very first fetch should show as "loading" — later ones are
+    // background revalidation on route change (see below) and already have
+    // valid `user` data to keep showing meanwhile. Without this, a consumer
+    // that gates its UI on `loading` (e.g. chatRoom.tsx) would blank out on
+    // every single navigation, since `loading` briefly flips true → false
+    // each time.
+    let isFirstFetch = true;
 
     function fetchUser() {
-      setLoading(true);
+      if (isFirstFetch) setLoading(true);
       fetch("/api/auth/me")
         .then((res) => res.json())
         .then((data) => {
@@ -27,7 +34,8 @@ export function useDirectusUser() {
           if (!cancelled) setUser(null);
         })
         .finally(() => {
-          if (!cancelled) setLoading(false);
+          if (!cancelled && isFirstFetch) setLoading(false);
+          isFirstFetch = false;
         });
     }
 

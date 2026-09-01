@@ -18,24 +18,3 @@ if (!chatServiceToken) {
 export const directusServer = createDirectus(directusUrl)
   .with(staticToken(chatServiceToken))
   .with(rest());
-
-// Resolves the real sender from a Directus access token by asking Directus
-// itself who it belongs to — never trust a client-supplied user id.
-export async function resolveDirectusUser(
-  accessToken: string
-): Promise<{ id: string; email: string } | null> {
-  try {
-    const response = await fetch(`${directusUrl}/users/me?fields=id,email`, {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    });
-
-    if (!response.ok) return null;
-
-    const { data } = await response.json();
-    if (!data?.id || !data?.email) return null;
-
-    return { id: data.id, email: data.email };
-  } catch {
-    return null;
-  }
-}

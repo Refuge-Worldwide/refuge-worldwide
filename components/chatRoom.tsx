@@ -1,9 +1,16 @@
 import Image from "next/image";
-import { readItems } from "@directus/sdk";
+import Link from "next/link";
 import { FC, useCallback, useEffect, useRef, useState } from "react";
-import { directusBrowser } from "@/lib/directus/browser";
+import { createChatRealtimeClient } from "@/lib/directus/chatRealtime";
+import { useDirectusUser } from "@/hooks/useDirectusUser";
 
 const LS_USERNAME = "rw_chat_username";
+const PAGE_SIZE = 50;
+// How close to the top (px) triggers loading older messages.
+const LOAD_MORE_THRESHOLD = 100;
+// How close to the bottom (px) counts as "already at the bottom", so a new
+// message auto-scrolls into view without yanking someone reading history.
+const NEAR_BOTTOM_THRESHOLD = 80;
 
 interface ChatMessage {
   id: number;
@@ -17,38 +24,83 @@ interface ChatMessage {
 function formatTimestamp(ts: string): string {
   const date = new Date(ts);
   const now = new Date();
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const yesterday = new Date(today);
-  yesterday.setDate(yesterday.getDate() - 1);
-  const msgDay = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  const isToday =
+    date.getFullYear() === now.getFullYear() &&
+    date.getMonth() === now.getMonth() &&
+    date.getDate() === now.getDate();
 
   const time = date.toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
   });
 
-  if (msgDay.getTime() === today.getTime()) return `Today at ${time}`;
-  if (msgDay.getTime() === yesterday.getTime()) return `Yesterday at ${time}`;
-  return `${date.toLocaleDateString([], {
-    day: "numeric",
-    month: "long",
-  })} at ${time}`;
+  if (isToday) return time;
+
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  return `${day}/${month}/${date.getFullYear()}, ${time}`;
 }
 
 const ChatRoom: FC = () => {
+  // Signed-in senders chat as their account name (the same "Username" field
+  // shown in Account Settings, stored on Directus's first_name) — no
+  // separate identity to pick. Anonymous visitors still choose one, kept in
+  // localStorage.
+  const { user: accountUser, loading: accountLoading } = useDirectusUser();
+  const isLoggedIn = Boolean(accountUser);
+  const accountDisplayName = accountUser
+    ? accountUser.first_name?.trim() || accountUser.email.split("@")[0]
+    : null;
+
   const [username, setUsername] = useState<string | null>(null);
   const [nameInput, setNameInput] = useState("");
   const [settingName, setSettingName] = useState(false);
   const [ready, setReady] = useState(false);
 
+  const displayName = isLoggedIn ? accountDisplayName : username;
+  const showNameForm = !isLoggedIn && (!username || settingName);
+
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [loadingMessages, setLoadingMessages] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMoreHistory, setHasMoreHistory] = useState(true);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const [sendError, setSendError] = useState<string | null>(null);
 
   const listRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  // Mirrors `messages` so handleScroll (attached once) can always read the
+  // current oldest-loaded id without needing to be re-bound on every change.
+  const messagesRef = useRef<ChatMessage[]>([]);
+  useEffect(() => {
+    messagesRef.current = messages;
+  }, [messages]);
+
+  // Appends messages (deduped by id against what's already loaded), and
+  // auto-scrolls to the bottom only if the viewer was already there — so a
+  // new message doesn't yank someone away from history they scrolled up to
+  // read.
+  const appendMessages = useCallback((incoming: ChatMessage[]) => {
+    const el = listRef.current;
+    const wasNearBottom = el
+      ? el.scrollHeight - el.scrollTop - el.clientHeight < NEAR_BOTTOM_THRESHOLD
+      : true;
+
+    setMessages((prev) => {
+      const existingIds = new Set(prev.map((m) => m.id));
+      const toAdd = incoming.filter((m) => !existingIds.has(m.id));
+      return toAdd.length ? [...prev, ...toAdd] : prev;
+    });
+
+    if (wasNearBottom) {
+      requestAnimationFrame(() => {
+        if (listRef.current) {
+          listRef.current.scrollTop = listRef.current.scrollHeight;
+        }
+      });
+    }
+  }, []);
 
   // Load identity from localStorage
   useEffect(() => {
@@ -57,39 +109,114 @@ const ChatRoom: FC = () => {
     setReady(true);
   }, []);
 
-  // Load messages
+  // Load the most recent page of messages via /api/chat/history — a thin
+  // relay to Directus's own REST query params (see that file for why: CORS).
+  // Newest-first off the wire, reversed here for oldest-first display.
   useEffect(() => {
-    directusBrowser
-      .request(readItems("chat", { sort: ["date_created"], limit: 100 }))
-      .then((data) => {
-        setMessages(data as unknown as ChatMessage[]);
+    let cancelled = false;
+
+    fetch(`/api/chat/history?sort=-id&limit=${PAGE_SIZE}`)
+      .then((res) => res.json().then((data) => ({ ok: res.ok, data })))
+      .then(({ ok, data }) => {
+        if (cancelled) return;
+        if (!ok)
+          throw new Error(
+            data?.errors?.[0]?.message ?? "Failed to load chat history"
+          );
+        const rows = (data.data as ChatMessage[]).reverse();
+        setMessages(rows);
+        setHasMoreHistory(rows.length === PAGE_SIZE);
         setLoadingMessages(false);
+        requestAnimationFrame(() => {
+          if (listRef.current) {
+            listRef.current.scrollTop = listRef.current.scrollHeight;
+          }
+        });
       })
       .catch((error) => {
         console.error("Error fetching chat messages:", error);
-        setLoadingMessages(false);
+        if (!cancelled) setLoadingMessages(false);
       });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
-  // Subscribe to realtime updates
+  // Load the next page of older messages, preserving where the viewer was
+  // looking (prepending content above the viewport would otherwise shove
+  // everything down by the new content's height). An emptier-than-requested
+  // page means there's nothing older left.
+  const loadOlderMessages = useCallback(async () => {
+    const oldest = messagesRef.current[0];
+    if (loadingMore || !hasMoreHistory || !oldest) return;
+
+    const el = listRef.current;
+    const prevScrollHeight = el?.scrollHeight ?? 0;
+    const prevScrollTop = el?.scrollTop ?? 0;
+    setLoadingMore(true);
+
+    try {
+      const res = await fetch(
+        `/api/chat/history?sort=-id&limit=${PAGE_SIZE}&filter[id][_lt]=${oldest.id}`
+      );
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data?.errors?.[0]?.message ?? "Failed to load history");
+      }
+
+      const older = (data.data as ChatMessage[]).reverse();
+      if (older.length > 0) {
+        setMessages((prev) => [...older, ...prev]);
+      }
+      setHasMoreHistory(older.length === PAGE_SIZE);
+
+      requestAnimationFrame(() => {
+        if (listRef.current) {
+          const newScrollHeight = listRef.current.scrollHeight;
+          listRef.current.scrollTop =
+            prevScrollTop + (newScrollHeight - prevScrollHeight);
+        }
+      });
+    } catch (error) {
+      console.error("Error loading older chat messages:", error);
+    } finally {
+      setLoadingMore(false);
+    }
+  }, [loadingMore, hasMoreHistory]);
+
+  const handleScroll = useCallback(() => {
+    const el = listRef.current;
+    if (!el || el.scrollTop > LOAD_MORE_THRESHOLD) return;
+    loadOlderMessages();
+  }, [loadOlderMessages]);
+
+  // Subscribe to realtime updates. This Directus instance's websocket layer
+  // requires every connection to authenticate (WEBSOCKETS_REST_AUTH
+  // defaults to "handshake" — there's no anonymous mode enabled), so we
+  // authenticate as a dedicated read-only user rather than connecting
+  // anonymously — see lib/directus/chatRealtime.ts.
   useEffect(() => {
-    let unsubscribe: (() => void) | undefined;
     let cancelled = false;
+    let client: Awaited<ReturnType<typeof createChatRealtimeClient>> | null =
+      null;
 
     const listen = async () => {
       try {
-        const { subscription, unsubscribe: unsub } =
-          await directusBrowser.subscribe("chat", { event: "create" });
-        unsubscribe = unsub;
+        client = await createChatRealtimeClient();
+        if (cancelled) return;
 
-        for await (const message of subscription) {
+        const { subscription } = await client.subscribe("chat", {
+          event: "create",
+        });
+
+        for await (const event of subscription) {
           if (cancelled) break;
-          if (message.event === "create") {
-            setMessages((prev) => [
-              ...prev,
-              ...(message.data as unknown as ChatMessage[]),
-            ]);
-          }
+          if (event.event !== "create") continue;
+
+          // appendMessages dedupes by id, so this can't double up with the
+          // optimistic append already done in handleSend for our own sends.
+          appendMessages(event.data as unknown as ChatMessage[]);
         }
       } catch (error) {
         console.error("Error subscribing to chat:", error);
@@ -100,23 +227,16 @@ const ChatRoom: FC = () => {
 
     return () => {
       cancelled = true;
-      unsubscribe?.();
+      client?.disconnect();
     };
-  }, []);
+  }, [appendMessages]);
 
-  // Scroll to bottom when messages arrive
+  // Focus input once there's a name to chat under
   useEffect(() => {
-    if (listRef.current) {
-      listRef.current.scrollTop = listRef.current.scrollHeight;
-    }
-  }, [messages]);
-
-  // Focus input after setting name
-  useEffect(() => {
-    if (username && !settingName && inputRef.current) {
+    if (displayName && !showNameForm && inputRef.current) {
       inputRef.current.focus();
     }
-  }, [username, settingName]);
+  }, [displayName, showNameForm]);
 
   const handleSetUsername = useCallback(() => {
     const name = nameInput.trim();
@@ -133,7 +253,7 @@ const ChatRoom: FC = () => {
   }, [username]);
 
   const handleSend = useCallback(async () => {
-    if (!username || !input.trim() || sending) return;
+    if (!displayName || !input.trim() || sending) return;
     const text = input.trim().slice(0, 500);
     setInput("");
     setSending(true);
@@ -142,12 +262,23 @@ const ChatRoom: FC = () => {
       const response = await fetch("/api/chat/send", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, message: text }),
+        // Signed-in senders' identity is resolved server-side from the
+        // session cookie — sending a username here would just be ignored,
+        // so it's only included for anonymous senders.
+        body: JSON.stringify({
+          message: text,
+          ...(isLoggedIn ? {} : { username: displayName }),
+        }),
       });
+      const body = await response.json().catch(() => null);
 
       if (!response.ok) {
-        const body = await response.json().catch(() => null);
         setSendError(body?.error ?? "Failed to send message");
+      } else if (body?.message) {
+        // Show it immediately rather than waiting for the realtime event to
+        // round-trip — appendMessages dedupes by id, so it can't double up
+        // when that event arrives too.
+        appendMessages([body.message as ChatMessage]);
       }
     } catch (error) {
       console.error("Error sending message:", error);
@@ -155,7 +286,7 @@ const ChatRoom: FC = () => {
     } finally {
       setTimeout(() => setSending(false), 1000);
     }
-  }, [username, input, sending]);
+  }, [displayName, isLoggedIn, input, sending, appendMessages]);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
@@ -181,9 +312,7 @@ const ChatRoom: FC = () => {
     [handleSetUsername]
   );
 
-  if (!ready) return null;
-
-  const showNameForm = !username || settingName;
+  if (!ready || accountLoading) return null;
 
   return (
     <div className="flex flex-col h-full bg-black text-white">
@@ -226,7 +355,7 @@ const ChatRoom: FC = () => {
             <div key={msg.id}>
               <div className="min-w-0">
                 <div className="flex items-baseline gap-2 flex-wrap">
-                  <span className="text-small font-medium leading-none">
+                  <span className="text-tiny font-medium leading-none">
                     {msg.username}
                   </span>
                   <span className="text-tiny text-white/40 leading-none">
@@ -271,14 +400,24 @@ const ChatRoom: FC = () => {
             )}
             <div className="flex items-center justify-end gap-1 px-3 pb-3">
               <span className="text-white text-tiny">
-                Chatting as <strong className="text-white">{username}</strong>
+                Chatting as{" "}
+                <strong className="text-white">{displayName}</strong>
               </span>
-              <button
-                onClick={handleResetUsername}
-                className="text-white text-tiny underline hover:text-white/60 transition-colors ml-1"
-              >
-                change
-              </button>
+              {isLoggedIn ? (
+                <Link
+                  href="/account/settings"
+                  className="text-white text-tiny underline hover:text-white/60 transition-colors ml-1"
+                >
+                  change
+                </Link>
+              ) : (
+                <button
+                  onClick={handleResetUsername}
+                  className="text-white text-tiny underline hover:text-white/60 transition-colors ml-1"
+                >
+                  change
+                </button>
+              )}
             </div>
           </>
         )}
