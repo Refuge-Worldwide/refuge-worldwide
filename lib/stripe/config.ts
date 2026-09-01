@@ -9,7 +9,3 @@ export const stripe = new Stripe(
     },
   }
 );
-
-// Re-export plan types for server-side API routes
-export type { PlanId } from "./plans";
-export { PLANS } from "./plans";

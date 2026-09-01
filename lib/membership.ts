@@ -169,8 +169,6 @@ export async function syncSupporterSubscription(
  * Called on invoice.payment_failed. Stripe itself emails the customer about
  * the failed charge — this just flags it on their Directus record so it can
  * be surfaced in the account UI.
- * TODO: nothing in pages/account currently reads payment_failed_at — surface
- * a "payment failed" notice in the account section once there's a design for it.
  */
 export async function markPaymentFailed(customerId: string) {
   const user = await findUserByStripeCustomerId(customerId);

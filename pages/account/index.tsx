@@ -9,6 +9,7 @@ import { useState } from "react";
 import { SupportPicker } from "@/components/supportPicker";
 import { FavouritesContent } from "@/components/account/favouritesContent";
 import { SettingsContent } from "@/components/account/settingsContent";
+import { PaymentFailedNotice } from "@/components/account/paymentFailedNotice";
 
 type AccountPageProps = {
   user: {
@@ -18,7 +19,6 @@ type AccountPageProps = {
     subscription_status?: string | null;
     supporter_amount_cents?: number | null;
     supporter_interval?: "month" | "year" | null;
-    // TODO: show a "payment failed" notice.
     payment_failed_at?: string | null;
   };
 };
@@ -120,6 +120,17 @@ export default function AccountPage({ user }: AccountPageProps) {
   return (
     <Layout>
       <PageMeta title="Account | Refuge Worldwide" path="account/" />
+
+      {user.payment_failed_at && (
+        <div className="bg-white px-4 sm:px-8 pt-4 sm:pt-8">
+          <div className="max-w-md md:max-w-[1320px] mx-auto">
+            <PaymentFailedNotice
+              onManage={handleManageSubscription}
+              isLoading={isPortalLoading}
+            />
+          </div>
+        </div>
+      )}
 
       {/* mobile */}
       <div className="md:hidden min-h-[75vh] bg-white p-4 sm:p-8">

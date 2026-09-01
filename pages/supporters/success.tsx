@@ -21,22 +21,30 @@ export default function SubscriptionSuccessPage() {
           </p>
 
           <p className="mb-4">Make sure to download our app.</p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <a
               href="https://apps.apple.com/us/app/refuge-worldwide/id6785827225"
               target="_blank"
               rel="noopener noreferrer"
-              className="pill-input bg-black text-white hover:bg-black/80 transition-colors text-center"
+              className="shrink-0"
             >
-              Download on the App Store
+              <img
+                src="/images/app-store-badge.svg"
+                alt="Download on the App Store"
+                className="h-14"
+              />
             </a>
             <a
               href="https://play.google.com/store/apps/details?id=com.refugeworldwide.app&hl=en-US"
               target="_blank"
               rel="noopener noreferrer"
-              className="pill-input bg-black text-white hover:bg-black/80 transition-colors text-center"
+              className="shrink-0"
             >
-              Get it on Google Play
+              <img
+                src="/images/google-play-badge.png"
+                alt="Get it on Google Play"
+                className="h-20"
+              />
             </a>
           </div>
         </div>
