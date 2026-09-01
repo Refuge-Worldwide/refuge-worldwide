@@ -22,12 +22,9 @@ const uploadToContentful = async (file: formidable.File) => {
     const space = await client.getSpace(spaceId);
     const environment = await space.getEnvironment(environmentId);
 
-    // Read file buffer
-    const fileBuffer = fs.readFileSync(file.filepath);
-
-    // Step 1: Create an upload using binary data
+    // Step 1: Create an upload, streaming the file rather than buffering it
     const upload = await environment.createUpload({
-      file: fileBuffer,
+      file: fs.createReadStream(file.filepath),
     });
 
     // Step 2: Create asset with reference to the upload
