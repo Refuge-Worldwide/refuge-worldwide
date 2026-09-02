@@ -1,33 +1,20 @@
-import { inviteUser, readRoles, readUsers, updateUser } from "@directus/sdk";
+import { randomBytes } from "crypto";
+import { createUser, readUsers, updateUser } from "@directus/sdk";
 import Stripe from "stripe";
 import { directusMembershipAdmin } from "@/lib/directus/admin";
+import { sendSlackMessage } from "@/lib/slack";
 
-const APP_USER_ROLE_NAME = "Refuge App User";
-
-// Directus's /users/invite endpoint requires the role's id (a GUID), not its
-// display name — resolved once per server lifetime rather than hardcoding a
-// UUID that could differ between environments.
-let cachedAppUserRoleId: string | null = null;
-
-async function getAppUserRoleId(): Promise<string> {
-  if (cachedAppUserRoleId) return cachedAppUserRoleId;
-
-  const roles = await directusMembershipAdmin.request(
-    readRoles({
-      filter: { name: { _eq: APP_USER_ROLE_NAME } },
-      limit: 1,
-      fields: ["id"],
-    })
-  );
-  const role = roles[0];
-  if (!role) {
-    throw new Error(
-      `Could not find a Directus role named "${APP_USER_ROLE_NAME}"`
-    );
+// Directus's /users/invite endpoint requires the role's id (a GUID). Read
+// directly from the environment rather than looking it up by display name —
+// a role rename in Directus (which has already happened once) would
+// otherwise silently break signup. Differs between environments, same as
+// DIRECTUS_ADMIN_TOKEN.
+export async function getAppUserRoleId(): Promise<string> {
+  const roleId = process.env.DIRECTUS_SUPPORTER_ROLE_ID;
+  if (!roleId) {
+    throw new Error("DIRECTUS_SUPPORTER_ROLE_ID is not set");
   }
-
-  cachedAppUserRoleId = role.id;
-  return role.id;
+  return roleId;
 }
 
 interface SubscriptionFields {
@@ -38,7 +25,7 @@ interface SubscriptionFields {
   supporter_interval: "month" | "year" | null;
 }
 
-function fieldsFromSubscription(
+export function fieldsFromSubscription(
   subscription: Stripe.Subscription
 ): SubscriptionFields & { payment_failed_at?: null } {
   const item = subscription.items.data[0];
@@ -57,15 +44,57 @@ function fieldsFromSubscription(
   };
 }
 
-async function findUserByEmail(email: string) {
+export async function findUserByEmail(email: string) {
   const users = await directusMembershipAdmin.request(
     readUsers({
       filter: { email: { _eq: email } },
       limit: 1,
-      fields: ["id", "email"],
+      // status distinguishes a real account (someone chose their own
+      // password, status "active") from one that only has a random
+      // placeholder (status "invited") — see complete-signup.ts and
+      // upsertSupporterFromCheckout below. Setting "invited" directly here
+      // (rather than via Directus's /users/invite endpoint) does not send
+      // any email — confirmed directly against the live instance — and
+      // Directus's own password-reset flow works fine against it too.
+      fields: ["id", "email", "status"],
     })
   );
   return users[0] ?? null;
+}
+
+type MembershipUser = { id: string; email: string; status?: string };
+
+/**
+ * Finds a Directus user by email, or creates one with the given fields if
+ * none exists. Shared by the two places that can independently race to
+ * create the same account — complete-signup.ts (the customer actively
+ * submitting the password form) and upsertSupporterFromCheckout below (the
+ * webhook's silent fallback) — both may run for the same email within
+ * moments of each other. If createUser fails, re-checks for a user that
+ * appeared in the meantime before giving up; callers decide how to log/alert
+ * on a genuine failure, since that context (a Stripe session id, an app
+ * signup, etc.) differs per caller.
+ */
+export async function findOrCreateUser(
+  email: string,
+  createFields: Record<string, unknown>
+): Promise<MembershipUser> {
+  const existing = await findUserByEmail(email);
+  if (existing) return existing as unknown as MembershipUser;
+
+  try {
+    const created = await directusMembershipAdmin.request(
+      createUser({ email, ...createFields } as unknown as Record<
+        string,
+        unknown
+      >)
+    );
+    return created as unknown as MembershipUser;
+  } catch (error) {
+    const concurrent = await findUserByEmail(email);
+    if (concurrent) return concurrent as unknown as MembershipUser;
+    throw error;
+  }
 }
 
 async function findUserByStripeCustomerId(customerId: string) {
@@ -81,43 +110,41 @@ async function findUserByStripeCustomerId(customerId: string) {
 
 /**
  * Called on checkout.session.completed. Finds the Directus user by email, or
- * creates one via an emailed invite if they're new — then stores the Stripe
- * subscription details on their record.
+ * creates one (no email — see note below) if they're new — then stores the
+ * Stripe subscription details on their record.
+ *
+ * This is the fallback path for someone who pays but never returns to
+ * /supporters/success to submit the password form there (which is what
+ * normally creates the account, with the password they chose). It used to
+ * invite them via Directus's own inviteUser(), but that sends Directus's
+ * stock invite email — wrong template, and not something we want firing
+ * automatically for every pay-first signup. Instead this creates the
+ * account with an unusable random password and sends nothing; if they never
+ * came back to set a real one, "Forgot password" on the sign-in page works
+ * against this account exactly the same as any other.
  */
 export async function upsertSupporterFromCheckout(
   email: string,
   subscription: Stripe.Subscription
 ) {
-  let user = await findUserByEmail(email);
+  const roleId = await getAppUserRoleId();
+  const placeholderPassword = randomBytes(24).toString("hex");
 
-  if (!user) {
-    console.log(
-      `[membership] no existing Directus user for ${email}, inviting...`
+  let user: MembershipUser;
+  try {
+    user = await findOrCreateUser(email, {
+      password: placeholderPassword,
+      role: roleId,
+      status: "invited",
+    });
+  } catch (error) {
+    sendSlackMessage(
+      `[membership] a paid customer (${email}) could not get an account created — needs manual follow-up. ${error.message}`,
+      "error"
     );
-    const inviteUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/account/accept-invite`;
-    const roleId = await getAppUserRoleId();
-    await directusMembershipAdmin.request(inviteUser(email, roleId, inviteUrl));
-    console.log(
-      `[membership] invite sent to ${email} (invite_url=${inviteUrl})`
-    );
-    user = await findUserByEmail(email);
-
-    if (!user) {
-      // Directus sends the invite synchronously but the user row should
-      // exist immediately after — if it's still missing, something's wrong
-      // upstream and retrying blindly could send duplicate invite emails.
-      throw new Error(
-        `Invited ${email} but could not find the resulting Directus user`
-      );
-    }
-    console.log(
-      `[membership] found newly-invited Directus user ${user.id} for ${email}`
-    );
-  } else {
-    console.log(
-      `[membership] found existing Directus user ${user.id} for ${email}`
-    );
+    throw error;
   }
+  console.log(`[membership] resolved Directus user ${user.id} for ${email}`);
 
   const fields = fieldsFromSubscription(subscription);
   console.log(

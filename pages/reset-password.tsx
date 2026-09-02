@@ -13,6 +13,7 @@ export default function ResetPasswordPage() {
         apiPath="/api/auth/reset-password"
         heading="Set a new password"
         successMessage="Your password has been updated."
+        successRedirect="/account"
       />
     </Layout>
   );

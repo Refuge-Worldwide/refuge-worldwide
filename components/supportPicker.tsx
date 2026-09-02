@@ -11,12 +11,31 @@ function formatEur(amount: number): string {
   return amount % 1 === 0 ? `${amount}` : amount.toFixed(2);
 }
 
-export function SupportPicker() {
+export function SupportPicker({
+  clientSecret: controlledClientSecret,
+  onClientSecretChange,
+}: {
+  // Both optional — omit entirely for the uncontrolled, standalone usage
+  // (account page). SupportModal passes both to lift this up so it can
+  // render its own back button once checkout starts.
+  clientSecret?: string | null;
+  onClientSecretChange?: (value: string | null) => void;
+} = {}) {
   const [amountIndex, setAmountIndex] = useState(0); // default to lowest amount, €5
   const [billingInterval, setBillingInterval] = useState<"month" | "year">(
     "month"
   );
-  const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [internalClientSecret, setInternalClientSecret] = useState<
+    string | null
+  >(null);
+  const isControlled = controlledClientSecret !== undefined;
+  const clientSecret = isControlled
+    ? controlledClientSecret
+    : internalClientSecret;
+  function setClientSecret(value: string | null) {
+    onClientSecretChange?.(value);
+    if (!isControlled) setInternalClientSecret(value);
+  }
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
 

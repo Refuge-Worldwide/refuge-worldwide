@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 import {
   MIXCLOUD_URL,
   PATREON_URL,
@@ -18,10 +19,13 @@ export default function Footer() {
   const handleGoToTop = () =>
     window?.scroll({ top: 0, left: 0, behavior: "smooth" });
   const { user, loading } = useDirectusUser();
+  const router = useRouter();
+  // Pointless on the support page itself — it just links back to here.
+  const isSupportPage = router.pathname === "/support";
 
   return (
     <footer className="bg-black text-white">
-      {!loading && !user && <SupportBanner />}
+      {!loading && !user && !isSupportPage && <SupportBanner />}
       <div className="px-4 md:px-8 py-10 md:py-20">
         <div className="container md:grid items-center grid-cols-2">
           <div className="mb-6 md:mb-0">

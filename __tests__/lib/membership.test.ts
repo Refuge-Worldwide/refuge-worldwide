@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi, type Mock } from "vitest";
-import { readRoles, readUsers, updateUser, inviteUser } from "@directus/sdk";
+import { readUsers, updateUser, createUser } from "@directus/sdk";
 import { directusMembershipAdmin } from "@/lib/directus/admin";
 import {
   markPaymentFailed,
@@ -12,16 +12,14 @@ vi.mock("@/lib/directus/admin", () => ({
   directusMembershipAdmin: { request: vi.fn() },
 }));
 
+vi.mock("@/lib/slack", () => ({
+  sendSlackMessage: vi.fn(),
+}));
+
 vi.mock("@directus/sdk", () => ({
-  readRoles: vi.fn((query) => ({ __op: "readRoles", query })),
   readUsers: vi.fn((query) => ({ __op: "readUsers", query })),
   updateUser: vi.fn((id, data) => ({ __op: "updateUser", id, data })),
-  inviteUser: vi.fn((email, role, inviteUrl) => ({
-    __op: "inviteUser",
-    email,
-    role,
-    inviteUrl,
-  })),
+  createUser: vi.fn((data) => ({ __op: "createUser", data })),
 }));
 
 const mockRequest = directusMembershipAdmin.request as Mock;
@@ -59,7 +57,7 @@ describe("upsertSupporterFromCheckout", () => {
 
     await upsertSupporterFromCheckout("a@b.com", subscription());
 
-    expect(inviteUser).not.toHaveBeenCalled();
+    expect(createUser).not.toHaveBeenCalled();
     expect(updateUser).toHaveBeenCalledWith(
       "user-1",
       expect.objectContaining({
@@ -73,14 +71,13 @@ describe("upsertSupporterFromCheckout", () => {
     );
   });
 
-  // getAppUserRoleId() caches the role id at module scope for the server's
-  // lifetime, so a positional mockResolvedValueOnce chain would only line up
-  // the first time this path runs in the suite — routing by operation type
-  // instead makes these tests indifferent to whether the cache is warm.
+  // getAppUserRoleId() now just reads DIRECTUS_SUPPORTER_ROLE_ID (set to
+  // "role-1" in vitest.setup.ts) rather than calling Directus — routing the
+  // remaining ops by type keeps these tests order-independent regardless.
   function routeByOp(responses: {
     findUserByEmail: unknown[];
-    readRoles?: { id: string }[];
-    inviteUser?: unknown;
+    createUser?: unknown;
+    createUserError?: Error;
     updateUser?: unknown;
   }) {
     let findUserByEmailCall = 0;
@@ -88,25 +85,29 @@ describe("upsertSupporterFromCheckout", () => {
       if (op.__op === "readUsers" && "email" in (op.query.filter ?? {})) {
         return responses.findUserByEmail[findUserByEmailCall++];
       }
-      if (op.__op === "readRoles")
-        return responses.readRoles ?? [{ id: "role-1" }];
-      if (op.__op === "inviteUser") return responses.inviteUser;
+      if (op.__op === "createUser") {
+        if (responses.createUserError) throw responses.createUserError;
+        return responses.createUser;
+      }
       if (op.__op === "updateUser") return responses.updateUser;
       throw new Error(`Unexpected op in test: ${op.__op}`);
     });
   }
 
-  it("invites a new user by email, then writes subscription fields", async () => {
+  it("creates a new user silently (no email) when none exists, then writes subscription fields", async () => {
     routeByOp({
-      findUserByEmail: [[], [{ id: "user-new", email: "new@b.com" }]],
+      findUserByEmail: [[]],
+      createUser: { id: "user-new", email: "new@b.com" },
     });
 
     await upsertSupporterFromCheckout("new@b.com", subscription());
 
-    expect(inviteUser).toHaveBeenCalledWith(
-      "new@b.com",
-      "role-1",
-      expect.stringContaining("/account/accept-invite")
+    expect(createUser).toHaveBeenCalledWith(
+      expect.objectContaining({
+        email: "new@b.com",
+        role: "role-1",
+        status: "invited",
+      })
     );
     expect(updateUser).toHaveBeenCalledWith(
       "user-new",
@@ -114,12 +115,29 @@ describe("upsertSupporterFromCheckout", () => {
     );
   });
 
-  it("throws if the invited user still can't be found afterwards", async () => {
-    routeByOp({ findUserByEmail: [[], []] });
+  it("falls back to a concurrently-created account if createUser races (e.g. complete-signup.ts)", async () => {
+    routeByOp({
+      findUserByEmail: [[], [{ id: "user-from-success-page" }]],
+      createUserError: new Error("duplicate email"),
+    });
+
+    await upsertSupporterFromCheckout("racey@b.com", subscription());
+
+    expect(updateUser).toHaveBeenCalledWith(
+      "user-from-success-page",
+      expect.anything()
+    );
+  });
+
+  it("rethrows if createUser fails and no concurrent account exists either", async () => {
+    routeByOp({
+      findUserByEmail: [[], []],
+      createUserError: new Error("directus down"),
+    });
 
     await expect(
       upsertSupporterFromCheckout("ghost@b.com", subscription())
-    ).rejects.toThrow(/could not find the resulting Directus user/);
+    ).rejects.toThrow(/directus down/);
   });
 
   it("does not clear payment_failed_at for a non-active status", async () => {

@@ -1,6 +1,7 @@
 import { Resend } from "resend";
 import ShowSubmissionEmail from "../../emails/showSubmission";
 import { ShowArtworkEmail } from "../../emails/showArtwork";
+import { WelcomeCompletePaymentEmail } from "../../emails/welcomeCompletePayment";
 const resend = new Resend(process.env.RESEND_API_KEY);
 import { sendSlackMessage } from "../../lib/slack";
 import dayjs from "dayjs";
@@ -111,6 +112,50 @@ export async function sendArtworkEmail(artist, date, artwork) {
     console.log(error);
     sendSlackMessage(
       `Failed to send artwork email to ${artist.name}(${artist.email}). ${error.name} - ${error.message}. <@U04HG3VHHEW>`,
+      "error"
+    );
+  }
+}
+
+// Sent to app-door signups (account created without paying yet) — once
+// immediately after signup, and again ~24h later by the
+// supporter-signup-reminder cron if they still haven't paid.
+export async function sendWelcomeCompletePaymentEmail(
+  email: string,
+  userName: string,
+  reminder: boolean = false
+) {
+  try {
+    const { data, error } = await resend.emails.send({
+      from: "Refuge Worldwide <noreply@mail.refugeworldwide.com>",
+      to:
+        process.env.NODE_ENV === "development"
+          ? "jack@refugeworldwide.com"
+          : email,
+      subject: reminder
+        ? "Don't forget to complete your account setup"
+        : "Welcome to Refuge Worldwide — complete your account setup",
+      reply_to: ["assistant@refugeworldwide.com"],
+      react: WelcomeCompletePaymentEmail({
+        userName,
+        supportersUrl: "https://refugeworldwide.com/supporters",
+        reminder,
+      }),
+    });
+
+    if (error) {
+      throw new Error(error.name);
+    }
+
+    return data;
+  } catch (error) {
+    console.log(error);
+    sendSlackMessage(
+      `Failed to send ${
+        reminder ? "reminder" : "welcome"
+      } payment email to ${email}. ${error.name} - ${
+        error.message
+      }. <@U04HG3VHHEW>`,
       "error"
     );
   }

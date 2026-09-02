@@ -6,6 +6,7 @@ import {
   syncSupporterSubscription,
   upsertSupporterFromCheckout,
 } from "@/lib/membership";
+import { sendSlackMessage } from "@/lib/slack";
 
 export const config = {
   api: {
@@ -105,6 +106,10 @@ export default async function handler(
     }
   } catch (error) {
     console.error(`[webhooks/stripe] handler failed for ${event.type}:`, error);
+    sendSlackMessage(
+      `[webhooks/stripe] handler failed for ${event.type} (${event.id}): ${error.message}`,
+      "error"
+    );
     return res.status(400).json({ error: "Webhook handler failed." });
   }
 

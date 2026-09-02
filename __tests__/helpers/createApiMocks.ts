@@ -6,12 +6,14 @@ export function createApiMocks(
     method?: RequestMethod;
     body?: Record<string, unknown>;
     cookies?: Record<string, string>;
+    query?: Record<string, string>;
   } = {}
 ) {
   const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
     method: options.method ?? "POST",
     body: options.body,
     cookies: options.cookies,
+    query: options.query,
   });
   return { req, res };
 }

@@ -10,10 +10,22 @@ export function sendSlackMessage(text: string, channel?: string) {
 
   const url = urlMap[channel] || slackURL;
 
+  if (!url) {
+    console.error(
+      `[slack] no webhook URL configured for channel "${
+        channel ?? "default"
+      }" — dropped message:`,
+      text
+    );
+    return;
+  }
+
   fetch(url, {
     method: "POST",
     body: JSON.stringify({
       text: text,
     }),
+  }).catch((error) => {
+    console.error("[slack] failed to send message:", error);
   });
 }

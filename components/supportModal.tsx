@@ -1,5 +1,7 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import Link from "next/link";
+import { useState } from "react";
+import { Arrow } from "../icons/arrow";
 import { Cross } from "../icons/cross";
 import { SupportPicker } from "./supportPicker";
 
@@ -13,12 +15,33 @@ export function SupportModal({
   /** Hide this when the modal is opened from the /support page itself. */
   showFindOutMoreLink?: boolean;
 }) {
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
+
+  function handleOpenChange(next: boolean) {
+    if (!next) setClientSecret(null); // don't land back in checkout next time it opens
+    onOpenChange(next);
+  }
+
   return (
-    <Dialog.Root open={open} onOpenChange={onOpenChange}>
+    <Dialog.Root open={open} onOpenChange={handleOpenChange}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/60 z-50" />
         <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-[calc(100%-2rem)] max-w-3xl max-h-[90vh] overflow-y-auto bg-white p-4 sm:p-8">
-          <div className="flex justify-end mb-2">
+          <div className="flex justify-between items-center mb-2">
+            {clientSecret ? (
+              <button
+                type="button"
+                onClick={() => setClientSecret(null)}
+                className="focus:outline-none focus:ring-4"
+              >
+                <span className="sr-only">Back</span>
+                <span aria-hidden>
+                  <Arrow size={20} colour="black" className="rotate-180" />
+                </span>
+              </button>
+            ) : (
+              <span />
+            )}
             <Dialog.Close className="focus:outline-none focus:ring-4">
               <span className="sr-only">Close</span>
               <span aria-hidden>
@@ -34,7 +57,10 @@ export function SupportModal({
             Help keep independent radio alive, in whatever amount works for you.
           </Dialog.Description>
 
-          <SupportPicker />
+          <SupportPicker
+            clientSecret={clientSecret}
+            onClientSecretChange={setClientSecret}
+          />
 
           {showFindOutMoreLink && (
             <p className="text-center text-small mt-6">
