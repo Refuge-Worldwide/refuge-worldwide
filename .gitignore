@@ -43,3 +43,4 @@ secrets.json
 
 #react email
 .react-email
+.env*.local

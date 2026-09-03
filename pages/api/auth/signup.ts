@@ -2,7 +2,6 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { createUser } from "@directus/sdk";
 import { directusMembershipAdmin } from "@/lib/directus/admin";
 import { findUserByEmail, getAppUserRoleId } from "@/lib/membership";
-import { sendWelcomeCompletePaymentEmail } from "@/lib/resend/email";
 import { sendSlackMessage } from "@/lib/slack";
 import { getClientIp } from "@/lib/signupRateLimit";
 
@@ -96,10 +95,12 @@ export default async function handler(
     return res.status(500).json({ error: "Could not create your account" });
   }
 
-  // Fire-and-forget — don't block the signup response on the email send.
-  sendWelcomeCompletePaymentEmail(email, username.trim()).catch((error) => {
-    console.error("[api/auth/signup] welcome email failed:", error);
-  });
+  // Deliberately not sending an email here for now — the
+  // "complete your payment" framing (sendWelcomeCompletePaymentEmail, see
+  // lib/resend/email.ts) is specific to this signup route and about to be
+  // replaced by a single general "account created" email that fires the
+  // same way regardless of which door (app-first or web-first) created
+  // the account.
 
   return res.status(200).json({ ok: true });
 }

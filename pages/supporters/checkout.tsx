@@ -4,7 +4,7 @@ import PageMeta from "../../components/seo/page";
 import { SupportPicker } from "@/components/supportPicker";
 
 /**
- * Dedicated checkout page for the app's "Become a Supporter" button —
+ * Dedicated checkout page for the app's "Complete Account Setup" button —
  * /supporters/checkout?email=... (see app/(tabs)/account/index.tsx in
  * refugeWorldwideApp). Opened inside the app's in-app browser, so this
  * intentionally skips /support's marketing content, app-download badges,
@@ -20,21 +20,23 @@ export default function SupportersCheckoutPage() {
   return (
     <Layout>
       <PageMeta
-        title="Become a Supporter | Refuge Worldwide"
+        title="Complete Account Setup | Refuge Worldwide"
         path="supporters/checkout/"
       />
 
       <div className="min-h-[75vh] flex items-center justify-center p-4">
         <div className="max-w-xl w-full">
-          {/* Keep in sync with components/supportModal.tsx's Dialog.Title/
-              Description — same copy, but plain markup here since there's
-              no Dialog context to hang Radix's a11y-linked title/description
-              components off of. */}
+          {/* Deliberately different copy from components/supportModal.tsx's
+              Dialog.Title/Description — this page is specifically for an
+              app user finishing the account they already started, not a
+              first-time web visitor, so it frames it as completing setup
+              rather than the general "become a supporter" pitch. */}
           <h1 className="font-serif text-large text-center mb-2">
-            Support Refuge Worldwide
+            Complete account setup
           </h1>
           <p className="text-center text-small opacity-60 mb-8 max-w-sm mx-auto">
-            Help keep independent radio alive, in whatever amount works for you.
+            Subscribe to complete your account setup, in whatever amount works
+            for you.
           </p>
 
           <SupportPicker email={email} fromApp />

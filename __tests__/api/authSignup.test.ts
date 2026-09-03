@@ -4,7 +4,6 @@ import { createApiMocks } from "../helpers/createApiMocks";
 import signupHandler from "@/pages/api/auth/signup";
 import { directusMembershipAdmin } from "@/lib/directus/admin";
 import { findUserByEmail, getAppUserRoleId } from "@/lib/membership";
-import { sendWelcomeCompletePaymentEmail } from "@/lib/resend/email";
 import { getClientIp } from "@/lib/signupRateLimit";
 
 vi.mock("@/lib/directus/admin", () => ({
@@ -20,10 +19,6 @@ vi.mock("@/lib/membership", () => ({
   getAppUserRoleId: vi.fn(),
 }));
 
-vi.mock("@/lib/resend/email", () => ({
-  sendWelcomeCompletePaymentEmail: vi.fn(),
-}));
-
 vi.mock("@/lib/signupRateLimit", () => ({
   getClientIp: vi.fn(),
 }));
@@ -31,13 +26,11 @@ vi.mock("@/lib/signupRateLimit", () => ({
 const mockRequest = directusMembershipAdmin.request as Mock;
 const mockFindUserByEmail = findUserByEmail as Mock;
 const mockGetAppUserRoleId = getAppUserRoleId as Mock;
-const mockSendEmail = sendWelcomeCompletePaymentEmail as Mock;
 const mockGetClientIp = getClientIp as Mock;
 
 beforeEach(() => {
   vi.clearAllMocks();
   mockGetAppUserRoleId.mockResolvedValue("role-1");
-  mockSendEmail.mockResolvedValue(undefined);
   mockGetClientIp.mockReturnValue("1.2.3.4");
 });
 
@@ -91,7 +84,7 @@ describe("POST /api/auth/signup", () => {
     expect(mockRequest).not.toHaveBeenCalled();
   });
 
-  it("creates the account, sends the welcome email, and never returns tokens", async () => {
+  it("creates the account and never returns tokens", async () => {
     mockFindUserByEmail.mockResolvedValueOnce(null);
     mockRequest.mockResolvedValueOnce({ id: "user-new" });
 
@@ -114,7 +107,6 @@ describe("POST /api/auth/signup", () => {
         status: "active",
       })
     );
-    expect(mockSendEmail).toHaveBeenCalledWith("new@b.com", "DJ Refuge");
     expect(res._getStatusCode()).toBe(200);
     expect(res._getJSONData()).toEqual({ ok: true });
   });
@@ -129,6 +121,5 @@ describe("POST /api/auth/signup", () => {
     await signupHandler(req, res);
 
     expect(res._getStatusCode()).toBe(500);
-    expect(mockSendEmail).not.toHaveBeenCalled();
   });
 });
