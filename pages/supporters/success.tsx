@@ -7,10 +7,13 @@ import { SetPasswordForm } from "@/components/setPasswordForm";
 
 type Status = "loading" | "needs-password" | "already-supporter" | "error";
 
+const APP_RETURN_URL = "refugeworldwideapp://supporter-callback";
+
 export default function SubscriptionSuccessPage() {
   const router = useRouter();
   const sessionId =
     typeof router.query.session_id === "string" ? router.query.session_id : "";
+  const fromApp = router.query.app === "1";
 
   const [status, setStatus] = useState<Status>("loading");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -37,6 +40,17 @@ export default function SubscriptionSuccessPage() {
         setErrorMessage(error.message ?? "Something went wrong");
       });
   }, [router.isReady, sessionId]);
+
+  // An app-first signup is always status "active" (see pages/api/auth/signup.ts)
+  // well before they ever pay, so this is the only branch app checkouts hit
+  // — hasAccount is true from the moment they signed up, not something the
+  // payment itself changes. Hand back to the app rather than showing the
+  // website's "sign in" messaging, which doesn't apply to them.
+  useEffect(() => {
+    if (status === "already-supporter" && fromApp) {
+      window.location.href = APP_RETURN_URL;
+    }
+  }, [status, fromApp]);
 
   const downloadAppSection = (
     <>
@@ -91,7 +105,19 @@ export default function SubscriptionSuccessPage() {
             <p className="mb-8 text-red">{errorMessage}</p>
           )}
 
-          {status === "already-supporter" && (
+          {status === "already-supporter" && fromApp && (
+            <>
+              <p className="mb-8">
+                Taking you back to the app —{" "}
+                <a href={APP_RETURN_URL} className="underline">
+                  tap here
+                </a>{" "}
+                if it doesn&apos;t open automatically.
+              </p>
+            </>
+          )}
+
+          {status === "already-supporter" && !fromApp && (
             <>
               <p className="mb-8">
                 You already have an account —{" "}

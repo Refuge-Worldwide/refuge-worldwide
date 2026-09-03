@@ -18,9 +18,13 @@ export default async function handler(
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { amountEur, interval } = req.body as {
+  const { amountEur, interval, email, fromApp } = req.body as {
     amountEur?: number;
     interval?: string;
+    // Signed-in app user's known email and a flag that this checkout came
+    // from the app — see components/supportPicker.tsx.
+    email?: string;
+    fromApp?: boolean;
   };
 
   if (!amountEur || !ALLOWED_AMOUNTS_EUR.includes(amountEur)) {
@@ -57,7 +61,15 @@ export default async function handler(
       mode: "subscription",
       ui_mode: "embedded",
       line_items: [{ price: price.id, quantity: 1 }],
-      return_url: `${baseUrl}/supporters/success?session_id={CHECKOUT_SESSION_ID}`,
+      // `app=1` tells the success page to redirect back into the app
+      // instead of showing the website's normal post-checkout messaging.
+      return_url: `${baseUrl}/supporters/success?session_id={CHECKOUT_SESSION_ID}${
+        fromApp ? "&app=1" : ""
+      }`,
+      // Prefills (and, once set, locks) the email field for a signed-in app
+      // user — keeps the payment from attaching to a different/mistyped
+      // account. Omitted for the normal web flow, where Stripe just asks.
+      ...(email ? { customer_email: email } : {}),
       // Auto-localizes the displayed/charged amount for customers outside
       // the Eurozone — no extra Price objects to maintain. No-ops if the
       // Stripe account isn't eligible for it.

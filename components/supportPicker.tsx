@@ -14,12 +14,23 @@ function formatEur(amount: number): string {
 export function SupportPicker({
   clientSecret: controlledClientSecret,
   onClientSecretChange,
+  email,
+  fromApp,
 }: {
   // Both optional — omit entirely for the uncontrolled, standalone usage
   // (account page). SupportModal passes both to lift this up so it can
   // render its own back button once checkout starts.
   clientSecret?: string | null;
   onClientSecretChange?: (value: string | null) => void;
+  // Known email of a signed-in app user starting checkout here — prefills
+  // and locks Stripe's email field so the payment attaches to their
+  // existing account instead of risking a typo'd/different address. See
+  // pages/api/stripe/create-checkout-session.ts.
+  email?: string;
+  // Whether this checkout was opened from the mobile app — tells the
+  // success page to redirect back into the app instead of showing the
+  // website's normal "sign in" messaging.
+  fromApp?: boolean;
 } = {}) {
   const [amountIndex, setAmountIndex] = useState(0); // default to lowest amount, €5
   const [billingInterval, setBillingInterval] = useState<"month" | "year">(
@@ -59,6 +70,8 @@ export function SupportPicker({
         body: JSON.stringify({
           amountEur: monthlyAmount,
           interval: billingInterval,
+          email,
+          fromApp,
         }),
       });
       const data = await res.json();
