@@ -54,7 +54,7 @@ export default function SubscriptionSuccessPage() {
 
   const downloadAppSection = (
     <>
-      <p className="mb-4">Don&apos;t Download the app.</p>
+      <p className="mb-4">Download the app.</p>
       <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
         <a
           href="https://apps.apple.com/au/app/refuge-worldwide/id6785827225"
