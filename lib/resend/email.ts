@@ -2,6 +2,7 @@ import { Resend } from "resend";
 import ShowSubmissionEmail from "../../emails/showSubmission";
 import { ShowArtworkEmail } from "../../emails/showArtwork";
 import { WelcomeCompletePaymentEmail } from "../../emails/welcomeCompletePayment";
+import { WelcomeSupporterEmail } from "../../emails/welcomeSupporter";
 const resend = new Resend(process.env.RESEND_API_KEY);
 import { sendSlackMessage } from "../../lib/slack";
 import dayjs from "dayjs";
@@ -156,6 +157,38 @@ export async function sendWelcomeCompletePaymentEmail(
       } payment email to ${email}. ${error.name} - ${
         error.message
       }. <@U04HG3VHHEW>`,
+      "error"
+    );
+  }
+}
+
+// Sent once, right after checkout.session.completed confirms payment — see
+// upsertSupporterFromCheckout in lib/membership.ts.
+export async function sendWelcomeSupporterEmail(
+  email: string,
+  userName: string
+) {
+  try {
+    const { data, error } = await resend.emails.send({
+      from: "Refuge Worldwide <noreply@mail.refugeworldwide.com>",
+      to:
+        process.env.NODE_ENV === "development"
+          ? "jack@refugeworldwide.com"
+          : email,
+      subject: "Thank you for supporting Refuge Worldwide ",
+      reply_to: ["assistant@refugeworldwide.com"],
+      react: WelcomeSupporterEmail({ userName }),
+    });
+
+    if (error) {
+      throw new Error(error.name);
+    }
+
+    return data;
+  } catch (error) {
+    console.log(error);
+    sendSlackMessage(
+      `Failed to send welcome supporter email to ${email}. ${error.name} - ${error.message}. <@U04HG3VHHEW>`,
       "error"
     );
   }

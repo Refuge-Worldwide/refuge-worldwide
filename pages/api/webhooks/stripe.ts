@@ -74,6 +74,7 @@ export default async function handler(
     } else if (event.type === "checkout.session.completed") {
       const session = event.data.object as Stripe.Checkout.Session;
       const email = session.customer_details?.email;
+      const name = session.customer_details?.name;
       const subscriptionId = session.subscription as string | null;
 
       if (!email || !subscriptionId) {
@@ -88,7 +89,7 @@ export default async function handler(
         const subscription = await stripe.subscriptions.retrieve(
           subscriptionId
         );
-        await upsertSupporterFromCheckout(email, subscription);
+        await upsertSupporterFromCheckout(email, subscription, name);
         console.log(
           `[webhooks/stripe] upsertSupporterFromCheckout completed for ${email}`
         );

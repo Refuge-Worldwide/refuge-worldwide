@@ -443,3 +443,9 @@
 .event-accordion > summary::-webkit-details-marker {
   display: none;
 }
+
+/* faq accordion */
+
+.faq-accordion > summary::-webkit-details-marker {
+  display: none;
+}

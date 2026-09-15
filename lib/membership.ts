@@ -3,6 +3,7 @@ import { createUser, readUsers, updateUser } from "@directus/sdk";
 import Stripe from "stripe";
 import { directusMembershipAdmin } from "@/lib/directus/admin";
 import { sendSlackMessage } from "@/lib/slack";
+import { sendWelcomeSupporterEmail } from "@/lib/resend/email";
 
 // Directus's /users/invite endpoint requires the role's id (a GUID). Read
 // directly from the environment rather than looking it up by display name —
@@ -119,13 +120,20 @@ async function findUserByStripeCustomerId(customerId: string) {
  * invite them via Directus's own inviteUser(), but that sends Directus's
  * stock invite email — wrong template, and not something we want firing
  * automatically for every pay-first signup. Instead this creates the
- * account with an unusable random password and sends nothing; if they never
- * came back to set a real one, "Forgot password" on the sign-in page works
- * against this account exactly the same as any other.
+ * account with an unusable random password; if they never come back to set
+ * a real one, "Forgot password" on the sign-in page works against this
+ * account exactly the same as any other.
+ *
+ * Also sends the "thank you for becoming a supporter" email — this is the
+ * single point where every paid checkout lands, regardless of which door
+ * (app-first or web-first) or whether the customer ever completes the
+ * separate password-setup step, so it's the one place that can send it
+ * exactly once per checkout without risking a duplicate.
  */
 export async function upsertSupporterFromCheckout(
   email: string,
-  subscription: Stripe.Subscription
+  subscription: Stripe.Subscription,
+  name?: string | null
 ) {
   const roleId = await getAppUserRoleId();
   const placeholderPassword = randomBytes(24).toString("hex");
@@ -160,6 +168,8 @@ export async function upsertSupporterFromCheckout(
     updateUser(user.id, fields as unknown as Record<string, unknown>)
   );
   console.log(`[membership] subscription fields written for user ${user.id}`);
+
+  await sendWelcomeSupporterEmail(email, name?.split(" ")[0] || "there");
 }
 
 /** Called on customer.subscription.updated/deleted to keep status in sync. */
