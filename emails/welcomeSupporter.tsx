@@ -19,7 +19,9 @@ interface EmailProps {
   userName: string;
 }
 
-const baseUrl = "https://refugeworldwide.com/";
+// TODO: switch back to "https://refugeworldwide.com/" once this branch
+const baseUrl =
+  "https://refuge-worldwide-git-supporters-refugeworldwide.vercel.app/";
 
 export const WelcomeSupporterEmail = ({ userName = "there" }: EmailProps) => {
   return (
@@ -58,14 +60,15 @@ export const WelcomeSupporterEmail = ({ userName = "there" }: EmailProps) => {
                 <Text
                   style={{ ...paragraph, fontWeight: 600, marginBottom: 8 }}
                 >
-                  Get the app to make the most of your membership
+                  Download the app to make the most of your membership
                 </Text>
                 <Row>
                   <Column style={{ width: "50%" }}>
                     <Link href="https://apps.apple.com/us/app/refuge-worldwide/id6785827225">
                       <Img
-                        src={`${baseUrl}images/app-store-badge.svg`}
+                        src={`${baseUrl}images/app-store-badge-email.png`}
                         alt="Download on the App Store"
+                        width={143}
                         height={48}
                       />
                     </Link>
@@ -75,6 +78,7 @@ export const WelcomeSupporterEmail = ({ userName = "there" }: EmailProps) => {
                       <Img
                         src={`${baseUrl}images/google-play-badge.png`}
                         alt="Get it on Google Play"
+                        width={176}
                         height={68}
                       />
                     </Link>
