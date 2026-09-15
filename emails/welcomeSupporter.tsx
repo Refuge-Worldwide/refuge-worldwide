@@ -23,7 +23,7 @@ interface EmailProps {
 const baseUrl =
   "https://refuge-worldwide-git-supporters-refugeworldwide.vercel.app/";
 
-export const WelcomeSupporterEmail = ({ userName = "there" }: EmailProps) => {
+export const WelcomeSupporterEmail = ({ userName = "Jack" }: EmailProps) => {
   return (
     <Html>
       <Head />
@@ -58,28 +58,47 @@ export const WelcomeSupporterEmail = ({ userName = "there" }: EmailProps) => {
                   broadcasts, programming, and community projects.
                 </Text>
                 <Text
-                  style={{ ...paragraph, fontWeight: 600, marginBottom: 8 }}
+                  style={{
+                    ...paragraph,
+                    fontWeight: 600,
+                    marginTop: 32,
+                    marginBottom: 8,
+                    textAlign: "center",
+                  }}
                 >
                   Download the app to make the most of your membership
                 </Text>
-                <Row>
-                  <Column style={{ width: "50%" }}>
-                    <Link href="https://apps.apple.com/us/app/refuge-worldwide/id6785827225">
+                <Row style={{ paddingBottom: 32 }}>
+                  <Column align="center">
+                    <Link
+                      href="https://apps.apple.com/us/app/refuge-worldwide/id6785827225"
+                      style={{
+                        display: "inline-block",
+                        verticalAlign: "middle",
+                        marginRight: 12,
+                      }}
+                    >
                       <Img
                         src={`${baseUrl}images/app-store-badge-email.png`}
                         alt="Download on the App Store"
                         width={143}
                         height={48}
+                        style={{ verticalAlign: "middle" }}
                       />
                     </Link>
-                  </Column>
-                  <Column style={{ width: "50%" }}>
-                    <Link href="https://play.google.com/store/apps/details?id=com.refugeworldwide.app&hl=en-US">
+                    <Link
+                      href="https://play.google.com/store/apps/details?id=com.refugeworldwide.app&hl=en-US"
+                      style={{
+                        display: "inline-block",
+                        verticalAlign: "middle",
+                      }}
+                    >
                       <Img
                         src={`${baseUrl}images/google-play-badge.png`}
                         alt="Get it on Google Play"
                         width={176}
                         height={68}
+                        style={{ verticalAlign: "middle" }}
                       />
                     </Link>
                   </Column>
