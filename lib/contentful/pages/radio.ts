@@ -8,8 +8,6 @@ import {
 import {
   extractCollection,
   extractCollectionItem,
-  extractLinkedFromCollection,
-  sort,
   placeholderImage,
 } from "../../../util";
 
@@ -271,8 +269,9 @@ export async function getUpcomingShows(
 
 export async function getAllGenres() {
   const AllGenresQuery = /* GraphQL */ `
-    query AllGenresQuery {
-      genreCollection(limit: 1000, order: name_ASC) {
+    query AllGenresQuery($skip: Int!) {
+      genreCollection(limit: 1000, skip: $skip, order: name_ASC) {
+        total
         items {
           sys {
             id
@@ -283,9 +282,20 @@ export async function getAllGenres() {
     }
   `;
 
-  const res = await graphql(AllGenresQuery);
+  // Contentful caps any single collection request at 1000 items, so loop
+  // through pages in case the genre count ever grows past that.
+  const genres: GenreInterface[] = [];
+  let skip = 0;
 
-  return extractCollection<GenreInterface>(res, "genreCollection");
+  while (true) {
+    const res = await graphql(AllGenresQuery, { variables: { skip } });
+    const { items, total } = res.data.genreCollection;
+    genres.push(...items);
+    skip += items.length;
+    if (items.length === 0 || skip >= total) break;
+  }
+
+  return genres;
 }
 
 export type RelatedShowsType = Pick<
@@ -305,33 +315,77 @@ export async function getRelatedShows(
   limit: number,
   skip: number
 ) {
-  const RelatedShowsQuery = /* GraphQL */ `
-    query RelatedShowsQuery($limit: Int, $skip: Int, $genres: [String]) {
+  if (genres.length === 0) return [];
+
+  const now = dayjs().toISOString();
+
+  // Look up genre ids first, since Contentful's GraphQL API can't filter
+  // showCollection by genre name directly (only by reference/id).
+  const genreIdsQuery = /* GraphQL */ `
+    query genreIdsQuery($genres: [String]) {
       genreCollection(where: { name_in: $genres }) {
         items {
-          linkedFrom {
-            showCollection(limit: $limit, skip: $skip) {
-              items {
-                title
-                date
-                slug
-                mixcloudLink
-                coverImage {
-                  sys {
-                    id
-                  }
-                  url
-                }
-                genresCollection(limit: 3) {
-                  items {
-                    name
-                  }
-                }
-                sys {
-                  id
-                }
-              }
+          sys {
+            id
+          }
+        }
+      }
+    }
+  `;
+
+  const genreIdsRes = await graphql(genreIdsQuery, {
+    variables: { genres },
+  });
+
+  const genreIds: string[] = genreIdsRes.data.genreCollection.items
+    .map((genre) => genre?.sys?.id)
+    .filter((id): id is string => Boolean(id) && /^[a-zA-Z0-9]+$/.test(id));
+
+  if (genreIds.length === 0) return [];
+
+  // Interpolated directly rather than passed as a variable: Contentful's
+  // generated OR/filter input types are per-content-type and not worth
+  // referencing generically here. Ids are validated above, so this is safe.
+  const genreOrClause = genreIds
+    .map((id) => `{ genres: { sys: { id: "${id}" } } }`)
+    .join(", ");
+
+  const RelatedShowsQuery = /* GraphQL */ `
+    query RelatedShowsQuery(
+      $limit: Int
+      $skip: Int
+      $slug: String
+      $now: DateTime
+    ) {
+      showCollection(
+        where: {
+          OR: [${genreOrClause}]
+          slug_not: $slug
+          mixcloudLink_exists: true
+          date_lt: $now
+        }
+        order: [date_DESC, title_ASC]
+        limit: $limit
+        skip: $skip
+      ) {
+        items {
+          title
+          date
+          slug
+          mixcloudLink
+          coverImage {
+            sys {
+              id
             }
+            url
+          }
+          genresCollection(limit: 3) {
+            items {
+              name
+            }
+          }
+          sys {
+            id
           }
         }
       }
@@ -339,17 +393,12 @@ export async function getRelatedShows(
   `;
 
   const res = await graphql(RelatedShowsQuery, {
-    variables: { limit, skip, genres },
+    variables: { limit, skip, slug, now },
   });
 
-  const linkedFromShows = extractLinkedFromCollection<RelatedShowsType>(
-    res,
-    "genreCollection",
-    "showCollection"
-  );
+  const shows: RelatedShowsType[] = res.data.showCollection.items;
 
-  //TODO: move to processor function.
-  const processed = linkedFromShows.map((show) => ({
+  const processed = shows.map((show) => ({
     id: show.sys.id,
     title: show.title,
     date: show.date,
@@ -363,19 +412,7 @@ export async function getRelatedShows(
       .filter(Boolean),
   }));
 
-  // filter should only take first 2 genres.
-  const filteredShows = processed
-    .filter(
-      (show, index) =>
-        show.slug !== slug &&
-        index === processed.findIndex((t) => t.slug === show.slug) &&
-        show.mixcloudLink
-    )
-    .filter((show) => dayjs(show.date).isBefore(dayjs()))
-    .sort(sort.date_DESC)
-    .slice(0, 6);
-
-  return filteredShows;
+  return processed.slice(0, 6);
 }
 
 // to do: add show status prop confirmed/submitted

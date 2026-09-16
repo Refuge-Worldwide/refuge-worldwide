@@ -1,6 +1,5 @@
 import { graphql } from "..";
 import { Content } from "../../../types/shared";
-import { extractCollection } from "../../../util";
 
 type ArticleRSSFeedEntry = {
   author?: {
@@ -36,8 +35,9 @@ export const ArticleRSSFeedFragment = /* GraphQL */ `
 
 export async function getRSSFeed() {
   const ArticlesRSSFeedQuery = /* GraphQL */ `
-    query ArticlesRSSFeedQuery {
-      articleCollection(order: date_DESC, limit: 1000) {
+    query ArticlesRSSFeedQuery($skip: Int!) {
+      articleCollection(order: date_DESC, limit: 1000, skip: $skip) {
+        total
         items {
           ...ArticleRSSFeedFragment
         }
@@ -47,7 +47,18 @@ export async function getRSSFeed() {
     ${ArticleRSSFeedFragment}
   `;
 
-  const data = await graphql(ArticlesRSSFeedQuery);
+  // Contentful caps any single collection request at 1000 items, so loop
+  // through pages in case the article count ever grows past that.
+  const articles: ArticleRSSFeedEntry[] = [];
+  let skip = 0;
 
-  return extractCollection<ArticleRSSFeedEntry>(data, "articleCollection");
+  while (true) {
+    const data = await graphql(ArticlesRSSFeedQuery, { variables: { skip } });
+    const { items, total } = data.data.articleCollection;
+    articles.push(...items);
+    skip += items.length;
+    if (items.length === 0 || skip >= total) break;
+  }
+
+  return articles;
 }

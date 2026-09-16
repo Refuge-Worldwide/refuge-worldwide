@@ -1,6 +1,5 @@
 import { createClient, EntriesQueries, Entry } from "contentful";
 import { graphql } from ".";
-import { extractLinkedFromCollection, extractCollection } from "../../util";
 import { ShowPreviewFragment } from "./fragments";
 import dayjs from "dayjs";
 import type { TypeShow, TypeShowFields } from "../../types/contentful";
