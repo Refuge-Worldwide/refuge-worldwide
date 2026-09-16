@@ -1,6 +1,15 @@
 # *
 User-agent: *
 Allow: /
+Disallow: /admin/
+Disallow: /admin/calendar
+Disallow: /signin
+Disallow: /submission
+Disallow: /community-feedback
+Disallow: /residents-feedback
+Disallow: /submission-v2
+Disallow: /app-testing
+Disallow: /audio-archive-livestream
 
 # Host
 Host: https://refugeworldwide.com

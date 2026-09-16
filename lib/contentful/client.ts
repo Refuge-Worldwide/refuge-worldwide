@@ -1,11 +1,10 @@
 import { createClient, EntriesQueries, Entry } from "contentful";
 import { graphql } from ".";
-import { extractLinkedFromCollection, extractCollection } from "../../util";
 import { ShowPreviewFragment } from "./fragments";
 import dayjs from "dayjs";
 import type { TypeShow, TypeShowFields } from "../../types/contentful";
 import type { ShowInterface, PastShowSchema } from "../../types/shared";
-import { sort, placeholderImage } from "../../util";
+import { placeholderImage } from "../../util";
 
 export const client = createClient({
   accessToken: process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN,
@@ -129,33 +128,65 @@ export async function getPastShows(
     }));
   }
 
-  const genreShowQuery = /* GraphQL */ `
-    query genreShowQuery($filter: String) {
+  // Look up the genre's id first, since Contentful's GraphQL API can't
+  // filter showCollection by genre name directly (only by reference/id).
+  const genreQuery = /* GraphQL */ `
+    query genreQuery($filter: String) {
       genreCollection(where: { name: $filter }, limit: 1) {
         items {
-          linkedFrom {
-            showCollection(limit: 200) {
-              items {
-                coverImage {
-                  url
-                }
-                date
-                genresCollection(limit: 9) {
-                  items {
-                    name
-                  }
-                }
-                mixcloudLink
-                slug
-                title
-                audioFile {
-                  url
-                }
-                sys {
-                  id
-                }
-              }
+          sys {
+            id
+          }
+        }
+      }
+    }
+  `;
+
+  const genreRes = await graphql(genreQuery, {
+    variables: { filter: filter[0] },
+  });
+
+  const genreId = genreRes.data.genreCollection.items[0]?.sys.id;
+
+  if (!genreId) {
+    return [];
+  }
+
+  const genreShowQuery = /* GraphQL */ `
+    query genreShowQuery(
+      $genreId: String!
+      $limit: Int!
+      $skip: Int!
+      $now: DateTime!
+    ) {
+      showCollection(
+        where: {
+          genres: { sys: { id: $genreId } }
+          mixcloudLink_exists: true
+          date_lte: $now
+        }
+        order: [date_DESC, title_ASC]
+        limit: $limit
+        skip: $skip
+      ) {
+        items {
+          sys {
+            id
+          }
+          title
+          date
+          slug
+          mixcloudLink
+          coverImage {
+            url
+          }
+          genresCollection(limit: 9) {
+            items {
+              name
             }
+          }
+          audioFile {
+            url
           }
         }
       }
@@ -163,13 +194,10 @@ export async function getPastShows(
   `;
 
   const res = await graphql(genreShowQuery, {
-    variables: { filter: filter[0] },
+    variables: { genreId, limit: take, skip, now },
   });
 
-  const items =
-    res.data.genreCollection.items[0].linkedFrom.showCollection.items;
-
-  const processed = items.map((show) => ({
+  return res.data.showCollection.items.map((show) => ({
     id: show.sys.id,
     title: show.title,
     date: show.date,
@@ -181,21 +209,6 @@ export async function getPastShows(
       .filter(Boolean),
     audioFile: show.audioFile?.url ?? null,
   }));
-
-  // remove shows that do not have a playback link or are newer than today.
-  const filtered = processed.filter(
-    (show) => show.mixcloudLink && show.date <= now
-  );
-
-  // sort shows by date
-  const sorted = filtered.sort((a, b) => {
-    if (dayjs(a.date).isAfter(b.date)) return -1;
-    if (dayjs(b.date).isAfter(a.date)) return 1;
-    return sort.alpha(a.title, b.title);
-  });
-
-  // paginate and return
-  return sorted.slice(skip, skip + take);
 }
 
 export async function getShowByTime(time) {
