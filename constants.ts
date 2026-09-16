@@ -58,8 +58,8 @@ export const ALPHABET = [
 ];
 
 export const REGEX = {
-  NUMERIC: new RegExp(/^\d+$/iu),
-  SPECIAL: new RegExp(/\W|_/iu),
+  NUMERIC: new RegExp(/^\d+$/i),
+  SPECIAL: new RegExp(/\W|_/i),
 };
 
 export const ENDPOINT = `https://graphql.contentful.com/content/v1/spaces/${process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID}/environments/${process.env.NEXT_PUBLIC_CONTENTFUL_ENVIRONMENT_ID}`;
