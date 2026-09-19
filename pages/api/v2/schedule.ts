@@ -83,7 +83,8 @@ async function getCh1LiveNow(
     : show?.title ?? (isRepeat ? stripRepeatTag(radioTitle) : radioTitle);
 
   return {
-    title,
+    // same "|" replacement the schedule applies to Contentful titles
+    title: title.replace(/\|/g, "—"),
     artwork: show?.coverImage?.url ?? placeholderImage.url,
     link: show?.slug ? "/radio/" + show.slug : null,
     slug: show?.slug ?? null,
