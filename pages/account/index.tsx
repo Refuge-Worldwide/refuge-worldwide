@@ -91,7 +91,7 @@ export default function AccountPage({ user }: AccountPageProps) {
         <div className="flex justify-between">
           <span className="font-medium">Subscription:</span>
           <span className="capitalize">
-            {user.isStaff && !isPaidSupporter
+            {user.isStaff
               ? "Staff"
               : isPaidSupporter
               ? `${user.subscription_status} — €${(
@@ -104,24 +104,23 @@ export default function AccountPage({ user }: AccountPageProps) {
     </div>
   );
 
-  const supporterOrManageButton =
-    user.isStaff && !isPaidSupporter ? null : isPaidSupporter ? (
-      <button
-        onClick={handleManageSubscription}
-        disabled={isPortalLoading}
-        title="Opens in a new tab"
-        className="w-full border-2 border-black py-4 px-6 text-center text-small font-medium hover:bg-black hover:text-white transition-colors disabled:opacity-50"
-      >
-        {isPortalLoading ? "Loading..." : "Manage Subscription ↗"}
-      </button>
-    ) : !showSupportPicker ? (
-      <button
-        onClick={() => setShowSupportPicker(true)}
-        className="block w-full border-2 border-black py-4 px-6 text-center text-small font-medium hover:bg-black hover:text-white transition-colors"
-      >
-        Become a Supporter
-      </button>
-    ) : null;
+  const supporterOrManageButton = user.isStaff ? null : isPaidSupporter ? (
+    <button
+      onClick={handleManageSubscription}
+      disabled={isPortalLoading}
+      title="Opens in a new tab"
+      className="w-full border-2 border-black py-4 px-6 text-center text-small font-medium hover:bg-black hover:text-white transition-colors disabled:opacity-50"
+    >
+      {isPortalLoading ? "Loading..." : "Manage Subscription ↗"}
+    </button>
+  ) : !showSupportPicker ? (
+    <button
+      onClick={() => setShowSupportPicker(true)}
+      className="block w-full border-2 border-black py-4 px-6 text-center text-small font-medium hover:bg-black hover:text-white transition-colors"
+    >
+      Become a Supporter
+    </button>
+  ) : null;
 
   return (
     <Layout>

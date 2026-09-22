@@ -81,7 +81,13 @@ function Calendar() {
   useEffect(() => {
     const contentfulClient = async () => {
       const res = await fetch("/api/admin/contentful-token");
-      if (!res.ok) return;
+      if (!res.ok) {
+        console.error(
+          `[admin/calendar] contentful-token fetch failed: ${res.status}`
+        );
+        toast.error("Could not load the Contentful token — check the console.");
+        return;
+      }
       const { token } = await res.json();
       const client = createClient({
         accessToken: token,
