@@ -67,6 +67,7 @@ export default function AccountPage({ user }: AccountPageProps) {
     { label: "Favorite Shows", href: "/account/likes" },
     { label: "Account Settings", href: "/account/settings" },
     { label: "Help", href: "/support" },
+    ...(user.isStaff ? [{ label: "Calendar", href: "/admin/calendar" }] : []),
   ];
 
   const profileCard = (
@@ -203,6 +204,14 @@ export default function AccountPage({ user }: AccountPageProps) {
                     {tab.label}
                   </button>
                 ))}
+                {user.isStaff && (
+                  <Link
+                    href="/admin/calendar"
+                    className="px-5 py-2 rounded-full text-small font-medium transition-colors hover:opacity-60"
+                  >
+                    Calendar
+                  </Link>
+                )}
               </div>
             </div>
 
