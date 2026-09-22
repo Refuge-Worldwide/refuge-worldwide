@@ -1,11 +1,12 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import { requireStaffApi } from "@/lib/directus/staff";
 import { sendConfirmationEmail } from "../../../lib/resend/email";
-import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  if (!(await requireStaffApi(req, res))) return;
   const values = req.body;
   console.log("REQUEST METHOD: " + req.method);
   switch (req.method) {

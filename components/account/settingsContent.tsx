@@ -7,6 +7,7 @@ type SettingsContentProps = {
     email: string;
     first_name?: string | null;
     subscription_status?: string | null;
+    isStaff?: boolean;
   };
 };
 
@@ -51,6 +52,13 @@ export function SettingsContent({ user }: SettingsContentProps) {
   } | null>(null);
 
   const [isPortalLoading, setIsPortalLoading] = useState(false);
+
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteMessage, setDeleteMessage] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
 
   async function handleSaveUsername(e: React.FormEvent) {
     e.preventDefault();
@@ -130,6 +138,30 @@ export function SettingsContent({ user }: SettingsContentProps) {
       alert("Failed to open billing portal");
     } finally {
       setIsPortalLoading(false);
+    }
+  }
+
+  async function handleDeleteAccount() {
+    setIsDeleting(true);
+    setDeleteMessage(null);
+    try {
+      const res = await fetch("/api/auth/delete-account", { method: "POST" });
+      const data = await res.json().catch(() => null);
+      if (!res.ok) {
+        setDeleteMessage({
+          type: "error",
+          text: data?.error ?? "Could not delete your account",
+        });
+        setIsDeleting(false);
+        return;
+      }
+      router.push("/");
+    } catch {
+      setDeleteMessage({
+        type: "error",
+        text: "Could not delete your account",
+      });
+      setIsDeleting(false);
     }
   }
 
@@ -235,7 +267,12 @@ export function SettingsContent({ user }: SettingsContentProps) {
       <div className="border-b border-black/10 pb-8">
         <h2 className="font-medium text-base mb-4">Subscription</h2>
 
-        {isPaidSupporter ? (
+        {user.isStaff && !isPaidSupporter ? (
+          <p className="text-small">
+            You&apos;re part of the Refuge team, so you already have supporter
+            access. There&apos;s no subscription to manage.
+          </p>
+        ) : isPaidSupporter ? (
           <>
             <p className="text-small mb-4">
               Manage your payment method, change your support amount, or cancel
@@ -281,16 +318,39 @@ export function SettingsContent({ user }: SettingsContentProps) {
         <h2 className="font-medium text-base mb-4 text-red">Danger Zone</h2>
 
         <p className="text-small mb-4">
-          Deleting your account will permanently remove all your data, including
-          liked shows and subscription history.
+          Deleting your account permanently removes your login, liked shows and
+          subscription history.
+          {isPaidSupporter && " Your subscription will be cancelled."} This
+          can&apos;t be undone.
         </p>
 
-        <a
-          href="mailto:support@refugeworldwide.com?subject=Delete my account"
-          className="text-small text-red underline hover:no-underline"
-        >
-          Request Account Deletion
-        </a>
+        <Message message={deleteMessage} />
+
+        {!confirmingDelete ? (
+          <button
+            onClick={() => setConfirmingDelete(true)}
+            className="text-small text-red underline hover:no-underline"
+          >
+            Delete my account
+          </button>
+        ) : (
+          <div className="flex gap-4 mt-4">
+            <button
+              onClick={handleDeleteAccount}
+              disabled={isDeleting}
+              className="bg-red text-white py-3 px-6 text-small hover:opacity-80 transition-opacity disabled:opacity-50"
+            >
+              {isDeleting ? "Deleting..." : "Yes, delete my account"}
+            </button>
+            <button
+              onClick={() => setConfirmingDelete(false)}
+              disabled={isDeleting}
+              className="border-2 border-black py-3 px-6 text-small font-medium"
+            >
+              Cancel
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

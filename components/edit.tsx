@@ -1,22 +1,20 @@
 import Link from "next/link";
 import { AiOutlineEdit } from "react-icons/ai";
 import { usePathname } from "next/navigation";
-import { createClient } from "@/lib/supabase/component";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function Edit({ id }: { id?: string }) {
   const pathname = usePathname();
-  const supabase = createClient();
-  const [user, setUser] = useState<any>(undefined);
+  const [isStaff, setIsStaff] = useState(false);
 
   useEffect(() => {
-    supabase.auth.getUser().then((user) => {
-      setUser(user.data);
-    });
+    fetch("/api/auth/is-staff")
+      .then((res) => res.json())
+      .then((data) => setIsStaff(!!data.isStaff))
+      .catch(() => setIsStaff(false));
   }, []);
 
-  if (id && user)
+  if (id && isStaff)
     return (
       <Link
         className={`absolute ${

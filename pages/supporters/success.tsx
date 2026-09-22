@@ -141,6 +141,7 @@ export default function SubscriptionSuccessPage() {
                 missingTokenMessage="We couldn't find your payment session."
                 successRedirect="/account"
                 includeUsername
+                includeNewsletter
                 submitLabel="Finish account setup"
                 footer={
                   <div className="text-center mt-8">{downloadAppSection}</div>

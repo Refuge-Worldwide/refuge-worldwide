@@ -4,7 +4,7 @@ import { createApiMocks } from "../helpers/createApiMocks";
 import signupHandler from "@/pages/api/auth/signup";
 import { directusMembershipAdmin } from "@/lib/directus/admin";
 import { findUserByEmail, getAppUserRoleId } from "@/lib/membership";
-import { getClientIp } from "@/lib/signupRateLimit";
+import { subscribeNewUser } from "@/lib/mailchimp";
 
 vi.mock("@/lib/directus/admin", () => ({
   directusMembershipAdmin: { request: vi.fn() },
@@ -19,19 +19,18 @@ vi.mock("@/lib/membership", () => ({
   getAppUserRoleId: vi.fn(),
 }));
 
-vi.mock("@/lib/signupRateLimit", () => ({
-  getClientIp: vi.fn(),
+vi.mock("@/lib/mailchimp", () => ({
+  subscribeNewUser: vi.fn(),
 }));
 
 const mockRequest = directusMembershipAdmin.request as Mock;
 const mockFindUserByEmail = findUserByEmail as Mock;
 const mockGetAppUserRoleId = getAppUserRoleId as Mock;
-const mockGetClientIp = getClientIp as Mock;
+const mockSubscribeNewUser = subscribeNewUser as Mock;
 
 beforeEach(() => {
   vi.clearAllMocks();
   mockGetAppUserRoleId.mockResolvedValue("role-1");
-  mockGetClientIp.mockReturnValue("1.2.3.4");
 });
 
 describe("POST /api/auth/signup", () => {
@@ -103,12 +102,34 @@ describe("POST /api/auth/signup", () => {
         password: "longenough1",
         first_name: "DJ Refuge",
         role: "role-1",
-        signup_ip: "1.2.3.4",
+        newsletter_opt_in: false,
         status: "active",
       })
     );
     expect(res._getStatusCode()).toBe(200);
     expect(res._getJSONData()).toEqual({ ok: true });
+    expect(mockSubscribeNewUser).not.toHaveBeenCalled();
+  });
+
+  it("subscribes to the newsletter only when the box was ticked", async () => {
+    mockFindUserByEmail.mockResolvedValueOnce(null);
+    mockRequest.mockResolvedValueOnce({ id: "user-new" });
+
+    const { req, res } = createApiMocks({
+      body: {
+        email: "new@b.com",
+        password: "longenough1",
+        username: "dj",
+        newsletter: true,
+      },
+    });
+    await signupHandler(req, res);
+
+    expect(createUser).toHaveBeenCalledWith(
+      expect.objectContaining({ newsletter_opt_in: true })
+    );
+    expect(mockSubscribeNewUser).toHaveBeenCalledWith("new@b.com", "dj");
+    expect(res._getStatusCode()).toBe(200);
   });
 
   it("500s if Directus fails to create the user", async () => {

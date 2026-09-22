@@ -23,9 +23,23 @@ function normalize(text: string): string {
   return text.normalize("NFKC").replace(/[​-‍﻿̀-ͯ]/g, "");
 }
 
+// catches "f u c k" / "f-u-c-k" style spacing without touching real words
+const SPELLED_OUT_LETTER = "(?<![\\p{L}])\\p{L}(?![\\p{L}])";
+const SPELLED_OUT_WORD = new RegExp(
+  `${SPELLED_OUT_LETTER}(?:[\\s\\-_.]+${SPELLED_OUT_LETTER})+`,
+  "gu"
+);
+
+function collapseSpelledOutWords(text: string): string {
+  return text.replace(SPELLED_OUT_WORD, (spelledOut) =>
+    spelledOut.replace(/[\s\-_.]+/g, "")
+  );
+}
+
 function isSymbolHeavySpam(text: string): boolean {
   const trimmed = text.trim();
-  if (trimmed.length <= 4) return false; // allow short emoji reactions, e.g. "🔥🔥🔥"
+  // code points, not .length — emoji are surrogate pairs
+  if ([...trimmed].length <= 4) return false; // allow short emoji reactions, e.g. "🔥🔥🔥"
 
   const letterOrDigitCount = (trimmed.match(/[\p{L}\p{N}]/gu) ?? []).length;
   return letterOrDigitCount === 0;
@@ -42,7 +56,10 @@ export function moderateMessageText(rawText: string): ModerationResult {
     };
   }
 
-  if (profanityMatcher.hasMatch(text)) {
+  if (
+    profanityMatcher.hasMatch(text) ||
+    profanityMatcher.hasMatch(collapseSpelledOutWords(text))
+  ) {
     return { ok: false, reason: "That message isn't allowed here." };
   }
 

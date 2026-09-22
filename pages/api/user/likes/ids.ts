@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { directusUrl, getValidAccessToken } from "@/lib/directus/session";
+import { getUserAccess, getUserIdFromToken } from "@/lib/directus/staff";
 
 // Lightweight — just show IDs, no CMS hydration. Used by the like button on
 // show cards, which only needs to know whether a given show is liked.
@@ -12,8 +13,13 @@ export default async function handler(
     return res.status(405).json({ error: "Method not allowed" });
   }
 
+  // not a supporter? just show no likes rather than 403 here
   const token = await getValidAccessToken(req, res);
   if (!token) {
+    return res.status(200).json({ ids: [] });
+  }
+  const userId = await getUserIdFromToken(token);
+  if (!userId || !(await getUserAccess(userId)).hasSupporterAccess) {
     return res.status(200).json({ ids: [] });
   }
 

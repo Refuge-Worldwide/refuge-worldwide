@@ -1,4 +1,4 @@
-import { supabase } from "../supabase/client";
+import { getAccessTokenRow, saveAccessToken } from "../accessTokens";
 import dayjs from "dayjs";
 
 const APPLICATION = "soundcloud-oauth";
@@ -16,14 +16,9 @@ const cleanUrl = (url: string): string => {
 export const getAccessToken = async (): Promise<string> => {
   const now = dayjs();
 
-  const { data: row } = await supabase
-    .from("accessTokens")
-    .select("token, expires")
-    .eq("application", APPLICATION)
-    .limit(1)
-    .single();
+  const row = await getAccessTokenRow(APPLICATION).catch(() => null);
 
-  if (row?.token && now.isBefore(dayjs(row.expires))) {
+  if (row?.token && row.expires && now.isBefore(dayjs(row.expires))) {
     return row.token;
   }
 
@@ -49,16 +44,11 @@ export const getAccessToken = async (): Promise<string> => {
     expires: now.add(expiresIn - 30, "seconds").toISOString(),
   };
 
-  const { error: saveError } = row
-    ? await supabase
-        .from("accessTokens")
-        .update(tokenData)
-        .eq("application", APPLICATION)
-    : await supabase
-        .from("accessTokens")
-        .insert({ application: APPLICATION, ...tokenData });
-
-  if (saveError) console.error("[soundcloud] Supabase save error:", saveError);
+  try {
+    await saveAccessToken(APPLICATION, tokenData);
+  } catch (error) {
+    console.error("[soundcloud] token save error:", error);
+  }
 
   return body.access_token;
 };

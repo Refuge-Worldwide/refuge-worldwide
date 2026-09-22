@@ -1,5 +1,6 @@
 import type { GetServerSidePropsContext } from "next";
 import { getSessionUser } from "@/lib/directus/session";
+import { getUserAccess } from "@/lib/directus/staff";
 import Layout from "../../components/layout";
 import PageMeta from "../../components/seo/page";
 import Link from "next/link";
@@ -55,6 +56,16 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return {
       redirect: {
         destination: "/signin",
+        permanent: false,
+      },
+    };
+  }
+
+  const access = await getUserAccess(user.id);
+  if (!access.hasSupporterAccess) {
+    return {
+      redirect: {
+        destination: "/account",
         permanent: false,
       },
     };

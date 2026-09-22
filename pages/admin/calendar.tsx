@@ -1,3 +1,4 @@
+import { requireStaffPage } from "@/lib/directus/staff";
 import Layout from "../../components/layout";
 import PageMeta from "../../components/seo/page";
 import FullCalendar from "@fullcalendar/react";
@@ -45,10 +46,8 @@ import CalendarInsta from "../../views/admin/calendarInsta";
 import EmailModal from "../../views/admin/emailModal";
 import TextareaField from "../../components/formFields/textareaField";
 import { createClient } from "contentful-management";
-import { createClient as createSupabaseClient } from "@/lib/supabase/component";
 import AdditionalMenu from "../../views/admin/additionalMenu";
 
-import type { User } from "@supabase/supabase-js";
 import type { GetServerSidePropsContext } from "next";
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL
@@ -77,19 +76,15 @@ function Calendar() {
   const datePicker = useRef<any>();
   const windowSize = useWindowSize();
   const router = useRouter();
-  const supabase = createSupabaseClient();
   const [contentfulClient, setContentfulClient] = useState<any>(null);
 
   useEffect(() => {
     const contentfulClient = async () => {
-      const { data } = await supabase
-        .from("accessTokens")
-        .select("token")
-        .eq("application", "contentful")
-        .limit(1)
-        .single();
+      const res = await fetch("/api/admin/contentful-token");
+      if (!res.ok) return;
+      const { token } = await res.json();
       const client = createClient({
-        accessToken: data.token,
+        accessToken: token,
       });
       setContentfulClient(client);
     };
@@ -944,4 +939,8 @@ async function getEvents(info: any) {
   );
   const shows = await response.json();
   return shows.processed;
+}
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  return requireStaffPage(context);
 }

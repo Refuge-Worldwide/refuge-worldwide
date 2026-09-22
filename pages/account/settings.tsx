@@ -1,6 +1,7 @@
 import type { GetServerSidePropsContext } from "next";
 import { useState } from "react";
 import { getSessionUser } from "@/lib/directus/session";
+import { getUserAccess } from "@/lib/directus/staff";
 import Layout from "../../components/layout";
 import PageMeta from "../../components/seo/page";
 import Link from "next/link";
@@ -15,6 +16,7 @@ type SettingsPageProps = {
     first_name?: string | null;
     subscription_status?: string | null;
     payment_failed_at?: string | null;
+    isStaff?: boolean;
   };
 };
 
@@ -100,7 +102,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     };
   }
 
+  const { isStaff } = await getUserAccess(user.id);
+
   return {
-    props: { user },
+    props: { user: { ...user, isStaff } },
   };
 }

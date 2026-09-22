@@ -1,5 +1,6 @@
 import type { GetServerSidePropsContext } from "next";
 import { getSessionUser } from "@/lib/directus/session";
+import { getUserAccess } from "@/lib/directus/staff";
 import Layout from "../../components/layout";
 import PageMeta from "../../components/seo/page";
 import Link from "next/link";
@@ -20,6 +21,7 @@ type AccountPageProps = {
     supporter_amount_cents?: number | null;
     supporter_interval?: "month" | "year" | null;
     payment_failed_at?: string | null;
+    isStaff?: boolean;
   };
 };
 
@@ -88,7 +90,9 @@ export default function AccountPage({ user }: AccountPageProps) {
         <div className="flex justify-between">
           <span className="font-medium">Subscription:</span>
           <span className="capitalize">
-            {isPaidSupporter
+            {user.isStaff && !isPaidSupporter
+              ? "Staff"
+              : isPaidSupporter
               ? `${user.subscription_status} — €${(
                   (user.supporter_amount_cents ?? 0) / 100
                 ).toFixed(2)}/${user.supporter_interval}`
@@ -99,23 +103,24 @@ export default function AccountPage({ user }: AccountPageProps) {
     </div>
   );
 
-  const supporterOrManageButton = isPaidSupporter ? (
-    <button
-      onClick={handleManageSubscription}
-      disabled={isPortalLoading}
-      title="Opens in a new tab"
-      className="w-full border-2 border-black py-4 px-6 text-center text-small font-medium hover:bg-black hover:text-white transition-colors disabled:opacity-50"
-    >
-      {isPortalLoading ? "Loading..." : "Manage Subscription ↗"}
-    </button>
-  ) : !showSupportPicker ? (
-    <button
-      onClick={() => setShowSupportPicker(true)}
-      className="block w-full border-2 border-black py-4 px-6 text-center text-small font-medium hover:bg-black hover:text-white transition-colors"
-    >
-      Become a Supporter
-    </button>
-  ) : null;
+  const supporterOrManageButton =
+    user.isStaff && !isPaidSupporter ? null : isPaidSupporter ? (
+      <button
+        onClick={handleManageSubscription}
+        disabled={isPortalLoading}
+        title="Opens in a new tab"
+        className="w-full border-2 border-black py-4 px-6 text-center text-small font-medium hover:bg-black hover:text-white transition-colors disabled:opacity-50"
+      >
+        {isPortalLoading ? "Loading..." : "Manage Subscription ↗"}
+      </button>
+    ) : !showSupportPicker ? (
+      <button
+        onClick={() => setShowSupportPicker(true)}
+        className="block w-full border-2 border-black py-4 px-6 text-center text-small font-medium hover:bg-black hover:text-white transition-colors"
+      >
+        Become a Supporter
+      </button>
+    ) : null;
 
   return (
     <Layout>
@@ -239,7 +244,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     };
   }
 
+  const { isStaff } = await getUserAccess(user.id);
+
   return {
-    props: { user },
+    props: { user: { ...user, isStaff } },
   };
 }

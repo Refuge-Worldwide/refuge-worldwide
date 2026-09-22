@@ -1,3 +1,5 @@
+import { requireStaffPage } from "@/lib/directus/staff";
+import type { GetServerSidePropsContext } from "next";
 import { useEffect, useState } from "react";
 import { NextPage } from "next";
 import { TfiReload, TfiDownload } from "react-icons/tfi";
@@ -94,3 +96,7 @@ const ScheduleArtworkPage: NextPage & {
 ScheduleArtworkPage.getLayout = (page: React.ReactNode) => page;
 
 export default ScheduleArtworkPage;
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  return requireStaffPage(context);
+}

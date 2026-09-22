@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { directusUrl, getValidAccessToken } from "@/lib/directus/session";
+import { directusUrl } from "@/lib/directus/session";
+import { requireSupporterToken } from "@/lib/directus/supporterAccess";
 import { graphql } from "@/lib/contentful";
 import { placeholderImage } from "@/util";
 
@@ -12,10 +13,8 @@ export default async function handler(
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const token = await getValidAccessToken(req, res);
-  if (!token) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
+  const token = await requireSupporterToken(req, res);
+  if (!token) return;
 
   try {
     // Get liked show IDs from Directus (show_favourites is scoped to the

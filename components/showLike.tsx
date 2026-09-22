@@ -26,7 +26,7 @@ export default function ShowLike({ id }: { id?: string }) {
         body: JSON.stringify({ showId: id }),
       });
 
-      if (res.status === 401) {
+      if (res.status === 401 || res.status === 403) {
         setSignInModalOpen(true);
         return;
       }

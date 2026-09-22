@@ -3,7 +3,7 @@ import { createUser } from "@directus/sdk";
 import { directusMembershipAdmin } from "@/lib/directus/admin";
 import { findUserByEmail, getAppUserRoleId } from "@/lib/membership";
 import { sendSlackMessage } from "@/lib/slack";
-import { getClientIp } from "@/lib/signupRateLimit";
+import { subscribeNewUser } from "@/lib/mailchimp";
 
 /**
  * Public self-serve signup — this is Door B (app-first): the mobile app
@@ -31,10 +31,11 @@ export default async function handler(
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { email, password, username } = req.body as {
+  const { email, password, username, newsletter } = req.body as {
     email?: string;
     password?: string;
     username?: string;
+    newsletter?: boolean;
   };
 
   if (!email || !password || !username?.trim()) {
@@ -47,10 +48,6 @@ export default async function handler(
       .status(400)
       .json({ error: "Password must be at least 8 characters" });
   }
-
-  // IP rate limiting is on hold for now — see lib/signupRateLimit.ts.
-  // Still capturing the IP below so it's there if we turn it back on.
-  const ip = getClientIp(req);
 
   let existing;
   try {
@@ -78,7 +75,7 @@ export default async function handler(
         password,
         first_name: username.trim(),
         role: roleId,
-        signup_ip: ip,
+        newsletter_opt_in: newsletter === true,
         // A real, user-chosen password from the start — status "active"
         // means this account never needs the /supporters/success setup
         // form even if they later pay on the website (see
@@ -95,12 +92,9 @@ export default async function handler(
     return res.status(500).json({ error: "Could not create your account" });
   }
 
-  // Deliberately not sending an email here for now — the
-  // "complete your payment" framing (sendWelcomeCompletePaymentEmail, see
-  // lib/resend/email.ts) is specific to this signup route and about to be
-  // replaced by a single general "account created" email that fires the
-  // same way regardless of which door (app-first or web-first) created
-  // the account.
+  if (newsletter === true) {
+    await subscribeNewUser(email, username.trim());
+  }
 
   return res.status(200).json({ ok: true });
 }

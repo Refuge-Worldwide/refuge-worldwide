@@ -9,6 +9,7 @@ import {
   getAppUserRoleId,
 } from "@/lib/membership";
 import { sendSlackMessage } from "@/lib/slack";
+import { subscribeNewUser } from "@/lib/mailchimp";
 
 /**
  * Called from the /supporters/success page right after a Stripe Checkout
@@ -40,10 +41,12 @@ export default async function handler(
     session_id: sessionId,
     password,
     username,
+    newsletter,
   } = req.body as {
     session_id?: string;
     password?: string;
     username?: string;
+    newsletter?: boolean;
   };
 
   if (!sessionId || !password || !username?.trim()) {
@@ -124,10 +127,15 @@ export default async function handler(
             password,
             first_name: username.trim(),
             status: "active",
+            newsletter_opt_in: newsletter === true,
           }
         : {}),
     })
   );
+
+  if (needsSetup && newsletter === true) {
+    await subscribeNewUser(email, username.trim());
+  }
 
   // Never write a password beyond the needsSetup branch above — if the
   // account already had one, this is just an auth check with whatever the

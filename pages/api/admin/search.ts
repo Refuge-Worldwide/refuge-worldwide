@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { requireStaffApi } from "@/lib/directus/staff";
 import { assertError } from "ts-extras";
 import { getArtistSearchData } from "../../../lib/contentful/search";
 import { searchCalendarShows } from "../../../lib/contentful/calendar";
@@ -7,6 +8,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  if (!(await requireStaffApi(req, res))) return;
   try {
     const { query, type, showStatus } = req.query as typeof req.query & {
       query: string;

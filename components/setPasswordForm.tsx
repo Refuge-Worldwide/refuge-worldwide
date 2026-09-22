@@ -7,6 +7,7 @@ export function SetPasswordForm({
   heading,
   successMessage,
   includeUsername = false,
+  includeNewsletter = false,
   queryKey = "token",
   missingTokenMessage = "This link is missing its token.",
   successRedirect,
@@ -19,6 +20,8 @@ export function SetPasswordForm({
   heading: string;
   successMessage: string;
   includeUsername?: boolean;
+  // Shows an unticked newsletter opt-in checkbox and posts it as `newsletter`.
+  includeNewsletter?: boolean;
   // Which URL query param carries the identifier posted to apiPath (an
   // invite/reset token, or — for the post-checkout flow — a Stripe
   // session_id). Also used as the JSON body key.
@@ -52,6 +55,7 @@ export function SetPasswordForm({
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [newsletter, setNewsletter] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -78,11 +82,12 @@ export function SetPasswordForm({
       const res = await fetch(apiPath, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(
-          includeUsername
-            ? { [queryKey]: identifier, password, username }
-            : { [queryKey]: identifier, password }
-        ),
+        body: JSON.stringify({
+          [queryKey]: identifier,
+          password,
+          ...(includeUsername ? { username } : {}),
+          ...(includeNewsletter ? { newsletter } : {}),
+        }),
       });
       const data = await res.json();
 
@@ -173,6 +178,18 @@ export function SetPasswordForm({
               className="pill-input"
             />
           </div>
+
+          {includeNewsletter && (
+            <label className="flex items-start gap-3 text-small cursor-pointer">
+              <input
+                type="checkbox"
+                checked={newsletter}
+                onChange={(e) => setNewsletter(e.target.checked)}
+                className="mt-1"
+              />
+              <span>Sign me up to the Refuge Worldwide newsletter</span>
+            </label>
+          )}
 
           {error && <p className="text-small text-red">{error}</p>}
 

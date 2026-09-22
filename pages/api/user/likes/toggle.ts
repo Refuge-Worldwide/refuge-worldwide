@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { directusUrl, getValidAccessToken } from "@/lib/directus/session";
+import { directusUrl } from "@/lib/directus/session";
+import { requireSupporterToken } from "@/lib/directus/supporterAccess";
 
 export default async function handler(
   req: NextApiRequest,
@@ -15,10 +16,8 @@ export default async function handler(
     return res.status(400).json({ error: "showId is required" });
   }
 
-  const token = await getValidAccessToken(req, res);
-  if (!token) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
+  const token = await requireSupporterToken(req, res);
+  if (!token) return;
 
   const headers = {
     Authorization: `Bearer ${token}`,
