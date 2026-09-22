@@ -191,6 +191,16 @@ export function SetPasswordForm({
             </label>
           )}
 
+          {includeUsername && (
+            <p className="text-small text-black/60">
+              By signing up, you agree to our{" "}
+              <Link href="/privacy-policy" className="underline">
+                Privacy Policy
+              </Link>
+              .
+            </p>
+          )}
+
           {error && <p className="text-small text-red">{error}</p>}
 
           <button
