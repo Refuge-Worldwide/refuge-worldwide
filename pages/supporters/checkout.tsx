@@ -3,24 +3,19 @@ import Layout from "../../components/layout";
 import PageMeta from "../../components/seo/page";
 import { SupportPicker } from "@/components/supportPicker";
 
-/**
- * Dedicated checkout page for the app's "Complete Account Setup" button —
- * /supporters/checkout?email=... (see app/(tabs)/account/index.tsx in
- * refugeWorldwideApp). Opened inside the app's in-app browser, so this
- * intentionally skips /support's marketing content, app-download badges,
- * and modal wrapper — a page-in-a-browser-sheet opening a modal on load
- * was one UI layer too many. Just the picker, same as the account page's
- * standalone usage.
- */
+// Linked from the "confirm your account" email sent to app signups
+// (/supporters/checkout?email=...). ?app=1 means the app itself opened it,
+// so success hands back to the app instead of showing the web message.
 export default function SupportersCheckoutPage() {
   const router = useRouter();
   const email =
     typeof router.query.email === "string" ? router.query.email : undefined;
+  const fromApp = router.query.app === "1";
 
   return (
     <Layout>
       <PageMeta
-        title="Complete Account Setup | Refuge Worldwide"
+        title="Confirm Your Account | Refuge Worldwide"
         path="supporters/checkout/"
       />
 
@@ -32,14 +27,14 @@ export default function SupportersCheckoutPage() {
               first-time web visitor, so it frames it as completing setup
               rather than the general "become a supporter" pitch. */}
           <h1 className="font-serif text-large text-center mb-2">
-            Complete account setup
+            Confirm your account
           </h1>
           <p className="text-center text-small opacity-60 mb-8 max-w-sm mx-auto">
-            Subscribe to complete your account setup, in whatever amount works
-            for you.
+            Choose your supporter subscription, in whatever amount works for
+            you, to activate your account.
           </p>
 
-          <SupportPicker email={email} fromApp />
+          <SupportPicker email={email} fromApp={fromApp} />
         </div>
       </div>
     </Layout>

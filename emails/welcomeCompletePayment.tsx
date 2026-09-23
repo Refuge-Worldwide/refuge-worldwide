@@ -25,7 +25,7 @@ const baseUrl = "https://refugeworldwide.com/";
 
 export const WelcomeCompletePaymentEmail = ({
   userName = "there",
-  supportersUrl = "https://refugeworldwide.com/supporters",
+  supportersUrl = "https://refugeworldwide.com/supporters/checkout",
   reminder = false,
 }: EmailProps) => {
   return (
@@ -58,11 +58,11 @@ export const WelcomeCompletePaymentEmail = ({
                 </Heading>
                 <Text style={paragraph}>
                   {reminder
-                    ? "Just a nudge — you're almost there! You still need to complete your account setup and payment at the link below. Thank you for keeping independent radio alive."
-                    : "You're almost there! Just complete your account setup and payment at the link below. Thank you for keeping independent radio alive."}
+                    ? "Just a nudge — you're almost there! You still need to confirm your account and activate your subscription by paying at the link below. Thank you for keeping independent radio alive."
+                    : "Thanks for signing up! To finish, confirm your account and activate your subscription by paying at the link below. Once your payment goes through, your supporter features will be active across the app and our website. Thank you for keeping independent radio alive."}
                 </Text>
                 <Button href={supportersUrl} style={button} pY={9} pX={12}>
-                  COMPLETE ACCOUNT SETUP
+                  CONFIRM ACCOUNT &amp; ACTIVATE SUBSCRIPTION
                 </Button>
                 <Hr style={seperator} />
                 <Text style={{ ...paragraph, marginTop: -5, marginBottom: 0 }}>
@@ -91,8 +91,8 @@ export const WelcomeCompletePaymentEmail = ({
 
 export const preview = (reminder: boolean) =>
   reminder
-    ? "You're signed up — don't forget to complete your account setup."
-    : "Welcome to Refuge Worldwide — complete your account setup.";
+    ? "You're signed up — don't forget to confirm your account."
+    : "Confirm your account and activate your subscription.";
 
 export default WelcomeCompletePaymentEmail;
 

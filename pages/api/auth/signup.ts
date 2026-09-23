@@ -3,6 +3,7 @@ import { createUser } from "@directus/sdk";
 import { directusMembershipAdmin } from "@/lib/directus/admin";
 import { findUserByEmail, getAppUserRoleId } from "@/lib/membership";
 import { sendSlackMessage } from "@/lib/slack";
+import { sendWelcomeCompletePaymentEmail } from "@/lib/resend/email";
 import { subscribeNewUser } from "@/lib/mailchimp";
 
 /**
@@ -95,6 +96,9 @@ export default async function handler(
   if (newsletter === true) {
     await subscribeNewUser(email, username.trim());
   }
+
+  // Payment is only ever offered by email, never inside the app (App Store 3.1.3).
+  await sendWelcomeCompletePaymentEmail(email, username.trim());
 
   return res.status(200).json({ ok: true });
 }

@@ -120,11 +120,11 @@ export default function SubscriptionSuccessPage() {
           {status === "already-supporter" && !fromApp && (
             <>
               <p className="mb-8">
-                You already have an account —{" "}
+                Your supporter account is now active. Open the app, or{" "}
                 <Link href="/signin" className="underline">
                   sign in
                 </Link>{" "}
-                to get started.
+                on the website, to get started.
               </p>
               {downloadAppSection}
             </>

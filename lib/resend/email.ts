@@ -135,11 +135,13 @@ export async function sendWelcomeCompletePaymentEmail(
           : email,
       subject: reminder
         ? "Don't forget to complete your account setup"
-        : "Welcome to Refuge Worldwide — complete your account setup",
+        : "Welcome to Refuge Worldwide — confirm your account and activate your subscription",
       reply_to: ["assistant@refugeworldwide.com"],
       react: WelcomeCompletePaymentEmail({
         userName,
-        supportersUrl: "https://refugeworldwide.com/supporters",
+        supportersUrl: `https://refugeworldwide.com/supporters/checkout?email=${encodeURIComponent(
+          email
+        )}`,
         reminder,
       }),
     });

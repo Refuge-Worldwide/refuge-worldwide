@@ -5,6 +5,7 @@ import signupHandler from "@/pages/api/auth/signup";
 import { directusMembershipAdmin } from "@/lib/directus/admin";
 import { findUserByEmail, getAppUserRoleId } from "@/lib/membership";
 import { subscribeNewUser } from "@/lib/mailchimp";
+import { sendWelcomeCompletePaymentEmail } from "@/lib/resend/email";
 
 vi.mock("@/lib/directus/admin", () => ({
   directusMembershipAdmin: { request: vi.fn() },
@@ -23,10 +24,15 @@ vi.mock("@/lib/mailchimp", () => ({
   subscribeNewUser: vi.fn(),
 }));
 
+vi.mock("@/lib/resend/email", () => ({
+  sendWelcomeCompletePaymentEmail: vi.fn(),
+}));
+
 const mockRequest = directusMembershipAdmin.request as Mock;
 const mockFindUserByEmail = findUserByEmail as Mock;
 const mockGetAppUserRoleId = getAppUserRoleId as Mock;
 const mockSubscribeNewUser = subscribeNewUser as Mock;
+const mockSendPaymentEmail = sendWelcomeCompletePaymentEmail as Mock;
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -109,6 +115,7 @@ describe("POST /api/auth/signup", () => {
     expect(res._getStatusCode()).toBe(200);
     expect(res._getJSONData()).toEqual({ ok: true });
     expect(mockSubscribeNewUser).not.toHaveBeenCalled();
+    expect(mockSendPaymentEmail).toHaveBeenCalledWith("new@b.com", "DJ Refuge");
   });
 
   it("subscribes to the newsletter only when the box was ticked", async () => {
@@ -142,5 +149,6 @@ describe("POST /api/auth/signup", () => {
     await signupHandler(req, res);
 
     expect(res._getStatusCode()).toBe(500);
+    expect(mockSendPaymentEmail).not.toHaveBeenCalled();
   });
 });

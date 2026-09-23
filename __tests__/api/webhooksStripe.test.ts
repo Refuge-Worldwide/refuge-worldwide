@@ -104,10 +104,11 @@ describe("checkout.session.completed", () => {
     await promise;
 
     expect(mockRetrieveSubscription).toHaveBeenCalledWith("sub_1");
-    expect(upsertSupporterFromCheckout).toHaveBeenCalledWith("a@b.com", {
-      id: "sub_1",
-      status: "active",
-    });
+    expect(upsertSupporterFromCheckout).toHaveBeenCalledWith(
+      "a@b.com",
+      { id: "sub_1", status: "active" },
+      undefined
+    );
     expect(res._getStatusCode()).toBe(200);
   });
 
