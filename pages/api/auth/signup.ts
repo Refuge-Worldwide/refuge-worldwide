@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { normalizeEmail } from "@/lib/normalizeEmail";
 import { createUser } from "@directus/sdk";
 import { directusMembershipAdmin } from "@/lib/directus/admin";
 import { findUserByEmail, getAppUserRoleId } from "@/lib/membership";
@@ -32,18 +33,24 @@ export default async function handler(
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { email, password, username, newsletter } = req.body as {
+  const {
+    email: rawEmail,
+    password,
+    username,
+    newsletter,
+  } = req.body as {
     email?: string;
     password?: string;
     username?: string;
     newsletter?: boolean;
   };
 
-  if (!email || !password || !username?.trim()) {
+  if (!rawEmail?.trim() || !password || !username?.trim()) {
     return res
       .status(400)
       .json({ error: "Email, password and username are required" });
   }
+  const email = normalizeEmail(rawEmail);
   if (password.length < 8) {
     return res
       .status(400)

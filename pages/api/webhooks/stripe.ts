@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { normalizeEmail } from "@/lib/normalizeEmail";
 import Stripe from "stripe";
 import { stripe } from "@/lib/stripe/config";
 import {
@@ -73,7 +74,8 @@ export default async function handler(
       await markPaymentFailed(customerId);
     } else if (event.type === "checkout.session.completed") {
       const session = event.data.object as Stripe.Checkout.Session;
-      const email = session.customer_details?.email;
+      const sessionEmail = session.customer_details?.email;
+      const email = sessionEmail ? normalizeEmail(sessionEmail) : null;
       const name = session.customer_details?.name;
       const subscriptionId = session.subscription as string | null;
 
@@ -89,7 +91,9 @@ export default async function handler(
         const subscription = await stripe.subscriptions.retrieve(
           subscriptionId
         );
-        await upsertSupporterFromCheckout(email, subscription, name);
+        await upsertSupporterFromCheckout(email, subscription, name, {
+          sendWelcomeEmail: session.metadata?.signup_source !== "app",
+        });
         console.log(
           `[webhooks/stripe] upsertSupporterFromCheckout completed for ${email}`
         );

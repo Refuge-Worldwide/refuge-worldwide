@@ -25,7 +25,8 @@ type AccountPageProps = {
   };
 };
 
-type Tab = "favourites" | "settings" | "help";
+const TABS = ["favourites", "settings", "help"] as const;
+type Tab = (typeof TABS)[number];
 
 export default function AccountPage({ user }: AccountPageProps) {
   const router = useRouter();
@@ -35,7 +36,11 @@ export default function AccountPage({ user }: AccountPageProps) {
   const [isPortalLoading, setIsPortalLoading] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [showSupportPicker, setShowSupportPicker] = useState(false);
-  const [activeTab, setActiveTab] = useState<Tab>("favourites");
+  const activeTab: Tab = TABS.includes(router.query.tab as Tab)
+    ? (router.query.tab as Tab)
+    : "favourites";
+  const setActiveTab = (tab: Tab) =>
+    router.push({ query: { tab } }, undefined, { shallow: true });
 
   async function handleManageSubscription() {
     setIsPortalLoading(true);
@@ -166,7 +171,7 @@ export default function AccountPage({ user }: AccountPageProps) {
 
           {showSupportPicker && (
             <div className="mt-6">
-              <SupportPicker />
+              <SupportPicker email={user.email} />
             </div>
           )}
         </div>
@@ -253,6 +258,18 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 
   const { isStaff } = await getUserAccess(user.id);
+
+  // App signups that never paid get the same page as their confirm email.
+  if (!isStaff && !user.subscription_status) {
+    return {
+      redirect: {
+        destination: `/supporters/checkout?email=${encodeURIComponent(
+          user.email
+        )}`,
+        permanent: false,
+      },
+    };
+  }
 
   return {
     props: { user: { ...user, isStaff } },

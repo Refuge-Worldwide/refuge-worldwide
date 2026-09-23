@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { normalizeEmail } from "@/lib/normalizeEmail";
 import { directusUrl } from "@/lib/directus/session";
 
 export default async function handler(
@@ -10,10 +11,11 @@ export default async function handler(
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { email } = req.body as { email?: string };
-  if (!email) {
+  const { email: rawEmail } = req.body as { email?: string };
+  if (!rawEmail?.trim()) {
     return res.status(400).json({ error: "Email is required" });
   }
+  const email = normalizeEmail(rawEmail);
 
   const baseUrl = (
     process.env.NEXT_PUBLIC_SITE_URL ??

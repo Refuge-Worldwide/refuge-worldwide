@@ -125,9 +125,8 @@ function siteUrl() {
   ).replace(/\/$/, "");
 }
 
-// Sent to app-door signups (account created without paying yet) — once
-// immediately after signup, and again ~24h later by the
-// supporter-signup-reminder cron if they still haven't paid.
+// Sent to app signups (account created without paying yet). The reminder
+// variant is for the supporter-signup-reminder cron, currently unscheduled.
 export async function sendWelcomeCompletePaymentEmail(
   email: string,
   userName: string,
@@ -136,10 +135,7 @@ export async function sendWelcomeCompletePaymentEmail(
   try {
     const { data, error } = await resend.emails.send({
       from: "Refuge Worldwide <noreply@mail.refugeworldwide.com>",
-      to:
-        process.env.NODE_ENV === "development"
-          ? "jack@refugeworldwide.com"
-          : email,
+      to: email,
       subject: reminder
         ? "Don't forget to complete your account setup"
         : "Welcome to Refuge Worldwide — confirm your account and activate your subscription",
@@ -180,10 +176,7 @@ export async function sendWelcomeSupporterEmail(
   try {
     const { data, error } = await resend.emails.send({
       from: "Refuge Worldwide <noreply@mail.refugeworldwide.com>",
-      to:
-        process.env.NODE_ENV === "development"
-          ? "jack@refugeworldwide.com"
-          : email,
+      to: email,
       subject: "Thank you for supporting Refuge Worldwide ",
       reply_to: ["assistant@refugeworldwide.com"],
       react: WelcomeSupporterEmail({ userName }),

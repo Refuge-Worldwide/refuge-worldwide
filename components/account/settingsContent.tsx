@@ -299,7 +299,7 @@ export function SettingsContent({ user }: SettingsContentProps) {
             </button>
           </>
         ) : (
-          <SupportPicker />
+          <SupportPicker email={user.email} />
         )}
       </div>
 

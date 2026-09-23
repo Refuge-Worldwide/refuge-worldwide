@@ -16,6 +16,7 @@ export function SupportPicker({
   onClientSecretChange,
   email,
   fromApp,
+  appSignup,
 }: {
   // Both optional — omit entirely for the uncontrolled, standalone usage
   // (account page). SupportModal passes both to lift this up so it can
@@ -31,6 +32,9 @@ export function SupportPicker({
   // success page to redirect back into the app instead of showing the
   // website's normal "sign in" messaging.
   fromApp?: boolean;
+  // Paying to activate an account made in the app — they've already had the
+  // welcome content in their signup email, so no thank-you email is sent.
+  appSignup?: boolean;
 } = {}) {
   const [amountIndex, setAmountIndex] = useState(0); // default to lowest amount, €5
   const [billingInterval, setBillingInterval] = useState<"month" | "year">(
@@ -72,6 +76,7 @@ export function SupportPicker({
           interval: billingInterval,
           email,
           fromApp,
+          appSignup,
         }),
       });
       const data = await res.json();

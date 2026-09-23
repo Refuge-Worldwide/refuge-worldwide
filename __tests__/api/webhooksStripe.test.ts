@@ -107,7 +107,35 @@ describe("checkout.session.completed", () => {
     expect(upsertSupporterFromCheckout).toHaveBeenCalledWith(
       "a@b.com",
       { id: "sub_1", status: "active" },
-      undefined
+      undefined,
+      { sendWelcomeEmail: true }
+    );
+    expect(res._getStatusCode()).toBe(200);
+  });
+
+  it("skips the thank-you email for checkouts tagged as app signups", async () => {
+    mockRetrieveSubscription.mockResolvedValueOnce({
+      id: "sub_1",
+      status: "active",
+    });
+    const { res, promise } = sendWebhook({
+      type: "checkout.session.completed",
+      id: "evt_2",
+      data: {
+        object: {
+          customer_details: { email: "A@B.com" },
+          subscription: "sub_1",
+          metadata: { signup_source: "app" },
+        },
+      },
+    });
+    await promise;
+
+    expect(upsertSupporterFromCheckout).toHaveBeenCalledWith(
+      "a@b.com",
+      { id: "sub_1", status: "active" },
+      undefined,
+      { sendWelcomeEmail: false }
     );
     expect(res._getStatusCode()).toBe(200);
   });

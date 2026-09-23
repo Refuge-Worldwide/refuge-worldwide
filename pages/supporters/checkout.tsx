@@ -34,7 +34,7 @@ export default function SupportersCheckoutPage() {
             you, to activate your account.
           </p>
 
-          <SupportPicker email={email} fromApp={fromApp} />
+          <SupportPicker email={email} fromApp={fromApp} appSignup />
         </div>
       </div>
     </Layout>

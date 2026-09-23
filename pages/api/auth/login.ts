@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { normalizeEmail } from "@/lib/normalizeEmail";
 import { directusUrl, setSessionCookies } from "@/lib/directus/session";
 
 export default async function handler(
@@ -10,10 +11,14 @@ export default async function handler(
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { email, password } = req.body as { email?: string; password?: string };
-  if (!email || !password) {
+  const { email: rawEmail, password } = req.body as {
+    email?: string;
+    password?: string;
+  };
+  if (!rawEmail?.trim() || !password) {
     return res.status(400).json({ error: "Email and password are required" });
   }
+  const email = normalizeEmail(rawEmail);
 
   const response = await fetch(`${directusUrl}/auth/login`, {
     method: "POST",

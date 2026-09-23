@@ -118,6 +118,22 @@ describe("POST /api/auth/signup", () => {
     expect(mockSendPaymentEmail).toHaveBeenCalledWith("new@b.com", "DJ Refuge");
   });
 
+  it("trims and lowercases the email before checking and creating", async () => {
+    mockFindUserByEmail.mockResolvedValueOnce(null);
+    mockRequest.mockResolvedValueOnce({ id: "user-new" });
+
+    const { req, res } = createApiMocks({
+      body: { email: "  New@B.com ", password: "longenough1", username: "dj" },
+    });
+    await signupHandler(req, res);
+
+    expect(mockFindUserByEmail).toHaveBeenCalledWith("new@b.com");
+    expect(createUser).toHaveBeenCalledWith(
+      expect.objectContaining({ email: "new@b.com" })
+    );
+    expect(mockSendPaymentEmail).toHaveBeenCalledWith("new@b.com", "dj");
+  });
+
   it("subscribes to the newsletter only when the box was ticked", async () => {
     mockFindUserByEmail.mockResolvedValueOnce(null);
     mockRequest.mockResolvedValueOnce({ id: "user-new" });

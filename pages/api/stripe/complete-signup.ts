@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { normalizeEmail } from "@/lib/normalizeEmail";
 import { updateUser } from "@directus/sdk";
 import { stripe } from "@/lib/stripe/config";
 import { directusMembershipAdmin } from "@/lib/directus/admin";
@@ -70,7 +71,8 @@ export default async function handler(
         .status(400)
         .json({ error: "This session hasn't completed payment yet" });
     }
-    email = session.customer_details?.email ?? undefined;
+    const sessionEmail = session.customer_details?.email;
+    email = sessionEmail ? normalizeEmail(sessionEmail) : undefined;
     subscriptionId = session.subscription as string | null;
   } catch (error) {
     console.error("[api/stripe/complete-signup] session lookup failed:", error);

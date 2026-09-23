@@ -6,10 +6,15 @@ import {
   syncSupporterSubscription,
   upsertSupporterFromCheckout,
 } from "@/lib/membership";
+import { sendWelcomeSupporterEmail } from "@/lib/resend/email";
 import type Stripe from "stripe";
 
 vi.mock("@/lib/directus/admin", () => ({
   directusMembershipAdmin: { request: vi.fn() },
+}));
+
+vi.mock("@/lib/resend/email", () => ({
+  sendWelcomeSupporterEmail: vi.fn(),
 }));
 
 vi.mock("@/lib/slack", () => ({
@@ -153,6 +158,28 @@ describe("upsertSupporterFromCheckout", () => {
 
     const fields = (updateUser as Mock).mock.calls[0][1];
     expect(fields).not.toHaveProperty("payment_failed_at");
+  });
+
+  it("sends the thank-you email by default", async () => {
+    mockRequest
+      .mockResolvedValueOnce([{ id: "user-1", email: "a@b.com" }])
+      .mockResolvedValueOnce(undefined);
+
+    await upsertSupporterFromCheckout("a@b.com", subscription(), "Sam Smith");
+
+    expect(sendWelcomeSupporterEmail).toHaveBeenCalledWith("a@b.com", "Sam");
+  });
+
+  it("skips the thank-you email when asked to (app signups)", async () => {
+    mockRequest
+      .mockResolvedValueOnce([{ id: "user-1", email: "a@b.com" }])
+      .mockResolvedValueOnce(undefined);
+
+    await upsertSupporterFromCheckout("a@b.com", subscription(), null, {
+      sendWelcomeEmail: false,
+    });
+
+    expect(sendWelcomeSupporterEmail).not.toHaveBeenCalled();
   });
 });
 

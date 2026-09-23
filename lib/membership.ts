@@ -1,4 +1,5 @@
 import { randomBytes } from "crypto";
+import { normalizeEmail } from "@/lib/normalizeEmail";
 import { createUser, readUsers, updateUser } from "@directus/sdk";
 import Stripe from "stripe";
 import { directusMembershipAdmin } from "@/lib/directus/admin";
@@ -48,7 +49,7 @@ export function fieldsFromSubscription(
 export async function findUserByEmail(email: string) {
   const users = await directusMembershipAdmin.request(
     readUsers({
-      filter: { email: { _eq: email } },
+      filter: { email: { _eq: normalizeEmail(email) } },
       limit: 1,
       // status distinguishes a real account (someone chose their own
       // password, status "active") from one that only has a random
@@ -80,6 +81,7 @@ export async function findOrCreateUser(
   email: string,
   createFields: Record<string, unknown>
 ): Promise<MembershipUser> {
+  email = normalizeEmail(email);
   const existing = await findUserByEmail(email);
   if (existing) return existing as unknown as MembershipUser;
 
@@ -125,15 +127,15 @@ async function findUserByStripeCustomerId(customerId: string) {
  * account exactly the same as any other.
  *
  * Also sends the "thank you for becoming a supporter" email — this is the
- * single point where every paid checkout lands, regardless of which door
- * (app-first or web-first) or whether the customer ever completes the
- * separate password-setup step, so it's the one place that can send it
- * exactly once per checkout without risking a duplicate.
+ * single point where every paid checkout lands, so it's the one place that
+ * can send it exactly once per checkout. App signups skip it: their signup
+ * email already carried the thank-you and supporter details.
  */
 export async function upsertSupporterFromCheckout(
   email: string,
   subscription: Stripe.Subscription,
-  name?: string | null
+  name?: string | null,
+  { sendWelcomeEmail = true }: { sendWelcomeEmail?: boolean } = {}
 ) {
   const roleId = await getAppUserRoleId();
   const placeholderPassword = randomBytes(24).toString("hex");
@@ -169,7 +171,9 @@ export async function upsertSupporterFromCheckout(
   );
   console.log(`[membership] subscription fields written for user ${user.id}`);
 
-  await sendWelcomeSupporterEmail(email, name?.split(" ")[0] || "there");
+  if (sendWelcomeEmail) {
+    await sendWelcomeSupporterEmail(email, name?.split(" ")[0] || "there");
+  }
 }
 
 /** Called on customer.subscription.updated/deleted to keep status in sync. */
