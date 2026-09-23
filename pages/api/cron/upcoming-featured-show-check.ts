@@ -29,7 +29,7 @@ export default async function handler(
       const updateBy = dayjs(lastFour[0].date)
         .subtract(1, "day")
         .format("ddd D MMMM");
-      sendSlackMessage(
+      await sendSlackMessage(
         `🍊 section will drop below the required 4 shows in the next 2 weeks. Please add more featured shows by ${updateBy}.`
       );
     }

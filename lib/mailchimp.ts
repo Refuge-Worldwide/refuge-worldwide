@@ -57,13 +57,13 @@ export async function subscribeNewUser(email: string, firstName?: string) {
   try {
     const result = await subscribeToNewsletter(email, firstName);
     if (result.ok === false) {
-      sendSlackMessage(
+      await sendSlackMessage(
         `[newsletter] could not subscribe ${email} at signup: ${result.error}`,
         "error"
       );
     }
   } catch (error) {
-    sendSlackMessage(
+    await sendSlackMessage(
       `[newsletter] could not subscribe ${email} at signup: ${error.message}`,
       "error"
     );
@@ -104,13 +104,13 @@ export async function unsubscribeDeletedUser(email: string) {
   try {
     const result = await unsubscribeFromNewsletter(email);
     if (result.ok === false) {
-      sendSlackMessage(
+      await sendSlackMessage(
         `[newsletter] could not remove ${email} from Mailchimp after account deletion: ${result.error}`,
         "error"
       );
     }
   } catch (error) {
-    sendSlackMessage(
+    await sendSlackMessage(
       `[newsletter] could not remove ${email} from Mailchimp after account deletion: ${error.message}`,
       "error"
     );

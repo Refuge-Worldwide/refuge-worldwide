@@ -76,7 +76,7 @@ export default async function handler(
     subscriptionId = session.subscription as string | null;
   } catch (error) {
     console.error("[api/stripe/complete-signup] session lookup failed:", error);
-    sendSlackMessage(
+    await sendSlackMessage(
       `[complete-signup] failed to verify session ${sessionId}: ${error.message}`,
       "error"
     );
@@ -109,7 +109,7 @@ export default async function handler(
       status: "active",
     });
   } catch (error) {
-    sendSlackMessage(
+    await sendSlackMessage(
       `[complete-signup] a paid customer (${email}, session ${sessionId}) could not get an account created — needs manual follow-up. ${error.message}`,
       "error"
     );
@@ -158,7 +158,7 @@ export default async function handler(
       // We just set this exact password — login should always succeed
       // immediately after. This is a real problem, not the benign
       // "already set up elsewhere, different password" case.
-      sendSlackMessage(
+      await sendSlackMessage(
         `[complete-signup] set up an account for ${email} (session ${sessionId}) but the immediate login failed — needs manual follow-up.`,
         "error"
       );

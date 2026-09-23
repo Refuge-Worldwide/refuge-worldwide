@@ -148,7 +148,7 @@ export async function upsertSupporterFromCheckout(
       status: "invited",
     });
   } catch (error) {
-    sendSlackMessage(
+    await sendSlackMessage(
       `[membership] a paid customer (${email}) could not get an account created — needs manual follow-up. ${error.message}`,
       "error"
     );

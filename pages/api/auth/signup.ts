@@ -62,7 +62,7 @@ export default async function handler(
     existing = await findUserByEmail(email);
   } catch (error) {
     console.error("[api/auth/signup] existence check failed:", error);
-    sendSlackMessage(
+    await sendSlackMessage(
       `[signup] existence check failed for ${email}: ${error.message}`,
       "error"
     );
@@ -93,7 +93,7 @@ export default async function handler(
     );
   } catch (error) {
     console.error("[api/auth/signup] createUser failed:", error);
-    sendSlackMessage(
+    await sendSlackMessage(
       `[signup] failed to create an account for ${email}: ${error.message}`,
       "error"
     );

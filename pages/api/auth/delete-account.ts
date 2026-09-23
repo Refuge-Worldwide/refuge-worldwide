@@ -56,7 +56,7 @@ export default async function handler(
       if (error?.code !== "resource_missing") {
         // already cancelled on Stripe's side
         console.error("[api/auth/delete-account] cancel failed:", error);
-        sendSlackMessage(
+        await sendSlackMessage(
           `[delete-account] could not cancel subscription ${me.stripe_subscription_id} for ${me.email}: ${error.message}`,
           "error"
         );
@@ -72,7 +72,7 @@ export default async function handler(
     await directusMembershipAdmin.request(deleteUser(me.id));
   } catch (error) {
     console.error("[api/auth/delete-account] deleteUser failed:", error);
-    sendSlackMessage(
+    await sendSlackMessage(
       `[delete-account] subscription cancelled but the account for ${me.email} could not be deleted: ${error.message}`,
       "error"
     );

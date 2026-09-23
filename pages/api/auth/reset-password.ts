@@ -81,7 +81,7 @@ export default async function handler(
         "[api/auth/reset-password] status promotion failed:",
         error
       );
-      sendSlackMessage(
+      await sendSlackMessage(
         `[reset-password] reset succeeded for ${email} but promoting status to active failed: ${error.message}`,
         "error"
       );

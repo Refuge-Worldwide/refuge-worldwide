@@ -45,7 +45,7 @@ export default async function handler(
       .json({ email, hasAccount: existingUser?.status === "active" });
   } catch (error) {
     console.error("[api/stripe/session-status] failed:", error);
-    sendSlackMessage(
+    await sendSlackMessage(
       `[session-status] failed to verify session ${sessionId}: ${error.message}`,
       "error"
     );
