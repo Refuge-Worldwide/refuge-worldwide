@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { FC, useCallback, useEffect, useRef, useState } from "react";
+import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createChatRealtimeClient } from "@/lib/directus/chatRealtime";
 import { useDirectusUser } from "@/hooks/useDirectusUser";
 
@@ -19,6 +19,53 @@ interface ChatMessage {
   message: string;
   image: string | null;
   date_created: string;
+}
+
+interface MessageGroup {
+  key: string;
+  system: boolean;
+  username: string;
+  date_created: string;
+  image: string | null;
+  messages: ChatMessage[];
+}
+
+// Truncates to the minute (dropping seconds/ms) so grouping can compare
+// "same calendar minute" rather than a rolling time-since-last-message window.
+function toMinute(ts: string): number {
+  return Math.floor(new Date(ts).getTime() / 60000);
+}
+
+function groupMessages(messages: ChatMessage[]): MessageGroup[] {
+  const groups: MessageGroup[] = [];
+
+  for (const msg of messages) {
+    const isSystem = msg.username === "Refuge Worldwide";
+    const last = groups[groups.length - 1];
+    const lastMessage = last?.messages[last.messages.length - 1];
+    const sameSender =
+      last &&
+      lastMessage &&
+      !isSystem &&
+      !last.system &&
+      last.username === msg.username &&
+      toMinute(msg.date_created) === toMinute(lastMessage.date_created);
+
+    if (sameSender && last) {
+      last.messages.push(msg);
+    } else {
+      groups.push({
+        key: String(msg.id),
+        system: isSystem,
+        username: msg.username,
+        date_created: msg.date_created,
+        image: msg.image,
+        messages: [msg],
+      });
+    }
+  }
+
+  return groups;
 }
 
 function formatTimestamp(ts: string): string {
@@ -51,6 +98,24 @@ const ChatRoom: FC = () => {
   const accountDisplayName = accountUser
     ? accountUser.first_name?.trim() || accountUser.email.split("@")[0]
     : null;
+
+  const [isStaff, setIsStaff] = useState(false);
+  useEffect(() => {
+    if (!isLoggedIn) {
+      setIsStaff(false);
+      return;
+    }
+    let cancelled = false;
+    fetch("/api/auth/is-staff")
+      .then((res) => res.json())
+      .then((data) => {
+        if (!cancelled) setIsStaff(!!data.isStaff);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [isLoggedIn]);
 
   const [username, setUsername] = useState<string | null>(null);
   const [nameInput, setNameInput] = useState("");
@@ -206,17 +271,24 @@ const ChatRoom: FC = () => {
         client = await createChatRealtimeClient();
         if (cancelled) return;
 
-        const { subscription } = await client.subscribe("chat", {
-          event: "create",
-        });
+        // No `event` filter — this subscribes to create, update and delete
+        // alike, so a staff deletion (see handleDeleteMessage) propagates to
+        // every connected viewer, not just the one who deleted it.
+        const { subscription } = await client.subscribe("chat", {});
 
         for await (const event of subscription) {
           if (cancelled) break;
-          if (event.event !== "create") continue;
 
-          // appendMessages dedupes by id, so this can't double up with the
-          // optimistic append already done in handleSend for our own sends.
-          appendMessages(event.data as unknown as ChatMessage[]);
+          if (event.event === "create") {
+            // appendMessages dedupes by id, so this can't double up with the
+            // optimistic append already done in handleSend for our own sends.
+            appendMessages(event.data as unknown as ChatMessage[]);
+          } else if (event.event === "delete") {
+            const deletedIds = new Set(
+              (event.data as (string | number)[]).map(Number)
+            );
+            setMessages((prev) => prev.filter((m) => !deletedIds.has(m.id)));
+          }
         }
       } catch (error) {
         console.error("Error subscribing to chat:", error);
@@ -288,6 +360,28 @@ const ChatRoom: FC = () => {
     }
   }, [displayName, isLoggedIn, input, sending, appendMessages]);
 
+  const messageGroups = useMemo(() => groupMessages(messages), [messages]);
+
+  const handleDeleteMessage = useCallback(async (id: number, text: string) => {
+    if (!window.confirm(`Delete this message?\n\n"${text}"`)) return;
+    // Removed locally right away rather than waiting on the realtime delete
+    // event to round-trip back (same reasoning as appendMessages in
+    // handleSend); other viewers still get it via that event.
+    setMessages((prev) => prev.filter((m) => m.id !== id));
+    try {
+      const response = await fetch("/api/chat/delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      if (!response.ok) {
+        console.error("Failed to delete message:", await response.text());
+      }
+    } catch (error) {
+      console.error("Error deleting message:", error);
+    }
+  }, []);
+
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
       if (e.key === "Enter" && !e.shiftKey) {
@@ -331,20 +425,20 @@ const ChatRoom: FC = () => {
             No messages yet. Say hi!
           </p>
         )}
-        {messages.map((msg) =>
-          msg.username === "Refuge Worldwide" ? (
-            <div key={msg.id} className="py-2 space-y-2">
+        {messageGroups.map((group) =>
+          group.system ? (
+            <div key={group.key} className="py-2 space-y-2">
               <div className="flex items-center gap-3">
                 <div className="flex-1 h-px bg-white/20" />
                 <span className="text-tiny text-white/50 flex-shrink-0">
-                  Live now: {msg.message}
+                  Live now: {group.messages[0].message}
                 </span>
                 <div className="flex-1 h-px bg-white/20" />
               </div>
-              {msg.image && (
+              {group.image && (
                 <Image
-                  src={msg.image}
-                  alt={msg.message}
+                  src={group.image}
+                  alt={group.messages[0].message}
                   width={320}
                   height={320}
                   className="max-w-xs"
@@ -352,19 +446,34 @@ const ChatRoom: FC = () => {
               )}
             </div>
           ) : (
-            <div key={msg.id}>
-              <div className="min-w-0">
-                <div className="flex items-baseline gap-2 flex-wrap">
-                  <span className="text-tiny font-medium leading-none">
-                    {msg.username}
-                  </span>
-                  <span className="text-tiny text-white/40 leading-none">
-                    {formatTimestamp(msg.date_created)}
-                  </span>
-                </div>
-                <p className="text-tiny mt-1 break-words leading-snug">
-                  {msg.message}
-                </p>
+            <div key={group.key} className="min-w-0">
+              <div className="flex items-baseline gap-2 flex-wrap">
+                <span className="text-tiny font-medium leading-none">
+                  {group.username}
+                </span>
+                <span className="text-tiny text-white/40 leading-none">
+                  {formatTimestamp(group.date_created)}
+                </span>
+              </div>
+              <div className="mt-1 space-y-px">
+                {group.messages.map((msg) => (
+                  <div
+                    key={msg.id}
+                    className="group/msg flex items-start gap-2 -mx-1.5 px-1.5 py-0.5 rounded hover:bg-white/10"
+                  >
+                    <p className="text-tiny break-words leading-snug flex-1">
+                      {msg.message}
+                    </p>
+                    {isStaff && (
+                      <button
+                        onClick={() => handleDeleteMessage(msg.id, msg.message)}
+                        className="text-tiny text-red-400 underline opacity-0 group-hover/msg:opacity-100 transition-opacity flex-shrink-0"
+                      >
+                        Delete
+                      </button>
+                    )}
+                  </div>
+                ))}
               </div>
             </div>
           )
