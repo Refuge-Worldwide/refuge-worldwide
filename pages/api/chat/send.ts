@@ -7,6 +7,12 @@ import { checkRateLimit, moderateMessageText } from "@/lib/chatModeration";
 const MAX_USERNAME_LENGTH = 30;
 const MAX_MESSAGE_LENGTH = 500;
 
+// "Refuge Worldwide" is reserved for the automated show-announcement message
+// (see is_system on the chat collection, which is what actually gates the
+// frontend's system-message styling) — blocked here too, for any username
+// containing "refuge" at all, so no one can even display a name that looks
+// official, avoiding confusion even though it can no longer be used to spoof
+// a system message.
 function sanitizeUsername(raw: unknown): string | null {
   if (typeof raw !== "string") return null;
   // eslint-disable-next-line no-control-regex
@@ -14,7 +20,9 @@ function sanitizeUsername(raw: unknown): string | null {
     .trim()
     .replace(/[\x00-\x1f\x7f]/g, "")
     .slice(0, MAX_USERNAME_LENGTH);
-  return cleaned.length >= 2 ? cleaned : null;
+  if (cleaned.length < 2) return null;
+  if (cleaned.toLowerCase().includes("refuge")) return null;
+  return cleaned;
 }
 
 export default async function handler(

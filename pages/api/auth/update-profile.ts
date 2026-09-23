@@ -12,10 +12,14 @@ export default async function handler(
   }
 
   const { username } = req.body as { username?: string };
-  if (!username || username.trim().length < 2) {
+  const trimmedUsername = username?.trim();
+  if (!trimmedUsername || trimmedUsername.length < 2) {
     return res
       .status(400)
       .json({ error: "Username must be at least 2 characters" });
+  }
+  if (trimmedUsername.toLowerCase().includes("refuge")) {
+    return res.status(400).json({ error: "That username is reserved" });
   }
 
   const token = await getValidAccessToken(req, res);
@@ -29,7 +33,7 @@ export default async function handler(
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ first_name: username.trim() }),
+    body: JSON.stringify({ first_name: trimmedUsername }),
   });
 
   if (!response.ok) {

@@ -54,6 +54,16 @@ export default async function handler(
 
     const { title, artwork } = schedule.liveNow;
 
+    // schedule.liveNow.artwork is the original full-resolution Contentful
+    // asset — downscale via Contentful's Images API query params so the chat
+    // message doesn't ship a multi-MB image. Only touches this cron's own
+    // copy of the URL, not the shared /api/schedule response other consumers
+    // read the full-res artwork from.
+    const chatArtwork =
+      artwork && artwork.includes("ctfassets.net")
+        ? `${artwork}?w=640&q=70&fm=jpg`
+        : artwork;
+
     // Check if this show was already announced
     let lastMessage: string | undefined;
     try {
@@ -89,7 +99,8 @@ export default async function handler(
         createItem("chat", {
           username: SYSTEM_USERNAME,
           message: title,
-          image: artwork ?? null,
+          image: chatArtwork ?? null,
+          is_system: true,
         })
       );
     } catch (insertError) {

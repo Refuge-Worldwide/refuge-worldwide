@@ -19,6 +19,7 @@ interface ChatMessage {
   message: string;
   image: string | null;
   date_created: string;
+  is_system: boolean;
 }
 
 interface MessageGroup {
@@ -40,7 +41,7 @@ function groupMessages(messages: ChatMessage[]): MessageGroup[] {
   const groups: MessageGroup[] = [];
 
   for (const msg of messages) {
-    const isSystem = msg.username === "Refuge Worldwide";
+    const isSystem = msg.is_system === true;
     const last = groups[groups.length - 1];
     const lastMessage = last?.messages[last.messages.length - 1];
     const sameSender =
@@ -427,21 +428,18 @@ const ChatRoom: FC = () => {
         )}
         {messageGroups.map((group) =>
           group.system ? (
-            <div key={group.key} className="py-2 space-y-2">
-              <div className="flex items-center gap-3">
-                <div className="flex-1 h-px bg-white/20" />
-                <span className="text-tiny text-white/50 flex-shrink-0">
-                  Live now: {group.messages[0].message}
-                </span>
-                <div className="flex-1 h-px bg-white/20" />
-              </div>
+            <div key={group.key} className="py-2 space-y-2 min-w-0">
+              <div className="h-px bg-white/20" />
+              <p className="text-small text-white/50 break-words min-w-0">
+                Live now: {group.messages[0].message}
+              </p>
               {group.image && (
                 <Image
                   src={group.image}
                   alt={group.messages[0].message}
                   width={320}
                   height={320}
-                  className="max-w-xs"
+                  className="w-full h-auto max-w-xs"
                 />
               )}
             </div>
