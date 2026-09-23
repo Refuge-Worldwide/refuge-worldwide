@@ -22,15 +22,9 @@ const uploadToContentful = async (file: formidable.File) => {
     const space = await client.getSpace(spaceId);
     const environment = await space.getEnvironment(environmentId);
 
-    // Read file buffer
-    const fileBuffer = fs.readFileSync(file.filepath);
-
     // Step 1: Create an upload using binary data
     const upload = await environment.createUpload({
-      // contentful-management's types predate TS 5's generic Uint8Array/Buffer
-      // tightening; Buffer is fine here at runtime, just not structurally
-      // assignable to ArrayBuffer anymore under the stricter typing.
-      file: fileBuffer as unknown as ArrayBuffer,
+      file: fs.createReadStream(file.filepath),
     });
 
     // Step 2: Create asset with reference to the upload

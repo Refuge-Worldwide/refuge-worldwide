@@ -12,6 +12,7 @@ type Schedule = {
       link?: string | null;
       slug?: string | null;
       isMixedFeelings?: boolean;
+      repeat?: boolean;
     };
     nextUp: Array<ScheduleShow>;
     schedule: Array<ScheduleShow>;
