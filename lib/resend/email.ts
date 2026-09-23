@@ -118,6 +118,13 @@ export async function sendArtworkEmail(artist, date, artwork) {
   }
 }
 
+function siteUrl() {
+  return (
+    process.env.NEXT_PUBLIC_SITE_URL ??
+    `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+  ).replace(/\/$/, "");
+}
+
 // Sent to app-door signups (account created without paying yet) — once
 // immediately after signup, and again ~24h later by the
 // supporter-signup-reminder cron if they still haven't paid.
@@ -139,7 +146,7 @@ export async function sendWelcomeCompletePaymentEmail(
       reply_to: ["assistant@refugeworldwide.com"],
       react: WelcomeCompletePaymentEmail({
         userName,
-        supportersUrl: `https://refugeworldwide.com/supporters/checkout?email=${encodeURIComponent(
+        supportersUrl: `${siteUrl()}/supporters/checkout?email=${encodeURIComponent(
           email
         )}`,
         reminder,
