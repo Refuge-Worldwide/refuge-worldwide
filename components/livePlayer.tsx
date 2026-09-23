@@ -95,7 +95,9 @@ export default function LivePlayer() {
   useEffect(() => {
     if ("mediaSession" in navigator && scheduleData?.ch1?.liveNow) {
       navigator.mediaSession.metadata = new MediaMetadata({
-        title: scheduleData.ch1.liveNow.title,
+        title:
+          scheduleData.ch1.liveNow.title +
+          (scheduleData.ch1.liveNow.repeat ? " (Repeat)" : ""),
         artist: "Refuge Worldwide",
         artwork: [
           {
@@ -175,6 +177,7 @@ export default function LivePlayer() {
                 text={
                   <span className="pr-8">
                     {scheduleData?.ch1?.liveNow.title}
+                    {scheduleData?.ch1?.liveNow.repeat && " (Repeat)"}
                   </span>
                 }
                 speed={ch2IsOnline ? 0.2 : 0.25}
