@@ -2,7 +2,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import Link from "next/link";
 import { Cross } from "../icons/cross";
 
-export function LikeSignInModal({
+export function FavouriteSignInModal({
   open,
   onOpenChange,
 }: {
@@ -24,11 +24,11 @@ export function LikeSignInModal({
           </div>
 
           <Dialog.Title className="font-serif text-large text-center mb-2">
-            Sign in to like shows
+            Sign in to favourite shows
           </Dialog.Title>
           <Dialog.Description className="text-center text-small opacity-60 mb-8 max-w-sm mx-auto">
-            Liking shows is a perk for Refuge Worldwide supporters. Sign in to
-            your account, or become a supporter to get started.
+            Favouriting shows is a perk for Refuge Worldwide supporters. Sign in
+            to your account, or become a supporter to get started.
           </Dialog.Description>
 
           <div className="flex flex-col gap-3 max-w-xs mx-auto">

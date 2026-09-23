@@ -318,8 +318,8 @@ export function SettingsContent({ user }: SettingsContentProps) {
         <h2 className="font-medium text-base mb-4 text-red">Danger Zone</h2>
 
         <p className="text-small mb-4">
-          Deleting your account permanently removes your login, liked shows and
-          subscription history.
+          Deleting your account permanently removes your login, favourite shows
+          and subscription history.
           {isPaidSupporter && " Your subscription will be cancelled."} This
           can&apos;t be undone.
         </p>

@@ -10,7 +10,7 @@ import PlayCircle from "../../icons/playCircle";
 import { RenderRichTextWithImages } from "../../lib/rich-text";
 import { ShowInterface } from "../../types/shared";
 import { parseGenres } from "../../util";
-import ShowLike from "@/components/showLike";
+import ShowFavourite from "@/components/showFavourite";
 
 const ShareButton = dynamic(() => import("../../components/shareButton"));
 
@@ -114,7 +114,7 @@ export default function ShowBody({
                   slug: `/radio/${slug}`,
                 }}
               />
-              <ShowLike id={sys.id} />
+              <ShowFavourite id={sys.id} />
             </div>
           </div>
 

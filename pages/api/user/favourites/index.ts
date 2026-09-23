@@ -17,7 +17,7 @@ export default async function handler(
   if (!token) return;
 
   try {
-    // Get liked show IDs from Directus (show_favourites is scoped to the
+    // Get favourited show IDs from Directus (show_favourites is scoped to the
     // caller's own rows by the "Refuge App - Own Favourites" policy).
     const favResponse = await fetch(
       `${directusUrl}/items/show_favourites?fields=show_id&sort=-date_created&limit=-1`,
@@ -62,7 +62,7 @@ export default async function handler(
     const contentfulRes = await graphql(query, { variables: { ids: showIds } });
     const shows = contentfulRes.data.showCollection.items;
 
-    // Preserve the order from favourites (most recently liked first)
+    // Preserve the order from favourites (most recently favourited first)
     const orderedShows = showIds
       .map((id: string) => shows.find((s: any) => s.sys.id === id))
       .filter(Boolean)
@@ -78,9 +78,10 @@ export default async function handler(
 
     return res.status(200).json({ shows: orderedShows });
   } catch (error) {
-    console.error("Error fetching liked shows:", error);
+    console.error("Error fetching favourited shows:", error);
     return res.status(500).json({
-      error: error instanceof Error ? error.message : "Failed to fetch likes",
+      error:
+        error instanceof Error ? error.message : "Failed to fetch favourites",
     });
   }
 }

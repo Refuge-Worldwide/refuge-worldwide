@@ -2,8 +2,9 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { directusUrl, getValidAccessToken } from "@/lib/directus/session";
 import { getUserAccess, getUserIdFromToken } from "@/lib/directus/staff";
 
-// Lightweight — just show IDs, no CMS hydration. Used by the like button on
-// show cards, which only needs to know whether a given show is liked.
+// Lightweight — just show IDs, no CMS hydration. Used by the favourite
+// button on show cards, which only needs to know whether a given show is
+// favourited.
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -13,7 +14,7 @@ export default async function handler(
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  // not a supporter? just show no likes rather than 403 here
+  // not a supporter? just show no favourites rather than 403 here
   const token = await getValidAccessToken(req, res);
   if (!token) {
     return res.status(200).json({ ids: [] });

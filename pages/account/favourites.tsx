@@ -7,16 +7,16 @@ import Link from "next/link";
 import { IoArrowBack } from "react-icons/io5";
 import { FavouritesContent } from "@/components/account/favouritesContent";
 
-type LikesPageProps = {
+type FavouritesPageProps = {
   user: { id: string; email: string };
 };
 
-export default function LikesPage({ user }: LikesPageProps) {
+export default function FavouritesPage({ user }: FavouritesPageProps) {
   return (
     <Layout>
       <PageMeta
         title="Favorite Shows | Refuge Worldwide"
-        path="account/likes/"
+        path="account/favourites/"
       />
 
       <div className="min-h-[75vh] bg-white">
@@ -34,7 +34,7 @@ export default function LikesPage({ user }: LikesPageProps) {
               Favorite Shows
             </h1>
             <p className="text-small text-black/60">
-              Shows you&apos;ve liked from the archive
+              Shows you&apos;ve favourited from the archive
             </p>
           </div>
         </div>

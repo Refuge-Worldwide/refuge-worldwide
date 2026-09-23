@@ -2,25 +2,25 @@ import { IoHeart } from "react-icons/io5";
 import HeartOutline from "../icons/heartOutline";
 import { useState } from "react";
 import useSWR from "swr";
-import { LikeSignInModal } from "./likeSignInModal";
+import { FavouriteSignInModal } from "./favouriteSignInModal";
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
-export default function ShowLike({ id }: { id?: string }) {
+export default function ShowFavourite({ id }: { id?: string }) {
   const { data, mutate } = useSWR<{ ids: string[] }>(
-    "/api/user/likes/ids",
+    "/api/user/favourites/ids",
     fetcher
   );
   const [isToggling, setIsToggling] = useState(false);
   const [signInModalOpen, setSignInModalOpen] = useState(false);
-  const liked = !!id && !!data?.ids?.includes(id);
+  const favourited = !!id && !!data?.ids?.includes(id);
 
-  async function toggleLike() {
+  async function toggleFavourite() {
     if (!id || isToggling) return;
     setIsToggling(true);
 
     try {
-      const res = await fetch("/api/user/likes/toggle", {
+      const res = await fetch("/api/user/favourites/toggle", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ showId: id }),
@@ -30,7 +30,7 @@ export default function ShowLike({ id }: { id?: string }) {
         setSignInModalOpen(true);
         return;
       }
-      if (!res.ok) throw new Error("Failed to update like");
+      if (!res.ok) throw new Error("Failed to update favourite");
 
       await mutate();
     } catch (error) {
@@ -42,21 +42,21 @@ export default function ShowLike({ id }: { id?: string }) {
 
   return (
     <>
-      <button type="button" onClick={toggleLike} disabled={isToggling}>
-        {liked ? (
+      <button type="button" onClick={toggleFavourite} disabled={isToggling}>
+        {favourited ? (
           <IoHeart
             className="w-8 h-8 sm:w-10 sm:h-10"
-            aria-label="Unlike show"
+            aria-label="Remove from favourites"
           />
         ) : (
           <HeartOutline
             className="w-8 h-8 sm:w-10 sm:h-10"
             strokeWidth={24}
-            aria-label="Like show"
+            aria-label="Add to favourites"
           />
         )}
       </button>
-      <LikeSignInModal
+      <FavouriteSignInModal
         open={signInModalOpen}
         onOpenChange={setSignInModalOpen}
       />

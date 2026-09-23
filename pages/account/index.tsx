@@ -64,7 +64,7 @@ export default function AccountPage({ user }: AccountPageProps) {
   }
 
   const linkItems = [
-    { label: "Favorite Shows", href: "/account/likes" },
+    { label: "Favorite Shows", href: "/account/favourites" },
     { label: "Account Settings", href: "/account/settings" },
     { label: "Help", href: "/support" },
     ...(user.isStaff ? [{ label: "Calendar", href: "/admin/calendar" }] : []),

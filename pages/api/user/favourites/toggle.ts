@@ -43,7 +43,7 @@ export default async function handler(
         }
       );
       if (!deleteRes.ok) throw new Error("Failed to remove favourite");
-      return res.status(200).json({ liked: false });
+      return res.status(200).json({ favourited: false });
     }
 
     const createRes = await fetch(`${directusUrl}/items/show_favourites`, {
@@ -52,9 +52,9 @@ export default async function handler(
       body: JSON.stringify({ show_id: showId }),
     });
     if (!createRes.ok) throw new Error("Failed to add favourite");
-    return res.status(200).json({ liked: true });
+    return res.status(200).json({ favourited: true });
   } catch (error) {
-    console.error("[api/user/likes/toggle] failed:", error);
+    console.error("[api/user/favourites/toggle] failed:", error);
     return res.status(500).json({ error: "Failed to update favourite" });
   }
 }

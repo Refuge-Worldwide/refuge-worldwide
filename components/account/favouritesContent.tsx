@@ -5,7 +5,7 @@ import useSWR from "swr";
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
 export function FavouritesContent() {
-  const { data, error, isLoading } = useSWR("/api/user/likes", fetcher);
+  const { data, error, isLoading } = useSWR("/api/user/favourites", fetcher);
 
   return (
     <div>
@@ -17,7 +17,7 @@ export function FavouritesContent() {
 
       {data?.shows?.length === 0 && (
         <div className="border-2 border-black p-8 text-center">
-          <p className="mb-4">You haven&apos;t liked any shows yet.</p>
+          <p className="mb-4">You haven&apos;t favourited any shows yet.</p>
           <Link
             href="/radio"
             className="inline-block bg-black text-white py-3 px-6 hover:bg-black/80 transition-colors"
