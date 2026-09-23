@@ -40,11 +40,11 @@ describe("requireContentfulUser", () => {
     expect(res._getStatusCode()).toBe(401);
   });
 
-  it("401s when Contentful can't be reached", async () => {
+  it("503s (not 401) when Contentful can't be reached", async () => {
     (global.fetch as Mock).mockRejectedValueOnce(new Error("network"));
     const { req, res } = withAuth("Bearer user-token");
 
     expect(await requireContentfulUser(req, res)).toBe(false);
-    expect(res._getStatusCode()).toBe(401);
+    expect(res._getStatusCode()).toBe(503);
   });
 });

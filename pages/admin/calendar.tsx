@@ -1,5 +1,9 @@
 import { useContentfulAuth } from "@/hooks/useContentfulAuth";
-import { adminFetch } from "@/lib/contentful/adminFetch";
+import {
+  adminFetch,
+  handleContentfulAuthExpired,
+  isContentfulAuthError,
+} from "@/lib/contentful/adminFetch";
 import Layout from "../../components/layout";
 import PageMeta from "../../components/seo/page";
 import FullCalendar from "@fullcalendar/react";
@@ -238,9 +242,11 @@ function Calendar() {
       }
     } catch (error) {
       console.log(error);
-      toast.error(
-        method == "create" ? "Error updating show" : "Error creating show"
-      );
+      if (isContentfulAuthError(error)) handleContentfulAuthExpired();
+      else
+        toast.error(
+          method == "create" ? "Error updating show" : "Error creating show"
+        );
       setCalendarLoading(false);
       actions.setSubmitting(false);
       throw error;
@@ -262,7 +268,8 @@ function Calendar() {
       })
       .catch((error) => {
         console.log(error);
-        toast.error("Error moving show");
+        if (isContentfulAuthError(error)) handleContentfulAuthExpired();
+        else toast.error("Error moving show");
       });
   };
 
@@ -280,7 +287,8 @@ function Calendar() {
       })
       .catch((error) => {
         console.log(error);
-        toast.error("Error deleting show");
+        if (isContentfulAuthError(error)) handleContentfulAuthExpired();
+        else toast.error("Error deleting show");
       });
   };
 

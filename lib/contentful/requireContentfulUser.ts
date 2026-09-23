@@ -17,7 +17,9 @@ export async function requireContentfulUser(
       );
       if (check.ok) return true;
     } catch {
-      // treated as unauthorised below
+      // not a 401, so the browser doesn't throw away a still-valid token
+      res.status(503).json({ error: "Could not reach Contentful" });
+      return false;
     }
   }
 
