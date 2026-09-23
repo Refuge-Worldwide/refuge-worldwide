@@ -6,6 +6,7 @@ import {
   SOUNDCLOUD_URL,
   CONTACT_URL,
   TELEGRAM_URL,
+  SUPPORTERS_LIVE,
 } from "../constants";
 import { Arrow } from "../icons/arrow";
 import Mixcloud from "../icons/mixcloud";
@@ -18,14 +19,17 @@ import { useDirectusUser } from "../hooks/useDirectusUser";
 export default function Footer() {
   const handleGoToTop = () =>
     window?.scroll({ top: 0, left: 0, behavior: "smooth" });
-  const { user, loading } = useDirectusUser();
+  const { user, loading, isStaff } = useDirectusUser();
   const router = useRouter();
   // Pointless on the support page itself — it just links back to here.
   const isSupportPage = router.pathname === "/support";
 
   return (
     <footer className="bg-black text-white">
-      {!loading && !user && !isSupportPage && <SupportBanner />}
+      {/* pre-launch, staff get to preview it even though they're signed in */}
+      {!loading && (SUPPORTERS_LIVE ? !user : isStaff) && !isSupportPage && (
+        <SupportBanner />
+      )}
       <div className="px-4 md:px-8 py-10 md:py-20">
         <div className="container md:grid items-center grid-cols-2">
           <div className="mb-6 md:mb-0">

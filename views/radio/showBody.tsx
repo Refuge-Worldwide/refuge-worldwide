@@ -11,6 +11,7 @@ import { RenderRichTextWithImages } from "../../lib/rich-text";
 import { ShowInterface } from "../../types/shared";
 import { parseGenres } from "../../util";
 import ShowFavourite from "@/components/showFavourite";
+import { useDirectusUser } from "@/hooks/useDirectusUser";
 
 const ShareButton = dynamic(() => import("../../components/shareButton"));
 
@@ -25,6 +26,7 @@ export default function ShowBody({
   mixcloudLink,
   coverImage,
 }: ShowInterface) {
+  const { showSupporters } = useDirectusUser();
   const genres = parseGenres(genresCollection);
 
   const artists = artistsCollection.items.filter((artist) => artist !== null);
@@ -114,7 +116,7 @@ export default function ShowBody({
                   slug: `/radio/${slug}`,
                 }}
               />
-              <ShowFavourite id={sys.id} />
+              {showSupporters && <ShowFavourite id={sys.id} />}
             </div>
           </div>
 

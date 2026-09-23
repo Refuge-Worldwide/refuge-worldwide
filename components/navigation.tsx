@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useCallback, useState } from "react";
 import { MobileMenu } from "../components/mobileMenu";
 import { INSTAGRAM_URL, SHOP_URL, DISCORD_INVITE_URL } from "../constants";
+import Instagram from "../icons/instagram";
 import { Menu } from "../icons/menu";
 import MessageSquare from "../icons/message-square";
 import Search from "../icons/search";
@@ -14,7 +15,7 @@ import { useDirectusUser } from "../hooks/useDirectusUser";
 export default function Navigation() {
   const [isOpen, isOpenSet] = useState(false);
   const onDismiss = () => isOpenSet(false);
-  const { user } = useDirectusUser();
+  const { user, showSupporters } = useDirectusUser();
 
   const openChat = useCallback(() => {
     const chatOptions =
@@ -111,13 +112,23 @@ export default function Navigation() {
                   </NavigationLink>
                 </li>
                 <li>
-                  <NavigationLink
-                    href="/support"
-                    activeClassName="text-pink"
-                    className="hover:text-pink focus:text-pink"
-                  >
-                    Support
-                  </NavigationLink>
+                  {showSupporters ? (
+                    <NavigationLink
+                      href="/support"
+                      activeClassName="text-pink"
+                      className="hover:text-pink focus:text-pink"
+                    >
+                      Support
+                    </NavigationLink>
+                  ) : (
+                    <NavigationLink
+                      href="/newsletter"
+                      activeClassName="text-pink"
+                      className="hover:text-pink focus:text-pink"
+                    >
+                      Newsletter
+                    </NavigationLink>
+                  )}
                 </li>
                 <li>
                   <a
@@ -140,11 +151,34 @@ export default function Navigation() {
                         <Search />
                       </NavigationLink>
                     </li>
-                    <li>
-                      <Link href={user ? "/account" : "/signin"}>
-                        <AiOutlineUser size={24} />
-                      </Link>
-                    </li>
+                    {showSupporters ? (
+                      <li>
+                        <Link href={user ? "/account" : "/signin"}>
+                          <AiOutlineUser size={24} />
+                        </Link>
+                      </li>
+                    ) : (
+                      <>
+                        <li className="h-6 leading-none">
+                          <a
+                            href="/chat"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <MessageSquare />
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            href={INSTAGRAM_URL}
+                          >
+                            <Instagram />
+                          </a>
+                        </li>
+                      </>
+                    )}
                   </ul>
                 </li>
               </ul>

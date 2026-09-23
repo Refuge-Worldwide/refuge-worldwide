@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useField, useFormikContext } from "formik";
 import { AsyncPaginate } from "react-select-async-paginate";
+import { adminFetch } from "../../lib/contentful/adminFetch";
 
 export default function ArtistMultiSelectField({
   label,
@@ -37,7 +38,7 @@ export default function ArtistMultiSelectField({
 
   const loadOptions = async () => {
     console.log("searching artists " + query);
-    const res = await fetch(fetchUrl);
+    const res = await (includeEmail ? adminFetch : fetch)(fetchUrl);
     const data = await res.json();
 
     return {

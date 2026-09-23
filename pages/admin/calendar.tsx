@@ -1,4 +1,5 @@
-import { requireStaffPage } from "@/lib/directus/staff";
+import { useContentfulAuth } from "@/hooks/useContentfulAuth";
+import { adminFetch } from "@/lib/contentful/adminFetch";
 import Layout from "../../components/layout";
 import PageMeta from "../../components/seo/page";
 import FullCalendar from "@fullcalendar/react";
@@ -10,7 +11,7 @@ import Loading from "../../components/loading";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as Popover from "@radix-ui/react-popover";
 import * as RadioGroup from "@radix-ui/react-radio-group";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import InputField from "../../components/formFields/inputField";
 import MultiSelectField from "../../components/formFields/multiSelectField";
 import ArtistMultiSelectField from "../../components/formFields/artistsMultiSelectField";
@@ -48,8 +49,6 @@ import TextareaField from "../../components/formFields/textareaField";
 import { createClient } from "contentful-management";
 import AdditionalMenu from "../../views/admin/additionalMenu";
 
-import type { GetServerSidePropsContext } from "next";
-
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL
   ? `${process.env.NEXT_PUBLIC_SITE_URL}`
   : "http://localhost:3000/";
@@ -76,27 +75,12 @@ function Calendar() {
   const datePicker = useRef<any>();
   const windowSize = useWindowSize();
   const router = useRouter();
-  const [contentfulClient, setContentfulClient] = useState<any>(null);
-
-  useEffect(() => {
-    const contentfulClient = async () => {
-      const res = await fetch("/api/admin/contentful-token");
-      if (!res.ok) {
-        console.error(
-          `[admin/calendar] contentful-token fetch failed: ${res.status}`
-        );
-        toast.error("Could not load the Contentful token — check the console.");
-        return;
-      }
-      const { token } = await res.json();
-      const client = createClient({
-        accessToken: token,
-      });
-      setContentfulClient(client);
-    };
-
-    contentfulClient();
-  }, []);
+  const auth = useContentfulAuth();
+  const authToken = auth.status === "authenticated" ? auth.token : null;
+  const contentfulClient = useMemo(
+    () => (authToken ? createClient({ accessToken: authToken }) : null),
+    [authToken]
+  );
 
   const handleKeyPress = useCallback((event) => {
     const calendarApi = calendarRef.current.getApi();
@@ -234,7 +218,7 @@ function Calendar() {
       setShowDialogOpen(false);
       toast.success(method == "update" ? "Show updated" : "Show created");
       if (show.confirmationEmail) {
-        const fetchPromise = fetch("/api/admin/confirmation-email", {
+        const fetchPromise = adminFetch("/api/admin/confirmation-email", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -576,7 +560,7 @@ function Calendar() {
               <TfiReload size={20} />
             )}
           </button>
-          <AdditionalMenu />
+          <AdditionalMenu onSignOut={auth.logout} />
         </div>
         {/* <DropdownMenu.Root
           open={addDropdownOpen}
@@ -900,6 +884,7 @@ function Calendar() {
       </div>
     );
 
+  if (auth.status === "error") return <p className="p-4">{auth.message}</p>;
   return <Loading />;
 }
 
@@ -940,13 +925,9 @@ function renderEventContent(eventInfo) {
 }
 
 async function getEvents(info: any) {
-  const response = await fetch(
+  const response = await adminFetch(
     `/api/admin/calendar?start=${info.startStr}&end=${info.endStr}`
   );
   const shows = await response.json();
   return shows.processed;
-}
-
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  return requireStaffPage(context);
 }

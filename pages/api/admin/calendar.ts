@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { requireStaffApi } from "@/lib/directus/staff";
+import { requireContentfulUser } from "@/lib/contentful/requireContentfulUser";
 import { assertError } from "ts-extras";
 import { getCalendarShows } from "../../../lib/contentful/calendar";
 
@@ -7,7 +7,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (!(await requireStaffApi(req, res))) return;
+  if (!(await requireContentfulUser(req, res))) return;
   const values = req.body;
   console.log("REQUEST METHOD: " + req.method);
   switch (req.method) {

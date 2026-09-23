@@ -13,6 +13,7 @@ import { useRouter } from "next/router";
 import { Arrow } from "../icons/arrow";
 import MixedFeelingsPlayer from "./mixedFeelingsPlayer";
 import { SupportModal } from "./supportModal";
+import { useDirectusUser } from "../hooks/useDirectusUser";
 
 // Only nudge listeners to support us once every 7 days.
 const SUPPORT_POPUP_KEY = "rw-support-popup-last-shown";
@@ -91,8 +92,10 @@ export default function LivePlayer() {
   });
 
   const [supportModalOpen, setSupportModalOpen] = useState(false);
+  const { showSupporters } = useDirectusUser();
 
   useEffect(() => {
+    if (!showSupporters) return;
     if (isPlaying !== 1 && isPlaying !== 2) return;
 
     let lastShown = 0;
@@ -110,7 +113,7 @@ export default function LivePlayer() {
     } catch (error) {
       // ignore - not critical if we can't persist this
     }
-  }, [isPlaying]);
+  }, [isPlaying, showSupporters]);
 
   const playerWrapperClassNames = cn(
     "bg-black text-white lg:flex items-center max-w-screen",
@@ -345,10 +348,12 @@ export default function LivePlayer() {
           slug={scheduleData?.ch1?.liveNow?.slug}
         />
       )}
-      <SupportModal
-        open={supportModalOpen}
-        onOpenChange={setSupportModalOpen}
-      />
+      {showSupporters && (
+        <SupportModal
+          open={supportModalOpen}
+          onOpenChange={setSupportModalOpen}
+        />
+      )}
     </>
   );
 }

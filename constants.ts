@@ -67,3 +67,7 @@ export const ENDPOINT = `https://graphql.contentful.com/content/v1/spaces/${proc
 export const FATHOM_SITE_ID = "WFNPQSZU";
 
 export const RESEND_RATE_LIMIT_DELAY = 1000; // 1000 milliseconds delay to respect rate limits
+
+// Flip to true at launch. Until then, supporter UI (banner, support popup,
+// favourites, new chat, new support page) is only shown to signed-in staff.
+export const SUPPORTERS_LIVE = false;

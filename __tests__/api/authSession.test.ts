@@ -4,6 +4,7 @@ import loginHandler from "@/pages/api/auth/login";
 import logoutHandler from "@/pages/api/auth/logout";
 import meHandler from "@/pages/api/auth/me";
 import { getSessionUser } from "@/lib/directus/session";
+import { getUserAccess } from "@/lib/directus/staff";
 
 // Partial-mock so login/logout keep using the real setSessionCookies /
 // clearSessionCookies, while me.ts gets a mockable getSessionUser.
@@ -14,7 +15,10 @@ vi.mock("@/lib/directus/session", async () => ({
   getSessionUser: vi.fn(),
 }));
 
+vi.mock("@/lib/directus/staff", () => ({ getUserAccess: vi.fn() }));
+
 const mockGetSessionUser = getSessionUser as Mock;
+const mockGetUserAccess = getUserAccess as Mock;
 
 const DIRECTUS_URL = "https://directus.test";
 
@@ -119,12 +123,35 @@ describe("POST /api/auth/logout", () => {
 describe("GET /api/auth/me", () => {
   it("returns the session user when logged in", async () => {
     mockGetSessionUser.mockResolvedValueOnce({ id: "u1", email: "a@b.com" });
+    mockGetUserAccess.mockResolvedValueOnce({ isStaff: false });
     const { req, res } = createApiMocks({ method: "GET" });
     await meHandler(req, res);
 
     expect(res._getStatusCode()).toBe(200);
     expect(res._getJSONData()).toEqual({
       user: { id: "u1", email: "a@b.com" },
+      isStaff: false,
+    });
+  });
+
+  it("flags staff users", async () => {
+    mockGetSessionUser.mockResolvedValueOnce({ id: "u1", email: "a@b.com" });
+    mockGetUserAccess.mockResolvedValueOnce({ isStaff: true });
+    const { req, res } = createApiMocks({ method: "GET" });
+    await meHandler(req, res);
+
+    expect(res._getJSONData()).toMatchObject({ isStaff: true });
+  });
+
+  it("still returns the user if the staff lookup fails", async () => {
+    mockGetSessionUser.mockResolvedValueOnce({ id: "u1", email: "a@b.com" });
+    mockGetUserAccess.mockRejectedValueOnce(new Error("directus down"));
+    const { req, res } = createApiMocks({ method: "GET" });
+    await meHandler(req, res);
+
+    expect(res._getJSONData()).toEqual({
+      user: { id: "u1", email: "a@b.com" },
+      isStaff: false,
     });
   });
 
@@ -133,6 +160,6 @@ describe("GET /api/auth/me", () => {
     const { req, res } = createApiMocks({ method: "GET" });
     await meHandler(req, res);
 
-    expect(res._getJSONData()).toEqual({ user: null });
+    expect(res._getJSONData()).toEqual({ user: null, isStaff: false });
   });
 });

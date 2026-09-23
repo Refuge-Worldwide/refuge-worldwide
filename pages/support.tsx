@@ -1,3 +1,4 @@
+import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import { BLOCKS } from "@contentful/rich-text-types";
 import { InferGetStaticPropsType } from "next";
 import Layout from "../components/layout";
@@ -7,6 +8,7 @@ import FaqAccordion from "../components/faqAccordion";
 import { getSupportPage } from "../lib/contentful/pages/support";
 import { RenderRichTextWithImages } from "../lib/rich-text";
 import SinglePage from "../views/singlePage";
+import { useDirectusUser } from "../hooks/useDirectusUser";
 
 const HEADING_TYPES = new Set([
   BLOCKS.HEADING_1,
@@ -51,6 +53,24 @@ export default function SupportPage({
   content,
   coverImage,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
+  const { showSupporters } = useDirectusUser();
+
+  if (!showSupporters) {
+    return (
+      <Layout preview={preview} pageId="Aa4GRMf6fuDtkH0UhkX19">
+        <PageMeta title="Support | Refuge Worldwide" path="support/" />
+
+        <SinglePage coverImage={coverImage}>
+          <section>
+            <div className="container-md p-4 sm:p-8 bg-white">
+              <Prose>{documentToReactComponents(content?.json)}</Prose>
+            </div>
+          </section>
+        </SinglePage>
+      </Layout>
+    );
+  }
+
   // Split the single rich-text field into title (its first block), the
   // first paragraph, and everything after, so the app badges can sit right
   // after the first paragraph. There are no separate "title"/"intro"

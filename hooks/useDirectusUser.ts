@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { SUPPORTERS_LIVE } from "../constants";
 
 interface DirectusUser {
   id: string;
@@ -10,6 +11,7 @@ interface DirectusUser {
 
 export function useDirectusUser() {
   const [user, setUser] = useState<DirectusUser | null>(null);
+  const [isStaff, setIsStaff] = useState(false);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -28,10 +30,14 @@ export function useDirectusUser() {
       fetch("/api/auth/me")
         .then((res) => res.json())
         .then((data) => {
-          if (!cancelled) setUser(data.user ?? null);
+          if (cancelled) return;
+          setUser(data.user ?? null);
+          setIsStaff(data.isStaff === true);
         })
         .catch(() => {
-          if (!cancelled) setUser(null);
+          if (cancelled) return;
+          setUser(null);
+          setIsStaff(false);
         })
         .finally(() => {
           if (!cancelled && isFirstFetch) setLoading(false);
@@ -53,5 +59,5 @@ export function useDirectusUser() {
     };
   }, [router.events]);
 
-  return { user, loading };
+  return { user, loading, isStaff, showSupporters: SUPPORTERS_LIVE || isStaff };
 }
