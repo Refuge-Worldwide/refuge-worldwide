@@ -53,6 +53,7 @@
     "@stripe/react-stripe-js": "^5.6.1",
     "@stripe/stripe-js": "^8.9.0",
     "@use-it/interval": "^1.0.0",
+    "@vercel/functions": "^3.9.9",
     "@vercel/og": "^0.6.2",
     "@widgetbot/crate": "^3.5.4",
     "@widgetbot/react-embed": "1.7.0",

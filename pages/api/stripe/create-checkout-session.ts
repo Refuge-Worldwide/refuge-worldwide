@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { normalizeEmail } from "@/lib/normalizeEmail";
 import { stripe } from "@/lib/stripe/config";
 
-const ALLOWED_AMOUNTS_EUR = [5, 7.5, 15, 30, 50, 100];
+const ALLOWED_AMOUNTS_EUR = [5, 7.5, 10, 15, 20, 30];
 const ALLOWED_INTERVALS = ["month", "year"] as const;
 
 function lookupKeyFor(amountEur: number, interval: string): string {

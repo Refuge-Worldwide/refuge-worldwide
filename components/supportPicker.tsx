@@ -5,7 +5,7 @@ import {
 } from "@stripe/react-stripe-js";
 import { getStripe } from "@/lib/stripe/client";
 
-const AMOUNTS_EUR = [5, 7.5, 15, 30, 50, 100];
+const AMOUNTS_EUR = [5, 7.5, 10, 15, 20, 30];
 
 function formatEur(amount: number): string {
   return amount % 1 === 0 ? `${amount}` : amount.toFixed(2);
