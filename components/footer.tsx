@@ -1,26 +1,35 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 import {
   MIXCLOUD_URL,
   PATREON_URL,
   SOUNDCLOUD_URL,
   CONTACT_URL,
   TELEGRAM_URL,
+  SUPPORTERS_LIVE,
 } from "../constants";
 import { Arrow } from "../icons/arrow";
 import Mixcloud from "../icons/mixcloud";
 import Soundcloud from "../icons/soundcloud";
 import Telegram from "../icons/telegram";
-import { useUser } from "@supabase/auth-helpers-react";
 import SignOut from "./signOut";
+import SupportBanner from "./supportBanner";
+import { useDirectusUser } from "../hooks/useDirectusUser";
 
 export default function Footer() {
   const handleGoToTop = () =>
     window?.scroll({ top: 0, left: 0, behavior: "smooth" });
-
-  const user = useUser();
+  const { user, loading, isStaff } = useDirectusUser();
+  const router = useRouter();
+  // Pointless on the support page itself — it just links back to here.
+  const isSupportPage = router.pathname === "/support";
 
   return (
     <footer className="bg-black text-white">
+      {/* pre-launch, staff get to preview it even though they're signed in */}
+      {!loading && (SUPPORTERS_LIVE ? !user : isStaff) && !isSupportPage && (
+        <SupportBanner />
+      )}
       <div className="px-4 md:px-8 py-10 md:py-20">
         <div className="container md:grid items-center grid-cols-2">
           <div className="mb-6 md:mb-0">
@@ -51,8 +60,7 @@ export default function Footer() {
 
       <div className="px-4 md:px-8 border-t border-white py-4 md:py-6">
         <div className="grid lg:grid-cols-3 gap-8 lg:gap-12 text-small font-medium">
-          {/* Spacer */}
-          {user ? <SignOut /> : <div className="hidden lg:block" />}
+          <SignOut />
 
           <div className="flex justify-center">
             <button

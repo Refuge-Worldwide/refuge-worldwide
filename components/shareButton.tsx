@@ -1,4 +1,4 @@
-import Share from "../icons/share";
+import ShareOutline from "../icons/shareOutline";
 import { __SERVER__ } from "../util";
 import ShareMenu from "./shareMenu";
 
@@ -31,10 +31,11 @@ export default function ShareButton({
   if (!__SERVER__ && navigator.share)
     return (
       <button
-        className="w-20 h-20 sm:w-28 sm:h-28 focus:outline-none"
+        className="focus:outline-none"
         onClick={handleOnClick}
+        aria-label="Share this show"
       >
-        <Share />
+        <ShareOutline className="w-8 h-8 sm:w-10 sm:h-10" strokeWidth={24} />
       </button>
     );
 

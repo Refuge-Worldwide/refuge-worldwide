@@ -448,7 +448,7 @@ export default async function handler(
         try {
           values.artwork = await showArtwork(values);
         } catch (err) {
-          sendSlackMessage(
+          await sendSlackMessage(
             "Error generating social image for " + values.name,
             "error"
           );
@@ -461,7 +461,7 @@ export default async function handler(
         const message = `⚠️ ERROR SUBMITTING FORM
         \n\nShow: ${values.showName}
         \nError: ${err}`;
-        sendSlackMessage(message, "error");
+        await sendSlackMessage(message, "error");
         res.status(400).json({ data: "issue submitting form" });
       }
   }

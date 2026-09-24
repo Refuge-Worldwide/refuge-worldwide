@@ -1,6 +1,9 @@
 import { InferGetStaticPropsType } from "next";
 import Layout from "../components/layout";
 import PageMeta from "../components/seo/page";
+import SupportBanner from "../components/supportBanner";
+import { SUPPORTERS_LIVE } from "../constants";
+import { useDirectusUser } from "../hooks/useDirectusUser";
 import { getHomePage } from "../lib/contentful/pages/home";
 import FeaturedShows from "../views/home/featuredShows";
 import LatestNews from "../views/home/latestNews";
@@ -20,6 +23,8 @@ export default function HomePage({
   latestArticles,
   nextUp,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
+  const { user, loading, isStaff } = useDirectusUser();
+
   return (
     <Layout pageId="3xN3mbIMb4CwtrZqlRbYyu">
       <Head>
@@ -31,6 +36,9 @@ export default function HomePage({
       <PageMeta title="Refuge Worldwide" path="/" />
 
       <NextUp />
+
+      {/* pre-launch, staff get to preview it even though they're signed in */}
+      {!loading && (SUPPORTERS_LIVE ? !user : isStaff) && <SupportBanner />}
 
       <FeaturedShows shows={featuredShows} />
 

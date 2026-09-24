@@ -1,15 +1,21 @@
-import { useRef } from "react";
 import PageMeta from "../components/seo/page";
+import ChatRoom from "../components/chatRoom";
 import DiscordEmbed from "../components/DiscordEmbed";
-import { DISCORD_INVITE_URL } from "../constants";
 import LivePlayer from "../components/livePlayer";
+import { DISCORD_INVITE_URL } from "../constants";
+import { useDirectusUser } from "../hooks/useDirectusUser";
 import { BsDiscord } from "react-icons/bs";
 import Head from "next/head";
-export default function ChatPage() {
-  const ref = useRef<HTMLDivElement>();
 
+export default function ChatPage() {
+  const { showSupporters } = useDirectusUser();
+
+  return showSupporters ? <NewChatPage /> : <DiscordChatPage />;
+}
+
+function ChatHead() {
   return (
-    <div ref={ref} className="flex flex-col bg-[#36393E] h-screen">
+    <>
       <Head>
         <meta
           name="viewport"
@@ -17,7 +23,31 @@ export default function ChatPage() {
         />
       </Head>
       <PageMeta title="Chat | Refuge Worldwide" path="chat/" />
+    </>
+  );
+}
 
+function NewChatPage() {
+  return (
+    <div className="flex flex-col bg-black h-screen overflow-hidden">
+      <ChatHead />
+      <div className="flex-shrink-0">
+        <LivePlayer />
+      </div>
+      <div className="flex-shrink-0 bg-black text-white h-[50px] px-4 border-y border-white/20 flex items-center">
+        <span className="leading-6">Chatroom</span>
+      </div>
+      <div className="flex-1 min-h-0 pb-safe">
+        <ChatRoom />
+      </div>
+    </div>
+  );
+}
+
+function DiscordChatPage() {
+  return (
+    <div className="flex flex-col bg-[#36393E] h-screen">
+      <ChatHead />
       <LivePlayer />
       <div className="absolute top-12 sm:top-16 left-0 w-full bg-black text-white h-[50px] px-4 border-b border-white border-t">
         <div className="flex gap-4 items-center h-full">

@@ -1,3 +1,9 @@
+import { useContentfulAuth } from "@/hooks/useContentfulAuth";
+import {
+  adminFetch,
+  handleContentfulAuthExpired,
+  isContentfulAuthError,
+} from "@/lib/contentful/adminFetch";
 import Layout from "../../components/layout";
 import PageMeta from "../../components/seo/page";
 import FullCalendar from "@fullcalendar/react";
@@ -9,7 +15,7 @@ import Loading from "../../components/loading";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as Popover from "@radix-ui/react-popover";
 import * as RadioGroup from "@radix-ui/react-radio-group";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import InputField from "../../components/formFields/inputField";
 import MultiSelectField from "../../components/formFields/multiSelectField";
 import ArtistMultiSelectField from "../../components/formFields/artistsMultiSelectField";
@@ -44,7 +50,6 @@ import CalendarSearch from "../../views/admin/calendarSearch";
 import CalendarInsta from "../../views/admin/calendarInsta";
 import EmailModal from "../../views/admin/emailModal";
 import TextareaField from "../../components/formFields/textareaField";
-import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { createClient } from "contentful-management";
 import AdditionalMenu from "../../views/admin/additionalMenu";
 
@@ -74,25 +79,12 @@ function Calendar() {
   const datePicker = useRef<any>();
   const windowSize = useWindowSize();
   const router = useRouter();
-  const supabaseClient = useSupabaseClient();
-  const user = useUser();
-  const [contentfulClient, setContentfulClient] = useState<any>(null);
-
-  useEffect(() => {
-    const contentfulClient = async () => {
-      const { data } = await supabaseClient
-        .from("accessTokens")
-        .select("token")
-        .eq("application", "contentful")
-        .limit(1)
-        .single();
-      const client = createClient({
-        accessToken: data.token,
-      });
-      setContentfulClient(client);
-    };
-    if (user) contentfulClient();
-  }, [user]);
+  const auth = useContentfulAuth();
+  const authToken = auth.status === "authenticated" ? auth.token : null;
+  const contentfulClient = useMemo(
+    () => (authToken ? createClient({ accessToken: authToken }) : null),
+    [authToken]
+  );
 
   const handleKeyPress = useCallback((event) => {
     const calendarApi = calendarRef.current.getApi();
@@ -230,7 +222,7 @@ function Calendar() {
       setShowDialogOpen(false);
       toast.success(method == "update" ? "Show updated" : "Show created");
       if (show.confirmationEmail) {
-        const fetchPromise = fetch("/api/admin/confirmation-email", {
+        const fetchPromise = adminFetch("/api/admin/confirmation-email", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -250,9 +242,11 @@ function Calendar() {
       }
     } catch (error) {
       console.log(error);
-      toast.error(
-        method == "create" ? "Error updating show" : "Error creating show"
-      );
+      if (isContentfulAuthError(error)) handleContentfulAuthExpired();
+      else
+        toast.error(
+          method == "create" ? "Error updating show" : "Error creating show"
+        );
       setCalendarLoading(false);
       actions.setSubmitting(false);
       throw error;
@@ -274,7 +268,8 @@ function Calendar() {
       })
       .catch((error) => {
         console.log(error);
-        toast.error("Error moving show");
+        if (isContentfulAuthError(error)) handleContentfulAuthExpired();
+        else toast.error("Error moving show");
       });
   };
 
@@ -292,7 +287,8 @@ function Calendar() {
       })
       .catch((error) => {
         console.log(error);
-        toast.error("Error deleting show");
+        if (isContentfulAuthError(error)) handleContentfulAuthExpired();
+        else toast.error("Error deleting show");
       });
   };
 
@@ -572,7 +568,7 @@ function Calendar() {
               <TfiReload size={20} />
             )}
           </button>
-          <AdditionalMenu />
+          <AdditionalMenu onSignOut={auth.logout} />
         </div>
         {/* <DropdownMenu.Root
           open={addDropdownOpen}
@@ -896,6 +892,7 @@ function Calendar() {
       </div>
     );
 
+  if (auth.status === "error") return <p className="p-4">{auth.message}</p>;
   return <Loading />;
 }
 
@@ -936,7 +933,7 @@ function renderEventContent(eventInfo) {
 }
 
 async function getEvents(info: any) {
-  const response = await fetch(
+  const response = await adminFetch(
     `/api/admin/calendar?start=${info.startStr}&end=${info.endStr}`
   );
   const shows = await response.json();

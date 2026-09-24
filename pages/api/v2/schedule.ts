@@ -78,13 +78,14 @@ async function getCh1LiveNow(
 
   const show = liveNowContentful ?? repeatShow;
 
-  const title = radioTitle.includes("!OVERWRITE!")
+  const isOverwrite = radioTitle.includes("!OVERWRITE!");
+  const title = isOverwrite
     ? radioTitle.replace("!OVERWRITE!", "")
     : show?.title ?? (isRepeat ? stripRepeatTag(radioTitle) : radioTitle);
 
   return {
     // same "|" replacement the schedule applies to Contentful titles
-    title: title.replace(/\|/g, "—"),
+    title: title.replace(/\|/g, "—") + (isRepeat && !isOverwrite ? " (R)" : ""),
     artwork: show?.coverImage?.url ?? placeholderImage.url,
     link: show?.slug ? "/radio/" + show.slug : null,
     slug: show?.slug ?? null,

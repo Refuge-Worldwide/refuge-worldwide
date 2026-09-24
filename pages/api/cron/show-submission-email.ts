@@ -26,7 +26,7 @@ export default async function handler(
 
     const emailCheckDate = now.add(13, "days");
     const showsEmailCheck = await getUpcomingShowsByDate(emailCheckDate, true);
-    checkEmails(showsEmailCheck);
+    await checkEmails(showsEmailCheck);
 
     const initialEmailDate = now.add(10, "days");
     const initialShowsToEmail = await getUpcomingShowsByDate(
@@ -76,14 +76,14 @@ async function sendEmails(
   }
 }
 
-function checkEmails(shows: ShowInterface[]) {
-  shows.forEach((show) => {
-    show.artistsCollection.items.forEach((artist) => {
+async function checkEmails(shows: ShowInterface[]) {
+  for (const show of shows) {
+    for (const artist of show.artistsCollection.items) {
       if (!artist.email) {
-        sendSlackMessage(
+        await sendSlackMessage(
           `【・_・?】 *${artist.name}* has no email assigned to them. This is a preflight check, please add an email address within 3 days to ensure they recieve the first automated email. <https://app.contentful.com/spaces/${contentfulSpaceId}/entries/${artist.sys.id}|Add email >`
         );
       }
-    });
-  });
+    }
+  }
 }

@@ -1,11 +1,12 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import { requireContentfulUser } from "@/lib/contentful/requireContentfulUser";
 import { sendConfirmationEmail } from "../../../lib/resend/email";
-import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  if (!(await requireContentfulUser(req, res))) return;
   const values = req.body;
   console.log("REQUEST METHOD: " + req.method);
   switch (req.method) {

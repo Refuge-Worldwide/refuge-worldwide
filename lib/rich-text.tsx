@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Asset, Entry, Content } from "../types/shared";
 import Link from "next/link";
 import { ArticleShowPreview } from "../components/showPreview";
+import { SupportButton } from "../components/supportButton";
 import Pill from "../components/pill";
 import { useEffect, useState } from "react";
 interface EmbeddedAssetBlock extends Block {
@@ -98,6 +99,28 @@ export function RenderRichTextWithImages(content: Content) {
           }
 
           return <a href={uri}>{children}</a>;
+        },
+        [BLOCKS.PARAGRAPH]: function Paragraph(node: Block, children) {
+          const text = node.content
+            .filter((child) => child.nodeType === "text")
+            .map((child) => (child as any).value)
+            .join("")
+            .trim();
+
+          if (text === "Become a supporter") {
+            return (
+              <div className="text-center">
+                <SupportButton
+                  className="bg-black text-white rounded-full py-4 px-8 text-small font-medium hover:bg-black/80 transition-colors"
+                  showFindOutMoreLink={false}
+                >
+                  Become a supporter
+                </SupportButton>
+              </div>
+            );
+          }
+
+          return <p>{children}</p>;
         },
         [BLOCKS.EMBEDDED_ENTRY]: (node, children) => {
           // find the entry in the entryMap by ID

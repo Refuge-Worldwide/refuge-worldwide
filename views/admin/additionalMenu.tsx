@@ -16,7 +16,11 @@ import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import CalendarInstaWeekly from "./calendarInstaWeekly";
 
-export default function ShowArtworkModal() {
+export default function ShowArtworkModal({
+  onSignOut,
+}: {
+  onSignOut: () => void;
+}) {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
@@ -75,6 +79,12 @@ export default function ShowArtworkModal() {
           <Link href="/admin/daily-schedule-generator">
             Daily Schedule Artwork
           </Link>
+        </DropdownMenu.Item>
+        <DropdownMenu.Item
+          className="hover:bg-black/10 px-2 py-1 rounded-lg cursor-pointer"
+          onClick={onSignOut}
+        >
+          Sign out of Contentful
         </DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu.Root>

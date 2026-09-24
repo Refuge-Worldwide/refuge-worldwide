@@ -1,13 +1,20 @@
 import Link from "next/link";
 import { AiOutlineEdit } from "react-icons/ai";
 import { usePathname } from "next/navigation";
-import { useUser } from "@supabase/auth-helpers-react";
+import { useEffect, useState } from "react";
 
 export default function Edit({ id }: { id?: string }) {
   const pathname = usePathname();
-  const user = useUser();
+  const [isStaff, setIsStaff] = useState(false);
 
-  if (id && user)
+  useEffect(() => {
+    fetch("/api/auth/is-staff")
+      .then((res) => res.json())
+      .then((data) => setIsStaff(!!data.isStaff))
+      .catch(() => setIsStaff(false));
+  }, []);
+
+  if (id && isStaff)
     return (
       <Link
         className={`absolute ${

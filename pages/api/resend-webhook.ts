@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { sendSlackMessage } from "../../lib/slack";
-export default (req: NextApiRequest, res: NextApiResponse) => {
+export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req;
 
   switch (method) {
@@ -9,11 +9,11 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
       console.log(body);
       try {
         if (body.type === "email.bounced") {
-          sendSlackMessage(
+          await sendSlackMessage(
             `Submission email bounced to *${body.data.to}*. ${body.data.bounce.message} <https://resend.com/emails/${body.data.email_id}|View email >`
           );
         } else if (body.type === "email.delivery_delayed") {
-          sendSlackMessage(
+          await sendSlackMessage(
             `Submission email delivery delayed to *${body.data.to}*. <https://resend.com/emails/${body.data.email_id}|View email >`
           );
         }

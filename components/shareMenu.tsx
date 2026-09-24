@@ -1,5 +1,5 @@
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import Share from "../icons/share";
+import ShareOutline from "../icons/shareOutline";
 
 export default function ShareMenu({ url }: { url: string }) {
   const TEXT =
@@ -7,8 +7,11 @@ export default function ShareMenu({ url }: { url: string }) {
 
   return (
     <DropdownMenu.Root modal={false}>
-      <DropdownMenu.Trigger className="w-20 h-20 sm:w-28 sm:h-28 focus:outline-none">
-        <Share />
+      <DropdownMenu.Trigger
+        className="focus:outline-none"
+        aria-label="Share this show"
+      >
+        <ShareOutline className="w-8 h-8 sm:w-10 sm:h-10" strokeWidth={24} />
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Portal>

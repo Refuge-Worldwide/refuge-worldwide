@@ -10,10 +10,13 @@ import PlayCircle from "../../icons/playCircle";
 import { RenderRichTextWithImages } from "../../lib/rich-text";
 import { ShowInterface } from "../../types/shared";
 import { parseGenres } from "../../util";
+import ShowFavourite from "@/components/showFavourite";
+import { useDirectusUser } from "@/hooks/useDirectusUser";
 
 const ShareButton = dynamic(() => import("../../components/shareButton"));
 
 export default function ShowBody({
+  sys,
   title,
   genresCollection,
   artistsCollection,
@@ -23,6 +26,7 @@ export default function ShowBody({
   mixcloudLink,
   coverImage,
 }: ShowInterface) {
+  const { showSupporters } = useDirectusUser();
   const genres = parseGenres(genresCollection);
 
   const artists = artistsCollection.items.filter((artist) => artist !== null);
@@ -85,20 +89,18 @@ export default function ShowBody({
 
               <div className="h-6" />
 
-              {genres.length > 0 && (
-                <ul className="w-full flex flex-wrap justify-center gap-2">
-                  {genres.map((genre, i) => (
-                    <li className="cursor-pointer" key={i}>
-                      <Link
-                        href={`/radio?genre=${encodeURIComponent(genre)}#shows`}
-                        legacyBehavior
-                      >
-                        <Badge as="a" text={genre} />
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              )}
+              <ul className="w-full flex flex-wrap justify-center gap-2">
+                {genres.map((genre, i) => (
+                  <li className="cursor-pointer" key={i}>
+                    <Link
+                      href={`/radio?genre=${encodeURIComponent(genre)}#shows`}
+                      legacyBehavior
+                    >
+                      <Badge as="a" text={genre} />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
 
               <div className="h-6" />
 
@@ -107,13 +109,14 @@ export default function ShowBody({
               )}
             </div>
 
-            <div className="flex">
+            <div className="flex items-start gap-2">
               <ShareButton
                 details={{
                   title: title,
                   slug: `/radio/${slug}`,
                 }}
               />
+              {showSupporters && <ShowFavourite id={sys.id} />}
             </div>
           </div>
 

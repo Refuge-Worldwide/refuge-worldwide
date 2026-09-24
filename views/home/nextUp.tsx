@@ -4,19 +4,10 @@ import Link from "next/link";
 import LocalTime from "../../components/localTime";
 import Marquee from "../../components/marquee";
 import { Cross } from "../../icons/cross";
-import { useState, useEffect } from "react";
-
-const bgOptions = ["bg-orange", "bg-purple", "bg-pink", "bg-green", "bg-red"];
 
 export default function NextUp() {
   const { scheduleData, isLoading, error } = useSchedule();
   // const shouldShowBanner = scheduleData.nextUp;
-
-  const [bgColour, setBgColour] = useState("");
-
-  useEffect(() => {
-    setBgColour(bgOptions[Math.floor(Math.random() * bgOptions.length)]);
-  }, []);
 
   if (
     (!isLoading && !scheduleData?.ch1?.nextUp) ||
@@ -26,7 +17,7 @@ export default function NextUp() {
     return null;
   else
     return (
-      <section className={`${bgColour} border-b-2`}>
+      <section className="bg-[#FFFE49] border-b-2">
         <div className="flex items-center">
           <div className="pt-2 pb-2 sm:pt-4 sm:pb-4 px-4 md:px-8 border-r-2">
             <Pill outline={true} size="medium">

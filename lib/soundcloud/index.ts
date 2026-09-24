@@ -1,7 +1,11 @@
-import { supabase } from "../supabase/client";
-import dayjs from "dayjs";
+import { getCache } from "@vercel/functions";
 
-const APPLICATION = "soundcloud-oauth";
+const CACHE_KEY = "soundcloud-oauth-token";
+
+type CachedToken = { token: string; expiresAt: number };
+
+// quick copy in memory so we don't hit the cache every time
+let memoryToken: CachedToken | null = null;
 
 const cleanUrl = (url: string): string => {
   try {
@@ -13,18 +17,20 @@ const cleanUrl = (url: string): string => {
   }
 };
 
+// soundcloud limits new tokens, so we keep one in the vercel cache
 export const getAccessToken = async (): Promise<string> => {
-  const now = dayjs();
+  if (memoryToken && Date.now() < memoryToken.expiresAt) {
+    return memoryToken.token;
+  }
 
-  const { data: row } = await supabase
-    .from("accessTokens")
-    .select("token, expires")
-    .eq("application", APPLICATION)
-    .limit(1)
-    .single();
+  const cache = getCache();
+  const cached = (await cache
+    .get(CACHE_KEY)
+    .catch(() => null)) as CachedToken | null;
 
-  if (row?.token && now.isBefore(dayjs(row.expires))) {
-    return row.token;
+  if (cached?.token && Date.now() < cached.expiresAt) {
+    memoryToken = cached;
+    return cached.token;
   }
 
   const response = await fetch("https://api.soundcloud.com/oauth2/token", {
@@ -42,23 +48,19 @@ export const getAccessToken = async (): Promise<string> => {
     throw new Error(`Failed to get SoundCloud token: ${JSON.stringify(body)}`);
   }
 
-  const expiresIn = body.expires_in ?? 3600;
-  const tokenData = {
+  // expire a minute early to be safe
+  const ttl = Math.max((body.expires_in ?? 3600) - 60, 60);
+  const entry: CachedToken = {
     token: body.access_token,
-    refresh_token: body.refresh_token ?? null,
-    expires: now.add(expiresIn - 30, "seconds").toISOString(),
+    expiresAt: Date.now() + ttl * 1000,
   };
+  memoryToken = entry;
 
-  const { error: saveError } = row
-    ? await supabase
-        .from("accessTokens")
-        .update(tokenData)
-        .eq("application", APPLICATION)
-    : await supabase
-        .from("accessTokens")
-        .insert({ application: APPLICATION, ...tokenData });
-
-  if (saveError) console.error("[soundcloud] Supabase save error:", saveError);
+  try {
+    await cache.set(CACHE_KEY, entry, { ttl });
+  } catch (error) {
+    console.error("[soundcloud] token cache error:", error);
+  }
 
   return body.access_token;
 };

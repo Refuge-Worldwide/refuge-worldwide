@@ -1,16 +1,21 @@
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/router";
+import { useDirectusUser } from "@/hooks/useDirectusUser";
 
 export default function SignOut() {
-  const supabase = createClientComponentClient();
   const router = useRouter();
+  const { user } = useDirectusUser();
+
   const handleSignOut = async () => {
-    await supabase.auth.signOut();
+    await fetch("/api/auth/logout", { method: "POST" });
     router.reload();
   };
-  return (
-    <button className="text-left grow-0" onClick={handleSignOut}>
-      Sign out
-    </button>
-  );
+
+  if (user)
+    return (
+      <button className="text-left grow-0" onClick={handleSignOut}>
+        Sign out
+      </button>
+    );
+
+  return null;
 }

@@ -18,6 +18,14 @@
     {
       "path": "/api/cron/artwork-email?for-tues=true",
       "schedule": "0 14 * * 1"
+    },
+    {
+      "path": "/api/cron/chat-show-announce",
+      "schedule": "58,59 * * * *"
+    },
+    {
+      "path": "/api/cron/chat-show-announce",
+      "schedule": "0,1,2,3 * * * *"
     }
   ]
 }

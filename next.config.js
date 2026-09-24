@@ -32,6 +32,11 @@ module.exports = {
         destination: "/studio-bookings",
         permanent: false,
       },
+      {
+        source: "/account/likes",
+        destination: "/account/favourites",
+        permanent: true,
+      },
     ];
   },
 };
