@@ -1,8 +1,6 @@
 import { Resend } from "resend";
 import ShowSubmissionEmail from "../../emails/showSubmission";
 import { ShowArtworkEmail } from "../../emails/showArtwork";
-import { WelcomeCompletePaymentEmail } from "../../emails/welcomeCompletePayment";
-import { WelcomeSupporterEmail } from "../../emails/welcomeSupporter";
 const resend = new Resend(process.env.RESEND_API_KEY);
 import { sendSlackMessage } from "../../lib/slack";
 import dayjs from "dayjs";
@@ -113,84 +111,6 @@ export async function sendArtworkEmail(artist, date, artwork) {
     console.log(error);
     await sendSlackMessage(
       `Failed to send artwork email to ${artist.name}(${artist.email}). ${error.name} - ${error.message}. <@U04HG3VHHEW>`,
-      "error"
-    );
-  }
-}
-
-function siteUrl() {
-  return (
-    process.env.NEXT_PUBLIC_SITE_URL ??
-    `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
-  ).replace(/\/$/, "");
-}
-
-// Sent to app signups (account created without paying yet). The reminder
-// variant is for the supporter-signup-reminder cron, currently unscheduled.
-export async function sendWelcomeCompletePaymentEmail(
-  email: string,
-  userName: string,
-  reminder: boolean = false
-) {
-  try {
-    const { data, error } = await resend.emails.send({
-      from: "Refuge Worldwide <noreply@mail.refugeworldwide.com>",
-      to: email,
-      subject: reminder
-        ? "Don't forget to complete your account setup"
-        : "Welcome to Refuge Worldwide — confirm your account and activate your subscription",
-      reply_to: ["assistant@refugeworldwide.com"],
-      react: WelcomeCompletePaymentEmail({
-        userName,
-        supportersUrl: `${siteUrl()}/supporters/checkout?email=${encodeURIComponent(
-          email
-        )}`,
-        reminder,
-      }),
-    });
-
-    if (error) {
-      throw new Error(error.name);
-    }
-
-    return data;
-  } catch (error) {
-    console.log(error);
-    await sendSlackMessage(
-      `Failed to send ${
-        reminder ? "reminder" : "welcome"
-      } payment email to ${email}. ${error.name} - ${
-        error.message
-      }. <@U04HG3VHHEW>`,
-      "error"
-    );
-  }
-}
-
-// Sent once, right after checkout.session.completed confirms payment — see
-// upsertSupporterFromCheckout in lib/membership.ts.
-export async function sendWelcomeSupporterEmail(
-  email: string,
-  userName: string
-) {
-  try {
-    const { data, error } = await resend.emails.send({
-      from: "Refuge Worldwide <noreply@mail.refugeworldwide.com>",
-      to: email,
-      subject: "Thank you for supporting Refuge Worldwide ",
-      reply_to: ["assistant@refugeworldwide.com"],
-      react: WelcomeSupporterEmail({ userName }),
-    });
-
-    if (error) {
-      throw new Error(error.name);
-    }
-
-    return data;
-  } catch (error) {
-    console.log(error);
-    await sendSlackMessage(
-      `Failed to send welcome supporter email to ${email}. ${error.name} - ${error.message}. <@U04HG3VHHEW>`,
       "error"
     );
   }

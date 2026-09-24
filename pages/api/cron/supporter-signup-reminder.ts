@@ -3,7 +3,7 @@ import { readUsers } from "@directus/sdk";
 import dayjs from "dayjs";
 import { directusMembershipAdmin } from "@/lib/directus/admin";
 import { getAppUserRoleId } from "@/lib/membership";
-import { sendWelcomeCompletePaymentEmail } from "@/lib/resend/email";
+import { sendWelcomeCompletePaymentEmail } from "@/lib/scaleway/email";
 import { sendSlackMessage } from "@/lib/slack";
 import { RESEND_RATE_LIMIT_DELAY } from "@/constants";
 

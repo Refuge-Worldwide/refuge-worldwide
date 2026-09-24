@@ -4,7 +4,7 @@ import { createUser, readUsers, updateUser } from "@directus/sdk";
 import Stripe from "stripe";
 import { directusMembershipAdmin } from "@/lib/directus/admin";
 import { sendSlackMessage } from "@/lib/slack";
-import { sendWelcomeSupporterEmail } from "@/lib/resend/email";
+import { sendWelcomeSupporterEmail } from "@/lib/scaleway/email";
 
 // Directus's /users/invite endpoint requires the role's id (a GUID). Read
 // directly from the environment rather than looking it up by display name —

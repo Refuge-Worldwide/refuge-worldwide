@@ -4,7 +4,7 @@ import { createUser } from "@directus/sdk";
 import { directusMembershipAdmin } from "@/lib/directus/admin";
 import { findUserByEmail, getAppUserRoleId } from "@/lib/membership";
 import { sendSlackMessage } from "@/lib/slack";
-import { sendWelcomeCompletePaymentEmail } from "@/lib/resend/email";
+import { sendWelcomeCompletePaymentEmail } from "@/lib/scaleway/email";
 import { subscribeNewUser } from "@/lib/mailchimp";
 
 /**

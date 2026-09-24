@@ -6,14 +6,14 @@ import {
   syncSupporterSubscription,
   upsertSupporterFromCheckout,
 } from "@/lib/membership";
-import { sendWelcomeSupporterEmail } from "@/lib/resend/email";
+import { sendWelcomeSupporterEmail } from "@/lib/scaleway/email";
 import type Stripe from "stripe";
 
 vi.mock("@/lib/directus/admin", () => ({
   directusMembershipAdmin: { request: vi.fn() },
 }));
 
-vi.mock("@/lib/resend/email", () => ({
+vi.mock("@/lib/scaleway/email", () => ({
   sendWelcomeSupporterEmail: vi.fn(),
 }));
 

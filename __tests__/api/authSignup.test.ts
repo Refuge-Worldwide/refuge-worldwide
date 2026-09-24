@@ -5,7 +5,7 @@ import signupHandler from "@/pages/api/auth/signup";
 import { directusMembershipAdmin } from "@/lib/directus/admin";
 import { findUserByEmail, getAppUserRoleId } from "@/lib/membership";
 import { subscribeNewUser } from "@/lib/mailchimp";
-import { sendWelcomeCompletePaymentEmail } from "@/lib/resend/email";
+import { sendWelcomeCompletePaymentEmail } from "@/lib/scaleway/email";
 
 vi.mock("@/lib/directus/admin", () => ({
   directusMembershipAdmin: { request: vi.fn() },
@@ -24,7 +24,7 @@ vi.mock("@/lib/mailchimp", () => ({
   subscribeNewUser: vi.fn(),
 }));
 
-vi.mock("@/lib/resend/email", () => ({
+vi.mock("@/lib/scaleway/email", () => ({
   sendWelcomeCompletePaymentEmail: vi.fn(),
 }));
 
