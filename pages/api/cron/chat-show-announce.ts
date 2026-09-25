@@ -26,7 +26,7 @@ export default async function handler(
 
     console.log("[chat-show-announce] fetching schedule from", baseUrl);
 
-    const scheduleRes = await fetch(`${baseUrl}/api/schedule`);
+    const scheduleRes = await fetch(`${baseUrl}/api/v2/schedule`);
 
     if (!scheduleRes.ok) {
       console.log(
@@ -38,7 +38,7 @@ export default async function handler(
         .json({ success: false, reason: "schedule unavailable" });
     }
 
-    const schedule = await scheduleRes.json();
+    const { ch1: schedule } = await scheduleRes.json();
     console.log(
       "[chat-show-announce] status:",
       schedule.status,
@@ -52,6 +52,11 @@ export default async function handler(
         .json({ success: false, reason: "station offline or no title" });
     }
 
+    // only announce live shows, not repeats
+    if (schedule.liveNow.repeat) {
+      return res.status(200).json({ success: false, reason: "repeat" });
+    }
+
     const { title, artwork } = schedule.liveNow;
 
     // schedule.liveNow.artwork is the original full-resolution Contentful
@@ -61,7 +66,7 @@ export default async function handler(
     // read the full-res artwork from.
     const chatArtwork =
       artwork && artwork.includes("ctfassets.net")
-        ? `${artwork}?w=640&q=70&fm=jpg`
+        ? `${artwork}?w=640&h=360&q=70&fm=jpg&f=faces&fit=fill`
         : artwork;
 
     // Check if this show was already announced

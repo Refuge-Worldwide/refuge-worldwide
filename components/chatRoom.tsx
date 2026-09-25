@@ -437,9 +437,9 @@ const ChatRoom: FC = () => {
                 <Image
                   src={group.image}
                   alt={group.messages[0].message}
-                  width={320}
-                  height={320}
-                  className="w-full h-auto max-w-xs"
+                  width={640}
+                  height={360}
+                  className="w-full max-w-xs aspect-video object-cover"
                 />
               )}
             </div>
