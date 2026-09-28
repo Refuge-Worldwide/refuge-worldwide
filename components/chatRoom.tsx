@@ -128,7 +128,7 @@ const ChatRoom: FC = () => {
 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [loadingMessages, setLoadingMessages] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false);
+  const [listReady, setListReady] = useState(false);
   const [hasMoreHistory, setHasMoreHistory] = useState(true);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
@@ -136,6 +136,7 @@ const ChatRoom: FC = () => {
 
   const listRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const loadingMoreRef = useRef(false);
   // Mirrors `messages` so handleScroll (attached once) can always read the
   // current oldest-loaded id without needing to be re-bound on every change.
   const messagesRef = useRef<ChatMessage[]>([]);
@@ -143,30 +144,34 @@ const ChatRoom: FC = () => {
     messagesRef.current = messages;
   }, [messages]);
 
+  const isNearBottomRef = useRef(true);
+
+  const scrollToBottom = useCallback((behavior: ScrollBehavior = "auto") => {
+    const el = listRef.current;
+    if (!el) return;
+    el.scrollTo({ top: el.scrollHeight, behavior });
+  }, []);
+
   // Appends messages (deduped by id against what's already loaded), and
   // auto-scrolls to the bottom only if the viewer was already there — so a
   // new message doesn't yank someone away from history they scrolled up to
   // read.
-  const appendMessages = useCallback((incoming: ChatMessage[]) => {
-    const el = listRef.current;
-    const wasNearBottom = el
-      ? el.scrollHeight - el.scrollTop - el.clientHeight < NEAR_BOTTOM_THRESHOLD
-      : true;
+  const appendMessages = useCallback(
+    (incoming: ChatMessage[]) => {
+      const wasNearBottom = isNearBottomRef.current;
 
-    setMessages((prev) => {
-      const existingIds = new Set(prev.map((m) => m.id));
-      const toAdd = incoming.filter((m) => !existingIds.has(m.id));
-      return toAdd.length ? [...prev, ...toAdd] : prev;
-    });
-
-    if (wasNearBottom) {
-      requestAnimationFrame(() => {
-        if (listRef.current) {
-          listRef.current.scrollTop = listRef.current.scrollHeight;
-        }
+      setMessages((prev) => {
+        const existingIds = new Set(prev.map((m) => m.id));
+        const toAdd = incoming.filter((m) => !existingIds.has(m.id));
+        return toAdd.length ? [...prev, ...toAdd] : prev;
       });
-    }
-  }, []);
+
+      if (wasNearBottom) {
+        requestAnimationFrame(() => scrollToBottom());
+      }
+    },
+    [scrollToBottom]
+  );
 
   // Load identity from localStorage
   useEffect(() => {
@@ -194,20 +199,24 @@ const ChatRoom: FC = () => {
         setHasMoreHistory(rows.length === PAGE_SIZE);
         setLoadingMessages(false);
         requestAnimationFrame(() => {
-          if (listRef.current) {
-            listRef.current.scrollTop = listRef.current.scrollHeight;
-          }
+          scrollToBottom();
+          setTimeout(() => {
+            if (!cancelled) setListReady(true);
+          }, 250);
         });
       })
       .catch((error) => {
         console.error("Error fetching chat messages:", error);
-        if (!cancelled) setLoadingMessages(false);
+        if (!cancelled) {
+          setLoadingMessages(false);
+          setListReady(true);
+        }
       });
 
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [scrollToBottom]);
 
   // Load the next page of older messages, preserving where the viewer was
   // looking (prepending content above the viewport would otherwise shove
@@ -215,12 +224,12 @@ const ChatRoom: FC = () => {
   // page means there's nothing older left.
   const loadOlderMessages = useCallback(async () => {
     const oldest = messagesRef.current[0];
-    if (loadingMore || !hasMoreHistory || !oldest) return;
+    if (loadingMoreRef.current || !hasMoreHistory || !oldest) return;
 
     const el = listRef.current;
     const prevScrollHeight = el?.scrollHeight ?? 0;
     const prevScrollTop = el?.scrollTop ?? 0;
-    setLoadingMore(true);
+    loadingMoreRef.current = true;
 
     try {
       const res = await fetch(
@@ -247,14 +256,18 @@ const ChatRoom: FC = () => {
     } catch (error) {
       console.error("Error loading older chat messages:", error);
     } finally {
-      setLoadingMore(false);
+      loadingMoreRef.current = false;
     }
-  }, [loadingMore, hasMoreHistory]);
+  }, [hasMoreHistory]);
 
   const handleScroll = useCallback(() => {
     const el = listRef.current;
-    if (!el || el.scrollTop > LOAD_MORE_THRESHOLD) return;
-    loadOlderMessages();
+    if (!el) return;
+
+    isNearBottomRef.current =
+      el.scrollHeight - el.scrollTop - el.clientHeight < NEAR_BOTTOM_THRESHOLD;
+
+    if (el.scrollTop <= LOAD_MORE_THRESHOLD) loadOlderMessages();
   }, [loadOlderMessages]);
 
   // Subscribe to realtime updates. This Directus instance's websocket layer
@@ -412,70 +425,80 @@ const ChatRoom: FC = () => {
   return (
     <div className="flex flex-col h-full bg-black text-white">
       {/* Messages */}
-      <div
-        ref={listRef}
-        className="chat-scrollbar flex-1 overflow-y-auto p-3 space-y-3"
-      >
-        {loadingMessages && (
-          <p className="text-white/40 text-small text-center pt-6">
-            Loading...
-          </p>
+      <div className="relative flex-1 min-h-0">
+        {!listReady && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black">
+            <div
+              className="h-6 w-6 rounded-full border-2 border-white/20 border-t-white animate-spin"
+              role="status"
+              aria-label="Loading chat"
+            />
+          </div>
         )}
-        {!loadingMessages && messages.length === 0 && (
-          <p className="text-white text-small text-center pt-6">
-            No messages yet. Say hi!
-          </p>
-        )}
-        {messageGroups.map((group) =>
-          group.system ? (
-            <div key={group.key} className="py-2 space-y-2 min-w-0">
-              <div className="h-px bg-white/20" />
-              <p className="text-small text-white/50 break-words min-w-0">
-                Live now: {group.messages[0].message}
-              </p>
-              {group.image && (
-                <Image
-                  src={group.image}
-                  alt={group.messages[0].message}
-                  width={320}
-                  height={320}
-                  className="w-full h-auto max-w-xs"
-                />
-              )}
-            </div>
-          ) : (
-            <div key={group.key} className="min-w-0">
-              <div className="flex items-baseline gap-2 flex-wrap">
-                <span className="text-tiny font-medium leading-none">
-                  {group.username}
-                </span>
-                <span className="text-tiny text-white/40 leading-none">
-                  {formatTimestamp(group.date_created)}
-                </span>
+        <div
+          ref={listRef}
+          onScroll={handleScroll}
+          className="chat-scrollbar h-full overflow-y-auto p-3 space-y-3"
+          style={{ visibility: listReady ? "visible" : "hidden" }}
+        >
+          {!loadingMessages && messages.length === 0 && (
+            <p className="text-white text-small text-center pt-6">
+              No messages yet. Say hi!
+            </p>
+          )}
+          {messageGroups.map((group) =>
+            group.system ? (
+              <div key={group.key} className="py-2 space-y-2 min-w-0">
+                <div className="h-px bg-white/20" />
+                <p className="text-small text-white/50 break-words min-w-0">
+                  Live now: {group.messages[0].message}
+                </p>
+                {group.image && (
+                  <Image
+                    src={group.image}
+                    alt={group.messages[0].message}
+                    width={640}
+                    height={360}
+                    className="w-full max-w-xs aspect-video object-cover"
+                  />
+                )}
               </div>
-              <div className="mt-1 space-y-px">
-                {group.messages.map((msg) => (
-                  <div
-                    key={msg.id}
-                    className="group/msg flex items-start gap-2 -mx-1.5 px-1.5 py-0.5 rounded hover:bg-white/10"
-                  >
-                    <p className="text-tiny break-words leading-snug flex-1">
-                      {msg.message}
-                    </p>
-                    {isStaff && (
-                      <button
-                        onClick={() => handleDeleteMessage(msg.id, msg.message)}
-                        className="text-tiny text-red-400 underline opacity-0 group-hover/msg:opacity-100 transition-opacity flex-shrink-0"
-                      >
-                        Delete
-                      </button>
-                    )}
-                  </div>
-                ))}
+            ) : (
+              <div key={group.key} className="min-w-0">
+                <div className="flex items-baseline gap-2 flex-wrap">
+                  <span className="text-tiny font-medium leading-none">
+                    {group.username}
+                  </span>
+                  <span className="text-tiny text-white/40 leading-none">
+                    {formatTimestamp(group.date_created)}
+                  </span>
+                </div>
+                <div className="mt-1 space-y-px">
+                  {group.messages.map((msg) => (
+                    <div
+                      key={msg.id}
+                      className="group/msg flex items-start gap-2 -mx-1.5 px-1.5 py-0.5 rounded hover:bg-white/10"
+                    >
+                      <p className="text-tiny break-words leading-snug flex-1">
+                        {msg.message}
+                      </p>
+                      {isStaff && (
+                        <button
+                          onClick={() =>
+                            handleDeleteMessage(msg.id, msg.message)
+                          }
+                          className="text-tiny text-red-400 underline opacity-0 group-hover/msg:opacity-100 transition-opacity flex-shrink-0"
+                        >
+                          Delete
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          )
-        )}
+            )
+          )}
+        </div>
       </div>
 
       {/* Input area */}

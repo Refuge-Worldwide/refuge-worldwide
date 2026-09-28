@@ -66,7 +66,7 @@ async function getCh1LiveNow(
   radioCoData: RadioCo | null
 ) {
   const radioTitle = radioCoData?.current_track?.title ?? "";
-  const isRepeat = REPEAT_TAG_REGEX.test(radioTitle);
+  const isRepeat = !liveNowContentful && REPEAT_TAG_REGEX.test(radioTitle);
 
   const repeatShow =
     !liveNowContentful && radioTitle
@@ -85,7 +85,7 @@ async function getCh1LiveNow(
 
   return {
     // same "|" replacement the schedule applies to Contentful titles
-    title: title.replace(/\|/g, "—") + (isRepeat && !isOverwrite ? " (R)" : ""),
+    title: title.replace(/\|/g, "—") + (isRepeat && !isOverwrite ? " (r)" : ""),
     artwork: show?.coverImage?.url ?? placeholderImage.url,
     link: show?.slug ? "/radio/" + show.slug : null,
     slug: show?.slug ?? null,
