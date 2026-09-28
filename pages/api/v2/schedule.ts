@@ -66,7 +66,7 @@ async function getCh1LiveNow(
   radioCoData: RadioCo | null
 ) {
   const radioTitle = radioCoData?.current_track?.title ?? "";
-  const isRepeat = REPEAT_TAG_REGEX.test(radioTitle);
+  const isRepeat = !liveNowContentful && REPEAT_TAG_REGEX.test(radioTitle);
 
   const repeatShow =
     !liveNowContentful && radioTitle
