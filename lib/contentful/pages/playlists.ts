@@ -8,13 +8,21 @@ import {
 
 const PLAYLISTS_PAGE_ID = "66ltrry3HPWOktbkFPI5Ms";
 
+// Downscale via Contentful's Images API so playlist covers don't ship
+// full-resolution source images to every consumer (matches the app's own
+// 800x450 sizing for show/playlist covers).
+function optimizedImage(url: string | null): string | null {
+  if (!url || !url.includes("ctfassets.net")) return url;
+  return `${url}?w=800&h=450&q=80&fm=jpg&fl=progressive&f=faces&fit=fill`;
+}
+
 function processPlaylist(playlist: PlaylistInterface): PlaylistSchema {
   return {
     id: playlist.sys.id,
     title: playlist.title,
     slug: playlist.slug,
     description: playlist.description,
-    image: playlist.image?.url ?? null,
+    image: optimizedImage(playlist.image?.url ?? null),
     soundcloudLink: playlist.soundcloudLink,
     shows: playlist.showsCollection.items.filter(Boolean).map((show) => ({
       id: show.sys.id,
@@ -95,7 +103,7 @@ export async function getPlaylists(take: number, skip: number) {
       title: item.title,
       slug: item.slug,
       description: item.description,
-      image: item.image?.url ?? null,
+      image: optimizedImage(item.image?.url ?? null),
       soundcloudLink: item.soundcloudLink,
     }));
 }
