@@ -6,7 +6,6 @@ import {
   SOUNDCLOUD_URL,
   CONTACT_URL,
   TELEGRAM_URL,
-  SUPPORTERS_LIVE,
 } from "../constants";
 import { Arrow } from "../icons/arrow";
 import Mixcloud from "../icons/mixcloud";
@@ -27,9 +26,9 @@ export default function Footer() {
   return (
     <footer className="bg-black text-white">
       {/* pre-launch, staff get to preview it even though they're signed in */}
-      {!loading && (SUPPORTERS_LIVE ? !user : isStaff) && !isSupportPage && (
-        <SupportBanner />
-      )}
+      {!loading &&
+        (process.env.NODE_ENV !== "production" ? !user : isStaff) &&
+        !isSupportPage && <SupportBanner />}
       <div className="px-4 md:px-8 py-10 md:py-20">
         <div className="container md:grid items-center grid-cols-2">
           <div className="mb-6 md:mb-0">
