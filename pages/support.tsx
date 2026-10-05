@@ -1,6 +1,9 @@
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import { BLOCKS } from "@contentful/rich-text-types";
-import { InferGetStaticPropsType } from "next";
+import type {
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+} from "next";
 import Layout from "../components/layout";
 import Prose from "../components/Prose";
 import PageMeta from "../components/seo/page";
@@ -9,6 +12,8 @@ import { getSupportPage } from "../lib/contentful/pages/support";
 import { RenderRichTextWithImages } from "../lib/rich-text";
 import SinglePage from "../views/singlePage";
 import { useDirectusUser } from "../hooks/useDirectusUser";
+import { getSessionUser } from "../lib/directus/session";
+import { getUserAccess } from "../lib/directus/staff";
 
 const HEADING_TYPES = new Set([
   BLOCKS.HEADING_1,
@@ -38,13 +43,19 @@ const faqItemsFromList = (listBlock: any) =>
       };
     });
 
-export async function getStaticProps({ preview = false }) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const preview = !!context.preview;
+  const user = await getSessionUser(context.req, context.res, "id");
+  const hasSupporterAccess = user
+    ? (await getUserAccess(user.id)).hasSupporterAccess
+    : false;
+
   return {
     props: {
       preview,
+      hasSupporterAccess,
       ...(await getSupportPage(preview)),
     },
-    revalidate: 60 * 60 * 24,
   };
 }
 
@@ -52,7 +63,8 @@ export default function SupportPage({
   preview,
   content,
   coverImage,
-}: InferGetStaticPropsType<typeof getStaticProps>) {
+  hasSupporterAccess,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { showSupporters } = useDirectusUser();
 
   if (!showSupporters) {
@@ -133,7 +145,9 @@ export default function SupportPage({
         {blocks.length > 0 && (
           <section>
             <div className="container-md p-4 sm:p-8 bg-white">
-              <Prose>{RenderRichTextWithImages(titleDoc)}</Prose>
+              <Prose>
+                {RenderRichTextWithImages(titleDoc, { hasSupporterAccess })}
+              </Prose>
             </div>
           </section>
         )}
@@ -141,7 +155,9 @@ export default function SupportPage({
         {blocks.length > 1 && (
           <section>
             <div className="container-md p-4 sm:p-8 bg-white">
-              <Prose>{RenderRichTextWithImages(introDoc)}</Prose>
+              <Prose>
+                {RenderRichTextWithImages(introDoc, { hasSupporterAccess })}
+              </Prose>
             </div>
           </section>
         )}
@@ -178,7 +194,9 @@ export default function SupportPage({
         {leadBlocks.length > 0 && (
           <section>
             <div className="container-md p-4 sm:p-8 bg-white">
-              <Prose>{RenderRichTextWithImages(leadDoc)}</Prose>
+              <Prose>
+                {RenderRichTextWithImages(leadDoc, { hasSupporterAccess })}
+              </Prose>
             </div>
           </section>
         )}
@@ -187,7 +205,11 @@ export default function SupportPage({
           <section>
             <div className="container-md p-4 sm:p-8 bg-white">
               {faqTitleDoc && (
-                <Prose>{RenderRichTextWithImages(faqTitleDoc)}</Prose>
+                <Prose>
+                  {RenderRichTextWithImages(faqTitleDoc, {
+                    hasSupporterAccess,
+                  })}
+                </Prose>
               )}
               {faqCategories.map((category, categoryIndex) => (
                 <div key={categoryIndex} className="mt-8 first:mt-4">
@@ -198,7 +220,9 @@ export default function SupportPage({
                     {category.items.map((item, itemIndex) => (
                       <FaqAccordion key={itemIndex} question={item.question}>
                         <Prose lg={false}>
-                          {RenderRichTextWithImages(item.answerDoc)}
+                          {RenderRichTextWithImages(item.answerDoc, {
+                            hasSupporterAccess,
+                          })}
                         </Prose>
                       </FaqAccordion>
                     ))}

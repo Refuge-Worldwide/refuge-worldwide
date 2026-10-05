@@ -12,7 +12,7 @@ export default function AcceptInvitePage() {
       <SetPasswordForm
         apiPath="/api/auth/accept-invite"
         heading="Welcome to Refuge Worldwide"
-        successMessage="Your account is ready — sign in to manage your support."
+        successMessage="Your account is ready — sign in to get started."
         includeUsername
       />
     </Layout>

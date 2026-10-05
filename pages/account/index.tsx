@@ -10,6 +10,7 @@ import { useState } from "react";
 import { SupportPicker } from "@/components/supportPicker";
 import { FavouritesContent } from "@/components/account/favouritesContent";
 import { SettingsContent } from "@/components/account/settingsContent";
+import { DiscountsContent } from "@/components/account/discountsContent";
 import { PaymentFailedNotice } from "@/components/account/paymentFailedNotice";
 
 type AccountPageProps = {
@@ -22,15 +23,17 @@ type AccountPageProps = {
     supporter_interval?: "month" | "year" | null;
     payment_failed_at?: string | null;
     isStaff?: boolean;
+    isFriend?: boolean;
   };
 };
 
-const TABS = ["favourites", "settings", "help"] as const;
+const TABS = ["favourites", "discounts", "settings", "help"] as const;
 type Tab = (typeof TABS)[number];
 
 export default function AccountPage({ user }: AccountPageProps) {
   const router = useRouter();
   const isPaidSupporter =
+    user.isFriend ||
     user.subscription_status === "active" ||
     user.subscription_status === "past_due";
   const [isPortalLoading, setIsPortalLoading] = useState(false);
@@ -70,6 +73,9 @@ export default function AccountPage({ user }: AccountPageProps) {
 
   const linkItems = [
     { label: "Favorite Shows", href: "/account/favourites" },
+    ...(isPaidSupporter || user.isStaff
+      ? [{ label: "Discounts", href: "/account/discounts" }]
+      : []),
     { label: "Account Settings", href: "/account/settings" },
     { label: "Help", href: "/support" },
     ...(user.isStaff ? [{ label: "Calendar", href: "/admin/calendar" }] : []),
@@ -98,6 +104,8 @@ export default function AccountPage({ user }: AccountPageProps) {
           <span className="capitalize">
             {user.isStaff
               ? "Staff"
+              : user.isFriend
+              ? "Friend"
               : isPaidSupporter
               ? `${user.subscription_status} — €${(
                   (user.supporter_amount_cents ?? 0) / 100
@@ -109,23 +117,24 @@ export default function AccountPage({ user }: AccountPageProps) {
     </div>
   );
 
-  const supporterOrManageButton = user.isStaff ? null : isPaidSupporter ? (
-    <button
-      onClick={handleManageSubscription}
-      disabled={isPortalLoading}
-      title="Opens in a new tab"
-      className="w-full border-2 border-black py-4 px-6 text-center text-small font-medium hover:bg-black hover:text-white transition-colors disabled:opacity-50"
-    >
-      {isPortalLoading ? "Loading..." : "Manage Subscription ↗"}
-    </button>
-  ) : !showSupportPicker ? (
-    <button
-      onClick={() => setShowSupportPicker(true)}
-      className="block w-full border-2 border-black py-4 px-6 text-center text-small font-medium hover:bg-black hover:text-white transition-colors"
-    >
-      Become a Supporter
-    </button>
-  ) : null;
+  const supporterOrManageButton =
+    user.isStaff || user.isFriend ? null : isPaidSupporter ? (
+      <button
+        onClick={handleManageSubscription}
+        disabled={isPortalLoading}
+        title="Opens in a new tab"
+        className="w-full border-2 border-black py-4 px-6 text-center text-small font-medium hover:bg-black hover:text-white transition-colors disabled:opacity-50"
+      >
+        {isPortalLoading ? "Loading..." : "Manage Subscription ↗"}
+      </button>
+    ) : !showSupportPicker ? (
+      <button
+        onClick={() => setShowSupportPicker(true)}
+        className="block w-full border-2 border-black py-4 px-6 text-center text-small font-medium hover:bg-black hover:text-white transition-colors"
+      >
+        Become a Supporter
+      </button>
+    ) : null;
 
   return (
     <Layout>
@@ -191,6 +200,9 @@ export default function AccountPage({ user }: AccountPageProps) {
                 {(
                   [
                     { key: "favourites", label: "Favourites" },
+                    ...(isPaidSupporter || user.isStaff
+                      ? [{ key: "discounts", label: "Discounts" } as const]
+                      : []),
                     { key: "settings", label: "Settings" },
                     { key: "help", label: "Help" },
                   ] as const
@@ -221,6 +233,7 @@ export default function AccountPage({ user }: AccountPageProps) {
 
             {activeTab === "favourites" && <FavouritesContent />}
             {activeTab === "settings" && <SettingsContent user={user} />}
+            {activeTab === "discounts" && <DiscountsContent />}
             {activeTab === "help" && (
               <div className="border-2 border-black p-6 text-center">
                 <p className="text-small mb-4">
@@ -257,10 +270,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     };
   }
 
-  const { isStaff } = await getUserAccess(user.id);
+  const { isStaff, isFriend } = await getUserAccess(user.id);
 
   // App signups that never paid get the same page as their confirm email.
-  if (!isStaff && !user.subscription_status) {
+  if (!isStaff && !isFriend && !user.subscription_status) {
     return {
       redirect: {
         destination: `/supporters/checkout?email=${encodeURIComponent(
@@ -272,6 +285,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 
   return {
-    props: { user: { ...user, isStaff } },
+    props: { user: { ...user, isStaff, isFriend } },
   };
 }

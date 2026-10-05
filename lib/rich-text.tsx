@@ -23,7 +23,10 @@ const getAssetById = (id: string, assets: Asset[]) =>
 const getEntryById = (id: string, assets: Entry[]) =>
   assets.filter((asset) => asset.sys.id === id).pop();
 
-export function RenderRichTextWithImages(content: Content) {
+export function RenderRichTextWithImages(
+  content: Content,
+  options?: { hasSupporterAccess?: boolean }
+) {
   const [loaded, setLoaded] = useState(false);
   useEffect(() => {
     const scriptTag = document.createElement("script");
@@ -108,10 +111,23 @@ export function RenderRichTextWithImages(content: Content) {
             .trim();
 
           if (text === "Become a supporter") {
+            const ctaClassName =
+              "bg-black text-white rounded-full py-4 px-8 text-small font-medium hover:bg-black/80 transition-colors no-underline";
+
+            if (options?.hasSupporterAccess) {
+              return (
+                <div className="text-center">
+                  <Link href="/account" className={ctaClassName}>
+                    Go to account
+                  </Link>
+                </div>
+              );
+            }
+
             return (
               <div className="text-center">
                 <SupportButton
-                  className="bg-black text-white rounded-full py-4 px-8 text-small font-medium hover:bg-black/80 transition-colors"
+                  className={ctaClassName}
                   showFindOutMoreLink={false}
                 >
                   Become a supporter

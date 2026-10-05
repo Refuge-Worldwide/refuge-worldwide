@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { createItem, readItems } from "@directus/sdk";
 import { directusServer } from "@/lib/directus/server";
+import { ensureHttps } from "@/util";
 
 const SYSTEM_USERNAME = "Refuge Worldwide";
 
@@ -64,10 +65,11 @@ export default async function handler(
     // message doesn't ship a multi-MB image. Only touches this cron's own
     // copy of the URL, not the shared /api/schedule response other consumers
     // read the full-res artwork from.
+    const fullArtwork = ensureHttps(artwork);
     const chatArtwork =
-      artwork && artwork.includes("ctfassets.net")
-        ? `${artwork}?w=640&h=360&q=70&fm=jpg&f=faces&fit=fill`
-        : artwork;
+      fullArtwork && fullArtwork.includes("ctfassets.net")
+        ? `${fullArtwork}?w=640&h=360&q=70&fm=jpg&f=faces&fit=fill`
+        : fullArtwork;
 
     // Check if this show was already announced
     let lastMessage: string | undefined;

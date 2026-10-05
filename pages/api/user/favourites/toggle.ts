@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { directusUrl } from "@/lib/directus/session";
 import { requireSupporterToken } from "@/lib/directus/supporterAccess";
+import { getUserIdFromToken } from "@/lib/directus/staff";
 
 export default async function handler(
   req: NextApiRequest,
@@ -19,6 +20,11 @@ export default async function handler(
   const token = await requireSupporterToken(req, res);
   if (!token) return;
 
+  const userId = await getUserIdFromToken(token);
+  if (!userId) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
   const headers = {
     Authorization: `Bearer ${token}`,
     "Content-Type": "application/json",
@@ -28,6 +34,8 @@ export default async function handler(
     const existingRes = await fetch(
       `${directusUrl}/items/show_favourites?filter[show_id][_eq]=${encodeURIComponent(
         showId
+      )}&filter[user_created][_eq]=${encodeURIComponent(
+        userId
       )}&limit=1&fields=id`,
       { headers }
     );

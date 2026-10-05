@@ -3,7 +3,7 @@ import { assertError } from "ts-extras";
 import { getScheduleData } from "../../../lib/contentful/schedule";
 import { client } from "../../../lib/contentful/client";
 import { getShowByTitle } from "../../../lib/contentful/search";
-import { placeholderImage } from "../../../util";
+import { ensureHttps, placeholderImage } from "../../../util";
 import { ScheduleShow } from "../../../types/shared";
 
 const CH1_STATION_ID = "s3699c5e49";
@@ -50,7 +50,7 @@ async function getCh2Artwork(radioCoDataCh2: RadioCo | null) {
   try {
     const entry = await client.getEntry(CH2_IMAGE_ENTRY_ID);
     const image = (entry.fields.image as any)?.fields?.file?.url;
-    return image ?? placeholderImage.url;
+    return ensureHttps(image) ?? placeholderImage.url;
   } catch (error) {
     console.log("error loading ch2 image: " + error.message);
     return placeholderImage.url;
@@ -86,7 +86,7 @@ async function getCh1LiveNow(
   return {
     // same "|" replacement the schedule applies to Contentful titles
     title: title.replace(/\|/g, "—") + (isRepeat && !isOverwrite ? " (r)" : ""),
-    artwork: show?.coverImage?.url ?? placeholderImage.url,
+    artwork: ensureHttps(show?.coverImage?.url) ?? placeholderImage.url,
     link: show?.slug ? "/radio/" + show.slug : null,
     slug: show?.slug ?? null,
     isMixedFeelings: title.includes("mixed feelings"),

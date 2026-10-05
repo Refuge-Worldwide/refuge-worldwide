@@ -10,8 +10,8 @@ import { RESEND_RATE_LIMIT_DELAY } from "@/constants";
 /**
  * Runs once daily. Nudges app-door signups (Door B — see
  * lib/membership.ts/pages/api/auth/signup.ts) who still haven't completed
- * their Supporter payment ~24h after signing up. A date_created window
- * (24-48h ago) gives a one-time-per-user reminder without needing a
+ * their Supporter payment ~3 days after signing up. A date_created window
+ * (72-96h ago) gives a one-time-per-user reminder without needing a
  * "reminder already sent" field — there's no version-controlled Directus
  * schema to add one to.
  */
@@ -28,8 +28,8 @@ export default async function handler(
 
   try {
     const roleId = await getAppUserRoleId();
-    const windowStart = dayjs().subtract(48, "hours").toISOString();
-    const windowEnd = dayjs().subtract(24, "hours").toISOString();
+    const windowStart = dayjs().subtract(96, "hours").toISOString();
+    const windowEnd = dayjs().subtract(72, "hours").toISOString();
 
     const users = await directusMembershipAdmin.request(
       readUsers({

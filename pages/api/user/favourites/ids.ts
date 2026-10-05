@@ -25,7 +25,9 @@ export default async function handler(
   }
 
   const response = await fetch(
-    `${directusUrl}/items/show_favourites?fields=show_id&limit=-1`,
+    `${directusUrl}/items/show_favourites?filter[user_created][_eq]=${encodeURIComponent(
+      userId
+    )}&fields=show_id&limit=-1`,
     { headers: { Authorization: `Bearer ${token}` } }
   );
 

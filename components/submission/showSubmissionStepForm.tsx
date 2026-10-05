@@ -127,7 +127,7 @@ export default function ShowSubmissionStepForm({
                         />
                         <ImageUploadField
                           label="Image"
-                          description="No logos and no flyers. Minimum dimensions: 1000x1000px, maximum file size: 3MB."
+                          description="No logos and no flyers. Minimum dimensions: 1000x1000px, maximum file size: 2MB."
                           required
                           name={`extraArtists.${index}.image`}
                           value={values.extraArtists[index].image}
@@ -186,7 +186,7 @@ export default function ShowSubmissionStepForm({
                         {artist.requiresImage && (
                           <ImageUploadField
                             label="Image"
-                            description="No logos and no flyers. Minimum dimensions: 1000x1000px, maximum file size: 3MB."
+                            description="No logos and no flyers. Minimum dimensions: 1000x1000px, maximum file size: 2MB."
                             required
                             name={`artistsAdditionalInfo.${index}.image`}
                             value={values.artistsAdditionalInfo[index].image}
@@ -225,7 +225,7 @@ export default function ShowSubmissionStepForm({
         <ImageUploadField
           label="Show image(s)"
           name="image"
-          description="Please upload your show / artist image(s) below, including any guest images. No logos and no flyers. Minimum dimensions: 1000x1000px, maximum file size: 3MB."
+          description="Please upload your show / artist image(s) below, including any guest images. No logos and no flyers. Minimum dimensions: 1000x1000px, maximum file size: 2MB."
           required={true}
           multi={true}
           value={values.image}

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { SUPPORTERS_LIVE } from "../constants";
 
 interface DirectusUser {
   id: string;
@@ -59,5 +58,15 @@ export function useDirectusUser() {
     };
   }, [router.events]);
 
-  return { user, loading, isStaff, showSupporters: SUPPORTERS_LIVE || isStaff };
+  const newSupporterExperienceEnabled =
+    process.env.NEXT_PUBLIC_ENABLE_NEW_SUPPORTER_EXPERIENCE === "true";
+
+  return {
+    user,
+    loading,
+    isStaff,
+    newSupporterExperienceEnabled,
+    showSupporters:
+      process.env.NODE_ENV !== "production" || newSupporterExperienceEnabled,
+  };
 }

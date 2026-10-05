@@ -3,6 +3,7 @@ import Link from "next/link";
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createChatRealtimeClient } from "@/lib/directus/chatRealtime";
 import { useDirectusUser } from "@/hooks/useDirectusUser";
+import { splitOnUrls, isUrl } from "@/lib/linkify";
 
 const LS_USERNAME = "rw_chat_username";
 const PAGE_SIZE = 50;
@@ -275,27 +276,31 @@ const ChatRoom: FC = () => {
   // defaults to "handshake" — there's no anonymous mode enabled), so we
   // authenticate as a dedicated read-only user rather than connecting
   // anonymously — see lib/directus/chatRealtime.ts.
+  const clientRef = useRef<Awaited<
+    ReturnType<typeof createChatRealtimeClient>
+  > | null>(null);
+  const cancelledRef = useRef(false);
+  const retryTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined
+  );
+
   useEffect(() => {
-    let cancelled = false;
-    let client: Awaited<ReturnType<typeof createChatRealtimeClient>> | null =
-      null;
+    cancelledRef.current = false;
 
-    const listen = async () => {
+    const listen = async (attempt: number) => {
+      if (cancelledRef.current) return;
+
       try {
-        client = await createChatRealtimeClient();
-        if (cancelled) return;
+        const client = await createChatRealtimeClient();
+        clientRef.current = client;
+        if (cancelledRef.current) return;
 
-        // No `event` filter — this subscribes to create, update and delete
-        // alike, so a staff deletion (see handleDeleteMessage) propagates to
-        // every connected viewer, not just the one who deleted it.
         const { subscription } = await client.subscribe("chat", {});
 
         for await (const event of subscription) {
-          if (cancelled) break;
+          if (cancelledRef.current) break;
 
           if (event.event === "create") {
-            // appendMessages dedupes by id, so this can't double up with the
-            // optimistic append already done in handleSend for our own sends.
             appendMessages(event.data as unknown as ChatMessage[]);
           } else if (event.event === "delete") {
             const deletedIds = new Set(
@@ -307,13 +312,20 @@ const ChatRoom: FC = () => {
       } catch (error) {
         console.error("Error subscribing to chat:", error);
       }
+
+      if (!cancelledRef.current) {
+        const delay = Math.min(30000, 1000 * 2 ** attempt);
+        retryTimeoutRef.current = setTimeout(() => listen(attempt + 1), delay);
+      }
     };
 
-    listen();
+    listen(0);
 
     return () => {
-      cancelled = true;
-      client?.disconnect();
+      cancelledRef.current = true;
+      if (retryTimeoutRef.current) clearTimeout(retryTimeoutRef.current);
+      clientRef.current?.disconnect();
+      clientRef.current = null;
     };
   }, [appendMessages]);
 
@@ -480,7 +492,21 @@ const ChatRoom: FC = () => {
                       className="group/msg flex items-start gap-2 -mx-1.5 px-1.5 py-0.5 rounded hover:bg-white/10"
                     >
                       <p className="text-tiny break-words leading-snug flex-1">
-                        {msg.message}
+                        {splitOnUrls(msg.message).map((part, i) =>
+                          isUrl(part) ? (
+                            <a
+                              key={i}
+                              href={part}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="underline"
+                            >
+                              {part}
+                            </a>
+                          ) : (
+                            part
+                          )
+                        )}
                       </p>
                       {isStaff && (
                         <button
