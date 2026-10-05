@@ -14,6 +14,7 @@ export default function AcceptInvitePage() {
         heading="Welcome to Refuge Worldwide"
         successMessage="Your account is ready — sign in to get started."
         includeUsername
+        boxClassName="max-w-xl"
       />
     </Layout>
   );
