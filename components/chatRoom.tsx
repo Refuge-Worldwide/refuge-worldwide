@@ -3,6 +3,7 @@ import Link from "next/link";
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createChatRealtimeClient } from "@/lib/directus/chatRealtime";
 import { useDirectusUser } from "@/hooks/useDirectusUser";
+import { splitOnUrls, isUrl } from "@/lib/linkify";
 
 const LS_USERNAME = "rw_chat_username";
 const PAGE_SIZE = 50;
@@ -491,7 +492,21 @@ const ChatRoom: FC = () => {
                       className="group/msg flex items-start gap-2 -mx-1.5 px-1.5 py-0.5 rounded hover:bg-white/10"
                     >
                       <p className="text-tiny break-words leading-snug flex-1">
-                        {msg.message}
+                        {splitOnUrls(msg.message).map((part, i) =>
+                          isUrl(part) ? (
+                            <a
+                              key={i}
+                              href={part}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="underline"
+                            >
+                              {part}
+                            </a>
+                          ) : (
+                            part
+                          )
+                        )}
                       </p>
                       {isStaff && (
                         <button

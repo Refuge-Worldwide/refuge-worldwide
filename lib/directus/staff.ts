@@ -13,7 +13,8 @@ type HeaderRes = { setHeader(name: string, value: string | string[]): void };
 export type UserAccess = {
   isStaff: boolean;
   isPaid: boolean;
-  hasSupporterAccess: boolean; // paid, or staff/admin
+  isFriend: boolean;
+  hasSupporterAccess: boolean;
 };
 
 export function isPaidStatus(status?: string | null) {
@@ -29,6 +30,10 @@ function isStaffRole(role?: string | null) {
   return !!role && allowed.includes(role);
 }
 
+function isFriendRole(role?: string | null) {
+  return !!role && role === process.env.DIRECTUS_FRIEND_ROLE_ID;
+}
+
 // admin token, not the caller's — Staff can't read directus_users itself
 export async function getUserAccess(userId: string): Promise<UserAccess> {
   const user = (await directusMembershipAdmin.request(
@@ -40,7 +45,13 @@ export async function getUserAccess(userId: string): Promise<UserAccess> {
 
   const isStaff = isStaffRole(user.role);
   const isPaid = isPaidStatus(user.subscription_status);
-  return { isStaff, isPaid, hasSupporterAccess: isStaff || isPaid };
+  const isFriend = isFriendRole(user.role);
+  return {
+    isStaff,
+    isPaid,
+    isFriend,
+    hasSupporterAccess: isStaff || isPaid || isFriend,
+  };
 }
 
 export async function getUserIdFromToken(

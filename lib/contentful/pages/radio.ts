@@ -306,6 +306,7 @@ export type RelatedShowsType = Pick<
   | "coverImage"
   | "date"
   | "genresCollection"
+  | "artistsCollection"
   | "mixcloudLink"
 >;
 
@@ -350,6 +351,12 @@ const relatedShowsTierQuery = (genreIds: string[]) => {
               name
             }
           }
+          artistsCollection(limit: 9) {
+            items {
+              slug
+              name
+            }
+          }
           sys {
             id
           }
@@ -358,6 +365,8 @@ const relatedShowsTierQuery = (genreIds: string[]) => {
     }
   `;
 };
+
+const MAX_SHOWS_PER_ARTIST = 2;
 
 export async function getRelatedShows(
   slug: string,
@@ -416,6 +425,7 @@ export async function getRelatedShows(
     genres: string[];
   }[] = [];
   const excludeSlugs = [slug];
+  const artistShowCounts = new Map<string, number>();
 
   // Most relevant tier first: shows sharing ALL of this show's genres, then
   // all but the last one, then all but the last two, and so on down to a
@@ -439,6 +449,21 @@ export async function getRelatedShows(
     const items: RelatedShowsType[] = res.data.showCollection.items;
 
     for (const show of items) {
+      if (collected.length >= targetCount) break;
+
+      const artistSlugs = (show.artistsCollection?.items ?? [])
+        .map((artist) => artist?.slug)
+        .filter((artistSlug): artistSlug is string => Boolean(artistSlug));
+
+      const wouldExceedCap = artistSlugs.some(
+        (artistSlug) =>
+          (artistShowCounts.get(artistSlug) ?? 0) >= MAX_SHOWS_PER_ARTIST
+      );
+
+      excludeSlugs.push(show.slug);
+
+      if (wouldExceedCap) continue;
+
       collected.push({
         id: show.sys.id,
         title: show.title,
@@ -452,7 +477,13 @@ export async function getRelatedShows(
           .map((genre) => genre?.name)
           .filter(Boolean),
       });
-      excludeSlugs.push(show.slug);
+
+      for (const artistSlug of artistSlugs) {
+        artistShowCounts.set(
+          artistSlug,
+          (artistShowCounts.get(artistSlug) ?? 0) + 1
+        );
+      }
     }
   }
 

@@ -51,7 +51,7 @@ export default function ArticleBody({
               )}
             </div>
 
-            <div className="flex">
+            <div className="flex items-start">
               <ShareButton
                 details={{
                   title: title,

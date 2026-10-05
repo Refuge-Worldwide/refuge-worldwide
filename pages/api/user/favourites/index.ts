@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { directusUrl } from "@/lib/directus/session";
 import { requireSupporterToken } from "@/lib/directus/supporterAccess";
+import { getUserIdFromToken } from "@/lib/directus/staff";
 import { graphql } from "@/lib/contentful";
 import { placeholderImage } from "@/util";
 
@@ -16,11 +17,16 @@ export default async function handler(
   const token = await requireSupporterToken(req, res);
   if (!token) return;
 
+  const userId = await getUserIdFromToken(token);
+  if (!userId) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
   try {
-    // Get favourited show IDs from Directus (show_favourites is scoped to the
-    // caller's own rows by the "Refuge App - Own Favourites" policy).
     const favResponse = await fetch(
-      `${directusUrl}/items/show_favourites?fields=show_id&sort=-date_created&limit=-1`,
+      `${directusUrl}/items/show_favourites?filter[user_created][_eq]=${encodeURIComponent(
+        userId
+      )}&fields=show_id&sort=-date_created&limit=-1`,
       { headers: { Authorization: `Bearer ${token}` } }
     );
     if (!favResponse.ok) {

@@ -282,6 +282,9 @@ export const showArtworkURL = (
   return url;
 };
 
+export const ensureHttps = <T extends string | null | undefined>(url: T): T =>
+  (url?.startsWith("//") ? `https:${url}` : url) as T;
+
 export const placeholderImage = {
   sys: { id: "4njwdSvfwFLNoSZ6j1jE2G" },
   title: "",
