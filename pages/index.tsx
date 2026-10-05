@@ -22,7 +22,7 @@ export default function HomePage({
   latestArticles,
   nextUp,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const { user, loading, isStaff } = useDirectusUser();
+  const { user, loading, newSupporterExperienceEnabled } = useDirectusUser();
 
   return (
     <Layout pageId="3xN3mbIMb4CwtrZqlRbYyu">
@@ -36,11 +36,10 @@ export default function HomePage({
 
       <NextUp />
 
-      {/* pre-launch, staff get to preview it even though they're signed in */}
       {!loading &&
-        (process.env.NODE_ENV !== "production" ? !user : isStaff) && (
-          <SupportBanner />
-        )}
+        (process.env.NODE_ENV !== "production"
+          ? !user
+          : newSupporterExperienceEnabled) && <SupportBanner />}
 
       <FeaturedShows shows={featuredShows} />
 

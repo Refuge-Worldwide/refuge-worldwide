@@ -112,7 +112,7 @@ export function RenderRichTextWithImages(
 
           if (text === "Become a supporter") {
             const ctaClassName =
-              "bg-black text-white rounded-full py-4 px-8 text-small font-medium hover:bg-black/80 transition-colors";
+              "bg-black text-white rounded-full py-4 px-8 text-small font-medium hover:bg-black/80 transition-colors no-underline";
 
             if (options?.hasSupporterAccess) {
               return (

@@ -58,10 +58,15 @@ export function useDirectusUser() {
     };
   }, [router.events]);
 
+  const newSupporterExperienceEnabled =
+    process.env.NEXT_PUBLIC_ENABLE_NEW_SUPPORTER_EXPERIENCE === "true";
+
   return {
     user,
     loading,
     isStaff,
-    showSupporters: process.env.NODE_ENV !== "production" || isStaff,
+    newSupporterExperienceEnabled,
+    showSupporters:
+      process.env.NODE_ENV !== "production" || newSupporterExperienceEnabled,
   };
 }
