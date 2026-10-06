@@ -12,6 +12,7 @@ type HeaderRes = { setHeader(name: string, value: string | string[]): void };
 
 export type UserAccess = {
   isStaff: boolean;
+  isAdmin: boolean;
   isPaid: boolean;
   isFriend: boolean;
   hasSupporterAccess: boolean;
@@ -30,6 +31,10 @@ function isStaffRole(role?: string | null) {
   return !!role && allowed.includes(role);
 }
 
+function isAdminRole(role?: string | null) {
+  return !!role && role === process.env.DIRECTUS_ADMIN_ROLE_ID;
+}
+
 function isFriendRole(role?: string | null) {
   return !!role && role === process.env.DIRECTUS_FRIEND_ROLE_ID;
 }
@@ -44,10 +49,12 @@ export async function getUserAccess(userId: string): Promise<UserAccess> {
   };
 
   const isStaff = isStaffRole(user.role);
+  const isAdmin = isAdminRole(user.role);
   const isPaid = isPaidStatus(user.subscription_status);
   const isFriend = isFriendRole(user.role);
   return {
     isStaff,
+    isAdmin,
     isPaid,
     isFriend,
     hasSupporterAccess: isStaff || isPaid || isFriend,
@@ -75,6 +82,13 @@ export async function getStaffUser(req: CookieReq, res: HeaderRes) {
   return access.isStaff ? user : null;
 }
 
+export async function getAdminUser(req: CookieReq, res: HeaderRes) {
+  const user = await getSessionUser(req, res, "id,email");
+  if (!user) return null;
+  const access = await getUserAccess(user.id);
+  return access.isAdmin ? user : null;
+}
+
 export async function requireStaffApi(
   req: NextApiRequest,
   res: NextApiResponse
@@ -87,8 +101,28 @@ export async function requireStaffApi(
   return true;
 }
 
+export async function requireAdminApi(
+  req: NextApiRequest,
+  res: NextApiResponse
+): Promise<boolean> {
+  const user = await getAdminUser(req, res);
+  if (!user) {
+    res.status(401).json({ error: "Unauthorized" });
+    return false;
+  }
+  return true;
+}
+
 export async function requireStaffPage(context: GetServerSidePropsContext) {
   const user = await getStaffUser(context.req, context.res);
+  if (!user) {
+    return { redirect: { destination: "/signin", permanent: false } } as const;
+  }
+  return { props: {} };
+}
+
+export async function requireAdminPage(context: GetServerSidePropsContext) {
+  const user = await getAdminUser(context.req, context.res);
   if (!user) {
     return { redirect: { destination: "/signin", permanent: false } } as const;
   }

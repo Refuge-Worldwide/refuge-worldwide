@@ -4,6 +4,7 @@ import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createChatRealtimeClient } from "@/lib/directus/chatRealtime";
 import { useDirectusUser } from "@/hooks/useDirectusUser";
 import { splitOnUrls, isUrl } from "@/lib/linkify";
+import { ensureHttps } from "@/util";
 
 const LS_USERNAME = "rw_chat_username";
 const PAGE_SIZE = 50;
@@ -467,7 +468,7 @@ const ChatRoom: FC = () => {
                 </p>
                 {group.image && (
                   <Image
-                    src={group.image}
+                    src={ensureHttps(group.image)}
                     alt={group.messages[0].message}
                     width={640}
                     height={360}

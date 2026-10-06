@@ -15,6 +15,7 @@ export function SetPasswordForm({
   submitLabel = "Set password",
   footer,
   headingClassName = "",
+  boxClassName = "max-w-md",
 }: {
   apiPath: string;
   heading: string;
@@ -45,6 +46,7 @@ export function SetPasswordForm({
   // Extra classes appended to the heading — e.g. to size down a longer,
   // more sentence-like heading to regular text size.
   headingClassName?: string;
+  boxClassName?: string;
 }) {
   const router = useRouter();
   const identifier =
@@ -110,7 +112,7 @@ export function SetPasswordForm({
       className={
         embedded
           ? "border-2 border-black p-8"
-          : "max-w-md mx-auto my-32 lg:my-40 border-2 border-black p-8"
+          : `${boxClassName} mx-auto my-32 lg:my-40 border-2 border-black p-8`
       }
     >
       <h1

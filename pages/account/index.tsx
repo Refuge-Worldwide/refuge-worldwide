@@ -23,6 +23,7 @@ type AccountPageProps = {
     supporter_interval?: "month" | "year" | null;
     payment_failed_at?: string | null;
     isStaff?: boolean;
+    isAdmin?: boolean;
     isFriend?: boolean;
   };
 };
@@ -79,6 +80,7 @@ export default function AccountPage({ user }: AccountPageProps) {
     { label: "Account Settings", href: "/account/settings" },
     { label: "Help", href: "/support" },
     ...(user.isStaff ? [{ label: "Calendar", href: "/admin/calendar" }] : []),
+    ...(user.isAdmin ? [{ label: "Invite", href: "/admin/invite" }] : []),
   ];
 
   const profileCard = (
@@ -228,6 +230,14 @@ export default function AccountPage({ user }: AccountPageProps) {
                     Calendar
                   </Link>
                 )}
+                {user.isAdmin && (
+                  <Link
+                    href="/admin/invite"
+                    className="px-5 py-2 rounded-full text-small font-medium transition-colors hover:opacity-60"
+                  >
+                    Invite
+                  </Link>
+                )}
               </div>
             </div>
 
@@ -270,7 +280,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     };
   }
 
-  const { isStaff, isFriend } = await getUserAccess(user.id);
+  const { isStaff, isAdmin, isFriend } = await getUserAccess(user.id);
 
   // App signups that never paid get the same page as their confirm email.
   if (!isStaff && !isFriend && !user.subscription_status) {
@@ -285,6 +295,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 
   return {
-    props: { user: { ...user, isStaff, isFriend } },
+    props: { user: { ...user, isStaff, isAdmin, isFriend } },
   };
 }
