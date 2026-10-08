@@ -5,6 +5,7 @@ import { FormEvent, ReactNode, useEffect, useState } from "react";
 export function SetPasswordForm({
   apiPath,
   heading,
+  intro,
   successMessage,
   includeUsername = false,
   includeNewsletter = false,
@@ -19,6 +20,7 @@ export function SetPasswordForm({
 }: {
   apiPath: string;
   heading: string;
+  intro?: string;
   successMessage: string;
   includeUsername?: boolean;
   // Shows an unticked newsletter opt-in checkbox and posts it as `newsletter`.
@@ -116,10 +118,16 @@ export function SetPasswordForm({
       }
     >
       <h1
-        className={`font-sans font-medium text-center mb-8 ${headingClassName}`}
+        className={`font-sans font-medium text-center ${
+          intro && !success ? "mb-4" : "mb-8"
+        } ${headingClassName}`}
       >
         {heading}
       </h1>
+
+      {intro && !success && (
+        <p className="text-center text-small mb-8">{intro}</p>
+      )}
 
       {success ? (
         <>

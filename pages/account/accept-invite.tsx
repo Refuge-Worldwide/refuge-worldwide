@@ -11,7 +11,8 @@ export default function AcceptInvitePage() {
       />
       <SetPasswordForm
         apiPath="/api/auth/accept-invite"
-        heading="Welcome to Refuge Worldwide"
+        heading="You've been invited to become a Refuge Worldwide supporter"
+        intro="Sign up below for your free supporter account."
         successMessage="Your account is ready — sign in to get started."
         includeUsername
         boxClassName="max-w-xl"
