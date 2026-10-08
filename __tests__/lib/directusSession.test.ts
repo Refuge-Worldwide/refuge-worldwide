@@ -86,6 +86,68 @@ describe("getSessionUser", () => {
     expect(global.fetch).not.toHaveBeenCalled();
   });
 
+  it("refreshes when the access cookie has expired but the refresh cookie remains", async () => {
+    const { req, res } = createApiMocks({
+      cookies: { directus_refresh_token: "refresh-token" },
+    });
+    mockFetchOnce({
+      ok: true,
+      status: 200,
+      json: async () => ({
+        data: {
+          access_token: "new-access",
+          refresh_token: "new-refresh",
+          expires: 900_000,
+        },
+      }),
+    });
+    mockFetchOnce({
+      ok: true,
+      status: 200,
+      json: async () => ({ data: { id: "u1", email: "a@b.com" } }),
+    });
+
+    const user = await getSessionUser(req, res);
+    expect(user).toEqual({ id: "u1", email: "a@b.com" });
+    expect(global.fetch).toHaveBeenNthCalledWith(
+      1,
+      `${DIRECTUS_URL}/auth/refresh`,
+      expect.anything()
+    );
+    expect(global.fetch).toHaveBeenNthCalledWith(
+      2,
+      `${DIRECTUS_URL}/users/me?fields=id,email,first_name`,
+      expect.objectContaining({
+        headers: { Authorization: "Bearer new-access" },
+      })
+    );
+    const setCookie = res.getHeader("Set-Cookie") as string[];
+    expect(setCookie[0]).toContain("directus_session_token=new-access");
+    expect(setCookie[1]).toContain("directus_refresh_token=new-refresh");
+  });
+
+  it("clears cookies when only an invalid refresh cookie remains", async () => {
+    const { req, res } = createApiMocks({
+      cookies: { directus_refresh_token: "bad-refresh-token" },
+    });
+    mockFetchOnce({ ok: false, status: 401, json: async () => ({}) });
+
+    expect(await getSessionUser(req, res)).toBeNull();
+    expect(global.fetch).toHaveBeenCalledTimes(1);
+    const setCookie = res.getHeader("Set-Cookie") as string[];
+    expect(setCookie[0]).toContain("directus_session_token=;");
+  });
+
+  it("keeps cookies when refreshing hits a network error", async () => {
+    const { req, res } = createApiMocks({
+      cookies: { directus_refresh_token: "refresh-token" },
+    });
+    (global.fetch as Mock).mockRejectedValueOnce(new Error("ECONNREFUSED"));
+
+    expect(await getSessionUser(req, res)).toBeNull();
+    expect(res.getHeader("Set-Cookie")).toBeUndefined();
+  });
+
   it("returns the user on a successful /users/me call", async () => {
     const { req, res } = createApiMocks({
       cookies: { directus_session_token: "valid-token" },
@@ -193,6 +255,28 @@ describe("getValidAccessToken", () => {
   it("returns null when there's no access token cookie", async () => {
     const { req, res } = createApiMocks({ cookies: {} });
     expect(await getValidAccessToken(req, res)).toBeNull();
+  });
+
+  it("refreshes when the access cookie has expired but the refresh cookie remains", async () => {
+    const { req, res } = createApiMocks({
+      cookies: { directus_refresh_token: "refresh-token" },
+    });
+    mockFetchOnce({
+      ok: true,
+      status: 200,
+      json: async () => ({
+        data: {
+          access_token: "new-access",
+          refresh_token: "new-refresh",
+          expires: 900_000,
+        },
+      }),
+    });
+
+    expect(await getValidAccessToken(req, res)).toBe("new-access");
+    expect(global.fetch).toHaveBeenCalledTimes(1);
+    const setCookie = res.getHeader("Set-Cookie") as string[];
+    expect(setCookie[0]).toContain("directus_session_token=new-access");
   });
 
   it("returns the token as-is when the probe succeeds", async () => {

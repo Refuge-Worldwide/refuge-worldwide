@@ -73,6 +73,26 @@ async function refreshTokens(
   return data as DirectusTokens;
 }
 
+async function refreshSession(
+  refreshToken: string,
+  res: ResponseLike
+): Promise<string | null> {
+  let tokens: DirectusTokens | null;
+  try {
+    tokens = await refreshTokens(refreshToken);
+  } catch {
+    return null;
+  }
+
+  if (!tokens) {
+    clearSessionCookies(res);
+    return null;
+  }
+
+  setSessionCookies(res, tokens);
+  return tokens.access_token;
+}
+
 /**
  * Resolves a valid Directus access token from the session cookies,
  * transparently refreshing an expired one once before giving up. For use by
@@ -87,7 +107,9 @@ export async function getValidAccessToken(
   const accessToken = req.cookies[ACCESS_COOKIE];
   const refreshToken = req.cookies[REFRESH_COOKIE];
 
-  if (!accessToken) return null;
+  if (!accessToken) {
+    return refreshToken ? refreshSession(refreshToken, res) : null;
+  }
 
   let probe: Response;
   try {
@@ -103,14 +125,7 @@ export async function getValidAccessToken(
   if (probe.ok) return accessToken;
 
   if (probe.status === 401 && refreshToken) {
-    const tokens = await refreshTokens(refreshToken);
-    if (!tokens) {
-      clearSessionCookies(res);
-      return null;
-    }
-
-    setSessionCookies(res, tokens);
-    return tokens.access_token;
+    return refreshSession(refreshToken, res);
   }
 
   // Anything other than a clean 401 (e.g. a transient 429/500 from Directus)
@@ -133,8 +148,14 @@ export async function getSessionUser(
   res: ResponseLike,
   fields: string = DEFAULT_FIELDS
 ) {
-  const accessToken = req.cookies[ACCESS_COOKIE];
+  let accessToken = req.cookies[ACCESS_COOKIE];
   const refreshToken = req.cookies[REFRESH_COOKIE];
+  let refreshed = false;
+
+  if (!accessToken && refreshToken) {
+    accessToken = (await refreshSession(refreshToken, res)) ?? undefined;
+    refreshed = true;
+  }
 
   if (!accessToken) return null;
 
@@ -145,15 +166,12 @@ export async function getSessionUser(
     response = null;
   }
 
-  if (response?.status === 401 && refreshToken) {
-    const tokens = await refreshTokens(refreshToken);
-    if (!tokens) {
-      clearSessionCookies(res);
-      return null;
-    }
-    setSessionCookies(res, tokens);
+  if (response?.status === 401 && refreshToken && !refreshed) {
+    const newToken = await refreshSession(refreshToken, res);
+    if (!newToken) return null;
+    accessToken = newToken;
     try {
-      response = await fetchMe(tokens.access_token, fields);
+      response = await fetchMe(accessToken, fields);
     } catch {
       response = null;
     }
