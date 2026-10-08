@@ -9,13 +9,13 @@ import { Menu } from "../icons/menu";
 import MessageSquare from "../icons/message-square";
 import Search from "../icons/search";
 import NavigationLink from "./navigationLink";
-import { AiOutlineUser } from "react-icons/ai";
+import { AiOutlineCalendar, AiOutlineUser } from "react-icons/ai";
 import { useDirectusUser } from "../hooks/useDirectusUser";
 
 export default function Navigation() {
   const [isOpen, isOpenSet] = useState(false);
   const onDismiss = () => isOpenSet(false);
-  const { user, showSupporters } = useDirectusUser();
+  const { user, isStaff, showSupporters } = useDirectusUser();
 
   const openChat = useCallback(() => {
     const chatOptions =
@@ -44,6 +44,26 @@ export default function Navigation() {
             </li>
 
             <li className="li flex lg:hidden gap-6 ml-auto">
+              {isStaff && (
+                <Link
+                  href="/admin/calendar"
+                  className="flex focus:outline-none focus:ring-4"
+                >
+                  <span className="sr-only">Calendar</span>
+                  <AiOutlineCalendar size={32} aria-hidden />
+                </Link>
+              )}
+
+              {user && (
+                <Link
+                  href="/account"
+                  className="flex focus:outline-none focus:ring-4"
+                >
+                  <span className="sr-only">Account</span>
+                  <AiOutlineUser size={32} aria-hidden />
+                </Link>
+              )}
+
               <a
                 className="flex focus:outline-none focus:ring-4"
                 target="_blank"
@@ -151,13 +171,7 @@ export default function Navigation() {
                         <Search />
                       </NavigationLink>
                     </li>
-                    {showSupporters ? (
-                      <li>
-                        <Link href={user ? "/account" : "/signin"}>
-                          <AiOutlineUser size={24} />
-                        </Link>
-                      </li>
-                    ) : (
+                    {!showSupporters && (
                       <>
                         <li className="h-6 leading-none">
                           <a
@@ -168,16 +182,36 @@ export default function Navigation() {
                             <MessageSquare />
                           </a>
                         </li>
-                        <li>
-                          <a
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            href={INSTAGRAM_URL}
-                          >
-                            <Instagram />
-                          </a>
-                        </li>
+                        {!user && (
+                          <li>
+                            <a
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              href={INSTAGRAM_URL}
+                            >
+                              <Instagram />
+                            </a>
+                          </li>
+                        )}
                       </>
+                    )}
+                    {isStaff && (
+                      <li>
+                        <Link href="/admin/calendar">
+                          <span className="sr-only">Calendar</span>
+                          <AiOutlineCalendar size={24} aria-hidden />
+                        </Link>
+                      </li>
+                    )}
+                    {(showSupporters || user) && (
+                      <li>
+                        <Link href={user ? "/account" : "/signin"}>
+                          <span className="sr-only">
+                            {user ? "Account" : "Sign in"}
+                          </span>
+                          <AiOutlineUser size={24} aria-hidden />
+                        </Link>
+                      </li>
                     )}
                   </ul>
                 </li>
