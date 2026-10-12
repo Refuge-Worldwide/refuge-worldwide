@@ -148,14 +148,18 @@ export const updatePlaylist = async (
   tracks: { id: number }[]
 ): Promise<void> => {
   const response = await fetch(
-    `https://api.soundcloud.com/playlists/${playlistId}`,
+    `https://api.soundcloud.com/playlists/soundcloud:playlists:${playlistId}`,
     {
       method: "PUT",
       headers: {
         Authorization: `OAuth ${token}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ playlist: { tracks } }),
+      body: JSON.stringify({
+        playlist: {
+          tracks: tracks.map(({ id }) => ({ urn: `soundcloud:tracks:${id}` })),
+        },
+      }),
     }
   );
 
