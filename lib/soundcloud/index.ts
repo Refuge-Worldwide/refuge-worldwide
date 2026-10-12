@@ -17,6 +17,17 @@ const cleanUrl = (url: string): string => {
   }
 };
 
+export const soundcloudTrackKey = (url: string): string => {
+  try {
+    const { hostname, pathname } = new URL(url);
+    const host = hostname.replace(/^(www|m)\./, "");
+    const path = pathname.split("/").filter(Boolean).slice(0, 2).join("/");
+    return `${host}/${path}`.toLowerCase();
+  } catch {
+    return url.toLowerCase();
+  }
+};
+
 // soundcloud limits new tokens, so we keep one in the vercel cache
 export const getAccessToken = async (): Promise<string> => {
   if (memoryToken && Date.now() < memoryToken.expiresAt) {
