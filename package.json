@@ -17,7 +17,8 @@
     "lint-staged": "lint-staged",
     "email": "email dev",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "playlists:from-soundcloud": "tsx scripts/sync-playlists-from-soundcloud.ts"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
