@@ -1,4 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { readItem } from "@directus/sdk";
+import { deleteChatImage } from "@/lib/chatImages";
+import { directusServer } from "@/lib/directus/server";
 import { directusUrl, getValidAccessToken } from "@/lib/directus/session";
 import { getUserAccess, getUserIdFromToken } from "@/lib/directus/staff";
 
@@ -30,6 +33,11 @@ export default async function handler(
     return res.status(403).json({ error: "Forbidden" });
   }
 
+  // read before deleting so the photo can be removed afterwards
+  const existing = await directusServer
+    .request(readItem("chat", id, { fields: ["image"] }))
+    .catch(() => null);
+
   const response = await fetch(`${directusUrl}/items/chat/${id}`, {
     method: "DELETE",
     headers: { Authorization: `Bearer ${token}` },
@@ -41,6 +49,12 @@ export default async function handler(
       response.status
     );
     return res.status(500).json({ error: "Failed to delete message" });
+  }
+
+  try {
+    await deleteChatImage(existing?.image);
+  } catch (error) {
+    console.error("[api/chat/delete] failed to delete image:", error);
   }
 
   return res.status(200).json({ ok: true });

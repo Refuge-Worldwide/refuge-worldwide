@@ -13,6 +13,7 @@ const profanityMatcher = new RegExpMatcher({
 
 const RATE_LIMIT_WINDOW_MS = 5_000;
 const RATE_LIMIT_MAX_MESSAGES = 3;
+const IMAGE_RATE_LIMIT_WINDOW_MS = 30_000;
 
 export type ModerationResult = { ok: true } | { ok: false; reason: string };
 
@@ -103,8 +104,42 @@ export async function checkRateLimit(
     };
   }
 
-  if (recent[0]?.message === newMessageText) {
+  // photo-only messages have no text, so there's nothing to compare
+  if (newMessageText && recent[0]?.message === newMessageText) {
     return { ok: false, reason: "You just sent that message." };
+  }
+
+  return { ok: true };
+}
+
+/** One photo per sender every 30 seconds, on top of checkRateLimit. */
+export async function checkImageRateLimit(
+  identityKey: string,
+  isAuthenticated: boolean
+): Promise<ModerationResult> {
+  const since = new Date(Date.now() - IMAGE_RATE_LIMIT_WINDOW_MS).toISOString();
+
+  const recent = await directusServer.request(
+    readItems("chat", {
+      filter: {
+        _and: [
+          isAuthenticated
+            ? { user: { _eq: identityKey } }
+            : { username: { _eq: identityKey } },
+          { image: { _nnull: true } },
+          { date_created: { _gte: since } },
+        ],
+      },
+      limit: 1,
+      fields: ["id"],
+    })
+  );
+
+  if (recent.length > 0) {
+    return {
+      ok: false,
+      reason: "You can only send one photo every 30 seconds.",
+    };
   }
 
   return { ok: true };

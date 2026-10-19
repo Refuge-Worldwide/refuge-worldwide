@@ -49,7 +49,16 @@ export function clearSessionCookies(res: ResponseLike) {
   ]);
 }
 
-type CookieSource = { cookies: Partial<Record<string, string>> };
+type CookieSource = {
+  cookies: Partial<Record<string, string>>;
+  headers?: { authorization?: string };
+};
+
+// The app has no session cookie, it sends its Directus token as a Bearer header
+function bearerToken(req: CookieSource): string | undefined {
+  const header = req.headers?.authorization;
+  return header?.startsWith("Bearer ") ? header.slice(7) : undefined;
+}
 
 const DEFAULT_FIELDS = "id,email,first_name";
 
@@ -157,6 +166,7 @@ export async function getSessionUser(
     refreshed = true;
   }
 
+  accessToken ??= bearerToken(req);
   if (!accessToken) return null;
 
   let response: Response | null;

@@ -1,7 +1,11 @@
 import { beforeEach, describe, expect, it, vi, type Mock } from "vitest";
 import { readItems } from "@directus/sdk";
 import { directusServer } from "@/lib/directus/server";
-import { checkRateLimit, moderateMessageText } from "@/lib/chatModeration";
+import {
+  checkImageRateLimit,
+  checkRateLimit,
+  moderateMessageText,
+} from "@/lib/chatModeration";
 
 vi.mock("@/lib/directus/server", () => ({
   directusServer: { request: vi.fn() },
@@ -134,5 +138,40 @@ describe("checkRateLimit", () => {
     ]);
     const result = await checkRateLimit("user-1", true, "same message");
     expect(result).toEqual({ ok: true });
+  });
+
+  it("doesn't treat two photo-only messages as a repeat", async () => {
+    mockRequest.mockResolvedValueOnce([{ message: "" }]);
+    const result = await checkRateLimit("user-1", true, "");
+    expect(result).toEqual({ ok: true });
+  });
+});
+
+describe("checkImageRateLimit", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("allows a photo when none were sent recently", async () => {
+    mockRequest.mockResolvedValueOnce([]);
+    const result = await checkImageRateLimit("some-guest", false);
+    expect(result).toEqual({ ok: true });
+    expect(readItems).toHaveBeenCalledWith(
+      "chat",
+      expect.objectContaining({
+        filter: expect.objectContaining({
+          _and: expect.arrayContaining([
+            { username: { _eq: "some-guest" } },
+            { image: { _nnull: true } },
+          ]),
+        }),
+      })
+    );
+  });
+
+  it("rejects a second photo inside the window", async () => {
+    mockRequest.mockResolvedValueOnce([{ id: 1 }]);
+    const result = await checkImageRateLimit("user-1", true);
+    expect(result.ok).toBe(false);
   });
 });
