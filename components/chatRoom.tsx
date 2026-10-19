@@ -5,8 +5,13 @@ import { createChatRealtimeClient } from "@/lib/directus/chatRealtime";
 import { useDirectusUser } from "@/hooks/useDirectusUser";
 import { splitOnUrls, isUrl } from "@/lib/linkify";
 import { ensureHttps } from "@/util";
+import { IoCameraOutline } from "react-icons/io5";
 
 const LS_USERNAME = "rw_chat_username";
+// photos only show inline, and this keeps uploads small (~100-200KB)
+const MAX_UPLOAD_DIMENSION = 1024;
+// matches MAX_CHAT_IMAGE_BYTES in lib/chatImages.ts
+const MAX_UPLOAD_BYTES = 1024 * 1024;
 const PAGE_SIZE = 50;
 // How close to the top (px) triggers loading older messages.
 const LOAD_MORE_THRESHOLD = 100;
@@ -69,6 +74,43 @@ function groupMessages(messages: ChatMessage[]): MessageGroup[] {
   }
 
   return groups;
+}
+
+async function decodeImage(file: File): Promise<ImageBitmap> {
+  try {
+    return await createImageBitmap(file, { imageOrientation: "from-image" });
+  } catch {
+    // Only Safari can read iPhone HEIC photos, so convert them for everyone
+    // else. Loaded on demand, it's a few MB.
+    const { heicTo, isHeic } = await import("heic-to");
+    if (!(await isHeic(file))) throw new Error("Unsupported image");
+    return heicTo({ blob: file, type: "bitmap" });
+  }
+}
+
+// Every photo is shrunk to a small JPEG here before upload, which also drops
+// its EXIF (including GPS). The server only accepts JPEGs.
+async function shrinkImage(file: File): Promise<Blob | null> {
+  try {
+    const bitmap = await decodeImage(file);
+    const scale = Math.min(
+      1,
+      MAX_UPLOAD_DIMENSION / Math.max(bitmap.width, bitmap.height)
+    );
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.round(bitmap.width * scale);
+    canvas.height = Math.round(bitmap.height * scale);
+    canvas
+      .getContext("2d")
+      ?.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+    bitmap.close();
+    return await new Promise<Blob | null>((resolve) =>
+      canvas.toBlob(resolve, "image/jpeg", 0.7)
+    );
+  } catch (error) {
+    console.error("Error reading photo:", error);
+    return null;
+  }
 }
 
 function formatTimestamp(ts: string): string {
@@ -135,9 +177,16 @@ const ChatRoom: FC = () => {
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const [sendError, setSendError] = useState<string | null>(null);
+  const [pendingImage, setPendingImage] = useState<{
+    blob: Blob;
+    previewUrl: string;
+  } | null>(null);
+  // HEIC conversion can take a second or two
+  const [preparingImage, setPreparingImage] = useState(false);
 
   const listRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const loadingMoreRef = useRef(false);
   // Mirrors `messages` so handleScroll (attached once) can always read the
   // current oldest-loaded id without needing to be re-bound on every change.
@@ -351,29 +400,84 @@ const ChatRoom: FC = () => {
     setSettingName(true);
   }, [username]);
 
+  const clearPendingImage = useCallback(() => {
+    setPendingImage((prev) => {
+      if (prev) URL.revokeObjectURL(prev.previewUrl);
+      return null;
+    });
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  }, []);
+
+  const handlePickImage = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      setSendError(null);
+      setPreparingImage(true);
+      const blob = await shrinkImage(file);
+      setPreparingImage(false);
+      if (!blob) {
+        setSendError("Couldn't read that photo, try a JPEG or PNG.");
+        return;
+      }
+      if (blob.size > MAX_UPLOAD_BYTES) {
+        setSendError("That photo is too large.");
+        return;
+      }
+      setPendingImage((prev) => {
+        if (prev) URL.revokeObjectURL(prev.previewUrl);
+        return { blob, previewUrl: URL.createObjectURL(blob) };
+      });
+      inputRef.current?.focus();
+    },
+    []
+  );
+
   const handleSend = useCallback(async () => {
-    if (!displayName || !input.trim() || sending) return;
+    if (
+      !displayName ||
+      (!input.trim() && !pendingImage) ||
+      sending ||
+      preparingImage
+    )
+      return;
     const text = input.trim().slice(0, 500);
-    setInput("");
     setSending(true);
     setSendError(null);
     try {
-      const response = await fetch("/api/chat/send", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        // Signed-in senders' identity is resolved server-side from the
-        // session cookie — sending a username here would just be ignored,
-        // so it's only included for anonymous senders.
-        body: JSON.stringify({
-          message: text,
-          ...(isLoggedIn ? {} : { username: displayName }),
-        }),
-      });
+      let response: Response;
+      if (pendingImage) {
+        // Photos only go up as part of a message (see pages/api/chat/send.ts)
+        const form = new FormData();
+        form.append("message", text);
+        if (!isLoggedIn) form.append("username", displayName);
+        form.append("image", pendingImage.blob, "photo.jpg");
+        response = await fetch("/api/chat/send", {
+          method: "POST",
+          body: form,
+        });
+      } else {
+        response = await fetch("/api/chat/send", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          // Signed-in senders' identity is resolved server-side from the
+          // session cookie — sending a username here would just be ignored,
+          // so it's only included for anonymous senders.
+          body: JSON.stringify({
+            message: text,
+            ...(isLoggedIn ? {} : { username: displayName }),
+          }),
+        });
+      }
       const body = await response.json().catch(() => null);
 
       if (!response.ok) {
         setSendError(body?.error ?? "Failed to send message");
-      } else if (body?.message) {
+      } else {
+        setInput("");
+        clearPendingImage();
+      }
+      if (response.ok && body?.message) {
         // Show it immediately rather than waiting for the realtime event to
         // round-trip — appendMessages dedupes by id, so it can't double up
         // when that event arrives too.
@@ -385,7 +489,16 @@ const ChatRoom: FC = () => {
     } finally {
       setTimeout(() => setSending(false), 1000);
     }
-  }, [displayName, isLoggedIn, input, sending, appendMessages]);
+  }, [
+    displayName,
+    isLoggedIn,
+    input,
+    pendingImage,
+    sending,
+    preparingImage,
+    appendMessages,
+    clearPendingImage,
+  ]);
 
   const messageGroups = useMemo(() => groupMessages(messages), [messages]);
 
@@ -408,16 +521,6 @@ const ChatRoom: FC = () => {
       console.error("Error deleting message:", error);
     }
   }, []);
-
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
-      if (e.key === "Enter" && !e.shiftKey) {
-        e.preventDefault();
-        handleSend();
-      }
-    },
-    [handleSend]
-  );
 
   const handleNameKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
@@ -492,27 +595,47 @@ const ChatRoom: FC = () => {
                       key={msg.id}
                       className="group/msg flex items-start gap-2 -mx-1.5 px-1.5 py-0.5 rounded hover:bg-white/10"
                     >
-                      <p className="text-tiny break-words leading-snug flex-1">
-                        {splitOnUrls(msg.message).map((part, i) =>
-                          isUrl(part) ? (
-                            <a
-                              key={i}
-                              href={part}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="underline"
-                            >
-                              {part}
-                            </a>
-                          ) : (
-                            part
-                          )
+                      <div className="flex-1 min-w-0">
+                        {msg.message && (
+                          <p className="text-tiny break-words leading-snug">
+                            {splitOnUrls(msg.message).map((part, i) =>
+                              isUrl(part) ? (
+                                <a
+                                  key={i}
+                                  href={part}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="underline"
+                                >
+                                  {part}
+                                </a>
+                              ) : (
+                                part
+                              )
+                            )}
+                          </p>
                         )}
-                      </p>
+                        {msg.image && (
+                          // plain img, these are already small and served from Directus
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={msg.image}
+                            alt={`Photo from ${msg.username}`}
+                            loading="lazy"
+                            onLoad={() => {
+                              if (isNearBottomRef.current) scrollToBottom();
+                            }}
+                            className="mt-1 max-w-[65%] max-h-80 object-cover bg-white/10"
+                          />
+                        )}
+                      </div>
                       {isStaff && (
                         <button
                           onClick={() =>
-                            handleDeleteMessage(msg.id, msg.message)
+                            handleDeleteMessage(
+                              msg.id,
+                              msg.message || "(photo)"
+                            )
                           }
                           className="text-tiny text-red-400 underline opacity-0 group-hover/msg:opacity-100 transition-opacity flex-shrink-0"
                         >
@@ -532,26 +655,70 @@ const ChatRoom: FC = () => {
       <div className="flex-shrink-0 border-t border-white">
         {!showNameForm && (
           <>
-            <div className="flex gap-2 items-center p-3">
+            {pendingImage && (
+              <div className="relative ml-3 mt-3 w-fit max-w-[65%]">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={pendingImage.previewUrl}
+                  alt="Photo to send"
+                  className="block max-h-40 max-w-full w-auto"
+                />
+                <button
+                  onClick={clearPendingImage}
+                  disabled={sending}
+                  aria-label="Remove photo"
+                  className="absolute -top-2 -right-2 h-5 w-5 rounded-full bg-white text-black text-tiny leading-none flex items-center justify-center"
+                >
+                  ×
+                </button>
+              </div>
+            )}
+            {/* a real form, so Enter sends without a send button (implicit submission) */}
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSend();
+              }}
+              className="flex gap-2 items-center p-3"
+            >
               <input
                 ref={inputRef}
                 type="text"
                 placeholder="Say something..."
+                enterKeyHint="send"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
                 maxLength={500}
-                disabled={sending}
-                className="flex-1 bg-black border border-white rounded-full text-white text-tiny px-4 py-2 focus:outline-none focus:border-white/50 placeholder-white/30 min-w-0 disabled:opacity-50"
+                // readOnly rather than disabled, so focus stays put for the next message
+                readOnly={sending}
+                className="flex-1 bg-black border border-white rounded-full text-white text-tiny px-4 py-2 focus:outline-none focus:border-white/50 placeholder-white/30 min-w-0 read-only:opacity-50"
+              />
+              <input
+                ref={fileInputRef}
+                type="file"
+                // .heic listed too, desktop Chrome doesn't count it as image/*
+                accept="image/*,.heic,.heif"
+                onChange={handlePickImage}
+                className="hidden"
               />
               <button
-                onClick={handleSend}
-                disabled={sending || !input.trim()}
-                className="flex-shrink-0 border border-white rounded-full text-tiny px-4 py-2 hover:bg-white hover:text-black transition-colors disabled:opacity-40"
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={sending || preparingImage}
+                aria-label="Add a photo"
+                className="flex-shrink-0 p-2 text-white/70 hover:text-white transition-colors disabled:opacity-40"
               >
-                Send
+                {preparingImage ? (
+                  <span
+                    className="block h-4 w-4 rounded-full border-2 border-white/20 border-t-white animate-spin"
+                    role="status"
+                    aria-label="Preparing photo"
+                  />
+                ) : (
+                  <IoCameraOutline size={18} />
+                )}
               </button>
-            </div>
+            </form>
             {sendError && (
               <p className="text-tiny text-red-400 px-3 pb-1">{sendError}</p>
             )}

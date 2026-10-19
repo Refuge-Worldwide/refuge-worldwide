@@ -62,6 +62,7 @@ export function useDirectusUser() {
     user,
     loading,
     isStaff,
-    showSupporters: false,
+    // on for local dev only, so the new chatroom can be tested
+    showSupporters: process.env.NODE_ENV !== "production",
   };
 }

@@ -1,11 +1,32 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { createItem } from "@directus/sdk";
+import formidable, { errors as formidableErrors } from "formidable";
+import fs from "fs";
 import { directusServer } from "@/lib/directus/server";
 import { getSessionUser } from "@/lib/directus/session";
-import { checkRateLimit, moderateMessageText } from "@/lib/chatModeration";
+import {
+  checkImageRateLimit,
+  checkRateLimit,
+  moderateMessageText,
+} from "@/lib/chatModeration";
+import {
+  MAX_CHAT_IMAGE_BYTES,
+  chatImagesEnabled,
+  deleteChatImage,
+  readChatImage,
+  uploadChatImage,
+} from "@/lib/chatImages";
+
+// Parsed by hand below so the same route can take a photo as multipart
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
 
 const MAX_USERNAME_LENGTH = 30;
 const MAX_MESSAGE_LENGTH = 500;
+const MAX_JSON_BODY_BYTES = 10 * 1024;
 
 // "Refuge Worldwide" is reserved for the automated show-announcement message
 // (see is_system on the chat collection, which is what actually gates the
@@ -25,6 +46,63 @@ function sanitizeUsername(raw: unknown): string | null {
   return cleaned;
 }
 
+class BadRequestError extends Error {}
+
+interface SendBody {
+  message: unknown;
+  username: unknown;
+  image: formidable.File | null;
+}
+
+async function readJsonBody(req: NextApiRequest): Promise<SendBody> {
+  // decodes across chunk boundaries, so emoji don't get split
+  req.setEncoding("utf8");
+  let raw = "";
+  for await (const chunk of req) {
+    raw += chunk;
+    if (raw.length > MAX_JSON_BODY_BYTES) {
+      throw new BadRequestError("Message is too long");
+    }
+  }
+  try {
+    const body = JSON.parse(raw || "{}");
+    return { message: body?.message, username: body?.username, image: null };
+  } catch {
+    throw new BadRequestError("Invalid request body");
+  }
+}
+
+// Photos are only accepted here, as part of a message — there's no
+// standalone upload route, so the chat's rate limits always apply.
+async function readMultipartBody(req: NextApiRequest): Promise<SendBody> {
+  const form = formidable({
+    maxFiles: 1,
+    maxFileSize: MAX_CHAT_IMAGE_BYTES,
+    maxFields: 5,
+    maxFieldsSize: MAX_JSON_BODY_BYTES,
+    filter: ({ name, mimetype }) =>
+      name === "image" && !!mimetype?.startsWith("image/"),
+  });
+
+  try {
+    const [fields, files] = await form.parse(req);
+    return {
+      message: fields.message?.[0] ?? "",
+      username: fields.username?.[0],
+      image: files.image?.[0] ?? null,
+    };
+  } catch (error) {
+    const code = (error as { code?: number })?.code;
+    throw new BadRequestError(
+      code === formidableErrors.maxFilesExceeded
+        ? "You can only send one photo per message."
+        : code === formidableErrors.biggerThanMaxFileSize
+        ? "That photo is too large."
+        : "Invalid upload"
+    );
+  }
+}
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -34,14 +112,47 @@ export default async function handler(
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const rawMessage = req.body?.message;
-  if (typeof rawMessage !== "string" || rawMessage.trim().length === 0) {
+  let body: SendBody;
+  try {
+    body = req.headers["content-type"]?.startsWith("multipart/form-data")
+      ? await readMultipartBody(req)
+      : await readJsonBody(req);
+  } catch (error) {
+    if (error instanceof BadRequestError) {
+      return res.status(400).json({ error: error.message });
+    }
+    throw error;
+  }
+
+  const image = body.image;
+  try {
+    return await sendMessage(req, res, body);
+  } finally {
+    if (image) fs.promises.unlink(image.filepath).catch(() => {});
+  }
+}
+
+async function sendMessage(
+  req: NextApiRequest,
+  res: NextApiResponse,
+  { message: rawMessage, username: rawUsername, image }: SendBody
+) {
+  const message =
+    typeof rawMessage === "string"
+      ? rawMessage.trim().slice(0, MAX_MESSAGE_LENGTH)
+      : "";
+  if (!message && !image) {
     return res.status(400).json({ error: "Message is required" });
   }
-  const message = rawMessage.trim().slice(0, MAX_MESSAGE_LENGTH);
+  if (image && !chatImagesEnabled()) {
+    return res
+      .status(503)
+      .json({ error: "Photo sharing isn't available right now." });
+  }
 
-  // Resolve identity server-side from the caller's own session cookie —
-  // never trust a client-supplied user id. No valid session means anonymous.
+  // Resolve identity server-side from the caller's own session cookie (or the
+  // app's Bearer token) — never trust a client-supplied user id. No valid
+  // session means anonymous.
   const sessionUser = await getSessionUser(req, res, "id,email,first_name");
 
   let username: string | null;
@@ -58,22 +169,46 @@ export default async function handler(
       (sessionUser.email as string).split("@")[0];
     userId = sessionUser.id as string;
   } else {
-    username = sanitizeUsername(req.body?.username);
+    username = sanitizeUsername(rawUsername);
     userId = null;
     if (!username) {
       return res.status(400).json({ error: "A valid username is required" });
     }
   }
 
-  const moderation = moderateMessageText(message);
-  if (moderation.ok === false) {
-    return res.status(422).json({ error: moderation.reason });
+  if (message) {
+    const moderation = moderateMessageText(message);
+    if (moderation.ok === false) {
+      return res.status(422).json({ error: moderation.reason });
+    }
   }
 
   const identityKey = userId ?? username;
   const rateLimit = await checkRateLimit(identityKey, !!userId, message);
   if (rateLimit.ok === false) {
     return res.status(429).json({ error: rateLimit.reason });
+  }
+
+  let imageUrl: string | null = null;
+  if (image) {
+    const imageLimit = await checkImageRateLimit(identityKey, !!userId);
+    if (imageLimit.ok === false) {
+      return res.status(429).json({ error: imageLimit.reason });
+    }
+
+    const processed = await readChatImage(image.filepath);
+    if (!processed) {
+      return res
+        .status(422)
+        .json({ error: "Photos need to be a JPEG under 1MB." });
+    }
+
+    try {
+      imageUrl = await uploadChatImage(processed);
+    } catch (error) {
+      console.error("[api/chat/send] failed to upload image:", error);
+      return res.status(500).json({ error: "Failed to upload photo" });
+    }
   }
 
   try {
@@ -84,12 +219,15 @@ export default async function handler(
       createItem("chat", {
         username,
         message,
+        image: imageUrl,
         user: userId,
       })
     );
     return res.status(200).json({ ok: true, message: created });
   } catch (error) {
     console.error("[api/chat/send] failed to write message:", error);
+    // don't leave an orphaned photo behind
+    await deleteChatImage(imageUrl).catch(() => {});
     return res.status(500).json({ error: "Failed to send message" });
   }
 }

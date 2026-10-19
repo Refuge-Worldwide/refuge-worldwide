@@ -30,6 +30,10 @@
     {
       "path": "/api/cron/chat-show-announce",
       "schedule": "0,1,2,3 * * * *"
+    },
+    {
+      "path": "/api/cron/chat-cleanup",
+      "schedule": "0 4 * * 1"
     }
   ]
 }
