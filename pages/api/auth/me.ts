@@ -7,14 +7,19 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const user = await getSessionUser(req, res);
-  if (!user) return res.status(200).json({ user: null, isStaff: false });
+  if (!user) {
+    return res
+      .status(200)
+      .json({ user: null, isStaff: false, hasSupporterAccess: false });
+  }
 
   let isStaff = false;
+  let hasSupporterAccess = false;
   try {
-    isStaff = (await getUserAccess(user.id)).isStaff;
+    ({ isStaff, hasSupporterAccess } = await getUserAccess(user.id));
   } catch {
     // a failed role lookup shouldn't sign anyone out
   }
 
-  return res.status(200).json({ user, isStaff });
+  return res.status(200).json({ user, isStaff, hasSupporterAccess });
 }

@@ -8,7 +8,11 @@ interface DirectusUser {
   last_name?: string;
 }
 
-type MeResponse = { user: DirectusUser | null; isStaff: boolean };
+type MeResponse = {
+  user: DirectusUser | null;
+  isStaff: boolean;
+  hasSupporterAccess: boolean;
+};
 
 let inflight: Promise<MeResponse> | null = null;
 
@@ -18,6 +22,7 @@ function fetchMe(): Promise<MeResponse> {
     .then((data) => ({
       user: data.user ?? null,
       isStaff: data.isStaff === true,
+      hasSupporterAccess: data.hasSupporterAccess === true,
     }))
     .finally(() => {
       inflight = null;
@@ -28,6 +33,7 @@ function fetchMe(): Promise<MeResponse> {
 export function useDirectusUser() {
   const [user, setUser] = useState<DirectusUser | null>(null);
   const [isStaff, setIsStaff] = useState(false);
+  const [hasSupporterAccess, setHasSupporterAccess] = useState(false);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -48,11 +54,13 @@ export function useDirectusUser() {
           if (cancelled) return;
           setUser(data.user);
           setIsStaff(data.isStaff);
+          setHasSupporterAccess(data.hasSupporterAccess);
         })
         .catch(() => {
           if (cancelled) return;
           setUser(null);
           setIsStaff(false);
+          setHasSupporterAccess(false);
         })
         .finally(() => {
           if (!cancelled && isFirstFetch) setLoading(false);
@@ -78,7 +86,6 @@ export function useDirectusUser() {
     user,
     loading,
     isStaff,
-    // on for local dev only, so the new chatroom can be tested
-    showSupporters: process.env.NODE_ENV !== "production",
+    hasSupporterAccess,
   };
 }

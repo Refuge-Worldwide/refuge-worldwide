@@ -3,8 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useState } from "react";
 import { MobileMenu } from "../components/mobileMenu";
-import { INSTAGRAM_URL, SHOP_URL, DISCORD_INVITE_URL } from "../constants";
-import Instagram from "../icons/instagram";
+import { SHOP_URL } from "../constants";
 import { Menu } from "../icons/menu";
 import MessageSquare from "../icons/message-square";
 import Search from "../icons/search";
@@ -15,7 +14,7 @@ import { useDirectusUser } from "../hooks/useDirectusUser";
 export default function Navigation() {
   const [isOpen, isOpenSet] = useState(false);
   const onDismiss = () => isOpenSet(false);
-  const { user, isStaff, showSupporters } = useDirectusUser();
+  const { user, isStaff } = useDirectusUser();
 
   const openChat = useCallback(() => {
     const chatOptions =
@@ -132,23 +131,13 @@ export default function Navigation() {
                   </NavigationLink>
                 </li>
                 <li>
-                  {showSupporters ? (
-                    <NavigationLink
-                      href="/support"
-                      activeClassName="text-pink"
-                      className="hover:text-pink focus:text-pink"
-                    >
-                      Support
-                    </NavigationLink>
-                  ) : (
-                    <NavigationLink
-                      href="/newsletter"
-                      activeClassName="text-pink"
-                      className="hover:text-pink focus:text-pink"
-                    >
-                      Newsletter
-                    </NavigationLink>
-                  )}
+                  <NavigationLink
+                    href="/support"
+                    activeClassName="text-pink"
+                    className="hover:text-pink focus:text-pink"
+                  >
+                    Support
+                  </NavigationLink>
                 </li>
                 <li>
                   <a
@@ -171,30 +160,6 @@ export default function Navigation() {
                         <Search />
                       </NavigationLink>
                     </li>
-                    {!showSupporters && (
-                      <>
-                        <li className="h-6 leading-none">
-                          <a
-                            href="/chat"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <MessageSquare />
-                          </a>
-                        </li>
-                        {!user && (
-                          <li>
-                            <a
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              href={INSTAGRAM_URL}
-                            >
-                              <Instagram />
-                            </a>
-                          </li>
-                        )}
-                      </>
-                    )}
                     {isStaff && (
                       <li>
                         <Link href="/admin/calendar">
@@ -203,16 +168,14 @@ export default function Navigation() {
                         </Link>
                       </li>
                     )}
-                    {(showSupporters || user) && (
-                      <li>
-                        <Link href={user ? "/account" : "/signin"}>
-                          <span className="sr-only">
-                            {user ? "Account" : "Sign in"}
-                          </span>
-                          <AiOutlineUser size={24} aria-hidden />
-                        </Link>
-                      </li>
-                    )}
+                    <li>
+                      <Link href={user ? "/account" : "/signin"}>
+                        <span className="sr-only">
+                          {user ? "Account" : "Sign in"}
+                        </span>
+                        <AiOutlineUser size={24} aria-hidden />
+                      </Link>
+                    </li>
                   </ul>
                 </li>
               </ul>

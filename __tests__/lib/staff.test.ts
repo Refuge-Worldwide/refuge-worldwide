@@ -33,7 +33,9 @@ describe("getUserAccess", () => {
     });
     expect(await getUserAccess("u1")).toEqual({
       isStaff: true,
+      isAdmin: false,
       isPaid: false,
+      isFriend: false,
       hasSupporterAccess: true,
     });
   });
@@ -56,7 +58,9 @@ describe("getUserAccess", () => {
     });
     expect(await getUserAccess("u3")).toEqual({
       isStaff: false,
+      isAdmin: false,
       isPaid: true,
+      isFriend: false,
       hasSupporterAccess: true,
     });
   });
@@ -76,7 +80,9 @@ describe("getUserAccess", () => {
     });
     expect(await getUserAccess("u4")).toEqual({
       isStaff: false,
+      isAdmin: false,
       isPaid: false,
+      isFriend: false,
       hasSupporterAccess: false,
     });
   });
