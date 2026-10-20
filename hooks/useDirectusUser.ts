@@ -8,6 +8,23 @@ interface DirectusUser {
   last_name?: string;
 }
 
+type MeResponse = { user: DirectusUser | null; isStaff: boolean };
+
+let inflight: Promise<MeResponse> | null = null;
+
+function fetchMe(): Promise<MeResponse> {
+  inflight ??= fetch("/api/auth/me")
+    .then((res) => res.json())
+    .then((data) => ({
+      user: data.user ?? null,
+      isStaff: data.isStaff === true,
+    }))
+    .finally(() => {
+      inflight = null;
+    });
+  return inflight;
+}
+
 export function useDirectusUser() {
   const [user, setUser] = useState<DirectusUser | null>(null);
   const [isStaff, setIsStaff] = useState(false);
@@ -26,12 +43,11 @@ export function useDirectusUser() {
 
     function fetchUser() {
       if (isFirstFetch) setLoading(true);
-      fetch("/api/auth/me")
-        .then((res) => res.json())
+      fetchMe()
         .then((data) => {
           if (cancelled) return;
-          setUser(data.user ?? null);
-          setIsStaff(data.isStaff === true);
+          setUser(data.user);
+          setIsStaff(data.isStaff);
         })
         .catch(() => {
           if (cancelled) return;

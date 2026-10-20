@@ -138,29 +138,15 @@ const ChatRoom: FC = () => {
   // shown in Account Settings, stored on Directus's first_name) — no
   // separate identity to pick. Anonymous visitors still choose one, kept in
   // localStorage.
-  const { user: accountUser, loading: accountLoading } = useDirectusUser();
+  const {
+    user: accountUser,
+    loading: accountLoading,
+    isStaff,
+  } = useDirectusUser();
   const isLoggedIn = Boolean(accountUser);
   const accountDisplayName = accountUser
     ? accountUser.first_name?.trim() || accountUser.email.split("@")[0]
     : null;
-
-  const [isStaff, setIsStaff] = useState(false);
-  useEffect(() => {
-    if (!isLoggedIn) {
-      setIsStaff(false);
-      return;
-    }
-    let cancelled = false;
-    fetch("/api/auth/is-staff")
-      .then((res) => res.json())
-      .then((data) => {
-        if (!cancelled) setIsStaff(!!data.isStaff);
-      })
-      .catch(() => {});
-    return () => {
-      cancelled = true;
-    };
-  }, [isLoggedIn]);
 
   const [username, setUsername] = useState<string | null>(null);
   const [nameInput, setNameInput] = useState("");
