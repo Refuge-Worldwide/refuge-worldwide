@@ -126,7 +126,7 @@ describe("getSessionUser", () => {
     expect(setCookie[1]).toContain("directus_refresh_token=new-refresh");
   });
 
-  it("clears cookies when only an invalid refresh cookie remains", async () => {
+  it("keeps cookies when only an invalid refresh cookie remains", async () => {
     const { req, res } = createApiMocks({
       cookies: { directus_refresh_token: "bad-refresh-token" },
     });
@@ -134,8 +134,7 @@ describe("getSessionUser", () => {
 
     expect(await getSessionUser(req, res)).toBeNull();
     expect(global.fetch).toHaveBeenCalledTimes(1);
-    const setCookie = res.getHeader("Set-Cookie") as string[];
-    expect(setCookie[0]).toContain("directus_session_token=;");
+    expect(res.getHeader("Set-Cookie")).toBeUndefined();
   });
 
   it("keeps cookies when refreshing hits a network error", async () => {
@@ -204,7 +203,7 @@ describe("getSessionUser", () => {
     expect(setCookie[0]).toContain("directus_session_token=new-access");
   });
 
-  it("clears cookies and returns null when the refresh token is also invalid", async () => {
+  it("returns null without clearing cookies when the refresh token is also invalid", async () => {
     const { req, res } = createApiMocks({
       cookies: {
         directus_session_token: "expired-token",
@@ -218,8 +217,7 @@ describe("getSessionUser", () => {
     const user = await getSessionUser(req, res);
     expect(user).toBeNull();
 
-    const setCookie = res.getHeader("Set-Cookie") as string[];
-    expect(setCookie[0]).toContain("directus_session_token=;");
+    expect(res.getHeader("Set-Cookie")).toBeUndefined();
   });
 
   it("retries once on a transient error before giving up", async () => {
@@ -329,7 +327,7 @@ describe("getValidAccessToken", () => {
     expect(await getValidAccessToken(req, res)).toBe("new-access");
   });
 
-  it("clears cookies and returns null when refreshing fails", async () => {
+  it("returns null without clearing cookies when refreshing fails", async () => {
     const { req, res } = createApiMocks({
       cookies: {
         directus_session_token: "expired-token",
@@ -340,8 +338,7 @@ describe("getValidAccessToken", () => {
     mockFetchOnce({ ok: false, status: 401, json: async () => ({}) });
 
     expect(await getValidAccessToken(req, res)).toBeNull();
-    const setCookie = res.getHeader("Set-Cookie") as string[];
-    expect(setCookie[0]).toContain("directus_session_token=;");
+    expect(res.getHeader("Set-Cookie")).toBeUndefined();
   });
 
   it("returns null on a 401 with no refresh token available", async () => {

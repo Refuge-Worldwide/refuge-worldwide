@@ -1,18 +1,11 @@
 import Link from "next/link";
 import { AiOutlineEdit } from "react-icons/ai";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useDirectusUser } from "@/hooks/useDirectusUser";
 
 export default function Edit({ id }: { id?: string }) {
   const pathname = usePathname();
-  const [isStaff, setIsStaff] = useState(false);
-
-  useEffect(() => {
-    fetch("/api/auth/is-staff")
-      .then((res) => res.json())
-      .then((data) => setIsStaff(!!data.isStaff))
-      .catch(() => setIsStaff(false));
-  }, []);
+  const { isStaff } = useDirectusUser();
 
   if (id && isStaff)
     return (

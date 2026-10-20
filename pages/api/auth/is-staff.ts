@@ -24,6 +24,10 @@ export default async function handler(
     return res.status(200).json({ isStaff: false, hasSupporterAccess: false });
   }
 
-  const { isStaff, hasSupporterAccess } = await getUserAccess(userId);
-  return res.status(200).json({ isStaff, hasSupporterAccess });
+  try {
+    const { isStaff, hasSupporterAccess } = await getUserAccess(userId);
+    return res.status(200).json({ isStaff, hasSupporterAccess });
+  } catch {
+    return res.status(200).json({ isStaff: false, hasSupporterAccess: false });
+  }
 }

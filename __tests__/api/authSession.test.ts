@@ -123,7 +123,10 @@ describe("POST /api/auth/logout", () => {
 describe("GET /api/auth/me", () => {
   it("returns the session user when logged in", async () => {
     mockGetSessionUser.mockResolvedValueOnce({ id: "u1", email: "a@b.com" });
-    mockGetUserAccess.mockResolvedValueOnce({ isStaff: false });
+    mockGetUserAccess.mockResolvedValueOnce({
+      isStaff: false,
+      hasSupporterAccess: true,
+    });
     const { req, res } = createApiMocks({ method: "GET" });
     await meHandler(req, res);
 
@@ -131,6 +134,7 @@ describe("GET /api/auth/me", () => {
     expect(res._getJSONData()).toEqual({
       user: { id: "u1", email: "a@b.com" },
       isStaff: false,
+      hasSupporterAccess: true,
     });
   });
 
@@ -152,6 +156,7 @@ describe("GET /api/auth/me", () => {
     expect(res._getJSONData()).toEqual({
       user: { id: "u1", email: "a@b.com" },
       isStaff: false,
+      hasSupporterAccess: false,
     });
   });
 
@@ -160,6 +165,10 @@ describe("GET /api/auth/me", () => {
     const { req, res } = createApiMocks({ method: "GET" });
     await meHandler(req, res);
 
-    expect(res._getJSONData()).toEqual({ user: null, isStaff: false });
+    expect(res._getJSONData()).toEqual({
+      user: null,
+      isStaff: false,
+      hasSupporterAccess: false,
+    });
   });
 });

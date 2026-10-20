@@ -93,10 +93,7 @@ async function refreshSession(
     return null;
   }
 
-  if (!tokens) {
-    clearSessionCookies(res);
-    return null;
-  }
+  if (!tokens) return null;
 
   setSessionCookies(res, tokens);
   return tokens.access_token;
