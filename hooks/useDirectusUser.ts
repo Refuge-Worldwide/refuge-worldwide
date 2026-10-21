@@ -16,17 +16,23 @@ type MeResponse = {
 
 let inflight: Promise<MeResponse> | null = null;
 
+async function requestMe(canRetry: boolean): Promise<MeResponse> {
+  const data = await fetch("/api/auth/me").then((res) => res.json());
+  if (!data.user && data.retry && canRetry) {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    return requestMe(false);
+  }
+  return {
+    user: data.user ?? null,
+    isStaff: data.isStaff === true,
+    hasSupporterAccess: data.hasSupporterAccess === true,
+  };
+}
+
 function fetchMe(): Promise<MeResponse> {
-  inflight ??= fetch("/api/auth/me")
-    .then((res) => res.json())
-    .then((data) => ({
-      user: data.user ?? null,
-      isStaff: data.isStaff === true,
-      hasSupporterAccess: data.hasSupporterAccess === true,
-    }))
-    .finally(() => {
-      inflight = null;
-    });
+  inflight ??= requestMe(true).finally(() => {
+    inflight = null;
+  });
   return inflight;
 }
 
