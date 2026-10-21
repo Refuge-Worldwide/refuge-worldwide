@@ -169,6 +169,18 @@ describe("GET /api/auth/me", () => {
       user: null,
       isStaff: false,
       hasSupporterAccess: false,
+      retry: false,
     });
+  });
+
+  it("asks the client to retry when a refresh cookie is still there", async () => {
+    mockGetSessionUser.mockResolvedValueOnce(null);
+    const { req, res } = createApiMocks({
+      method: "GET",
+      cookies: { directus_refresh_token: "rotated-by-another-request" },
+    });
+    await meHandler(req, res);
+
+    expect(res._getJSONData()).toMatchObject({ user: null, retry: true });
   });
 });

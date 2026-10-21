@@ -3,12 +3,14 @@ import HeartOutline from "../icons/heartOutline";
 import { useState } from "react";
 import useSWR from "swr";
 import { FavouriteSignInModal } from "./favouriteSignInModal";
+import { useDirectusUser } from "@/hooks/useDirectusUser";
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
 export default function ShowFavourite({ id }: { id?: string }) {
+  const { user } = useDirectusUser();
   const { data, mutate } = useSWR<{ ids: string[] }>(
-    "/api/user/favourites/ids",
+    user ? "/api/user/favourites/ids" : null,
     fetcher
   );
   const [isToggling, setIsToggling] = useState(false);

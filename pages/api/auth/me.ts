@@ -8,9 +8,12 @@ export default async function handler(
 ) {
   const user = await getSessionUser(req, res);
   if (!user) {
-    return res
-      .status(200)
-      .json({ user: null, isStaff: false, hasSupporterAccess: false });
+    return res.status(200).json({
+      user: null,
+      isStaff: false,
+      hasSupporterAccess: false,
+      retry: Boolean(req.cookies.directus_refresh_token),
+    });
   }
 
   let isStaff = false;
