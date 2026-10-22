@@ -121,7 +121,7 @@ describe("checkRateLimit", () => {
     );
   });
 
-  it("rejects an anonymous IP that's sent too many in ten minutes", async () => {
+  it("rejects an anonymous IP that's sent too many in a few minutes", async () => {
     mockRequest.mockResolvedValueOnce(
       Array.from({ length: 20 }, (_, i) => ({
         message: `msg ${i}`,
@@ -148,6 +148,65 @@ describe("checkRateLimit", () => {
       { message: "lol", date_created: minutesAgo(3) },
     ]);
     const result = await checkRateLimit("hash-1", false, "lol");
+    expect(result).toEqual({ ok: true });
+  });
+
+  it("rejects a third anonymous message inside 15 seconds", async () => {
+    mockRequest.mockResolvedValueOnce([
+      { message: "a", date_created: now(), username: "dj" },
+      { message: "b", date_created: now(), username: "dj" },
+    ]);
+    const result = await checkRateLimit("hash-1", false, "c", "dj");
+    expect(result.ok).toBe(false);
+  });
+
+  it("rejects a sixth anonymous message in three minutes, even when spaced out", async () => {
+    mockRequest.mockResolvedValueOnce(
+      Array.from({ length: 5 }, (_, i) => ({
+        message: `msg ${i}`,
+        date_created: minutesAgo(0.5 + i * 0.5),
+        username: "dj",
+      }))
+    );
+    const result = await checkRateLimit("hash-1", false, "another", "dj");
+    expect(result.ok).toBe(false);
+  });
+
+  it("allows an anonymous chatter whose earlier messages are over three minutes old", async () => {
+    mockRequest.mockResolvedValueOnce(
+      Array.from({ length: 8 }, (_, i) => ({
+        message: `msg ${i}`,
+        date_created: minutesAgo(3.5 + i),
+        username: "dj",
+      }))
+    );
+    const result = await checkRateLimit("hash-1", false, "another", "dj");
+    expect(result).toEqual({ ok: true });
+  });
+
+  it("rejects an anonymous IP switching to a third name within the hour", async () => {
+    mockRequest.mockResolvedValueOnce([
+      { message: "a", date_created: minutesAgo(5), username: "bot 1" },
+      { message: "b", date_created: minutesAgo(10), username: "bot 2" },
+    ]);
+    const result = await checkRateLimit("hash-1", false, "c", "bot 3");
+    expect(result.ok).toBe(false);
+  });
+
+  it("lets an anonymous IP keep using a name it already used", async () => {
+    mockRequest.mockResolvedValueOnce([
+      { message: "a", date_created: minutesAgo(5), username: "dj" },
+      { message: "b", date_created: minutesAgo(10), username: "dj2" },
+    ]);
+    const result = await checkRateLimit("hash-1", false, "c", "dj");
+    expect(result).toEqual({ ok: true });
+  });
+
+  it("allows a second name on the same IP, e.g. two people on one wifi", async () => {
+    mockRequest.mockResolvedValueOnce([
+      { message: "a", date_created: minutesAgo(5), username: "dj" },
+    ]);
+    const result = await checkRateLimit("hash-1", false, "b", "friend");
     expect(result).toEqual({ ok: true });
   });
 
@@ -219,22 +278,55 @@ describe("checkAnonymousSurge", () => {
     vi.clearAllMocks();
   });
 
-  const busy = Array.from({ length: 30 }, (_, i) => ({ id: i }));
+  const rows = (count: number, senders: number) =>
+    Array.from({ length: count }, (_, i) => ({
+      sender_hash: `other-${i % senders}`,
+      date_created: now(),
+    }));
 
-  it("does nothing while anonymous traffic is normal", async () => {
-    mockRequest.mockResolvedValueOnce(busy.slice(0, 6));
+  it("lets an established anonymous chatter straight through", async () => {
+    mockRequest.mockResolvedValueOnce([{ id: 1 }]);
     expect(await checkAnonymousSurge("hash-1")).toEqual({ ok: true });
     expect(mockRequest).toHaveBeenCalledTimes(1);
   });
 
-  it("lets an established anonymous chatter through a surge", async () => {
-    mockRequest.mockResolvedValueOnce(busy).mockResolvedValueOnce([{ id: 1 }]);
+  it("lets a new sender in while anonymous traffic is normal", async () => {
+    mockRequest.mockResolvedValueOnce([]).mockResolvedValueOnce(rows(6, 3));
     expect(await checkAnonymousSurge("hash-1")).toEqual({ ok: true });
   });
 
-  it("holds back a brand new anonymous sender during a surge", async () => {
-    mockRequest.mockResolvedValueOnce(busy).mockResolvedValueOnce([]);
+  it("holds back a new sender during a message surge", async () => {
+    mockRequest.mockResolvedValueOnce([]).mockResolvedValueOnce(rows(30, 3));
     expect((await checkAnonymousSurge("hash-1")).ok).toBe(false);
+  });
+
+  it("holds back a new sender when lots of new IPs turned up at once", async () => {
+    mockRequest
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce(rows(12, 6))
+      .mockResolvedValueOnce([]);
+    expect((await checkAnonymousSurge("hash-1")).ok).toBe(false);
+  });
+
+  it("doesn't count established chatters as new IPs", async () => {
+    mockRequest
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce(rows(12, 6))
+      .mockResolvedValueOnce([
+        { sender_hash: "other-0" },
+        { sender_hash: "other-1" },
+      ]);
+    expect(await checkAnonymousSurge("hash-1")).toEqual({ ok: true });
+  });
+
+  it("keeps letting in a new sender who already got in this window", async () => {
+    mockRequest
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([
+        ...rows(12, 6),
+        { sender_hash: "hash-1", date_created: now() },
+      ]);
+    expect(await checkAnonymousSurge("hash-1")).toEqual({ ok: true });
   });
 });
 

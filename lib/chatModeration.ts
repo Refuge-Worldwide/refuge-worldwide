@@ -16,12 +16,18 @@ const RATE_LIMIT_WINDOW_MS = 5_000;
 const RATE_LIMIT_MAX_MESSAGES = 3;
 const IMAGE_RATE_LIMIT_WINDOW_MS = 30_000;
 
-const ANON_IP_WINDOW_MS = 10 * 60_000;
-const ANON_IP_MAX_MESSAGES = 20;
+const ANON_BURST_WINDOW_MS = 15_000;
+const ANON_BURST_MAX_MESSAGES = 2;
+const ANON_PACE_WINDOW_MS = 3 * 60_000;
+const ANON_PACE_MAX_MESSAGES = 5;
+const ANON_NAME_WINDOW_MS = 60 * 60_000;
+const ANON_MAX_NAMES_PER_IP = 2;
 
 const ANON_SURGE_WINDOW_MS = 60_000;
 const ANON_SURGE_MAX_MESSAGES = 30;
 const ESTABLISHED_SENDER_AGE_MS = 10 * 60_000;
+const NEW_SENDER_WINDOW_MS = 10 * 60_000;
+const NEW_SENDER_MAX = 6;
 
 function ipKey(ip: string): string {
   const addr = ip.split("%")[0];
@@ -120,12 +126,12 @@ export function moderateMessageText(rawText: string): ModerationResult {
 export async function checkRateLimit(
   identityKey: string,
   isAuthenticated: boolean,
-  newMessageText: string
+  newMessageText: string,
+  username?: string | null
 ): Promise<ModerationResult> {
-  const windowMs = isAuthenticated ? RATE_LIMIT_WINDOW_MS : ANON_IP_WINDOW_MS;
-  const maxRows = isAuthenticated
-    ? RATE_LIMIT_MAX_MESSAGES
-    : ANON_IP_MAX_MESSAGES;
+  const windowMs = isAuthenticated ? RATE_LIMIT_WINDOW_MS : ANON_NAME_WINDOW_MS;
+  // an hour of anon history is at most 100 rows given the 5-per-3-min cap
+  const maxRows = isAuthenticated ? RATE_LIMIT_MAX_MESSAGES : 100;
 
   const recent = await directusServer.request(
     readItems("chat", {
@@ -137,28 +143,50 @@ export async function checkRateLimit(
       },
       sort: ["-date_created"],
       limit: maxRows,
-      fields: ["message", "date_created"],
+      fields: ["message", "date_created", "username"],
     })
   );
 
-  const burstStart = Date.now() - RATE_LIMIT_WINDOW_MS;
-  const inBurst = recent.filter(
-    (row) => Date.parse(row.date_created as string) >= burstStart
-  );
+  const since = (ms: number) =>
+    recent.filter(
+      (row) => Date.parse(row.date_created as string) >= Date.now() - ms
+    );
 
-  if (inBurst.length >= RATE_LIMIT_MAX_MESSAGES) {
+  const inBurst = since(
+    isAuthenticated ? RATE_LIMIT_WINDOW_MS : ANON_BURST_WINDOW_MS
+  );
+  const burstMax = isAuthenticated
+    ? RATE_LIMIT_MAX_MESSAGES
+    : ANON_BURST_MAX_MESSAGES;
+
+  if (inBurst.length >= burstMax) {
     return {
       ok: false,
       reason: "You're sending messages too fast — slow down a little.",
     };
   }
 
-  if (!isAuthenticated && recent.length >= ANON_IP_MAX_MESSAGES) {
-    return {
-      ok: false,
-      reason:
-        "You've sent a lot of messages in the last few minutes — take a short break, or sign in to keep chatting.",
-    };
+  if (!isAuthenticated) {
+    if (since(ANON_PACE_WINDOW_MS).length >= ANON_PACE_MAX_MESSAGES) {
+      return {
+        ok: false,
+        reason:
+          "You've sent a lot of messages in the last few minutes — take a short break, or sign in to keep chatting.",
+      };
+    }
+
+    const names = new Set(recent.map((row) => row.username));
+    if (
+      username &&
+      !names.has(username) &&
+      names.size >= ANON_MAX_NAMES_PER_IP
+    ) {
+      return {
+        ok: false,
+        reason:
+          "You've changed your name a lot — stick with one name, or sign in to keep chatting.",
+      };
+    }
   }
 
   // photo-only messages have no text, so there's nothing to compare
@@ -169,24 +197,12 @@ export async function checkRateLimit(
   return { ok: true };
 }
 
+// Established = chatted more than 10 minutes ago. New IPs are held back when
+// overall anon traffic surges, or when too many new IPs turn up at once
+// (bots rotating through proxies), but established chatters always get in.
 export async function checkAnonymousSurge(
   senderHash: string
 ): Promise<ModerationResult> {
-  const recentAnonymous = await directusServer.request(
-    readItems("chat", {
-      filter: {
-        _and: [
-          { sender_hash: { _nnull: true } },
-          { date_created: { _gte: isoAgo(ANON_SURGE_WINDOW_MS) } },
-        ],
-      },
-      limit: ANON_SURGE_MAX_MESSAGES,
-      fields: ["id"],
-    })
-  );
-
-  if (recentAnonymous.length < ANON_SURGE_MAX_MESSAGES) return { ok: true };
-
   const earlierMessage = await directusServer.request(
     readItems("chat", {
       filter: {
@@ -199,14 +215,67 @@ export async function checkAnonymousSurge(
       fields: ["id"],
     })
   );
-
   if (earlierMessage.length > 0) return { ok: true };
 
-  return {
-    ok: false,
-    reason:
-      "The chat is really busy right now — sign in to keep chatting, or try again in a minute.",
-  };
+  const recentAnonymous = await directusServer.request(
+    readItems("chat", {
+      filter: {
+        _and: [
+          { sender_hash: { _nnull: true } },
+          { date_created: { _gte: isoAgo(NEW_SENDER_WINDOW_MS) } },
+        ],
+      },
+      limit: 500,
+      fields: ["sender_hash", "date_created"],
+    })
+  );
+
+  const surgeStart = Date.now() - ANON_SURGE_WINDOW_MS;
+  const lastMinute = recentAnonymous.filter(
+    (row) => Date.parse(row.date_created as string) >= surgeStart
+  );
+  if (lastMinute.length >= ANON_SURGE_MAX_MESSAGES) {
+    return {
+      ok: false,
+      reason:
+        "The chat is really busy right now — sign in to keep chatting, or try again in a minute.",
+    };
+  }
+
+  const recentSenders = [
+    ...new Set(recentAnonymous.map((row) => row.sender_hash as string)),
+  ];
+  // already let in during this window, so the per-IP limits cover them
+  if (recentSenders.includes(senderHash)) return { ok: true };
+  if (recentSenders.length < NEW_SENDER_MAX) return { ok: true };
+
+  const establishedRows = await directusServer.request(
+    readItems("chat", {
+      filter: {
+        _and: [
+          { sender_hash: { _in: recentSenders } },
+          { date_created: { _lt: isoAgo(ESTABLISHED_SENDER_AGE_MS) } },
+        ],
+      },
+      groupBy: ["sender_hash"],
+      aggregate: { count: ["id"] },
+      limit: -1,
+    } as never)
+  );
+  const established = new Set(
+    (establishedRows as { sender_hash: string }[]).map((row) => row.sender_hash)
+  );
+  const newSenders = recentSenders.filter((hash) => !established.has(hash));
+
+  if (newSenders.length >= NEW_SENDER_MAX) {
+    return {
+      ok: false,
+      reason:
+        "Lots of new people are chatting right now — sign in to keep chatting, or try again in a few minutes.",
+    };
+  }
+
+  return { ok: true };
 }
 
 /** One photo per sender every 30 seconds, on top of checkRateLimit. */

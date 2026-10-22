@@ -196,7 +196,12 @@ async function sendMessage(
 
   const senderHash = userId ? null : hashSenderIp(clientIp(req));
   const identityKey = userId ?? (senderHash as string);
-  const rateLimit = await checkRateLimit(identityKey, !!userId, message);
+  const rateLimit = await checkRateLimit(
+    identityKey,
+    !!userId,
+    message,
+    username
+  );
   if (rateLimit.ok === false) {
     return res.status(429).json({ error: rateLimit.reason });
   }
