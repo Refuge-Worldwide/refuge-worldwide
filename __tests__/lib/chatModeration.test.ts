@@ -2,8 +2,10 @@ import { beforeEach, describe, expect, it, vi, type Mock } from "vitest";
 import { readItems } from "@directus/sdk";
 import { directusServer } from "@/lib/directus/server";
 import {
+  checkAnonymousSurge,
   checkImageRateLimit,
   checkRateLimit,
+  hashSenderIp,
   moderateMessageText,
 } from "@/lib/chatModeration";
 
@@ -19,6 +21,10 @@ vi.mock("@directus/sdk", () => ({
 }));
 
 const mockRequest = directusServer.request as Mock;
+
+const now = () => new Date().toISOString();
+const minutesAgo = (minutes: number) =>
+  new Date(Date.now() - minutes * 60_000).toISOString();
 
 describe("moderateMessageText", () => {
   it("allows an ordinary message", () => {
@@ -89,7 +95,7 @@ describe("checkRateLimit", () => {
   });
 
   it("allows a signed-in sender under the limit", async () => {
-    mockRequest.mockResolvedValueOnce([{ message: "hi" }]);
+    mockRequest.mockResolvedValueOnce([{ message: "hi", date_created: now() }]);
     const result = await checkRateLimit("user-1", true, "new message");
     expect(result).toEqual({ ok: true });
     expect(readItems).toHaveBeenCalledWith(
@@ -102,46 +108,78 @@ describe("checkRateLimit", () => {
     );
   });
 
-  it("filters by username for an anonymous sender", async () => {
+  it("filters by IP hash for an anonymous sender", async () => {
     mockRequest.mockResolvedValueOnce([]);
-    await checkRateLimit("some-guest", false, "hello");
+    await checkRateLimit("hash-1", false, "hello");
     expect(readItems).toHaveBeenCalledWith(
       "chat",
       expect.objectContaining({
         filter: expect.objectContaining({
-          _and: expect.arrayContaining([{ username: { _eq: "some-guest" } }]),
+          _and: expect.arrayContaining([{ sender_hash: { _eq: "hash-1" } }]),
         }),
       })
     );
   });
 
+  it("rejects an anonymous IP that's sent too many in ten minutes", async () => {
+    mockRequest.mockResolvedValueOnce(
+      Array.from({ length: 20 }, (_, i) => ({
+        message: `msg ${i}`,
+        date_created: minutesAgo(1 + i * 0.4),
+      }))
+    );
+    const result = await checkRateLimit("hash-1", false, "another");
+    expect(result.ok).toBe(false);
+  });
+
+  it("allows an anonymous IP chatting at a normal pace", async () => {
+    mockRequest.mockResolvedValueOnce(
+      Array.from({ length: 6 }, (_, i) => ({
+        message: `msg ${i}`,
+        date_created: minutesAgo(1 + i),
+      }))
+    );
+    const result = await checkRateLimit("hash-1", false, "another");
+    expect(result).toEqual({ ok: true });
+  });
+
+  it("allows repeating a short message that wasn't just sent", async () => {
+    mockRequest.mockResolvedValueOnce([
+      { message: "lol", date_created: minutesAgo(3) },
+    ]);
+    const result = await checkRateLimit("hash-1", false, "lol");
+    expect(result).toEqual({ ok: true });
+  });
+
   it("rejects once the sender hits the message cap", async () => {
     mockRequest.mockResolvedValueOnce([
-      { message: "a" },
-      { message: "b" },
-      { message: "c" },
+      { message: "a", date_created: now() },
+      { message: "b", date_created: now() },
+      { message: "c", date_created: now() },
     ]);
     const result = await checkRateLimit("user-1", true, "d");
     expect(result.ok).toBe(false);
   });
 
   it("rejects an exact repeat of the most recent message", async () => {
-    mockRequest.mockResolvedValueOnce([{ message: "same message" }]);
+    mockRequest.mockResolvedValueOnce([
+      { message: "same message", date_created: now() },
+    ]);
     const result = await checkRateLimit("user-1", true, "same message");
     expect(result.ok).toBe(false);
   });
 
   it("allows a different message even if a recent one matches something older", async () => {
     mockRequest.mockResolvedValueOnce([
-      { message: "newest" },
-      { message: "same message" },
+      { message: "newest", date_created: now() },
+      { message: "same message", date_created: now() },
     ]);
     const result = await checkRateLimit("user-1", true, "same message");
     expect(result).toEqual({ ok: true });
   });
 
   it("doesn't treat two photo-only messages as a repeat", async () => {
-    mockRequest.mockResolvedValueOnce([{ message: "" }]);
+    mockRequest.mockResolvedValueOnce([{ message: "", date_created: now() }]);
     const result = await checkRateLimit("user-1", true, "");
     expect(result).toEqual({ ok: true });
   });
@@ -154,14 +192,14 @@ describe("checkImageRateLimit", () => {
 
   it("allows a photo when none were sent recently", async () => {
     mockRequest.mockResolvedValueOnce([]);
-    const result = await checkImageRateLimit("some-guest", false);
+    const result = await checkImageRateLimit("hash-1", false);
     expect(result).toEqual({ ok: true });
     expect(readItems).toHaveBeenCalledWith(
       "chat",
       expect.objectContaining({
         filter: expect.objectContaining({
           _and: expect.arrayContaining([
-            { username: { _eq: "some-guest" } },
+            { sender_hash: { _eq: "hash-1" } },
             { image: { _nnull: true } },
           ]),
         }),
@@ -173,5 +211,50 @@ describe("checkImageRateLimit", () => {
     mockRequest.mockResolvedValueOnce([{ id: 1 }]);
     const result = await checkImageRateLimit("user-1", true);
     expect(result.ok).toBe(false);
+  });
+});
+
+describe("checkAnonymousSurge", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  const busy = Array.from({ length: 30 }, (_, i) => ({ id: i }));
+
+  it("does nothing while anonymous traffic is normal", async () => {
+    mockRequest.mockResolvedValueOnce(busy.slice(0, 6));
+    expect(await checkAnonymousSurge("hash-1")).toEqual({ ok: true });
+    expect(mockRequest).toHaveBeenCalledTimes(1);
+  });
+
+  it("lets an established anonymous chatter through a surge", async () => {
+    mockRequest.mockResolvedValueOnce(busy).mockResolvedValueOnce([{ id: 1 }]);
+    expect(await checkAnonymousSurge("hash-1")).toEqual({ ok: true });
+  });
+
+  it("holds back a brand new anonymous sender during a surge", async () => {
+    mockRequest.mockResolvedValueOnce(busy).mockResolvedValueOnce([]);
+    expect((await checkAnonymousSurge("hash-1")).ok).toBe(false);
+  });
+});
+
+describe("hashSenderIp", () => {
+  it("doesn't contain the IP", () => {
+    expect(hashSenderIp("203.0.113.7")).not.toContain("203");
+  });
+
+  it("treats an IPv4-mapped address like plain IPv4", () => {
+    expect(hashSenderIp("::ffff:203.0.113.7")).toBe(
+      hashSenderIp("203.0.113.7")
+    );
+  });
+
+  it("groups an IPv6 /64 together", () => {
+    expect(hashSenderIp("2001:db8:1:2::1")).toBe(
+      hashSenderIp("2001:db8:1:2:aaaa:bbbb:cccc:dddd")
+    );
+    expect(hashSenderIp("2001:db8:1:2::1")).not.toBe(
+      hashSenderIp("2001:db8:1:3::1")
+    );
   });
 });

@@ -3,6 +3,7 @@ import {
   englishDataset,
   englishRecommendedTransformers,
 } from "obscenity";
+import { createHmac } from "crypto";
 import { readItems } from "@directus/sdk";
 import { directusServer } from "@/lib/directus/server";
 
@@ -14,6 +15,49 @@ const profanityMatcher = new RegExpMatcher({
 const RATE_LIMIT_WINDOW_MS = 5_000;
 const RATE_LIMIT_MAX_MESSAGES = 3;
 const IMAGE_RATE_LIMIT_WINDOW_MS = 30_000;
+
+const ANON_IP_WINDOW_MS = 10 * 60_000;
+const ANON_IP_MAX_MESSAGES = 20;
+
+const ANON_SURGE_WINDOW_MS = 60_000;
+const ANON_SURGE_MAX_MESSAGES = 30;
+const ESTABLISHED_SENDER_AGE_MS = 10 * 60_000;
+
+function ipKey(ip: string): string {
+  const addr = ip.split("%")[0];
+  if (!addr.includes(":") || addr.includes(".")) {
+    return addr.slice(addr.lastIndexOf(":") + 1);
+  }
+  const [head, tail] = addr.split("::");
+  const headParts = head ? head.split(":") : [];
+  const tailParts = tail ? tail.split(":") : [];
+  const groups = [
+    ...headParts,
+    ...Array(Math.max(0, 8 - headParts.length - tailParts.length)).fill("0"),
+    ...tailParts,
+  ];
+  return groups
+    .slice(0, 4)
+    .map((group) => parseInt(group || "0", 16).toString(16))
+    .join(":");
+}
+
+export function hashSenderIp(ip: string): string {
+  return createHmac("sha256", process.env.DIRECTUS_CHAT_SERVICE_TOKEN as string)
+    .update(ipKey(ip))
+    .digest("hex")
+    .slice(0, 32);
+}
+
+function senderFilter(identityKey: string, isAuthenticated: boolean) {
+  return isAuthenticated
+    ? { user: { _eq: identityKey } }
+    : { sender_hash: { _eq: identityKey } };
+}
+
+function isoAgo(ms: number): string {
+  return new Date(Date.now() - ms).toISOString();
+}
 
 export type ModerationResult = { ok: true } | { ok: false; reason: string };
 
@@ -70,46 +114,99 @@ export function moderateMessageText(rawText: string): ModerationResult {
 /**
  * Best-effort rate limit + exact-repeat check, backed by the chat collection
  * itself rather than a separate store. `identityKey` is the resolved Directus
- * user id for signed-in senders, or the client-supplied username for
- * anonymous ones (anonymous identity is inherently spoofable — this is a
- * throttle, not a security boundary).
+ * user id for signed-in senders, or the hashed IP (see hashSenderIp) for
+ * anonymous ones.
  */
 export async function checkRateLimit(
   identityKey: string,
   isAuthenticated: boolean,
   newMessageText: string
 ): Promise<ModerationResult> {
-  const since = new Date(Date.now() - RATE_LIMIT_WINDOW_MS).toISOString();
+  const windowMs = isAuthenticated ? RATE_LIMIT_WINDOW_MS : ANON_IP_WINDOW_MS;
+  const maxRows = isAuthenticated
+    ? RATE_LIMIT_MAX_MESSAGES
+    : ANON_IP_MAX_MESSAGES;
 
   const recent = await directusServer.request(
     readItems("chat", {
       filter: {
         _and: [
-          isAuthenticated
-            ? { user: { _eq: identityKey } }
-            : { username: { _eq: identityKey } },
-          { date_created: { _gte: since } },
+          senderFilter(identityKey, isAuthenticated),
+          { date_created: { _gte: isoAgo(windowMs) } },
         ],
       },
       sort: ["-date_created"],
-      limit: RATE_LIMIT_MAX_MESSAGES + 1,
-      fields: ["message"],
+      limit: maxRows,
+      fields: ["message", "date_created"],
     })
   );
 
-  if (recent.length >= RATE_LIMIT_MAX_MESSAGES) {
+  const burstStart = Date.now() - RATE_LIMIT_WINDOW_MS;
+  const inBurst = recent.filter(
+    (row) => Date.parse(row.date_created as string) >= burstStart
+  );
+
+  if (inBurst.length >= RATE_LIMIT_MAX_MESSAGES) {
     return {
       ok: false,
       reason: "You're sending messages too fast — slow down a little.",
     };
   }
 
+  if (!isAuthenticated && recent.length >= ANON_IP_MAX_MESSAGES) {
+    return {
+      ok: false,
+      reason:
+        "You've sent a lot of messages in the last few minutes — take a short break, or sign in to keep chatting.",
+    };
+  }
+
   // photo-only messages have no text, so there's nothing to compare
-  if (newMessageText && recent[0]?.message === newMessageText) {
+  if (newMessageText && inBurst[0]?.message === newMessageText) {
     return { ok: false, reason: "You just sent that message." };
   }
 
   return { ok: true };
+}
+
+export async function checkAnonymousSurge(
+  senderHash: string
+): Promise<ModerationResult> {
+  const recentAnonymous = await directusServer.request(
+    readItems("chat", {
+      filter: {
+        _and: [
+          { sender_hash: { _nnull: true } },
+          { date_created: { _gte: isoAgo(ANON_SURGE_WINDOW_MS) } },
+        ],
+      },
+      limit: ANON_SURGE_MAX_MESSAGES,
+      fields: ["id"],
+    })
+  );
+
+  if (recentAnonymous.length < ANON_SURGE_MAX_MESSAGES) return { ok: true };
+
+  const earlierMessage = await directusServer.request(
+    readItems("chat", {
+      filter: {
+        _and: [
+          { sender_hash: { _eq: senderHash } },
+          { date_created: { _lt: isoAgo(ESTABLISHED_SENDER_AGE_MS) } },
+        ],
+      },
+      limit: 1,
+      fields: ["id"],
+    })
+  );
+
+  if (earlierMessage.length > 0) return { ok: true };
+
+  return {
+    ok: false,
+    reason:
+      "The chat is really busy right now — sign in to keep chatting, or try again in a minute.",
+  };
 }
 
 /** One photo per sender every 30 seconds, on top of checkRateLimit. */
@@ -117,17 +214,13 @@ export async function checkImageRateLimit(
   identityKey: string,
   isAuthenticated: boolean
 ): Promise<ModerationResult> {
-  const since = new Date(Date.now() - IMAGE_RATE_LIMIT_WINDOW_MS).toISOString();
-
   const recent = await directusServer.request(
     readItems("chat", {
       filter: {
         _and: [
-          isAuthenticated
-            ? { user: { _eq: identityKey } }
-            : { username: { _eq: identityKey } },
+          senderFilter(identityKey, isAuthenticated),
           { image: { _nnull: true } },
-          { date_created: { _gte: since } },
+          { date_created: { _gte: isoAgo(IMAGE_RATE_LIMIT_WINDOW_MS) } },
         ],
       },
       limit: 1,
