@@ -9,6 +9,7 @@ import {
   checkImageRateLimit,
   checkRateLimit,
   hashSenderIp,
+  isBlockedUsername,
   moderateMessageText,
 } from "@/lib/chatModeration";
 import {
@@ -184,6 +185,11 @@ async function sendMessage(
     userId = null;
     if (!username) {
       return res.status(400).json({ error: "A valid username is required" });
+    }
+    if (isBlockedUsername(username)) {
+      return res
+        .status(422)
+        .json({ error: "That username isn't allowed — pick another one." });
     }
   }
 

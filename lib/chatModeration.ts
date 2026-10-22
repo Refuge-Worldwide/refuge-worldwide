@@ -96,8 +96,30 @@ function isSymbolHeavySpam(text: string): boolean {
   return letterOrDigitCount === 0;
 }
 
+// temporary blocks for the Oct 2026 "spammed by pnt" bot
+const BLOCKED_PHRASES = ["spammedbypnt", "pixlmo0n", "pixlmoon"];
+const DISCORD_INVITE = /discord(app)?\.(me|gg|com\/invite)/;
+const BOT_USERNAME = /^bot\s*\d+$/i;
+
+function isKnownSpam(text: string): boolean {
+  const lower = text.toLowerCase();
+  const squashed = lower.replace(/[^\p{L}\p{N}]/gu, "");
+  return (
+    BLOCKED_PHRASES.some((phrase) => squashed.includes(phrase)) ||
+    DISCORD_INVITE.test(lower.replace(/\s+/g, ""))
+  );
+}
+
+export function isBlockedUsername(username: string): boolean {
+  return BOT_USERNAME.test(normalize(username).trim());
+}
+
 export function moderateMessageText(rawText: string): ModerationResult {
   const text = normalize(rawText);
+
+  if (isKnownSpam(text)) {
+    return { ok: false, reason: "That message isn't allowed here." };
+  }
 
   if (isSymbolHeavySpam(text)) {
     return {

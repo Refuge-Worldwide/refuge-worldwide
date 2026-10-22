@@ -6,6 +6,7 @@ import {
   checkImageRateLimit,
   checkRateLimit,
   hashSenderIp,
+  isBlockedUsername,
   moderateMessageText,
 } from "@/lib/chatModeration";
 
@@ -80,6 +81,29 @@ describe("moderateMessageText", () => {
 
   it("allows a short emoji reaction", () => {
     expect(moderateMessageText("🔥🔥🔥")).toEqual({ ok: true });
+  });
+
+  it("blocks the known spam message", () => {
+    expect(
+      moderateMessageText(
+        "spammed by pnt. join https://discord.me/pixlmo0n 82372"
+      ).ok
+    ).toBe(false);
+  });
+
+  it("blocks the spam phrase with spacing tricks", () => {
+    expect(moderateMessageText("S P A M M E D  b-y  p.n.t").ok).toBe(false);
+  });
+
+  it("blocks discord invite links", () => {
+    expect(moderateMessageText("come hang discord.gg/abc123").ok).toBe(false);
+    expect(moderateMessageText("discord . me / xyz").ok).toBe(false);
+  });
+
+  it("still allows talking about discord", () => {
+    expect(moderateMessageText("is there a refuge discord?")).toEqual({
+      ok: true,
+    });
   });
 
   it("allows a message that mixes symbols with real words", () => {
@@ -348,5 +372,18 @@ describe("hashSenderIp", () => {
     expect(hashSenderIp("2001:db8:1:2::1")).not.toBe(
       hashSenderIp("2001:db8:1:3::1")
     );
+  });
+});
+
+describe("isBlockedUsername", () => {
+  it("blocks the spam bot's names", () => {
+    expect(isBlockedUsername("bot 65022")).toBe(true);
+    expect(isBlockedUsername("BOT65022")).toBe(true);
+  });
+
+  it("allows ordinary names, including ones with bot in them", () => {
+    expect(isBlockedUsername("robotnik")).toBe(false);
+    expect(isBlockedUsername("bot fan")).toBe(false);
+    expect(isBlockedUsername("dj bot 3")).toBe(false);
   });
 });
