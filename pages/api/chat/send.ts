@@ -5,8 +5,10 @@ import fs from "fs";
 import { directusServer } from "@/lib/directus/server";
 import { getSessionUser } from "@/lib/directus/session";
 import {
+  checkAnonymousSurge,
   checkImageRateLimit,
   checkRateLimit,
+  hashSenderIp,
   moderateMessageText,
 } from "@/lib/chatModeration";
 import {
@@ -44,6 +46,15 @@ function sanitizeUsername(raw: unknown): string | null {
   if (cleaned.length < 2) return null;
   if (cleaned.toLowerCase().includes("refuge")) return null;
   return cleaned;
+}
+
+function clientIp(req: NextApiRequest): string {
+  const realIp = req.headers["x-real-ip"];
+  return (
+    (Array.isArray(realIp) ? realIp[0] : realIp) ||
+    req.socket.remoteAddress ||
+    "unknown"
+  );
 }
 
 class BadRequestError extends Error {}
@@ -183,10 +194,18 @@ async function sendMessage(
     }
   }
 
-  const identityKey = userId ?? username;
+  const senderHash = userId ? null : hashSenderIp(clientIp(req));
+  const identityKey = userId ?? (senderHash as string);
   const rateLimit = await checkRateLimit(identityKey, !!userId, message);
   if (rateLimit.ok === false) {
     return res.status(429).json({ error: rateLimit.reason });
+  }
+
+  if (senderHash) {
+    const surge = await checkAnonymousSurge(senderHash);
+    if (surge.ok === false) {
+      return res.status(429).json({ error: surge.reason });
+    }
   }
 
   let imageUrl: string | null = null;
@@ -216,12 +235,27 @@ async function sendMessage(
     // immediately, rather than waiting on the realtime event to round-trip
     // back through the websocket (see components/chatRoom.tsx).
     const created = await directusServer.request(
-      createItem("chat", {
-        username,
-        message,
-        image: imageUrl,
-        user: userId,
-      })
+      createItem(
+        "chat",
+        {
+          username,
+          message,
+          image: imageUrl,
+          user: userId,
+          sender_hash: senderHash,
+        },
+        {
+          fields: [
+            "id",
+            "message",
+            "username",
+            "image",
+            "date_created",
+            "user",
+            "is_system",
+          ],
+        }
+      )
     );
     return res.status(200).json({ ok: true, message: created });
   } catch (error) {
