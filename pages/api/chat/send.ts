@@ -115,6 +115,12 @@ async function readMultipartBody(req: NextApiRequest): Promise<SendBody> {
   }
 }
 
+function isForbidden(error: unknown): boolean {
+  const errors = (error as { errors?: { extensions?: { code?: string } }[] })
+    ?.errors;
+  return errors?.some((e) => e.extensions?.code === "FORBIDDEN") ?? false;
+}
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -273,6 +279,12 @@ async function sendMessage(
     console.error("[api/chat/send] failed to write message:", error);
     // don't leave an orphaned photo behind
     await deleteChatImage(imageUrl).catch(() => {});
+    // chat is switched off by removing the create permission in Directus
+    if (isForbidden(error)) {
+      return res.status(503).json({
+        error: "The chatroom is closed until we're live again.",
+      });
+    }
     return res.status(500).json({ error: "Failed to send message" });
   }
 }
