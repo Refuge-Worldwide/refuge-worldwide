@@ -1,4 +1,4 @@
-import { serialize as serializeCookie } from "cookie";
+import { parse as parseCookie, serialize as serializeCookie } from "cookie";
 
 // Structural type rather than NextApiResponse so this works for both API
 // route handlers and getServerSideProps' `res`, which have slightly
@@ -11,42 +11,104 @@ if (!directusUrl) {
   throw new Error("NEXT_PUBLIC_DIRECTUS_URL is not set");
 }
 
-const ACCESS_COOKIE = "directus_session_token";
-const REFRESH_COOKIE = "directus_refresh_token";
+// session mode, not json, so parallel refreshes get Directus's grace period
+const SESSION_COOKIE = "directus_session_token";
 
-interface DirectusTokens {
-  access_token: string;
-  refresh_token: string;
-  expires: number; // ms until access token expiry
+function decodeToken(token: string): { iat: number; exp: number } | null {
+  try {
+    const payload = JSON.parse(
+      Buffer.from(token.split(".")[1], "base64url").toString()
+    );
+    return typeof payload.iat === "number" && typeof payload.exp === "number"
+      ? payload
+      : null;
+  } catch {
+    return null;
+  }
 }
 
-export function setSessionCookies(res: ResponseLike, tokens: DirectusTokens) {
-  const isProd = process.env.NODE_ENV === "production";
-
-  res.setHeader("Set-Cookie", [
-    serializeCookie(ACCESS_COOKIE, tokens.access_token, {
+function setSessionCookie(res: ResponseLike, token: string) {
+  const exp = decodeToken(token)?.exp;
+  res.setHeader(
+    "Set-Cookie",
+    serializeCookie(SESSION_COOKIE, token, {
       httpOnly: true,
-      secure: isProd,
+      secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
-      maxAge: Math.floor(tokens.expires / 1000),
-    }),
-    serializeCookie(REFRESH_COOKIE, tokens.refresh_token, {
-      httpOnly: true,
-      secure: isProd,
-      sameSite: "lax",
-      path: "/",
-      // Directus refresh tokens default to a 7 day lifetime.
-      maxAge: 60 * 60 * 24 * 7,
-    }),
-  ]);
+      ...(exp && { maxAge: Math.max(0, exp - Math.floor(Date.now() / 1000)) }),
+    })
+  );
 }
 
 export function clearSessionCookies(res: ResponseLike) {
-  res.setHeader("Set-Cookie", [
-    serializeCookie(ACCESS_COOKIE, "", { path: "/", maxAge: 0 }),
-    serializeCookie(REFRESH_COOKIE, "", { path: "/", maxAge: 0 }),
-  ]);
+  res.setHeader(
+    "Set-Cookie",
+    serializeCookie(SESSION_COOKIE, "", { path: "/", maxAge: 0 })
+  );
+}
+
+function sessionTokenFrom(directusResponse: Response): string | null {
+  for (const header of directusResponse.headers.getSetCookie()) {
+    const token = parseCookie(header)[SESSION_COOKIE];
+    if (token) return token;
+  }
+  return null;
+}
+
+export async function loginWithPassword(
+  email: string,
+  password: string,
+  res: ResponseLike
+): Promise<boolean> {
+  const response = await fetch(`${directusUrl}/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password, mode: "session" }),
+  });
+  if (!response.ok) return false;
+
+  const token = sessionTokenFrom(response);
+  if (!token) return false;
+  setSessionCookie(res, token);
+  return true;
+}
+
+export async function logoutSession(req: CookieSource) {
+  const token = req.cookies[SESSION_COOKIE];
+  if (!token) return;
+  await fetch(`${directusUrl}/auth/logout`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Cookie: serializeCookie(SESSION_COOKIE, token),
+    },
+    body: JSON.stringify({ mode: "session" }),
+  });
+}
+
+async function refreshSession(
+  token: string,
+  res: ResponseLike
+): Promise<string | null> {
+  try {
+    const response = await fetch(`${directusUrl}/auth/refresh`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: serializeCookie(SESSION_COOKIE, token),
+      },
+      body: JSON.stringify({ mode: "session" }),
+    });
+    if (!response.ok) return null;
+
+    const fresh = sessionTokenFrom(response);
+    if (!fresh) return null;
+    setSessionCookie(res, fresh);
+    return fresh;
+  } catch {
+    return null;
+  }
 }
 
 type CookieSource = {
@@ -60,139 +122,55 @@ function bearerToken(req: CookieSource): string | undefined {
   return header?.startsWith("Bearer ") ? header.slice(7) : undefined;
 }
 
-const DEFAULT_FIELDS = "id,email,first_name";
-
-async function fetchMe(accessToken: string, fields: string) {
-  return fetch(`${directusUrl}/users/me?fields=${fields}`, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
-}
-
-async function refreshTokens(
-  refreshToken: string
-): Promise<DirectusTokens | null> {
-  const response = await fetch(`${directusUrl}/auth/refresh`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ mode: "json", refresh_token: refreshToken }),
-  });
-
-  if (!response.ok) return null;
-  const { data } = await response.json();
-  return data as DirectusTokens;
-}
-
-async function refreshSession(
-  refreshToken: string,
-  res: ResponseLike
-): Promise<string | null> {
-  let tokens: DirectusTokens | null;
-  try {
-    tokens = await refreshTokens(refreshToken);
-  } catch {
-    return null;
-  }
-
-  if (!tokens) return null;
-
-  setSessionCookies(res, tokens);
-  return tokens.access_token;
-}
-
-/**
- * Resolves a valid Directus access token from the session cookies,
- * transparently refreshing an expired one once before giving up. For use by
- * API routes that need to call Directus with the caller's own permissions
- * (e.g. reading/writing their own show_favourites) rather than an admin
- * token.
- */
+// Directus won't refresh an expired token, so refresh at half its lifetime
 export async function getValidAccessToken(
   req: CookieSource,
   res: ResponseLike
 ): Promise<string | null> {
-  const accessToken = req.cookies[ACCESS_COOKIE];
-  const refreshToken = req.cookies[REFRESH_COOKIE];
+  const token = req.cookies[SESSION_COOKIE];
+  if (!token) return null;
 
-  if (!accessToken) {
-    return refreshToken ? refreshSession(refreshToken, res) : null;
+  const times = decodeToken(token);
+  if (!times) return token;
+
+  const now = Date.now() / 1000;
+  if (times.exp <= now) return null;
+
+  if (now - times.iat > (times.exp - times.iat) / 2) {
+    return (await refreshSession(token, res)) ?? token;
   }
+  return token;
+}
 
-  let probe: Response;
+const DEFAULT_FIELDS = "id,email,first_name";
+
+async function fetchMe(accessToken: string, fields: string) {
   try {
-    probe = await fetch(`${directusUrl}/users/me?fields=id`, {
+    return await fetch(`${directusUrl}/users/me?fields=${fields}`, {
       headers: { Authorization: `Bearer ${accessToken}` },
     });
   } catch {
-    // Network error talking to Directus — don't punish the user for our
-    // own infra hiccup by logging them out; trust the existing cookie.
-    return accessToken;
+    return null;
   }
-
-  if (probe.ok) return accessToken;
-
-  if (probe.status === 401 && refreshToken) {
-    return refreshSession(refreshToken, res);
-  }
-
-  // Anything other than a clean 401 (e.g. a transient 429/500 from Directus)
-  // is inconclusive, not proof the session is invalid — fail open rather
-  // than logging a real session out because of an unrelated hiccup.
-  if (probe.status !== 401) return accessToken;
-
-  return null;
 }
 
 /**
- * For use in getServerSideProps. Verifies the session against Directus
- * itself (never trusts the cookie value alone), transparently refreshing an
- * expired access token once before giving up. Pass `fields` to request more
- * than the default id/email/name — e.g. the account page also wants
- * subscription_status and the stripe_* fields.
+ * Verifies the session against Directus itself (never trusts the cookie
+ * alone). Pass `fields` to request more than the default id/email/name.
  */
 export async function getSessionUser(
   req: CookieSource,
   res: ResponseLike,
   fields: string = DEFAULT_FIELDS
 ) {
-  let accessToken = req.cookies[ACCESS_COOKIE];
-  const refreshToken = req.cookies[REFRESH_COOKIE];
-  let refreshed = false;
-
-  if (!accessToken && refreshToken) {
-    accessToken = (await refreshSession(refreshToken, res)) ?? undefined;
-    refreshed = true;
-  }
-
-  accessToken ??= bearerToken(req);
+  const accessToken = (await getValidAccessToken(req, res)) ?? bearerToken(req);
   if (!accessToken) return null;
 
-  let response: Response | null;
-  try {
-    response = await fetchMe(accessToken, fields);
-  } catch {
-    response = null;
-  }
+  let response = await fetchMe(accessToken, fields);
 
-  if (response?.status === 401 && refreshToken && !refreshed) {
-    const newToken = await refreshSession(refreshToken, res);
-    if (!newToken) return null;
-    accessToken = newToken;
-    try {
-      response = await fetchMe(accessToken, fields);
-    } catch {
-      response = null;
-    }
-  }
-
+  // a 429/5xx isn't proof the session is invalid, so try once more
   if (response && !response.ok && response.status !== 401) {
-    // Transient error (e.g. a rate-limited 429, or a momentary 5xx) rather
-    // than proof the session is invalid — retry once before giving up,
-    // instead of treating a genuinely signed-in user as logged out.
-    try {
-      response = await fetchMe(accessToken, fields);
-    } catch {
-      response = null;
-    }
+    response = await fetchMe(accessToken, fields);
   }
 
   if (!response || !response.ok) return null;
@@ -201,4 +179,4 @@ export async function getSessionUser(
   return data as Record<string, any>;
 }
 
-export { directusUrl };
+export { SESSION_COOKIE, directusUrl };
