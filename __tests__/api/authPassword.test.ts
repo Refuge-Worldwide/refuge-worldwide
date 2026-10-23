@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi, type Mock } from "vitest";
 import { updateUser } from "@directus/sdk";
 import { createApiMocks } from "../helpers/createApiMocks";
+import { directusSessionResponse } from "../helpers/directusSession";
 import forgotPasswordHandler from "@/pages/api/auth/forgot-password";
 import resetPasswordHandler from "@/pages/api/auth/reset-password";
 import changePasswordHandler from "@/pages/api/auth/change-password";
@@ -139,12 +140,7 @@ describe("POST /api/auth/reset-password", () => {
 
     (global.fetch as Mock)
       .mockResolvedValueOnce({ ok: true }) // password/reset
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({
-          data: { access_token: "a", refresh_token: "r", expires: 900000 },
-        }),
-      }); // auth/login
+      .mockResolvedValueOnce(directusSessionResponse()); // auth/login
 
     const { req, res } = createApiMocks({
       body: { token: jwtLikeTokenFor("a@b.com"), password: "longenough1" },
@@ -158,7 +154,7 @@ describe("POST /api/auth/reset-password", () => {
         body: JSON.stringify({
           email: "a@b.com",
           password: "longenough1",
-          mode: "json",
+          mode: "session",
         }),
       })
     );
@@ -205,12 +201,7 @@ describe("POST /api/auth/reset-password", () => {
     mockFindUserByEmail.mockRejectedValueOnce(new Error("directus down"));
     (global.fetch as Mock)
       .mockResolvedValueOnce({ ok: true }) // password/reset
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({
-          data: { access_token: "a", refresh_token: "r", expires: 900000 },
-        }),
-      }); // auth/login
+      .mockResolvedValueOnce(directusSessionResponse()); // auth/login
 
     const { req, res } = createApiMocks({
       body: { token: jwtLikeTokenFor("a@b.com"), password: "longenough1" },
