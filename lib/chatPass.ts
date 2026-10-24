@@ -2,10 +2,8 @@ import { createHmac, timingSafeEqual } from "crypto";
 import { readItems } from "@directus/sdk";
 import { directusServer } from "@/lib/directus/server";
 
-// An anonymous sender gets a pass after passing Turnstile. It's tied to
-// their IP and runs out after 30 minutes or 15 messages, whichever is first.
-const PASS_LIFETIME_MS = 30 * 60_000;
-const PASS_MAX_MESSAGES = 15;
+const PASS_LIFETIME_MS = 2 * 60 * 60_000;
+const PASS_MAX_MESSAGES = 30;
 
 function sign(senderHash: string, issuedAt: number): string {
   return createHmac("sha256", process.env.DIRECTUS_CHAT_SERVICE_TOKEN as string)
