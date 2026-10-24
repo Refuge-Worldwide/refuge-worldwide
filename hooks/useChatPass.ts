@@ -51,6 +51,11 @@ export function useChatPass(enabled: boolean) {
   const requestToken = useCallback(async (): Promise<string> => {
     await loadTurnstile();
     const turnstile = window.turnstile as Turnstile;
+    const setVisible = (visible: boolean) => {
+      if (containerRef.current) {
+        containerRef.current.style.display = visible ? "" : "none";
+      }
+    };
     return new Promise((resolve, reject) => {
       waitingRef.current = { resolve, reject };
       if (widgetIdRef.current) {
@@ -63,11 +68,16 @@ export function useChatPass(enabled: boolean) {
           sitekey: TURNSTILE_SITE_KEY,
           appearance: "interaction-only",
           theme: "dark",
-          callback: (token: string) => waitingRef.current?.resolve(token),
+          callback: (token: string) => {
+            setVisible(false);
+            waitingRef.current?.resolve(token);
+          },
           "error-callback": () =>
             waitingRef.current?.reject(
               new Error("Couldn't verify you're human — please try again.")
             ),
+          "before-interactive-callback": () => setVisible(true),
+          "after-interactive-callback": () => setVisible(false),
         }
       );
     });
