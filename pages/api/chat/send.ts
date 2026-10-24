@@ -8,6 +8,7 @@ import {
   checkAnonymousSurge,
   checkImageRateLimit,
   checkRateLimit,
+  clientIp,
   hashSenderIp,
   isBlockedUsername,
   moderateMessageText,
@@ -19,6 +20,7 @@ import {
   readChatImage,
   uploadChatImage,
 } from "@/lib/chatImages";
+import { isChatPassValid } from "@/lib/chatPass";
 
 // Parsed by hand below so the same route can take a photo as multipart
 export const config = {
@@ -47,15 +49,6 @@ function sanitizeUsername(raw: unknown): string | null {
   if (cleaned.length < 2) return null;
   if (cleaned.toLowerCase().includes("refuge")) return null;
   return cleaned;
-}
-
-function clientIp(req: NextApiRequest): string {
-  const realIp = req.headers["x-real-ip"];
-  return (
-    (Array.isArray(realIp) ? realIp[0] : realIp) ||
-    req.socket.remoteAddress ||
-    "unknown"
-  );
 }
 
 class BadRequestError extends Error {}
@@ -208,6 +201,19 @@ async function sendMessage(
 
   const senderHash = userId ? null : hashSenderIp(clientIp(req));
   const identityKey = userId ?? (senderHash as string);
+
+  if (senderHash) {
+    const pass = req.headers["x-chat-pass"];
+    if (
+      !(await isChatPassValid(Array.isArray(pass) ? pass[0] : pass, senderHash))
+    ) {
+      // the website and new app versions fetch a fresh pass and retry on this code
+      return res.status(403).json({
+        code: "chat_pass_required",
+        error: "Please update the app or sign in to chat.",
+      });
+    }
+  }
   const rateLimit = await checkRateLimit(
     identityKey,
     !!userId,
