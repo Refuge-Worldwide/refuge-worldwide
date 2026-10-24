@@ -4,6 +4,7 @@ import {
   englishRecommendedTransformers,
 } from "obscenity";
 import { createHmac } from "crypto";
+import type { NextApiRequest } from "next";
 import { readItems } from "@directus/sdk";
 import { directusServer } from "@/lib/directus/server";
 
@@ -46,6 +47,15 @@ function ipKey(ip: string): string {
     .slice(0, 4)
     .map((group) => parseInt(group || "0", 16).toString(16))
     .join(":");
+}
+
+export function clientIp(req: NextApiRequest): string {
+  const realIp = req.headers["x-real-ip"];
+  return (
+    (Array.isArray(realIp) ? realIp[0] : realIp) ||
+    req.socket.remoteAddress ||
+    "unknown"
+  );
 }
 
 export function hashSenderIp(ip: string): string {
@@ -99,14 +109,18 @@ function isSymbolHeavySpam(text: string): boolean {
 // temporary blocks for the Oct 2026 "spammed by pnt" bot
 const BLOCKED_PHRASES = ["spammedbypnt", "pixlmo0n", "pixlmoon"];
 const DISCORD_INVITE = /discord(app)?\.(me|gg|com\/invite)/;
-const BOT_USERNAME = /^bot\s*\d+$/i;
+const BOT_USERNAME = /^(bot|spamton)\s*\d+$/i;
+const NUMBERED_SPAM = /^spam\s*\d+$/;
+// zero-width space, word joiner, BOM - not the joiners emoji need
+const INVISIBLE_PADDING = /[​⁠﻿]/;
 
 function isKnownSpam(text: string): boolean {
   const lower = text.toLowerCase();
   const squashed = lower.replace(/[^\p{L}\p{N}]/gu, "");
   return (
     BLOCKED_PHRASES.some((phrase) => squashed.includes(phrase)) ||
-    DISCORD_INVITE.test(lower.replace(/\s+/g, ""))
+    DISCORD_INVITE.test(lower.replace(/\s+/g, "")) ||
+    NUMBERED_SPAM.test(lower.trim())
   );
 }
 
@@ -117,7 +131,7 @@ export function isBlockedUsername(username: string): boolean {
 export function moderateMessageText(rawText: string): ModerationResult {
   const text = normalize(rawText);
 
-  if (isKnownSpam(text)) {
+  if (INVISIBLE_PADDING.test(rawText) || isKnownSpam(text)) {
     return { ok: false, reason: "That message isn't allowed here." };
   }
 

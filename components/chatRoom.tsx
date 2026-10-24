@@ -3,6 +3,7 @@ import Link from "next/link";
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createChatRealtimeClient } from "@/lib/directus/chatRealtime";
 import { useDirectusUser } from "@/hooks/useDirectusUser";
+import { useChatPass } from "@/hooks/useChatPass";
 import { splitOnUrls, isUrl } from "@/lib/linkify";
 import { ensureHttps } from "@/util";
 import { IoCameraOutline } from "react-icons/io5";
@@ -155,6 +156,11 @@ const ChatRoom: FC = () => {
 
   const displayName = isLoggedIn ? accountDisplayName : username;
   const showNameForm = !isLoggedIn && (!username || settingName);
+  const {
+    containerRef: turnstileRef,
+    getPass,
+    clearPass,
+  } = useChatPass(!accountLoading && !isLoggedIn && !!username);
 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [loadingMessages, setLoadingMessages] = useState(true);
@@ -430,32 +436,43 @@ const ChatRoom: FC = () => {
     const text = input.trim().slice(0, 500);
     setSending(true);
     setSendError(null);
-    try {
-      let response: Response;
+    const post = async (): Promise<Response> => {
+      const passHeader: Record<string, string> = isLoggedIn
+        ? {}
+        : { "X-Chat-Pass": await getPass() };
       if (pendingImage) {
         // Photos only go up as part of a message (see pages/api/chat/send.ts)
         const form = new FormData();
         form.append("message", text);
         if (!isLoggedIn) form.append("username", displayName);
         form.append("image", pendingImage.blob, "photo.jpg");
-        response = await fetch("/api/chat/send", {
+        return fetch("/api/chat/send", {
           method: "POST",
+          headers: passHeader,
           body: form,
         });
-      } else {
-        response = await fetch("/api/chat/send", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          // Signed-in senders' identity is resolved server-side from the
-          // session cookie — sending a username here would just be ignored,
-          // so it's only included for anonymous senders.
-          body: JSON.stringify({
-            message: text,
-            ...(isLoggedIn ? {} : { username: displayName }),
-          }),
-        });
       }
-      const body = await response.json().catch(() => null);
+      return fetch("/api/chat/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", ...passHeader },
+        // Signed-in senders' identity is resolved server-side from the
+        // session cookie — sending a username here would just be ignored,
+        // so it's only included for anonymous senders.
+        body: JSON.stringify({
+          message: text,
+          ...(isLoggedIn ? {} : { username: displayName }),
+        }),
+      });
+    };
+    try {
+      let response = await post();
+      let body = await response.json().catch(() => null);
+      // pass ran out or the IP changed, so get a new one and try once more
+      if (body?.code === "chat_pass_required") {
+        clearPass();
+        response = await post();
+        body = await response.json().catch(() => null);
+      }
 
       if (!response.ok) {
         setSendError(body?.error ?? "Failed to send message");
@@ -471,13 +488,19 @@ const ChatRoom: FC = () => {
       }
     } catch (error) {
       console.error("Error sending message:", error);
-      setSendError("Failed to send message");
+      setSendError(
+        error instanceof Error && error.message.includes("human")
+          ? error.message
+          : "Failed to send message"
+      );
     } finally {
       setTimeout(() => setSending(false), 1000);
     }
   }, [
     displayName,
     isLoggedIn,
+    getPass,
+    clearPass,
     input,
     pendingImage,
     sending,
@@ -769,6 +792,8 @@ const ChatRoom: FC = () => {
             </div>
           </div>
         )}
+        {/* only shows if Turnstile needs the person to tick a box */}
+        <div ref={turnstileRef} className="px-3 empty:hidden" />
       </div>
     </div>
   );
