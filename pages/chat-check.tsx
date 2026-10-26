@@ -73,7 +73,7 @@ export default function ChatCheckPage() {
         <meta name="robots" content="noindex" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div ref={containerRef} />
       </div>
     </>
