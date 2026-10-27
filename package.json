@@ -59,6 +59,7 @@
     "@widgetbot/crate": "^3.5.4",
     "@widgetbot/react-embed": "1.7.0",
     "add-to-calendar-button-react": "^2.4.3",
+    "anchorme": "^3.0.8",
     "classnames": "^2.3.2",
     "cloudinary": "^2.5.1",
     "contentful": "10.0.0-beta-v10.8",

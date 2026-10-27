@@ -4,7 +4,7 @@ import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createChatRealtimeClient } from "@/lib/directus/chatRealtime";
 import { useDirectusUser } from "@/hooks/useDirectusUser";
 import { useChatPass } from "@/hooks/useChatPass";
-import { splitOnUrls, isUrl } from "@/lib/linkify";
+import { linkify } from "@/lib/linkify";
 import { ensureHttps } from "@/util";
 import { IoCameraOutline } from "react-icons/io5";
 
@@ -607,20 +607,21 @@ const ChatRoom: FC = () => {
                       <div className="flex-1 min-w-0">
                         {msg.message && (
                           <p className="text-tiny break-words leading-snug">
-                            {splitOnUrls(msg.message).map((part, i) =>
-                              isUrl(part) ? (
-                                <a
-                                  key={i}
-                                  href={part}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="underline"
-                                >
-                                  {part}
-                                </a>
-                              ) : (
-                                part
-                              )
+                            {linkify(msg.message).map(
+                              ({ text: part, href }, i) =>
+                                href ? (
+                                  <a
+                                    key={i}
+                                    href={href}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="underline"
+                                  >
+                                    {part}
+                                  </a>
+                                ) : (
+                                  part
+                                )
                             )}
                           </p>
                         )}
