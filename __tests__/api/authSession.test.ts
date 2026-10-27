@@ -1,13 +1,16 @@
 import { beforeEach, describe, expect, it, vi, type Mock } from "vitest";
 import { createApiMocks } from "../helpers/createApiMocks";
+import {
+  directusSessionResponse,
+  sessionToken,
+} from "../helpers/directusSession";
 import loginHandler from "@/pages/api/auth/login";
 import logoutHandler from "@/pages/api/auth/logout";
 import meHandler from "@/pages/api/auth/me";
 import { getSessionUser } from "@/lib/directus/session";
 import { getUserAccess } from "@/lib/directus/staff";
 
-// Partial-mock so login/logout keep using the real setSessionCookies /
-// clearSessionCookies, while me.ts gets a mockable getSessionUser.
+// Partial-mock so login/logout keep using the real session helpers, while me.ts gets a mockable getSessionUser.
 vi.mock("@/lib/directus/session", async () => ({
   ...(await vi.importActual<typeof import("@/lib/directus/session")>(
     "@/lib/directus/session"
@@ -51,16 +54,10 @@ describe("POST /api/auth/login", () => {
   });
 
   it("sets session cookies and returns ok on success", async () => {
-    (global.fetch as Mock).mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({
-        data: {
-          access_token: "access-1",
-          refresh_token: "refresh-1",
-          expires: 900_000,
-        },
-      }),
-    });
+    const token = sessionToken();
+    (global.fetch as Mock).mockResolvedValueOnce(
+      directusSessionResponse(token)
+    );
     const { req, res } = createApiMocks({
       body: { email: "a@b.com", password: "correct" },
     });
@@ -69,10 +66,18 @@ describe("POST /api/auth/login", () => {
     expect(res._getStatusCode()).toBe(200);
     expect(global.fetch).toHaveBeenCalledWith(
       `${DIRECTUS_URL}/auth/login`,
-      expect.objectContaining({ method: "POST" })
+      expect.objectContaining({
+        method: "POST",
+        body: JSON.stringify({
+          email: "a@b.com",
+          password: "correct",
+          mode: "session",
+        }),
+      })
     );
-    const setCookie = res.getHeader("Set-Cookie") as string[];
-    expect(setCookie[0]).toContain("directus_session_token=access-1");
+    expect(res.getHeader("Set-Cookie")).toContain(
+      `directus_session_token=${token}`
+    );
   });
 });
 
@@ -83,40 +88,44 @@ describe("POST /api/auth/logout", () => {
     expect(res._getStatusCode()).toBe(405);
   });
 
-  it("clears cookies even when there's no refresh token", async () => {
+  it("clears the cookie even when there's no session", async () => {
     const { req, res } = createApiMocks({ cookies: {} });
     await logoutHandler(req, res);
 
     expect(global.fetch).not.toHaveBeenCalled();
     expect(res._getStatusCode()).toBe(200);
-    const setCookie = res.getHeader("Set-Cookie") as string[];
-    expect(setCookie[0]).toContain("directus_session_token=;");
+    expect(res.getHeader("Set-Cookie")).toContain("directus_session_token=;");
   });
 
-  it("calls Directus logout and clears cookies when a refresh token exists", async () => {
+  it("ends the Directus session and clears the cookie", async () => {
     (global.fetch as Mock).mockResolvedValueOnce({ ok: true });
     const { req, res } = createApiMocks({
-      cookies: { directus_refresh_token: "refresh-1" },
+      cookies: { directus_session_token: "session-1" },
     });
     await logoutHandler(req, res);
 
     expect(global.fetch).toHaveBeenCalledWith(
       `${DIRECTUS_URL}/auth/logout`,
-      expect.objectContaining({ method: "POST" })
+      expect.objectContaining({
+        method: "POST",
+        body: JSON.stringify({ mode: "session" }),
+        headers: expect.objectContaining({
+          Cookie: "directus_session_token=session-1",
+        }),
+      })
     );
     expect(res._getStatusCode()).toBe(200);
   });
 
-  it("still clears cookies and succeeds if the Directus call fails", async () => {
+  it("still clears the cookie and succeeds if the Directus call fails", async () => {
     (global.fetch as Mock).mockRejectedValueOnce(new Error("network down"));
     const { req, res } = createApiMocks({
-      cookies: { directus_refresh_token: "refresh-1" },
+      cookies: { directus_session_token: "session-1" },
     });
     await logoutHandler(req, res);
 
     expect(res._getStatusCode()).toBe(200);
-    const setCookie = res.getHeader("Set-Cookie") as string[];
-    expect(setCookie[0]).toContain("directus_session_token=;");
+    expect(res.getHeader("Set-Cookie")).toContain("directus_session_token=;");
   });
 });
 
@@ -173,11 +182,11 @@ describe("GET /api/auth/me", () => {
     });
   });
 
-  it("asks the client to retry when a refresh cookie is still there", async () => {
+  it("asks the client to retry when a session cookie is still there", async () => {
     mockGetSessionUser.mockResolvedValueOnce(null);
     const { req, res } = createApiMocks({
       method: "GET",
-      cookies: { directus_refresh_token: "rotated-by-another-request" },
+      cookies: { directus_session_token: "session-1" },
     });
     await meHandler(req, res);
 

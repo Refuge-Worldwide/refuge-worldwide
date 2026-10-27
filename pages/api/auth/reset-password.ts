@@ -1,7 +1,7 @@
 import { updateUser } from "@directus/sdk";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { directusMembershipAdmin } from "@/lib/directus/admin";
-import { directusUrl, setSessionCookies } from "@/lib/directus/session";
+import { directusUrl, loginWithPassword } from "@/lib/directus/session";
 import { findUserByEmail } from "@/lib/membership";
 import { sendSlackMessage } from "@/lib/slack";
 
@@ -87,14 +87,7 @@ export default async function handler(
       );
     }
 
-    const loginRes = await fetch(`${directusUrl}/auth/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password, mode: "json" }),
-    });
-    if (loginRes.ok) {
-      const { data } = await loginRes.json();
-      setSessionCookies(res, data);
+    if (await loginWithPassword(email, password, res)) {
       return res.status(200).json({ ok: true, loggedIn: true });
     }
   }

@@ -3,7 +3,7 @@ import { normalizeEmail } from "@/lib/normalizeEmail";
 import { updateUser } from "@directus/sdk";
 import { stripe } from "@/lib/stripe/config";
 import { directusMembershipAdmin } from "@/lib/directus/admin";
-import { directusUrl, setSessionCookies } from "@/lib/directus/session";
+import { loginWithPassword } from "@/lib/directus/session";
 import {
   fieldsFromSubscription,
   findOrCreateUser,
@@ -142,13 +142,7 @@ export default async function handler(
   // Never write a password beyond the needsSetup branch above — if the
   // account already had one, this is just an auth check with whatever the
   // customer submitted, which fails harmlessly if it doesn't match.
-  const loginRes = await fetch(`${directusUrl}/auth/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password, mode: "json" }),
-  });
-
-  if (!loginRes.ok) {
+  if (!(await loginWithPassword(email, password, res))) {
     console.log(
       `[api/stripe/complete-signup] login failed after ${
         needsSetup ? "completing setup for" : "finding an already-set-up"
@@ -166,7 +160,5 @@ export default async function handler(
     return res.status(200).json({ ok: true, loggedIn: false });
   }
 
-  const { data } = await loginRes.json();
-  setSessionCookies(res, data);
   return res.status(200).json({ ok: true, loggedIn: true });
 }

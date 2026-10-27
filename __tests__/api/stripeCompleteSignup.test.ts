@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi, type Mock } from "vitest";
 import { updateUser } from "@directus/sdk";
 import { createApiMocks } from "../helpers/createApiMocks";
+import { directusSessionResponse } from "../helpers/directusSession";
 import completeSignupHandler from "@/pages/api/stripe/complete-signup";
 import { stripe } from "@/lib/stripe/config";
 import { directusMembershipAdmin } from "@/lib/directus/admin";
@@ -101,12 +102,7 @@ describe("POST /api/stripe/complete-signup", () => {
       status: "active",
     });
     mockRequest.mockResolvedValueOnce(undefined); // updateUser
-    (global.fetch as Mock).mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({
-        data: { access_token: "a", refresh_token: "r", expires: 900000 },
-      }),
-    });
+    (global.fetch as Mock).mockResolvedValueOnce(directusSessionResponse());
 
     const { req, res } = createApiMocks({
       body: {
@@ -163,12 +159,7 @@ describe("POST /api/stripe/complete-signup", () => {
       status: "invited",
     });
     mockRequest.mockResolvedValueOnce(undefined); // updateUser only
-    (global.fetch as Mock).mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({
-        data: { access_token: "a", refresh_token: "r", expires: 900000 },
-      }),
-    });
+    (global.fetch as Mock).mockResolvedValueOnce(directusSessionResponse());
 
     const { req, res } = createApiMocks({
       body: {

@@ -1,8 +1,5 @@
 import { BLOCKS } from "@contentful/rich-text-types";
-import type {
-  GetServerSidePropsContext,
-  InferGetServerSidePropsType,
-} from "next";
+import type { InferGetStaticPropsType } from "next";
 import Layout from "../components/layout";
 import Prose from "../components/Prose";
 import PageMeta from "../components/seo/page";
@@ -10,8 +7,6 @@ import FaqAccordion from "../components/faqAccordion";
 import { getSupportPage } from "../lib/contentful/pages/support";
 import { RenderRichTextWithImages } from "../lib/rich-text";
 import SinglePage from "../views/singlePage";
-import { getSessionUser } from "../lib/directus/session";
-import { getUserAccess } from "../lib/directus/staff";
 
 const HEADING_TYPES = new Set([
   BLOCKS.HEADING_1,
@@ -41,19 +36,13 @@ const faqItemsFromList = (listBlock: any) =>
       };
     });
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const preview = !!context.preview;
-  const user = await getSessionUser(context.req, context.res, "id");
-  const hasSupporterAccess = user
-    ? (await getUserAccess(user.id)).hasSupporterAccess
-    : false;
-
+export async function getStaticProps({ preview = false }) {
   return {
     props: {
       preview,
-      hasSupporterAccess,
       ...(await getSupportPage(preview)),
     },
+    revalidate: 60 * 60,
   };
 }
 
@@ -61,8 +50,7 @@ export default function SupportPage({
   preview,
   content,
   coverImage,
-  hasSupporterAccess,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   // Split the single rich-text field into title (its first block), the
   // first paragraph, and everything after, so the app badges can sit right
   // after the first paragraph. There are no separate "title"/"intro"
@@ -125,9 +113,7 @@ export default function SupportPage({
         {blocks.length > 0 && (
           <section>
             <div className="container-md p-4 sm:p-8 bg-white">
-              <Prose>
-                {RenderRichTextWithImages(titleDoc, { hasSupporterAccess })}
-              </Prose>
+              <Prose>{RenderRichTextWithImages(titleDoc)}</Prose>
             </div>
           </section>
         )}
@@ -135,9 +121,7 @@ export default function SupportPage({
         {blocks.length > 1 && (
           <section>
             <div className="container-md p-4 sm:p-8 bg-white">
-              <Prose>
-                {RenderRichTextWithImages(introDoc, { hasSupporterAccess })}
-              </Prose>
+              <Prose>{RenderRichTextWithImages(introDoc)}</Prose>
             </div>
           </section>
         )}
@@ -174,9 +158,7 @@ export default function SupportPage({
         {leadBlocks.length > 0 && (
           <section>
             <div className="container-md p-4 sm:p-8 bg-white">
-              <Prose>
-                {RenderRichTextWithImages(leadDoc, { hasSupporterAccess })}
-              </Prose>
+              <Prose>{RenderRichTextWithImages(leadDoc)}</Prose>
             </div>
           </section>
         )}
@@ -185,11 +167,7 @@ export default function SupportPage({
           <section>
             <div className="container-md p-4 sm:p-8 bg-white">
               {faqTitleDoc && (
-                <Prose>
-                  {RenderRichTextWithImages(faqTitleDoc, {
-                    hasSupporterAccess,
-                  })}
-                </Prose>
+                <Prose>{RenderRichTextWithImages(faqTitleDoc)}</Prose>
               )}
               {faqCategories.map((category, categoryIndex) => (
                 <div key={categoryIndex} className="mt-8 first:mt-4">
@@ -200,9 +178,7 @@ export default function SupportPage({
                     {category.items.map((item, itemIndex) => (
                       <FaqAccordion key={itemIndex} question={item.question}>
                         <Prose lg={false}>
-                          {RenderRichTextWithImages(item.answerDoc, {
-                            hasSupporterAccess,
-                          })}
+                          {RenderRichTextWithImages(item.answerDoc)}
                         </Prose>
                       </FaqAccordion>
                     ))}

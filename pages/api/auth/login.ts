@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { normalizeEmail } from "@/lib/normalizeEmail";
-import { directusUrl, setSessionCookies } from "@/lib/directus/session";
+import { loginWithPassword } from "@/lib/directus/session";
 
 export default async function handler(
   req: NextApiRequest,
@@ -20,17 +20,9 @@ export default async function handler(
   }
   const email = normalizeEmail(rawEmail);
 
-  const response = await fetch(`${directusUrl}/auth/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password, mode: "json" }),
-  });
-
-  if (!response.ok) {
+  if (!(await loginWithPassword(email, password, res))) {
     return res.status(401).json({ error: "Incorrect email or password" });
   }
 
-  const { data } = await response.json();
-  setSessionCookies(res, data);
   return res.status(200).json({ ok: true });
 }

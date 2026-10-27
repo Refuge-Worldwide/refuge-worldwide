@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getSessionUser } from "@/lib/directus/session";
+import { SESSION_COOKIE, getSessionUser } from "@/lib/directus/session";
 import { getUserAccess } from "@/lib/directus/staff";
 
 export default async function handler(
@@ -12,7 +12,7 @@ export default async function handler(
       user: null,
       isStaff: false,
       hasSupporterAccess: false,
-      retry: Boolean(req.cookies.directus_refresh_token),
+      retry: Boolean(req.cookies[SESSION_COOKIE]),
     });
   }
 
