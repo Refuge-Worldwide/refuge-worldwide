@@ -91,6 +91,9 @@ async function getCh1LiveNow(
     slug: show?.slug ?? null,
     isMixedFeelings: title.includes("mixed feelings"),
     repeat: isRepeat,
+    // true only when this is a show scheduled in the Contentful calendar
+    // (not a radio.co-only track like a repeats block or an overwrite)
+    scheduled: !!liveNowContentful,
   };
 }
 
