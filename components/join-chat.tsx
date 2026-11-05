@@ -40,7 +40,7 @@ const ChatWidget = () => {
             </button>
           </div>
           <div className="flex-1 min-h-0">
-            <ChatRoom />
+            <ChatRoom active={openChat} />
           </div>
         </div>
       )}
