@@ -108,8 +108,10 @@ export default function CalendarSearch({ onView, onEdit, onToggle }) {
                   {data.map((show) => (
                     <tr className="my-2 border-black/20" key={show.id}>
                       <td className="py-3">
-                        {show.isFeatured}
-                        <p className="line-clamp-2">{show.title}</p>
+                        <p className="line-clamp-2">
+                          {show.isFeatured && <span>🍊 </span>}
+                          {show.title}
+                        </p>
                       </td>
                       <td className="py-3">
                         {show.artists &&
