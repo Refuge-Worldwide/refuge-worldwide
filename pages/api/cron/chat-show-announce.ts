@@ -53,9 +53,12 @@ export default async function handler(
         .json({ success: false, reason: "station offline or no title" });
     }
 
-    // only announce live shows, not repeats
-    if (schedule.liveNow.repeat) {
-      return res.status(200).json({ success: false, reason: "repeat" });
+    // only announce shows scheduled in the Contentful calendar - radio.co-only
+    // tracks (repeats blocks, overwrites, filler) are never announced
+    if (!schedule.liveNow.scheduled) {
+      return res
+        .status(200)
+        .json({ success: false, reason: "not a scheduled show" });
     }
 
     const { title, artwork } = schedule.liveNow;

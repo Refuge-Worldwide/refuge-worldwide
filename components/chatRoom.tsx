@@ -19,6 +19,9 @@ const LOAD_MORE_THRESHOLD = 100;
 // How close to the bottom (px) counts as "already at the bottom", so a new
 // message auto-scrolls into view without yanking someone reading history.
 const NEAR_BOTTOM_THRESHOLD = 80;
+// Away (tab hidden or widget closed) for longer than this, and the socket may
+// be dead and messages missed, so reconnect + refetch on return.
+const STALE_AFTER_MS = 60_000;
 
 interface ChatMessage {
   id: number;
@@ -134,7 +137,13 @@ function formatTimestamp(ts: string): string {
   return `${day}/${month}/${date.getFullYear()}, ${time}`;
 }
 
-const ChatRoom: FC = () => {
+interface ChatRoomProps {
+  // False while mounted but hidden (the website widget stays mounted after
+  // the first open). Becoming true refreshes and jumps to the newest message.
+  active?: boolean;
+}
+
+const ChatRoom: FC<ChatRoomProps> = ({ active = true }) => {
   // Signed-in senders chat as their account name (the same "Username" field
   // shown in Account Settings, stored on Directus's first_name) — no
   // separate identity to pick. Anonymous visitors still choose one, kept in
@@ -223,9 +232,17 @@ const ChatRoom: FC = () => {
     setReady(true);
   }, []);
 
-  // Load the most recent page of messages via /api/chat/history — a thin
-  // relay to Directus's own REST query params (see that file for why: CORS).
-  // Newest-first off the wire, reversed here for oldest-first display.
+  // Bumping connectionKey re-creates the realtime subscription and reloads
+  // the latest messages (see the subscription effect below).
+  const [connectionKey, setConnectionKey] = useState(0);
+  const awayAtRef = useRef<number | null>(null);
+  const activeRef = useRef(active);
+  const hasMountedRef = useRef(false);
+
+  // Load the newest page of messages via /api/chat/history — a thin relay to
+  // Directus's own REST query params (see that file for why: CORS).
+  // Newest-first off the wire, reversed here for oldest-first display. Used
+  // for the first load and again on reconnect, replacing the list each time.
   useEffect(() => {
     let cancelled = false;
 
@@ -241,6 +258,7 @@ const ChatRoom: FC = () => {
         setMessages(rows);
         setHasMoreHistory(rows.length === PAGE_SIZE);
         setLoadingMessages(false);
+        isNearBottomRef.current = true;
         requestAnimationFrame(() => {
           scrollToBottom();
           setTimeout(() => {
@@ -259,7 +277,46 @@ const ChatRoom: FC = () => {
     return () => {
       cancelled = true;
     };
-  }, [scrollToBottom]);
+  }, [scrollToBottom, connectionKey]);
+
+  // Back after a while away (or the network returning): the socket may be
+  // dead and messages missed, so reconnect and reload.
+  const reconnectIfStale = useCallback(() => {
+    const awayAt = awayAtRef.current;
+    awayAtRef.current = null;
+    if (awayAt && Date.now() - awayAt > STALE_AFTER_MS) {
+      setConnectionKey((k) => k + 1);
+    }
+  }, []);
+
+  useEffect(() => {
+    const onVisibility = () => {
+      if (document.hidden) awayAtRef.current ??= Date.now();
+      else if (activeRef.current) reconnectIfStale();
+    };
+    const onOnline = () => setConnectionKey((k) => k + 1);
+    document.addEventListener("visibilitychange", onVisibility);
+    window.addEventListener("online", onOnline);
+    return () => {
+      document.removeEventListener("visibilitychange", onVisibility);
+      window.removeEventListener("online", onOnline);
+    };
+  }, [reconnectIfStale]);
+
+  // Hidden (display: none) lists lose their scroll position and can't scroll,
+  // so every time the chat is opened, land on the newest message.
+  useEffect(() => {
+    activeRef.current = active;
+    if (!active) {
+      awayAtRef.current ??= Date.now();
+      return;
+    }
+    isNearBottomRef.current = true;
+    if (hasMountedRef.current) reconnectIfStale();
+    hasMountedRef.current = true;
+    const frame = requestAnimationFrame(() => scrollToBottom());
+    return () => cancelAnimationFrame(frame);
+  }, [active, scrollToBottom, reconnectIfStale]);
 
   // Load the next page of older messages, preserving where the viewer was
   // looking (prepending content above the viewport would otherwise shove
@@ -321,26 +378,26 @@ const ChatRoom: FC = () => {
   const clientRef = useRef<Awaited<
     ReturnType<typeof createChatRealtimeClient>
   > | null>(null);
-  const cancelledRef = useRef(false);
   const retryTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(
     undefined
   );
 
   useEffect(() => {
-    cancelledRef.current = false;
+    // per-run flag: a reconnect re-runs this effect and the old run must stay cancelled
+    let cancelled = false;
 
     const listen = async (attempt: number) => {
-      if (cancelledRef.current) return;
+      if (cancelled) return;
 
       try {
         const client = await createChatRealtimeClient();
         clientRef.current = client;
-        if (cancelledRef.current) return;
+        if (cancelled) return;
 
         const { subscription } = await client.subscribe("chat", {});
 
         for await (const event of subscription) {
-          if (cancelledRef.current) break;
+          if (cancelled) break;
 
           if (event.event === "create") {
             appendMessages(event.data as unknown as ChatMessage[]);
@@ -355,7 +412,7 @@ const ChatRoom: FC = () => {
         console.error("Error subscribing to chat:", error);
       }
 
-      if (!cancelledRef.current) {
+      if (!cancelled) {
         const delay = Math.min(30000, 1000 * 2 ** attempt);
         retryTimeoutRef.current = setTimeout(() => listen(attempt + 1), delay);
       }
@@ -364,12 +421,12 @@ const ChatRoom: FC = () => {
     listen(0);
 
     return () => {
-      cancelledRef.current = true;
+      cancelled = true;
       if (retryTimeoutRef.current) clearTimeout(retryTimeoutRef.current);
       clientRef.current?.disconnect();
       clientRef.current = null;
     };
-  }, [appendMessages]);
+  }, [appendMessages, connectionKey]);
 
   // Focus input once there's a name to chat under
   useEffect(() => {
