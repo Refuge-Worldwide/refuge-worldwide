@@ -25,9 +25,7 @@ export default async function handler(
 
     const show = await getShowByTime(decodedTimestamp);
 
-    res
-      .setHeader("Cache-Control", "s-maxage=1, stale-while-revalidate=59")
-      .json(show);
+    res.setHeader("Cache-Control", "private, no-store").json(show);
   } catch (error) {
     assertError(error);
 

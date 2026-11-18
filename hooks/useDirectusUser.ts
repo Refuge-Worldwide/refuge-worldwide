@@ -16,6 +16,14 @@ type MeResponse = {
 
 let inflight: Promise<MeResponse> | null = null;
 
+// Every /api/auth/me call is a serverless invocation (with up to three
+// Directus round trips when signed in), so don't re-run it on every
+// navigation. Auth state only changes on these pages, so refetch when the
+// route enters or leaves one of them, or when the data is getting old.
+const AUTH_ROUTE =
+  /^\/(signin|signup|forgot-password|reset-password|account|supporters\/success)/;
+const MAX_AGE_MS = 5 * 60 * 1000;
+
 async function requestMe(canRetry: boolean): Promise<MeResponse> {
   const data = await fetch("/api/auth/me").then((res) => res.json());
   if (!data.user && data.retry && canRetry) {
@@ -53,7 +61,11 @@ export function useDirectusUser() {
     // each time.
     let isFirstFetch = true;
 
+    let lastFetchedAt = 0;
+    let lastPath = router.asPath;
+
     function fetchUser() {
+      lastFetchedAt = Date.now();
       if (isFirstFetch) setLoading(true);
       fetchMe()
         .then((data) => {
@@ -80,11 +92,17 @@ export function useDirectusUser() {
     // <Component>, see _app.tsx) rather than per-page, so without this
     // they'd never notice a client-side sign-in/out and keep showing stale
     // logged-out UI (e.g. the footer's support banner) until a hard reload.
-    router.events.on("routeChangeComplete", fetchUser);
+    function onRouteChange(url: string) {
+      const involvesAuth = AUTH_ROUTE.test(url) || AUTH_ROUTE.test(lastPath);
+      lastPath = url;
+      if (involvesAuth || Date.now() - lastFetchedAt > MAX_AGE_MS) fetchUser();
+    }
+
+    router.events.on("routeChangeComplete", onRouteChange);
 
     return () => {
       cancelled = true;
-      router.events.off("routeChangeComplete", fetchUser);
+      router.events.off("routeChangeComplete", onRouteChange);
     };
   }, [router.events]);
 

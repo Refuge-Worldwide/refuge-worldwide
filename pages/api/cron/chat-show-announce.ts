@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { createItem, readItems } from "@directus/sdk";
 import { directusServer } from "@/lib/directus/server";
 import { ensureHttps } from "@/util";
+import { getFullSchedule } from "../v2/schedule";
 
 const SYSTEM_USERNAME = "Refuge Worldwide";
 
@@ -11,35 +12,18 @@ export default async function handler(
 ) {
   const authHeader = req.headers.authorization;
 
-  // if (
-  //   !process.env.CRON_SECRET ||
-  //   authHeader !== `Bearer ${process.env.CRON_SECRET}`
-  // ) {
-  //   return res.status(401).json({ success: false });
-  // }
+  if (
+    !process.env.CRON_SECRET ||
+    authHeader !== `Bearer ${process.env.CRON_SECRET}`
+  ) {
+    return res.status(401).json({ success: false });
+  }
 
   try {
-    // Fetch current schedule
-    const baseUrl = (
-      process.env.NEXT_PUBLIC_SITE_URL ??
-      `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
-    ).replace(/\/$/, "");
-
-    console.log("[chat-show-announce] fetching schedule from", baseUrl);
-
-    const scheduleRes = await fetch(`${baseUrl}/api/v2/schedule`);
-
-    if (!scheduleRes.ok) {
-      console.log(
-        "[chat-show-announce] schedule fetch failed",
-        scheduleRes.status
-      );
-      return res
-        .status(200)
-        .json({ success: false, reason: "schedule unavailable" });
-    }
-
-    const { ch1: schedule } = await scheduleRes.json();
+    // Call the schedule logic directly rather than fetching our own API,
+    // which would bill a second function invocation for every cron run.
+    const { scheduleData } = await getFullSchedule();
+    const schedule = scheduleData.ch1;
     console.log(
       "[chat-show-announce] status:",
       schedule.status,

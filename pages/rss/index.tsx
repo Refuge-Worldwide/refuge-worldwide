@@ -49,6 +49,10 @@ export async function getServerSideProps(
     });
 
     res.setHeader("Content-Type", "text/xml");
+    res.setHeader(
+      "Cache-Control",
+      "public, s-maxage=3600, stale-while-revalidate=86400"
+    );
 
     res.write(feed.rss2());
 

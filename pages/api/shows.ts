@@ -29,7 +29,7 @@ export default async function handler(
     );
 
     res
-      .setHeader("Cache-Control", "s-maxage=1, stale-while-revalidate=59")
+      .setHeader("Cache-Control", "s-maxage=300, stale-while-revalidate=600")
       .json(shows);
   } catch (error) {
     assertError(error);

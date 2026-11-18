@@ -97,43 +97,49 @@ async function getCh1LiveNow(
   };
 }
 
+export async function getFullSchedule() {
+  const { data, duration } = await getScheduleData();
+
+  const [radioCoData, radioCoDataCh2] = await Promise.all([
+    fetchRadioCoStatus(CH1_STATION_ID, "channel 1"),
+    fetchRadioCoStatus(CH2_STATION_ID, "channel 2"),
+  ]);
+
+  const [ch2Artwork, ch1LiveNow] = await Promise.all([
+    getCh2Artwork(radioCoDataCh2),
+    getCh1LiveNow(
+      data.schedule.find((show) => show.live),
+      radioCoData
+    ),
+  ]);
+
+  const scheduleData = {
+    ch1: {
+      status: radioCoData?.status ?? "offline",
+      streamUrl: CH1_STREAM_URL,
+      liveNow: ch1LiveNow,
+      nextUp: data.nextUp,
+      schedule: data.schedule,
+    },
+    ch2: {
+      status: radioCoDataCh2?.status ?? "offline",
+      streamUrl: CH2_STREAM_URL,
+      liveNow: {
+        title: radioCoDataCh2?.current_track?.title ?? null,
+        artwork: ch2Artwork,
+      },
+    },
+  };
+
+  return { scheduleData, duration };
+}
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   try {
-    const { data, duration } = await getScheduleData();
-
-    const [radioCoData, radioCoDataCh2] = await Promise.all([
-      fetchRadioCoStatus(CH1_STATION_ID, "channel 1"),
-      fetchRadioCoStatus(CH2_STATION_ID, "channel 2"),
-    ]);
-
-    const [ch2Artwork, ch1LiveNow] = await Promise.all([
-      getCh2Artwork(radioCoDataCh2),
-      getCh1LiveNow(
-        data.schedule.find((show) => show.live),
-        radioCoData
-      ),
-    ]);
-
-    const scheduleData = {
-      ch1: {
-        status: radioCoData?.status ?? "offline",
-        streamUrl: CH1_STREAM_URL,
-        liveNow: ch1LiveNow,
-        nextUp: data.nextUp,
-        schedule: data.schedule,
-      },
-      ch2: {
-        status: radioCoDataCh2?.status ?? "offline",
-        streamUrl: CH2_STREAM_URL,
-        liveNow: {
-          title: radioCoDataCh2?.current_track?.title ?? null,
-          artwork: ch2Artwork,
-        },
-      },
-    };
+    const { scheduleData, duration } = await getFullSchedule();
 
     res
       .setHeader("Server-Timing", `schedule;dur=${duration}`)

@@ -15,7 +15,7 @@ export default async function handler(
 
     res
       .setHeader("Server-Timing", `search;dur=${duration}`)
-      .setHeader("Cache-Control", "s-maxage=1, stale-while-revalidate=59")
+      .setHeader("Cache-Control", "s-maxage=300, stale-while-revalidate=600")
       .json(data);
   } catch (error) {
     assertError(error);

@@ -56,7 +56,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   res.setHeader("Server-Timing", `search-index;dur=${end - start}`);
 
-  res.setHeader("Cache-Control", "s-maxage=1, stale-while-revalidate=59");
+  res.setHeader("Cache-Control", "s-maxage=3600, stale-while-revalidate=86400");
 
   res.write(JSON.stringify(content));
 

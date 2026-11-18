@@ -18,7 +18,7 @@ export default async function handler(
     items = artists.items;
 
     res
-      .setHeader("Cache-Control", "s-maxage=1, stale-while-revalidate=59")
+      .setHeader("Cache-Control", "s-maxage=300, stale-while-revalidate=600")
       .json(items);
   } catch (error) {
     assertError(error);
